@@ -1,0 +1,17 @@
+*.aux
+*.toc
+*.backup
+*.kate-swp
+*.log
+*.bak
+*.blg
+*.bbl
+*.out
+*.thm
+*.pdf
+*~
+*.zip
+*.kilepr
+*.fdb_latexmk
+*.spl
+

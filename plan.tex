@@ -1,0 +1,118 @@
+\documentclass[a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{amsmath}  % Maths
+\usepackage{amsfonts} % Maths
+\usepackage{amssymb}  % Maths
+\usepackage{stmaryrd} % Maths (crochets doubles)
+
+\usepackage{url}     % Mise en forme + liens pour URLs
+\usepackage{hyperref}
+\usepackage{array}   % Tableaux évolués
+
+\usepackage{comment}
+
+% Commandes « à faire »
+\usepackage{color} % Couleurs du texte
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+\newcommand{\idee}[1]{\textcolor{darkgreen}{[#1]}}
+%\newcommand{\idee}[1]{\textcolor{red}{[#1]}}
+\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
+\newcommand{\mq}[1]{\textcolor{darkblue}{[MQ : #1]}}
+
+
+
+\input{macros/macros}
+\input{macros/macros-ph}
+%\input{macros/macros-abstr}
+
+
+
+\newcommand{\PHsc}{PHsc}
+\newcommand{\PHp}{PHp}
+
+\author{Maxime Folschette}
+\title{Plan de manuscrit de thèse}
+\date{Version du \today}
+
+\begin{document}
+
+%\maketitle
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+
+
+\chapter{Introduction}
+
+\chapter{État de l'art de la modélisation + PH standard et analyses}
+
+\chapter{Les différentes représentations du PH}
+  \section{PH avec priorités quelconques}
+  \section{arcs neutralisants}
+  \section{actions plurielles}
+
+\chapter{Équivalence et analyse des représentations du PH}
+  \section{PH avec sortes coopératives priorisées}
+  \section{analyse statique}
+
+\chapter{Expressivité du PH par rapport à d'autres formalismes}
+
+\chapter{Applications}
+
+\chapter{Conclusion}
+
+
+
+\begin{comment}
+\chapter{Introduction}
+
+\chapter{État de l'art de la modélisation et de l'analyse des réseaux de régulation biologique}
+
+\chapter{Le Process Hitting standard}
+  \section{Définition}
+  \section{Analyse statique (?)}
+  \section{Expressivité par rapport à d'autres formalismes}
+    \subsection{Réseaux de Petri saufs}
+      \idee{Une place par processus}
+    \subsection{Réseaux de Petri bornés}
+      \idee{Une place par sorte}
+    \subsection{$\pi$-calcul}
+      \idee{Cf. thèse de Loïc}
+    \subsection{Automates finis communicants}
+      \idee{Cf. thèse de Loïc}
+    \subsection{Biocham ?}
+
+\chapter{Extension du Process Hitting avec sortes coopératives priorisées (\PHsc)}
+  \section{Définition}
+    \idee{Cf. CS2Bio}
+  \section{Analyse statique : raffinement de la sous-approximation}
+    \idee{Cf. CS2Bio}
+  \section{Expressivité par rapport au PH standard}
+  \section{Expressivité par rapport à d'autres formalismes}
+    \subsection{Réseaux de Régulation Biologique}
+      \mq{traduction possible dans les deux sens avec hypothèses}
+
+\chapter{Autres extension du Process Hitting}
+  \section{PH avec arcs actions coopératives (?)}
+    \idee{De la forme : $\PHhit{A}{b_i}{b_j}$.}\\
+    \mq{PH avec arcs actions coopératives = \PHsc}
+  \section{PH avec priorités multiples et actions coopératives (\PHp)}
+    \mq{\PHp{} = \PHsc}
+  \section{PH avec arcs neutralisants}
+    \mq{PH avec arcs neutralisants = \PHsc}
+  \section{PH avec actions complexes/plurielles}
+    \idee{De la forme : $A \xrightarrow{C} B$ ou encore : $A \rightarrow B$.}\\
+    \mq{PH avec actions complexes = \PHsc}
+
+\chapter{Conclusion}
+\end{comment}
+
+
+
+\end{document}
