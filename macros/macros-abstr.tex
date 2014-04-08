@@ -41,7 +41,7 @@
 % \def\gProc{\mathrm{maxPROC}}
 \def\mCtx{\mathrm{maxCtx}}
 
-\def\procs{\f{procs}}
+%\def\procs{\f{procs}}
 \def\objs{\f{objs}}
 \def\sat#1{\lceil #1\rceil}
 
@@ -76,8 +76,7 @@
 
 %\def\lfp{\mathrm{lfp}\;}
 %\def\mlfp#1{\mathrm{lfp}\{#1\}\;}
-%\newcommand{\lfp}[3]{\mathbf{lfp}\{#1\}\left(#2\mapsto#3\right)}
-\newcommand{\lfp}[2]{\mathbf{lfp}(#1, #2)}
+\newcommand{\lfp}[3]{\mathbf{lfp}\{#1\}\left(#2\mapsto#3\right)}
 \def\maxobjs{{\f{maxobjs}}}
 \def\maxprocs{{\f{maxprocs}_\ctx}}
 \def\objends{{\f{ends}}}
@@ -106,7 +105,7 @@
 %\def\allprocs{\mathsf{allProcs}}
 \def\allprocs{\procs}
 %\def\pfp{\mathsf{pfp}}
-\def\pfp{\mathsf{lst}}
+\def\pfp{\mathsf{focals}^1}
 \def\pfpprocs{\mathsf{pfpProcs}}
 \def\bounceprocs{\mathsf{bounceProcs}}
 \def\newprocs{\mathsf{newProcs}}
@@ -154,6 +153,9 @@
 \newcommand{\VProc}{\V \cap \PHproc}
 \newcommand{\VObj}{\V \cap \Obj}
 \newcommand{\VSol}{\V \cap \Sol}
+\newcommand{\cwVProc}{\cwV \cap \PHproc}
+\newcommand{\cwVObj}{\cwV \cap \Obj}
+\newcommand{\cwVSol}{\cwV \cap \Sol}
 
 \def\Bv{\sat{\cwV}}
 \def\Be{\sat{\cwE}}
@@ -198,3 +200,6 @@
 %
 %
 \end{comment}
+
+\def\lastprocs{\f{lastprocs}}
+

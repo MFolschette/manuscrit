@@ -21,10 +21,10 @@ font=\footnotesize,inner sep=1pt]
 \tikzstyle{hl}=[font=\bfseries,very thick]
 \tikzstyle{hl2}=[hl]
 \tikzstyle{nohl}=[font=\normalfont,thin]
-\tikzstyle{cooperativeactiondot}=[circle, fill=black, draw=black, inner sep=1]
 
-%\tikzstyle{prio}=[draw,double,-stealth]
-\tikzstyle{prio}=[draw,very thick,-stealth]%[double]
+\tikzstyle{prio}=[draw,very thick,-stealth]
+\tikzstyle{coopupdate}=[dashed]
+\tikzstyle{superprio}=[draw,very thick,double,-stealth]
 
 \newcommand{\currentScope}{}
 \newcommand{\currentSort}{}
@@ -118,20 +118,11 @@ font=\footnotesize,inner sep=1pt]
   \renewcommand{#1}{#2}
 }
 \newcommand{\THit}[5]{
-  \path[hit] (#1) edge[#2] node[pos=.5,cooperativeactiondot] {} (#3#4);
+  \path[hit] (#1) edge[#2] (#3#4);
   \expandafter\repcommand\expandafter{\csname TBounce@#3@#5\endcsname}{#4}
 }
 \newcommand{\TBounce}[4]{
   (#1\csname TBounce@#1@#3\endcsname) edge[#2] (#3#4)
-}
-
-\newcommand{\TCoopHit}[6]{
-  \node[#2, cooperativeactiondot] at (#3) {};
-  \foreach \proc in {#1} {
-    \draw[#2,-] (#3) edge (\proc);
-  }
-  \path[hit] (#3) edge[#2] (#4#5);
-  \expandafter\repcommand\expandafter{\csname TBounce@#4@#6\endcsname}{#5}
 }
 
 \newcommand{\TState}[1]{

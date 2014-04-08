@@ -1,16 +1,23 @@
 % Macros relatives à la traduction de PH avec arcs neutralisants vers PH à k-priorités fixes
 
+% Macros définitions
+\def\DEF{\stackrel{\Delta}=}
+\def\EQDEF{\stackrel{\Delta}\Leftrightarrow}
+
 % Macros générales
-%\newcommand{\ie}{\textit{i.e.} }
+\newcommand{\sN}{\mathbb{N}}
+\newcommand{\sNN}{\mathbb{N}^\bullet}
+\newcommand{\segm}[2]{\llbracket #1; #2 \rrbracket}
+\def\indexes#1{\mathbb{I}^{#1}}
+\def\f#1{\mathsf{#1}}
 
 % Notations générales pour PH
 \newcommand{\PH}{\mathcal{PH}}
 %\newcommand{\PHs}{\mathcal{S}}
 \newcommand{\PHs}{\Sigma}
 %\newcommand{\PHp}{\mathcal{P}}
-%\newcommand{\PHp}{\textcolor{red}{\mathcal{P}}}
+\newcommand{\PHp}{\textcolor{red}{\mathcal{P}}}
 %\newcommand{\PHproc}{\mathcal{P}}
-\newcommand{\Sa}[1]{\mathbf{S}^{\setminus #1}}
 \newcommand{\PHproc}{\mathbf{Proc}}
 \newcommand{\Proc}{\PHproc}
 \newcommand{\PHh}{\mathcal{H}}
@@ -19,20 +26,17 @@
 \newcommand{\PHl}{\mathcal{L}}
 \newcommand{\PHn}{\mathcal{N}}
 
-\newcommand{\PHhitter}{\mathsf{\textcolor{red}{hitters}}}
-
-\newcommand{\PHhitters}{\mathsf{hitters}}
+\newcommand{\PHhitter}{\mathsf{hitter}}
 \newcommand{\PHtarget}{\mathsf{target}}
 \newcommand{\PHbounce}{\mathsf{bounce}}
 %\newcommand{\PHsort}{\Sigma}
-\newcommand{\PHsort}[1]{\PHs(#1)}
-\newcommand{\PHprio}[1]{\mathsf{prio}(#1)}
-\newcommand{\hitters}[1]{\PHhitters(#1)}
+\newcommand{\PHsort}{\PHs}
+
+\newcommand{\hitter}[1]{\PHhitter(#1)}
 \newcommand{\target}[1]{\PHtarget(#1)}
 \newcommand{\bounce}[1]{\PHbounce(#1)}
-%\newcommand{\PHsort}{\Sigma}
-\newcommand{\sort}[1]{\PHsort{#1}}
-\newcommand{\prio}{\PHprio}
+
+\newcommand{\prio}{\mathsf{prio}}
 
 %\newcommand{\PHfrappeur}{\mathsf{frappeur}}
 %\newcommand{\PHcible}{\mathsf{cible}}
@@ -70,8 +74,8 @@
 \def\DNtrans{\rightarrow_{ADN}}
 \def\DNdef{(\mathbb F, \langle f^1, \dots, f^n\rangle)}
 \def\DNdep{\f{dep}}
-\newcommand{\trans}[1]{\rightarrow_{#1}}
-%\def\PHPtrans{\trans{PH}}
+%\def\PHPtrans{\rightarrow_{PH}}
+\newcommand{\PHPtrans}[1][\PH]{\rightarrow_{#1}}
 \def\get#1#2{#1[{#2}]}
 \def\encodeF#1{\mathbf{#1}}
 \def\toPH{\encodeF{PH}}
@@ -81,3 +85,36 @@
 \def\Hits{\PHa}
 \def\hit{\PHhit}
 \def\play{\cdot}
+
+% General macros
+\newcommand{\angles}[1]{{\langle #1 \rangle}}
+\newcommand{\trans}[1]{\rightarrow_{#1}}
+%\newcommand{\bigtimes}[1]{\underset{#1}{\times}}
+\newcommand{\bigtimes}[1]{\times_{#1}}
+
+% Macros for falttening
+\newcommand{\PHsublize}[1]{#1^\diamond}
+\newcommand{\PHsubl}[1][\ov{\PHl}]{\PHsublize{#1}}
+
+%\newcommand{\ov}[1]{\widetilde{#1}}
+\newcommand{\ov}{\overline}
+\newcommand{\os}{\ov{s}}
+\newcommand{\oPH}{\ov{\PH}}
+
+\newcommand{\F}{F}
+\newcommand{\Fopsymbol}{\F}
+\newcommand{\Fop}[1]{\Fopsymbol(#1)}
+\newcommand{\Fsem}[2]{\left[#1\right](#2)}
+\newcommand{\PHdep}[2]{\f{dep}^{#1}(#2)}
+\newcommand{\PHflat}{\f{flat}}
+\newcommand{\flats}[1]{\lfloor #1 \rfloor}
+\newcommand{\unflats}[1]{\lceil #1 \rceil}
+\newcommand{\virtualhitters}{\f{VirtualHitters}}
+
+\newcommand{\mysigma}{\sigma}
+\newcommand{\n}[1][h]{n^{#1}}
+\newcommand{\m}[1][h,i]{m^{#1}}
+
+\def\toset#1{\widetilde{#1}}
+\def\conn{\f{conn}^1}
+\def\compin{\f{comp}^1}

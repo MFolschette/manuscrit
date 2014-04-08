@@ -1,0 +1,126 @@
+
+
+\chapter{Représentations temporelles du Frappes de Processus}
+
+La prise en compte de paramètres temporels peut être effectuée à l'aide de
+formalisations prenant en compte la simultanéité ou la préemption
+entre différentes actions afin de restreindre la dynamique.
+
+\section{Frappes de Processus avec actions plurielles
+  (équivalent automates \& réactions biochimiques)}
+\subsection{Équivalence : cf. modélisation avec arcs neutralisants ?}
+
+\section{Frappes de Processus avec préemption des actions}
+\subsection{Frappes de Processus avec priorités quelconques}
+
+Les Frappes de Processus avec $k$ classes de priorités
+(aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
+consistent, comme défini à la \pref{def:php},
+en une extension des Frappes de Processus contenant, à la place d'un ensemble d'actions,
+$k$ ensembles d'actions, chacun étant associé à une classe de priorités distincte.
+Avec cette sémantique, une action est jouable dans un état si et seulement si,
+en plus de la condition de la présence du frappeur et de la cible,
+il n'y a aucune autre action appartenant à une classe de priorité plus grande
+qui soit aussi jouable dans cet état.
+
+Cette représentation basée sur des classes de priorités permet de modéliser un système
+dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
+de leur vitesse d'exécution, ou encore d'autres facteurs leur donnant prévalence sur d'autres.
+
+Elle offre notamment la possibilité de distinguer les actions en fonction 
+de leur vitesse d'exécution (les actions les plus rapides étant jouées en priorité),
+de leur fonction (biologique donc lente ou non-biologique donc instantanée)
+ou d'autres paramètres permettant de déterminer l'existence de la préemption d'une action
+en fonction de la jouabilité d'une autre.
+L'application la plus poussée de cette modélisation consisterait à
+classer les actions d'un modèle en fonction d'un critère telle que la vitesse de réaction,
+et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
+afin de rendre compte de la priorité de chaque action en fonction des autres.
+
+Cette modélisation présente néanmoins quelques lacunes.
+Les phénomènes d'accumulation, notamment, n'y sont pas représentés ;
+un cycle d'actions prioritaires ne peut jamais être interrompu par une action moins prioritaire,
+menant à un cycle infini et pouvant contredire la réalité biologique.
+De plus, les classes de priorités définies pour un modèle sont invariables;
+certains modèles pourraient cependant nécessiter l'évolution de certaines classes de priorités
+en fonction de la présence ou de l'absence d'un composant dans un état donné.
+
+\begin{definition}[Frappes de Processus avec $k$ classes de priorités]
+\label{def:php}
+  Si $k \in \sN^*$, les \emph{Frappes de Processus avec $k$ classes de priorités} sont définies
+  par un triplet $\PH = (\PHs; \PHl; \PHa^{\langle k \rangle})$,
+  où $\PHa^{\langle k \rangle} = (\PHa^{(1)}; \dots; \PHa^{(k)})$ est un $k$-uplet, et :
+  \begin{itemize}
+    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini des \emph{sortes} ;
+    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini des \emph{processus} de la sorte
+      $a \in \PHs$ et $l_a \in \sN^*$.
+      Chaque processus appartient à une unique sorte :
+      $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
+    \item pour tout $n \in \llbracket 1; k \rrbracket$,
+      $\PHa^{(n)} \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
+      (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
+      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini 
+      des \emph{actions de priorité $n$}.
+  \end{itemize}
+  On appelle $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus,
+  et $\PHh \DEF \bigcup_{n \in \segm{1}{k}} \PHh^{(n)}$ l'ensemble de toutes les actions.
+  De plus, pour tout $n \in \sN^*$ et $h \in \PHh^{(n)}$, on note : $\prio(h) \DEF n$.
+\end{definition}
+%
+\noindent
+La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
+Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
+par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
+Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+
+La \pref{def:substate} définit la notion de sous-état sur un ensemble de sortes,
+\cad un ensemble de processus qui sont deux à deux de sortes différentes,
+ce qui permet de ne considérer qu'une partie d'un état complet.
+Nous notons qu'un état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
+Le recouvrement d'un état $s$ par un processus $a_i$ est défini à la \pref{def:statecap}
+par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
+ce qui permet de définir la dynamique des Frappes de Processus avec $k$ classes de priorités
+dans la \pref{def:play}.
+La définition de recouvrement est aussi étendue à un sous-ensemble,
+autrement dit, un ensemble de processus contenant au plus un processus par sorte.
+
+\begin{definition}[Sub-states ($\PHsublize{\PHl}$)]
+\label{def:substate}
+  Si $S \subset \PHs$ est un ensemble de sortes, un sous-ensemble sur $S$ est un élément de :
+  $\PHsubl[\PHl]_S \DEF \bigtimes{a \in S} \PHl_a$.
+  L'ensemble de tous les sous-ensembles est noté :
+  $\PHsubl[\PHl] \DEF \bigcup_{S \in\powerset(\PHs)} \PHsubl[\PHl]_S$.
+  
+  \noindent
+  De plus, si $\mysigma \in \PHsubl[\PHl]$ et $s \in \PHl$, on note alors :
+  \[\mysigma \subseteq s \EQDEF \forall a_i \in \Proc, a_i \in \mysigma \Rightarrow a_i \in s
+    \enspace.\]
+\end{definition}
+%
+\begin{definition}[$\Cap : \PHl \times \PHproc \rightarrow \PHl$]
+\label{def:statecap}
+  Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
+  $(s \Cap a_i)$ est l'état défini par :
+  $\PHget{(s \Cap a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \Cap a_i)}{b} = \PHget{s}{b}$.
+  On étend de plus cette définition à un tout ensemble de processus,
+  à condition que tous les processus soient tous de sortes différentes,
+  par le recouvrement de l'état par chaque processus :
+  $\forall ps \in \PHsubl[\PHl], s \Cap \toset{ps} = s \underset{a_i \in \toset{ps}}{\Cap} a_i$.
+\end{definition}
+%
+\begin{definition}[Dynamique des Frappes de Processus ($\PHPtrans$)]
+\label{def:play}
+  Une action $h = \PHhit{a_i}{b_j}{b_k} \in \PHa^{(n)}$ de priorité $n$ est dite \emph{jouable}
+  dans $s \in \PHl$ si et seulement si $\PHget{s}{a} = a_i$, $\PHget{s}{b} = b_j$
+  et $\forall m < n, \forall g \in \PHa^{(m)}, \PHhitter(g) \notin s \vee \PHtarget(g) \notin s$.
+  Dans ce cas, $(s \PHplay h)$ est l'état résultant du jeu de l'action $h$ dans $s$,
+  et on le définit par : $(s \PHplay h) = s \Cap b_k$.
+  De plus, on note alors : $s \PHPtrans (s \PHplay h)$.
+
+  Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$
+  est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
+  L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
+\end{definition}
+
+\subsection{PH avec arcs neutralisants}
