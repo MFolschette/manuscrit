@@ -1,0 +1,134 @@
+\section{Les Frappes de Processus}
+
+\subsection{Définition des Frappes de Processus}
+
+Les Frappes de Processus permettent une modélisation atomique des interactions entre composants.
+\Defref{ph}
+\todo{blabla}
+
+\begin{definition}[Frappes de Processus]
+\deflabel{ph}
+  Les \emph{Frappes de Processus avec $k$ classes de priorités} sont définies
+  par un triplet $\PH = (\PHs; \PHl; \PHh)$, où :
+  \begin{itemize}
+    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
+    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
+      Chaque processus appartient à une unique sorte :
+      $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
+    \item $\PHh \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs \times \PHs \wedge
+      (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
+      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini des \emph{actions}.
+  \end{itemize}
+  On appelle $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus.
+\end{definition}
+%
+\noindent
+La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
+Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
+par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
+Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+
+La \defref{substate} établit la notion de sous-état sur un ensemble de sortes,
+\cad un ensemble de processus qui sont deux à deux de sortes différentes,
+ce qui permet de ne considérer qu'une partie d'un état complet.
+Nous notons qu'un état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
+Le recouvrement d'un état $s$ par un processus $a_i$ est formalisé à la \defref{statecap}
+par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
+ce qui permet de définir la dynamique des Frappes de Processus avec $k$ classes de priorités
+dans la \defref{play}.
+La définition de recouvrement est aussi étendue à un sous-ensemble,
+autrement dit, un ensemble de processus contenant au plus un processus par sorte.
+
+\begin{definition}[Sous-états ($\PHsublize{\PHl}$)]
+\deflabel{substate}
+  Si $S \subset \PHs$ est un ensemble de sortes, un sous-ensemble sur $S$ est un élément de :
+  $\PHsubl[\PHl]_S \DEF \bigtimes{a \in S} \PHl_a$.
+  L'ensemble de tous les sous-ensembles est noté :
+  $\PHsubl[\PHl] \DEF \bigcup_{S \in\powerset(\PHs)} \PHsubl[\PHl]_S$.
+  
+  \noindent
+  De plus, si $\mysigma \in \PHsubl[\PHl]$ et $s \in \PHl$, on note alors :
+  \[\mysigma \subseteq s \EQDEF \forall a_i \in \Proc, a_i \in \mysigma \Rightarrow a_i \in s
+    \enspace.\]
+\end{definition}
+%
+\begin{definition}[$\Cap : \PHl \times \PHproc \rightarrow \PHl$]
+\deflabel{statecap}
+  Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
+  $(s \Cap a_i)$ est l'état défini par :
+  $\PHget{(s \Cap a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \Cap a_i)}{b} = \PHget{s}{b}$.
+  On étend de plus cette définition à un tout ensemble de processus,
+  à condition que tous les processus soient tous de sortes différentes,
+  par le recouvrement de l'état par chaque processus :
+  $\forall ps \in \PHsubl[\PHl], s \Cap \toset{ps} = s \underset{a_i \in \toset{ps}}{\Cap} a_i$.
+\end{definition}
+
+
+
+\subsection{Sémantique des Frappes de Processus}
+
+Une propriété de jouabilité telle que décrite à la \defref{ppl}
+est équivalente à une formule booléenne dont les atomes sont des processus dans $\Proc$.
+Le langage des propriétés de jouabilité permet de décrire la présence d'une configuration
+de processus actifs dans un état donné.
+Il permet notamment de décrire en termes formels la jouabilité d'une action,
+ce qui est immédiatement mis en pratique dans la \defref{fopph}.
+
+\begin{definition}[Propriété de jouabilité ($\F$)]
+  \label{def:ppl}
+  Une \emph{propriété de jouabilité} est un élément du langage $\F$ défini inductivement \todo{?} par :
+  \begin{itemize}
+    \item $\top$ et $\bot$ appartiennent à $\F$ ;
+    \item si $a \in \ov{\PHs}$ et $a_i \in \ov{\PHl}_a$, alors $a_i \in \F$
+      et $a_i$ est appelé un \emph{atome} ;
+    \item si $P \in \F$ et $Q \in \F$,
+      alors $\neg P \in \F$, $P \wedge Q \in \F$ et $P \vee Q \in \F$.
+  \end{itemize}
+%
+  Si $P \in \F$ est une propriété de jouabilité et $\mysigma \in \PHsubl$ est un sous-ensemble,
+  on note $\Feval{P}{\mysigma}$ l\emph{évaluation} de $P$ dans $\mysigma$:
+  \begin{itemize}
+    \item si $P = a_i \in \ov{\PHs}_a$ est un atome, avec $a \in \ov{\PHs}$,
+      alors $\Feval{a_i}{\mysigma}$ est vraie si et seulement si $a_i \in \mysigma$ ;
+    \item si $P$ n'est pas un atome, alors $\Feval{P}{\mysigma}$ est vraie si et seulement si
+      on peut l'évaluer récursivement comme vraie en utilisant la sémantique habituelle des
+      opérateurs $\neg$, $\wedge$ et $\vee$ et des constantes $\top$ et $\bot$.
+  \end{itemize}
+%
+  Une fonction $\Fop : \PHh \rightarrow \F$ associant à toute action une propriété de jouabilité
+  est appelée un \emph{opérateur de jouabilité}.
+\end{definition}
+
+Étant donné que ce langage n'utilise que des opérateur logiques classiques,
+les propriétés de la logique booléenne sont applicables aux propriétés de jouabilité,
+à savoir celles concernant la distributivité, l'associativité et la commutativité,
+ainsi que les lois de De Morgan concernant la négation.
+
+Il en résulte notamment la propriété suivante, permettant d'évaluer la négation d'un atome,
+et qui dérive naturellement du fait que si un processus n'est pas actif dans un état donné,
+cela signifie alors qu'un autre processus de la même sorte l'est :
+\[\forall a \in \ov{\PHs}, \forall a_i \in \ov{\PHl}_a, \forall \mysigma \in \PHsubl,
+  \Feval{\neg a_i}{\mysigma} \Leftrightarrow
+  \Feval{\bigvee_{\substack{a_j \in \PHl_a\\a_j \neq a_i}} a_j}{\mysigma}\]
+
+\begin{definition}[Propriété de jouabilité des Frappes de Processus
+  ($\Fopsymbol : \PHh \rightarrow \F$)]
+\deflabel{fopph}
+  L'opérateur de jouabilité des Frappes de Processus est défini par :
+  \[\forall h \in \PHh, \Fop{h} \equiv \hitter{h} \enspace.\]
+\end{definition}
+
+\begin{definition}[Dynamique des Frappes de Processus ($\PHtrans$)]
+\deflabel{play}
+  Une action $h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ est dite \emph{jouable}
+  dans l'état $s \in \PHl$ si et seulement si : $\target{h} \in s \wedge \Feval{\Fop{h}}{s}$.
+  Dans ce cas, $(s \PHplay h)$ est l'état résultant du jeu de l'action $h$ dans $s$,
+  et on le définit par : $(s \PHplay h) = s \Cap b_k$.
+  De plus, on note alors : $s \PHtrans (s \PHplay h)$.
+
+  Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$
+  est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
+  L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
+\end{definition}

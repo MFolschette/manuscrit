@@ -1,21 +1,8 @@
-
-
-\chapter{Représentations temporelles du Frappes de Processus}
-
-La prise en compte de paramètres temporels peut être effectuée à l'aide de
-formalisations prenant en compte la simultanéité ou la préemption
-entre différentes actions afin de restreindre la dynamique.
-
-\section{Frappes de Processus avec actions plurielles
-  (équivalent automates \& réactions biochimiques)}
-\subsection{Équivalence : cf. modélisation avec arcs neutralisants ?}
-
-\section{Frappes de Processus avec préemption des actions}
 \subsection{Frappes de Processus avec priorités quelconques}
 
 Les Frappes de Processus avec $k$ classes de priorités
 (aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
-consistent, comme défini à la \pref{def:php},
+consistent, comme formalisé par la \defref{php},
 en une extension des Frappes de Processus contenant, à la place d'un ensemble d'actions,
 $k$ ensembles d'actions, chacun étant associé à une classe de priorités distincte.
 Avec cette sémantique, une action est jouable dans un état si et seulement si,
@@ -46,21 +33,21 @@ certains modèles pourraient cependant nécessiter l'évolution de certaines cla
 en fonction de la présence ou de l'absence d'un composant dans un état donné.
 
 \begin{definition}[Frappes de Processus avec $k$ classes de priorités]
-\label{def:php}
+\deflabel{php}
   Si $k \in \sN^*$, les \emph{Frappes de Processus avec $k$ classes de priorités} sont définies
-  par un triplet $\PH = (\PHs; \PHl; \PHa^{\langle k \rangle})$,
-  où $\PHa^{\langle k \rangle} = (\PHa^{(1)}; \dots; \PHa^{(k)})$ est un $k$-uplet, et :
+  par un triplet $\PH = (\PHs; \PHl; \PHh^{\langle k \rangle})$,
+  où $\PHh^{\langle k \rangle} = (\PHh^{(1)}; \dots; \PHh^{(k)})$ est un $k$-uplet, et :
   \begin{itemize}
-    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini des \emph{sortes} ;
+    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
     \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
-      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini des \emph{processus} de la sorte
-      $a \in \PHs$ et $l_a \in \sN^*$.
+      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
       $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
     \item pour tout $n \in \llbracket 1; k \rrbracket$,
-      $\PHa^{(n)} \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
+      $\PHh^{(n)} \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
       (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
-      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini 
+      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini
       des \emph{actions de priorité $n$}.
   \end{itemize}
   On appelle $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus,
@@ -69,58 +56,32 @@ en fonction de la présence ou de l'absence d'un composant dans un état donné.
 \end{definition}
 %
 \noindent
+\todo{Reprendre les notation existantes}
 La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
 Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
 par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
 Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
 
-La \pref{def:substate} définit la notion de sous-état sur un ensemble de sortes,
-\cad un ensemble de processus qui sont deux à deux de sortes différentes,
-ce qui permet de ne considérer qu'une partie d'un état complet.
-Nous notons qu'un état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
-Le recouvrement d'un état $s$ par un processus $a_i$ est défini à la \pref{def:statecap}
-par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
-ce qui permet de définir la dynamique des Frappes de Processus avec $k$ classes de priorités
-dans la \pref{def:play}.
-La définition de recouvrement est aussi étendue à un sous-ensemble,
-autrement dit, un ensemble de processus contenant au plus un processus par sorte.
+\begin{definition}[Propriété de jouabilité des Frappes de Processus
+  ($\Fopsymbol : \PHh \rightarrow \F$)]
+\deflabel{fopphp}
+    \[\forall h \in \PHh, \Fop{h} \equiv \hitter{h} \wedge
+    \left( \bigwedge_{\substack{g \in \PHh^{(n)}\\n < \prio(h)}}
+    \neg \left( \target{g} \wedge \hitter{g}\right) \right)\]
+\end{definition}
+\todo{Est-ce une bonne idée ? L'opérateur pour la traduction est différent.}
 
-\begin{definition}[Sub-states ($\PHsublize{\PHl}$)]
-\label{def:substate}
-  Si $S \subset \PHs$ est un ensemble de sortes, un sous-ensemble sur $S$ est un élément de :
-  $\PHsubl[\PHl]_S \DEF \bigtimes{a \in S} \PHl_a$.
-  L'ensemble de tous les sous-ensembles est noté :
-  $\PHsubl[\PHl] \DEF \bigcup_{S \in\powerset(\PHs)} \PHsubl[\PHl]_S$.
-  
-  \noindent
-  De plus, si $\mysigma \in \PHsubl[\PHl]$ et $s \in \PHl$, on note alors :
-  \[\mysigma \subseteq s \EQDEF \forall a_i \in \Proc, a_i \in \mysigma \Rightarrow a_i \in s
-    \enspace.\]
-\end{definition}
-%
-\begin{definition}[$\Cap : \PHl \times \PHproc \rightarrow \PHl$]
-\label{def:statecap}
-  Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
-  $(s \Cap a_i)$ est l'état défini par :
-  $\PHget{(s \Cap a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \Cap a_i)}{b} = \PHget{s}{b}$.
-  On étend de plus cette définition à un tout ensemble de processus,
-  à condition que tous les processus soient tous de sortes différentes,
-  par le recouvrement de l'état par chaque processus :
-  $\forall ps \in \PHsubl[\PHl], s \Cap \toset{ps} = s \underset{a_i \in \toset{ps}}{\Cap} a_i$.
-\end{definition}
-%
-\begin{definition}[Dynamique des Frappes de Processus ($\PHPtrans$)]
-\label{def:play}
-  Une action $h = \PHhit{a_i}{b_j}{b_k} \in \PHa^{(n)}$ de priorité $n$ est dite \emph{jouable}
+
+\begin{definition}[Dynamique des Frappes de Processus ($\PHtrans$)]
+\deflabel{play}
+  Une action $h = \PHhit{a_i}{b_j}{b_k} \in \PHh^{(n)}$ de priorité $n$ est dite \emph{jouable}
   dans $s \in \PHl$ si et seulement si $\PHget{s}{a} = a_i$, $\PHget{s}{b} = b_j$
-  et $\forall m < n, \forall g \in \PHa^{(m)}, \PHhitter(g) \notin s \vee \PHtarget(g) \notin s$.
+  et $\forall m < n, \forall g \in \PHh^{(m)}, \PHhitter(g) \notin s \vee \PHtarget(g) \notin s$.
   Dans ce cas, $(s \PHplay h)$ est l'état résultant du jeu de l'action $h$ dans $s$,
   et on le définit par : $(s \PHplay h) = s \Cap b_k$.
-  De plus, on note alors : $s \PHPtrans (s \PHplay h)$.
+  De plus, on note alors : $s \PHtrans (s \PHplay h)$.
 
   Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$
   est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
   L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
 \end{definition}
-
-\subsection{PH avec arcs neutralisants}

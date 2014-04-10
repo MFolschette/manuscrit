@@ -1,0 +1,35 @@
+\subsection{PH avec arcs neutralisants}
+
+\begin{definition}[Frappes de Processus avec arcs neutralisants]
+  Les \emph{Frappes de Processus avec arcs neutralisants} sont définies par
+  un quadruplet $\PH = (\PHs ; \PHl ; \PHh ; \PHn)$, où :
+  \begin{itemize}
+    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
+    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
+      Chaque processus appartient à une unique sorte :
+      $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
+    \item $\PHh^{(n)} \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
+      (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
+      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini des actions ;
+    \item $\PHn = \{\PHan{h_1}{h_2} \mid (h_1 ; h_2) \in \PHh \times \PHh\}$
+      est l'ensemble fini des arcs neutralisants.
+  \end{itemize}
+\end{definition}
+
+Un arc neutralisant $n = \PHan{h_1}{h_2} \in \PHn$ est donc un couple d'actions.
+On note $\PHbloquant(n) = h_1$ la première action du couple $n$
+et $\PHbloque(n) = h_2$ sa seconde action.
+
+Dans des Frappes de Processus avec arcs neutralisants,
+une action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$ est dite \emph{active} dans un état $s \in \PHl$
+si et seulement si $\PHget{s}{a} = a_i$ et $\PHget{s}{b} = b_j$.
+On dit d'un arc neutralisant $n$ qu'il \emph{s'exprime} dans un état $s \in \PHl$
+si et seulement si $\PHbloquant(n)$ est active.
+Enfin, on dit qu'une action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$ est \emph{jouable}
+dans un état $s \in \PHl$ si et seulement si $\PHget{s}{a} = a_i$, $\PHget{s}{b} = b_j$
+et $\forall n \in \PHn, \PHbloque(n) = h \Rightarrow n$ ne s'exprime pas.
+Dans un tel cas, l'état résultant du jeu de l'action $h$ dans $s$ est dénoté $(s \PHplay h)$, où
+% $\PHget{(s \PHjoue h)}{b} = b_k$ et $\forall c \in \PHs, c \neq b, \PHget{(s \cdot h)}{c} = \PHget{s}{c}$.
+$(s \PHplay h) = s \Cap b_k$.

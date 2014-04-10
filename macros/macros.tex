@@ -24,7 +24,6 @@
 \newcommand{\PHa}{\PHh}
 %\newcommand{\PHa}{\mathcal{A}}
 \newcommand{\PHl}{\mathcal{L}}
-\newcommand{\PHn}{\mathcal{N}}
 
 \newcommand{\PHhitter}{\mathsf{hitter}}
 \newcommand{\PHtarget}{\mathsf{target}}
@@ -36,7 +35,17 @@
 \newcommand{\target}[1]{\PHtarget(#1)}
 \newcommand{\bounce}[1]{\PHbounce(#1)}
 
+% Priorités
 \newcommand{\prio}{\mathsf{prio}}
+
+% Arcs neutralisants
+\newcommand{\PHn}{\mathcal{N}}
+%\newcommand{\PHansymbol}{\rtimes}
+\newcommand{\PHansymbol}{\multimap}
+%\newcommand{\PHansymbol}{-\!\!\!\bullet\ }
+\newcommand{\PHan}[2]{\mbox{$#1\PHansymbol#2$}}
+\newcommand{\PHbloquant}{\mathsf{bloquante}}
+\newcommand{\PHbloque}{\mathsf{bloqu\acute{e}e}}
 
 %\newcommand{\PHfrappeur}{\mathsf{frappeur}}
 %\newcommand{\PHcible}{\mathsf{cible}}
@@ -75,7 +84,7 @@
 \def\DNdef{(\mathbb F, \langle f^1, \dots, f^n\rangle)}
 \def\DNdep{\f{dep}}
 %\def\PHPtrans{\rightarrow_{PH}}
-\newcommand{\PHPtrans}[1][\PH]{\rightarrow_{#1}}
+\newcommand{\PHtrans}[1][\PH]{\rightarrow_{#1}}
 \def\get#1#2{#1[{#2}]}
 \def\encodeF#1{\mathbf{#1}}
 \def\toPH{\encodeF{PH}}
@@ -104,7 +113,7 @@
 \newcommand{\F}{F}
 \newcommand{\Fopsymbol}{\F}
 \newcommand{\Fop}[1]{\Fopsymbol(#1)}
-\newcommand{\Fsem}[2]{\left[#1\right](#2)}
+\newcommand{\Feval}[2]{\left[#1\right](#2)}
 \newcommand{\PHdep}[2]{\f{dep}^{#1}(#2)}
 \newcommand{\PHflat}{\f{flat}}
 \newcommand{\flats}[1]{\lfloor #1 \rfloor}

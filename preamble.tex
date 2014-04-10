@@ -1,0 +1,60 @@
+%\documentclass[a4paper]{report}
+
+% Langue et encodage d'entrée
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% Maths
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+% Références internes
+\usepackage{varioref}
+\usepackage[french]{refstyle}
+\usepackage{hyperref}
+
+% Types de théorèmes
+\usepackage{ntheorem}
+\theorembodyfont{\upshape}
+\newtheorem{definition}{Définition}{}{}
+\newtheorem*{exemple}{Exemple}{}{}
+\newtheorem{propiete}{Propriété}{}{}
+\newtheorem{proposition}{Proposition}{}{}
+\newtheorem{theoreme}{Théorème}{}{}
+\newtheorem{demo}{Démonstration}{}{}
+
+% Divers
+\usepackage{color}   % Couleurs du texte
+\usepackage{url}     % Mise en forme + liens pour URLs
+\usepackage{array}   % Tableaux évolués
+\usepackage{comment} % Blocs de commentaires
+
+
+
+% Paquets temporaires
+\usepackage[notref,notcite]{showkeys}
+
+% Commandes À FAIRE
+%\definecolor{darkgreen}{rgb}{0,0.5,0}
+%\definecolor{darkblue}{rgb}{0,0,0.5}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+%\newcommand{\idea}[1]{\textcolor{darkgreen}{[#1]}}
+%\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
+%\newcommand{\mq}[1]{\textcolor{darkblue}{[MQ : #1]}}
+%\newcommand{\pref}[1]{\todo{Ref: #1}}
+
+
+
+\input{macros/macros}
+\input{macros/macros-ph}
+\input{macros/macros-abstr}
+\input{macros/tikzstyles}
+
+
+
+\newcommand{\nbd}{\nobreakdash-}
+\newcommand{\cad}{c.\nbd à\nbd d.\ }
+%\newcommand{\ie}{\cad}
