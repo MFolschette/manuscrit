@@ -1,0 +1,119 @@
+\section{Frappes de Processus avec actions plurielles}
+\seclabel{phm}
+
+\todo{Introduction}
+
+Les Frappes de Processus avec actions plurielles permettent de représenter des systèmes
+de réactions biochimiques de la forme : $X + Y \rightarrow Y + Z$,
+c'est-à-dire comportant un ensemble de réactifs $X$, un ensemble de catalyseurs $Y$
+et un ensemble de produits $Z$.
+La représentation d'une telle réaction en Frappes de Processus aura cependant la forme suivante :
+$\PHfrappemult{A}{B}$ où $A = X \cup Y$ et $B = Z$,
+où $A$ et $B$ sont des ensembles des processus.
+
+Une telle action peut donc être jouée dans un état contenant tous les processus de $A$
+(c'est-à-dire les réactifs et les catalyseurs)
+et fait évoluer celui-ci vers un état contenant tous les processus de $B$ (les produits),
+les autres processus restant inchangés (car n'intervenant pas ou en tant que catalyseurs).
+Cela implique toutefois que pour tout processus de $B$, on trouve un autre processus de la même
+sorte dans $A$.
+
+On note cependant qu'une réaction de la forme $\PHfrappemult{\{ a_0, b_0, c_0 \}}{\{ a_1, b_1 \}}$
+ne peut être jouée l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
+même si l'autre est au niveau $0$.
+Cela peut avoir un sens lorsque les différents processus d'une sorte ($a_0$ et $a_1$, par exemple)
+représentent différents états d'une même molécule :
+la réaction ne peut alors pas être jouée pour des raisons de stœchiométrie.
+Cependant, si ces différents processus représentent plutôt des niveaux de concentration
+($a_1$ représentant par exemple un niveau de concentration de la molécule $a$ plus élevé que $a_0$),
+cela n'a plus de sens car une plus forte concentration d'une des entités ne devrait pas empêcher
+la réaction d'avoir lieu et de produire la seconde entité.
+Cela peut néanmoins être corrigé en ajoutant les actions
+$\PHfrappemult{\{ a_1, b_0, c_0 \}}{\{ a_1, b_1 \}}$ et
+$\PHfrappemult{\{ a_0, b_1, c_0 \}}{\{ a_1, b_1 \}}$,
+ou encore en séparant la production de $a_1$ et de $b_1$ en deux actions (ou ensemble d'actions)
+distinctes.
+
+Cette représentation des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
+d'automates synchronisés, chaque sorte ayant le rôle d'un automate et chaque action celui d'un
+ensemble de transition étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
+arrivant dans le processus de la même sorte dans $A \Cap B$.
+
+\subsection{Définition}
+
+\todo{Gluer}
+
+\begin{definition}[Frappes de Processus avec actions plurielles]
+\deflabel{phm}
+  Les \emph{Frappes de Processus avec actions plurielles} sont définies
+  par un triplet $\PH = (\PHs; \PHl; \PHh)$, où :
+  \begin{itemize}
+    \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
+    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+      où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
+      Chaque processus appartient à une unique sorte :
+      $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
+    \item $\PHh \DEF \{\PHfrappemult{A}{B} \mid A, B \in \PHsublset \setminus \emptyset \wedge
+      \forall q \in B, \exists p \in A, (p \neq q \wedge \PHsort(p) = \PHsort(q)) \}$
+      est l'ensemble fini des \emph{actions}.
+  \end{itemize}
+\end{definition}
+%
+\noindent
+Pour toute action $h = \PHfrappemult{A}{B} \in \PHh$,
+$A$ est appelé le \emph{frappeur}, et $b_k$ le \emph{bond} de $h$,
+et on note : $\hitter{h} = A$, $\bounce{h} = B$.
+On note de plus :
+$\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
+
+\begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphmsubsymbol : \PHh \rightarrow \F$)]
+\deflabel{fopphm}
+  L'opérateur de jouabilité des Frappes de Processus avec actions plurielles est défini par :
+  \[\forall h \in \PHh, \Fopphm{h} \equiv \bigwedge_{p \in \hitter{h}} p \enspace.\]
+\end{definition}
+
+
+
+\subsection{Équivalence avec les automates synchronisés}
+
+\todo{Gluer}
+On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défini par :
+
+\begin{definition}[Automate équivalent ($\phmtoansymbol$)]
+\deflabel{phm2an}
+  Le réseau d'automates équivalent aux Frappes de Processus avec actions plurielles $\PH$
+  est défini par : $\phmtoan = (\PHs, \PHl, \ANi, \ANt)$, où :
+  \begin{itemize}
+    \item $\ANi = \{ \ell_h \mid h \in \PHh \}$ est l'ensemble des libellés de transitions ;
+    \item $\ANt = \{ p \xrightarrow{\ell_h} q \mid h \in \PHh \wedge p \in A \wedge q \in A \Cap B \wedge
+      \PHsort(p) = \PHsort(q) \}$ est l'ensemble des transitions locales.
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}[$\PH \equiv \phmtoan$]
+\thmlabel{phmequivan}
+  \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow s \trans{\phmtoan} s' \enspace.\]
+\end{theorem}
+
+\todo{Preuve}
+
+
+
+\subsection{Équivalence : cf. modélisation avec arcs neutralisants ?}
+
+\TODO
+\todo{Idée :
+\begin{itemize}
+  \item SC 1 entre tous les processus de $A$
+  \item SC 2 entre toutes les sortes de réaction
+  \item SC 3 entre tous les processus de $B$
+  \item sorte de réaction activable ($sr_1$) si SC 1 et SC 2 ok
+  \item actions depuis $sr_1$ activant tous les processus de $B$ \textsuperscript{*}
+  \item sorte de réaction désactivable ($sr_0$) si SC 3 \textsuperscript{**}
+\end{itemize}
+OU : idem avec arcs neutralisants depuis les actions de \textsuperscript{*}
+vers l'action de \textsuperscript{**}
+}
+
+

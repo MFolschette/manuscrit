@@ -25,25 +25,28 @@
 %\newcommand{\PHa}{\mathcal{A}}
 \newcommand{\PHl}{\mathcal{L}}
 
-\newcommand{\PHhitter}{\mathsf{hitter}}
-\newcommand{\PHtarget}{\mathsf{target}}
-\newcommand{\PHbounce}{\mathsf{bounce}}
+\newcommand{\PHhitter}{\mathsf{frappeur}}
+\newcommand{\PHtarget}{\mathsf{cible}}
+\newcommand{\PHbounce}{\mathsf{bond}}
 %\newcommand{\PHsort}{\Sigma}
 \newcommand{\PHsort}{\PHs}
 
 \newcommand{\hitter}[1]{\PHhitter(#1)}
 \newcommand{\target}[1]{\PHtarget(#1)}
 \newcommand{\bounce}[1]{\PHbounce(#1)}
+\newcommand{\frappeur}[1]{\PHhitter(#1)}
+\newcommand{\cible}[1]{\PHtarget(#1)}
+\newcommand{\bond}[1]{\PHbounce(#1)}
 
 % Priorités
 \newcommand{\prio}{\mathsf{prio}}
 
 % Arcs neutralisants
 \newcommand{\PHn}{\mathcal{N}}
-%\newcommand{\PHansymbol}{\rtimes}
-\newcommand{\PHansymbol}{\multimap}
+\newcommand{\PHansymbol}{\rtimes}
+%\newcommand{\PHansymbol}{\multimap}
 %\newcommand{\PHansymbol}{-\!\!\!\bullet\ }
-\newcommand{\PHan}[2]{\mbox{$#1\PHansymbol#2$}}
+\newcommand{\PHan}[2]{#1\PHansymbol#2}
 \newcommand{\PHbloquant}{\mathsf{bloquante}}
 \newcommand{\PHbloque}{\mathsf{bloqu\acute{e}e}}
 
@@ -84,7 +87,7 @@
 \def\DNdef{(\mathbb F, \langle f^1, \dots, f^n\rangle)}
 \def\DNdep{\f{dep}}
 %\def\PHPtrans{\rightarrow_{PH}}
-\newcommand{\PHtrans}[1][\PH]{\rightarrow_{#1}}
+\newcommand{\PHtrans}[1][\PH]{\trans{#1}}
 \def\get#1#2{#1[{#2}]}
 \def\encodeF#1{\mathbf{#1}}
 \def\toPH{\encodeF{PH}}
@@ -101,11 +104,26 @@
 %\newcommand{\bigtimes}[1]{\underset{#1}{\times}}
 \newcommand{\bigtimes}[1]{\times_{#1}}
 
-% Macros for falttening
-\newcommand{\PHsublize}[1]{#1^\diamond}
-\newcommand{\PHsubl}[1][\ov{\PHl}]{\PHsublize{#1}}
+% Sub-sets
+\newcommand{\PHsublize}[1]{#1^\lozenge}
+\newcommand{\PHsubl}[1][\PHl]{\PHsublize{#1}}
+\newcommand{\PHsublsetize}[1]{#1^{\blacklozenge}}
+\newcommand{\PHsublset}[1][\PHl]{\PHsublsetize{#1}}
 
-%\newcommand{\ov}[1]{\widetilde{#1}}
+% Actions plurielles
+\newcommand{\PHhitmultsymbol}{\rightarrowtail}
+\newcommand{\PHhitmult}[2]{\mbox{$#1 \PHhitmultsymbol #2$}}
+\newcommand{\PHfrappemult}{\PHhitmult}
+
+% Traduction en réseau d'automates
+\newcommand{\phmtoansymbol}{\f{AN}}
+\newcommand{\phmtoan}[1][\PH]{\phmtoansymbol(#1)}
+\newcommand{\ANs}{\PHs}
+\newcommand{\ANl}{\PHl}
+\newcommand{\ANi}{I}
+\newcommand{\ANt}{T}
+
+% Flattening
 \newcommand{\ov}{\overline}
 \newcommand{\os}{\ov{s}}
 \newcommand{\oPH}{\ov{\PH}}
@@ -113,6 +131,13 @@
 \newcommand{\F}{F}
 \newcommand{\Fopsymbol}{\F}
 \newcommand{\Fop}[1]{\Fopsymbol(#1)}
+\newcommand{\Fopphansubsymbol}{{an}}
+\newcommand{\Fopphan}[1]{\Fopsymbol_\Fopphansubsymbol(#1)}
+\newcommand{\Fopphpsubsymbol}{{p}}
+\newcommand{\Fopphp}[1]{\Fopsymbol_\Fopphpsubsymbol(#1)}
+\newcommand{\Fopphmsubsymbol}{{plur}}
+\newcommand{\Fopphm}[1]{\Fopsymbol_\Fopphmsubsymbol(#1)}
+
 \newcommand{\Feval}[2]{\left[#1\right](#2)}
 \newcommand{\PHdep}[2]{\f{dep}^{#1}(#2)}
 \newcommand{\PHflat}{\f{flat}}

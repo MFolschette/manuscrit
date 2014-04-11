@@ -1,4 +1,5 @@
-\subsection{Frappes de Processus avec priorités quelconques}
+\subsection{Frappes de Processus avec classes de priorités}
+\seclabel{php}
 
 Les Frappes de Processus avec $k$ classes de priorités
 (aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
@@ -50,38 +51,26 @@ en fonction de la présence ou de l'absence d'un composant dans un état donné.
       b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini
       des \emph{actions de priorité $n$}.
   \end{itemize}
-  On appelle $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus,
-  et $\PHh \DEF \bigcup_{n \in \segm{1}{k}} \PHh^{(n)}$ l'ensemble de toutes les actions.
-  De plus, pour tout $n \in \sN^*$ et $h \in \PHh^{(n)}$, on note : $\prio(h) \DEF n$.
+  On note $\PHh \DEF \bigcup_{n \in \segm{1}{k}} \PHh^{(n)}$ l'ensemble de toutes les actions
+  et, pour tout $n \in \sN^*$ et $h \in \PHh^{(n)}$, $\prio(h) \DEF n$.
 \end{definition}
 %
 \noindent
-\todo{Reprendre les notation existantes}
-La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
-Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
-par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
-Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+On réutilise de surcroît les notations définies à la \secref{ph} concernant les états et
+l'extraction de la sorte d'un processus.
 
-\begin{definition}[Propriété de jouabilité des Frappes de Processus
-  ($\Fopsymbol : \PHh \rightarrow \F$)]
+%La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
+%Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
+%par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
+%Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+
+\begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphpsubsymbol : \PHh \rightarrow \F$)]
 \deflabel{fopphp}
-    \[\forall h \in \PHh, \Fop{h} \equiv \hitter{h} \wedge
+  L'opérateur de jouabilité des Frappes de Processus avec $k$ classes de priorités est défini par :
+  \[\forall h \in \PHh, \Fopphp{h} \equiv \hitter{h} \wedge \target{h} \wedge
     \left( \bigwedge_{\substack{g \in \PHh^{(n)}\\n < \prio(h)}}
-    \neg \left( \target{g} \wedge \hitter{g}\right) \right)\]
+    \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
 \end{definition}
-\todo{Est-ce une bonne idée ? L'opérateur pour la traduction est différent.}
+%\todo{Est-ce une bonne idée ? L'opérateur pour la traduction est différent.}
 
-
-\begin{definition}[Dynamique des Frappes de Processus ($\PHtrans$)]
-\deflabel{play}
-  Une action $h = \PHhit{a_i}{b_j}{b_k} \in \PHh^{(n)}$ de priorité $n$ est dite \emph{jouable}
-  dans $s \in \PHl$ si et seulement si $\PHget{s}{a} = a_i$, $\PHget{s}{b} = b_j$
-  et $\forall m < n, \forall g \in \PHh^{(m)}, \PHhitter(g) \notin s \vee \PHtarget(g) \notin s$.
-  Dans ce cas, $(s \PHplay h)$ est l'état résultant du jeu de l'action $h$ dans $s$,
-  et on le définit par : $(s \PHplay h) = s \Cap b_k$.
-  De plus, on note alors : $s \PHtrans (s \PHplay h)$.
-
-  Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$
-  est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
-  L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
-\end{definition}
+\todo{À faire : équivalence avec les automates synchronisés avec un seul bond (cf. def de TSI)}

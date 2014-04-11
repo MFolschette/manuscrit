@@ -1,6 +1,41 @@
-\subsection{PH avec arcs neutralisants}
+\subsection{Frappes de Processus avec arcs neutralisants}
+\seclabel{phan}
+
+\todo{Ok avec la terminologie de cette section ?}
+
+Nous introduisons ici la notion d'arc neutralisant dans les Frappes de Processus (\defref{php})
+afin de représenter la préemption d'une action par une autre,
+ce qui permet une représentation plus atomique par rapport aux classes de priorités
+présentées à la \secref{php}.
+
+Un arc neutralisant est un couple d'actions,
+la première étant appelée \emph{action bloquante},
+et pouvant préempter la seconde, appelée \emph{action bloquée},
+dans certaines situations.
+Avec la présence d'arcs neutralisants, une action est dite \emph{activée} dans un état donné si
+son frappeur et sa cible y sont présents ;
+le fait pour une action d'être activée remplace donc celui d'être jouable
+par rapport à la sémantique standard des Frappes de Processus telle que décrite à la \secref{ph}.
+Un action n'est \emph{jouable} que si elle est activée,
+et que pour tout arc neutralisant la bloquant, son action bloquante n'est pas activée.
+Une action activée qui n'est pas jouable est dite \emph{neutralisée}.
+
+Il est à noter que la neutralisation d'une action par une autre ne dépend dont pas de la jouabilité
+de celle-ci, mais uniquement de son activation.
+Cela permet d'avoir un modèle cohérent car sans cela, certaines situations pourraient ne pas être
+définies, notamment dans le cas d'un interblocage.
+Ainsi, faire reposer la neutralisation d'une action bloquée sur la jouabilité de l'action bloquante
+devient inextricable dans un cas comme le suivant :
+$\PHan{h_1}{h_2}$, $\PHan{h_2}{h_3}$ et $\PHan{h_3}{h_1}$,
+car si les trois actions $h1$, $h2$ et $h3$ sont actives, leur jouabilité resté indéterminée.
+En revanche, si cette neutralisation repose sur l'état activé d'une action,
+la situation précédente se résout immédiatement car aucune des trois actions n'est jouable.
+On constate par ailleurs qu'une action peut en neutraliser une autre
+même si elle-même est neutralisée.
+Nous ne nous avancerons cependant pas sur la signification biologique de ce fait.
 
 \begin{definition}[Frappes de Processus avec arcs neutralisants]
+\deflabel{phan}
   Les \emph{Frappes de Processus avec arcs neutralisants} sont définies par
   un quadruplet $\PH = (\PHs ; \PHl ; \PHh ; \PHn)$, où :
   \begin{itemize}
@@ -10,7 +45,7 @@
       des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
       $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
-    \item $\PHh^{(n)} \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
+    \item $\PHh \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs^2 \wedge
       (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
       b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini des actions ;
     \item $\PHn = \{\PHan{h_1}{h_2} \mid (h_1 ; h_2) \in \PHh \times \PHh\}$
@@ -18,18 +53,15 @@
   \end{itemize}
 \end{definition}
 
-Un arc neutralisant $n = \PHan{h_1}{h_2} \in \PHn$ est donc un couple d'actions.
-On note $\PHbloquant(n) = h_1$ la première action du couple $n$
-et $\PHbloque(n) = h_2$ sa seconde action.
+Un arc neutralisant $u = \PHan{h_1}{h_2} \in \PHn$ est donc un couple d'actions.
+On note $\PHbloquant(u) = h_1$ la première action du couple $u$
+et $\PHbloque(u) = h_2$ sa seconde action.
+On réutilise par ailleurs les autres notations définies à la \secref{ph}.
 
-Dans des Frappes de Processus avec arcs neutralisants,
-une action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$ est dite \emph{active} dans un état $s \in \PHl$
-si et seulement si $\PHget{s}{a} = a_i$ et $\PHget{s}{b} = b_j$.
-On dit d'un arc neutralisant $n$ qu'il \emph{s'exprime} dans un état $s \in \PHl$
-si et seulement si $\PHbloquant(n)$ est active.
-Enfin, on dit qu'une action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$ est \emph{jouable}
-dans un état $s \in \PHl$ si et seulement si $\PHget{s}{a} = a_i$, $\PHget{s}{b} = b_j$
-et $\forall n \in \PHn, \PHbloque(n) = h \Rightarrow n$ ne s'exprime pas.
-Dans un tel cas, l'état résultant du jeu de l'action $h$ dans $s$ est dénoté $(s \PHplay h)$, où
-% $\PHget{(s \PHjoue h)}{b} = b_k$ et $\forall c \in \PHs, c \neq b, \PHget{(s \cdot h)}{c} = \PHget{s}{c}$.
-$(s \PHplay h) = s \Cap b_k$.
+\begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphansubsymbol : \PHh \rightarrow \F$)]
+\deflabel{fophan}
+  L'opérateur de jouabilité des Frappes de Processus avec arcs neutralisants est défini par :
+  \[\forall h \in \PHh, \Fopphan{h} \equiv \hitter{h} \wedge \target{h} \wedge
+    \left( \bigwedge_{\substack{u \in \PHn\\u = \PHan{g}{h}}}
+    \neg \left( \target{g} \wedge \hitter{g} \right) \right)\]
+\end{definition}
