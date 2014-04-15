@@ -29,7 +29,11 @@
 \newcommand{\PHtarget}{\mathsf{cible}}
 \newcommand{\PHbounce}{\mathsf{bond}}
 %\newcommand{\PHsort}{\Sigma}
-\newcommand{\PHsort}{\PHs}
+\newcommand{\PHsort}{\mathsf{sorte}}
+\newcommand{\sort}[1]{\PHsort(#1)}
+\newcommand{\sorte}{\sort}
+\newcommand{\PHsorts}{\mathsf{sortes}}
+\newcommand{\sortes}[1]{\PHsorts(#1)}
 
 \newcommand{\hitter}[1]{\PHhitter(#1)}
 \newcommand{\target}[1]{\PHtarget(#1)}
@@ -107,8 +111,10 @@
 % Sub-sets
 \newcommand{\PHsublize}[1]{#1^\lozenge}
 \newcommand{\PHsubl}[1][\PHl]{\PHsublize{#1}}
-\newcommand{\PHsublsetize}[1]{#1^{\blacklozenge}}
-\newcommand{\PHsublset}[1][\PHl]{\PHsublsetize{#1}}
+%\newcommand{\PHsublsetize}[1]{#1^{\blacklozenge}}
+%\newcommand{\PHsublset}[1][\PHl]{\PHsublsetize{#1}}
+\newcommand{\PHsublsetize}[1]{#1^{\lozenge}}
+\newcommand{\PHsublset}[1][\Proc]{\PHsublsetize{#1}}
 
 % Actions plurielles
 \newcommand{\PHhitmultsymbol}{\rightarrowtail}
@@ -123,14 +129,23 @@
 \newcommand{\ANi}{I}
 \newcommand{\ANt}{T}
 
+% Traduction en PHan ou PHp
+\newcommand{\mysc}[2]{#1^{(#2)}}
+\newcommand{\makesc}[1]{\lozenge #1}
+\newcommand{\lozsc}[2]{\makesc{#1^{(#2)}}}
+
 % Flattening
 \newcommand{\ov}{\overline}
 \newcommand{\os}{\ov{s}}
 \newcommand{\oPH}{\ov{\PH}}
 
+% Propriétés de jouabilité
 \newcommand{\F}{F}
 \newcommand{\Fopsymbol}{\F}
 \newcommand{\Fop}[1]{\Fopsymbol(#1)}
+\newcommand{\Fconj}[1]{\mathsf{conj}(#1)}
+
+% Opérateurs de jouabilité
 \newcommand{\Fopphansubsymbol}{{an}}
 \newcommand{\Fopphan}[1]{\Fopsymbol_\Fopphansubsymbol(#1)}
 \newcommand{\Fopphpsubsymbol}{{p}}
@@ -146,6 +161,7 @@
 \newcommand{\virtualhitters}{\f{VirtualHitters}}
 
 \newcommand{\mysigma}{\sigma}
+\newcommand{\mypi}{\pi}
 \newcommand{\n}[1][h]{n^{#1}}
 \newcommand{\m}[1][h,i]{m^{#1}}
 

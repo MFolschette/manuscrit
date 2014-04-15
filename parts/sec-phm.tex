@@ -86,12 +86,15 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
   est défini par : $\phmtoan = (\PHs, \PHl, \ANi, \ANt)$, où :
   \begin{itemize}
     \item $\ANi = \{ \ell_h \mid h \in \PHh \}$ est l'ensemble des libellés de transitions ;
-    \item $\ANt = \{ p \xrightarrow{\ell_h} q \mid h \in \PHh \wedge p \in A \wedge q \in A \Cap B \wedge
+    \item $\ANt = \{ p \xrightarrow{\ell_h} q \mid
+      h \in \PHh \wedge h = \PHfrappemult{A}{B} \wedge p \in A \wedge q \in A \Cap B \wedge
       \PHsort(p) = \PHsort(q) \}$ est l'ensemble des transitions locales.
   \end{itemize}
 \end{definition}
 
-\begin{theorem}[$\PH \equiv \phmtoan$]
+\todo{Définir la dynamique des réseaux d'automates}
+
+\begin{theorem}[$\PH \approx \phmtoan$]
 \thmlabel{phmequivan}
   \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow s \trans{\phmtoan} s' \enspace.\]
 \end{theorem}
@@ -100,11 +103,12 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
 
 
 
-\subsection{Équivalence : cf. modélisation avec arcs neutralisants ?}
+\subsection{Équivalence : cf. modélisation avec priorités ou arcs neutralisants ?}
 
 \TODO
 \todo{Idée :
 \begin{itemize}
+  \item création d'une sorte de réaction pour chaque action plurielle
   \item SC 1 entre tous les processus de $A$
   \item SC 2 entre toutes les sortes de réaction
   \item SC 3 entre tous les processus de $B$
@@ -115,5 +119,63 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
 OU : idem avec arcs neutralisants depuis les actions de \textsuperscript{*}
 vers l'action de \textsuperscript{**}
 }
+
+\newcommand{\phmtophan}{\mathsf{phm2phan}}
+\newcommand{\srsymbol}{r}
+\newcommand{\sr}[1]{\srsymbol^{#1}}
+\newcommand{\srgsymbol}{R}
+\newcommand{\srg}{\srgsymbol}
+\newcommand{\scfsymbol}{f}
+\newcommand{\scf}[1]{\scfsymbol^{(#1)}}
+\newcommand{\scfa}{\scf{A}}
+\newcommand{\scfb}{\scf{A \Cap B}}
+
+\newcommand{\PHssr}[1][\PHs']{#1_{\srsymbol}}
+\newcommand{\PHsscfa}[1][\PHs']{#1^A_{\scfsymbol}}
+\newcommand{\PHsscfb}[1][\PHs']{#1^B_{\scfsymbol}}
+
+\begin{definition}[Représentation avec arcs neutralisants]
+\deflabel{phm2phan}
+  On note : $\forall A \in \PHsublset, \lozsc{x}{A} =
+  \{ \mysc{x}{A}_\mysigma \mid \mysigma \in \PHsubl_{\sortes{A}} \}$
+  où $\sortes{A} = \{ \sorte{p} \mid p \in A \}$.
+  De plus, on note : $\mysc{x}{A}_\mypi \in \lozsc{x}{A}$
+  le processus tel que $\Feval{\Fconj{A}}{\mypi}$.
+
+  Soit $\PH = (\PHs; \PHl; \PHh)$ et $\phmtophan(\PH) = (\PHs'; \PHl'; \PHh'; \PHn')$
+  sa traduction en Frappes de Processus avec arcs neutralisants.
+  \begin{itemize}
+    \item $\PHs' = \PHs \cup \PHs'_{\srsymbol} \cup \PHs'^A_{\scfsymbol} \cup
+      \PHs'^B_{\scfsymbol} \cup \{ \srg \}$ où :
+      \begin{itemize}
+        \item $\PHssr = \{ \sr{h} \mid h \in \PHh \}$,
+        \item $\PHsscfa = \{ \scf{A} \mid \exists h \in \PHh, A = \hitter{h} \}$,
+        \item $\PHsscfb = \{ \scf{A \Cap B} \mid
+          \exists h \in \PHh, h = \PHfrappemult{A}{B} \}$ ;
+      \end{itemize}
+    \item $\PHl' = \PHl \times
+      \left( \bigtimes{\sr{h} \in \PHssr} \PHl_{\sr{h}} \right) \times
+      \left( \bigtimes{\scfa \in \PHsscfa} \PHl_{\scfa} \right) \times
+      \left( \bigtimes{\scfb \in \PHsscfa} \PHl_{\scfb} \right) \times
+      \PHl_\srg$ où :
+      \begin{itemize}
+        \item $\forall \sr{h} \in \PHssr, \PHl_{\sr{h}} = \{ \sr{h}_0, \sr{h}_1 \}$,
+        \item $\forall \scfa \in \PHsscfa, \PHl_{\scfa} = \makesc{\scfa}$,
+          %\{ \scfa_\mysigma \mid
+          %\mysigma \in \PHsubl_{\sort{A}} \}$,
+        \item $\forall \scfb \in \PHsscfb, \PHl_{\scfb} = \makesc{\scfb}$,
+          %\{ \scfb_\mysigma \mid
+          %\mysigma \in \PHsubl_{\sort{A \Cap B}} \}$,
+        \item $\PHl_\srg = \makesc{\srg^{(\theta)}}$
+          avec $\theta = \{ \sr{h}_0 \mid \sr{h} \in \PHssr \}$ ;
+          %\{ \srg_\mypi \mid
+          %\mypi \in \PHsubl_{\{ \sr{h}_1 \mid \sr{h} \in \PHssr \}} \}$ ;
+      \end{itemize}
+    \item $\PHh' = ...$
+  \end{itemize}
+\end{definition}
+
+
+
 
 
