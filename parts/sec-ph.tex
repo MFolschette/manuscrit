@@ -63,16 +63,17 @@ autrement dit, un ensemble de processus contenant au plus un processus par sorte
   et
   $\PHsublset = \{ \toset{ps} \subset \Proc \mid ps \in \PHsubl \}$.
 \end{definition}
+\todo{Définir la notation $\toset{x}$}
 %
-\begin{definition}[$\Cap : \PHl \times \PHproc \rightarrow \PHl$]
+\begin{definition}[$\recouvre : \PHl \times \PHproc \rightarrow \PHl$]
 \deflabel{statecap}
   Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
-  $(s \Cap a_i)$ est l'état défini par :
-  $\PHget{(s \Cap a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \Cap a_i)}{b} = \PHget{s}{b}$.
+  $(s \recouvre a_i)$ est l'état défini par :
+  $\PHget{(s \recouvre a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \recouvre a_i)}{b} = \PHget{s}{b}$.
   On étend de plus cette définition à un tout ensemble de processus,
   à condition que tous les processus soient tous de sortes différentes,
   par le recouvrement de l'état par chaque processus :
-  $\forall ps \in \PHsubl[\PHl], s \Cap \toset{ps} = s \underset{a_i \in \toset{ps}}{\Cap} a_i$.
+  $\forall ps \in \PHsublset, s \recouvre ps = s \underset{a_i \in ps}{\recouvre} a_i$.
 \end{definition}
 
 Une propriété de jouabilité telle que décrite à la \defref{ppl}
@@ -137,7 +138,7 @@ Enfin, on note dans la suite :
   $\Feval{\Fop{h}}{s}$.
 %  $\target{h} \in s \wedge \Feval{\Fop{h}}{s}$.
   Dans ce cas, $(s \PHplay h)$ est l'état résultant du jeu de l'action $h$ dans $s$,
-  et on le définit par : $(s \PHplay h) = s \Cap \bounce{h}$.
+  et on le définit par : $(s \PHplay h) = s \recouvre \bounce{h}$.
   De plus, on note alors : $s \PHtrans (s \PHplay h)$.
 
   Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$

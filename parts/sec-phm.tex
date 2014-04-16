@@ -37,7 +37,7 @@ distinctes.
 Cette représentation des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
 d'automates synchronisés, chaque sorte ayant le rôle d'un automate et chaque action celui d'un
 ensemble de transition étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
-arrivant dans le processus de la même sorte dans $A \Cap B$.
+arrivant dans le processus de la même sorte dans $A \recouvre B$.
 
 \subsection{Définition}
 
@@ -87,7 +87,7 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
   \begin{itemize}
     \item $\ANi = \{ \ell_h \mid h \in \PHh \}$ est l'ensemble des libellés de transitions ;
     \item $\ANt = \{ p \xrightarrow{\ell_h} q \mid
-      h \in \PHh \wedge h = \PHfrappemult{A}{B} \wedge p \in A \wedge q \in A \Cap B \wedge
+      h \in \PHh \wedge h = \PHfrappemult{A}{B} \wedge p \in A \wedge q \in A \recouvre B \wedge
       \PHsort(p) = \PHsort(q) \}$ est l'ensemble des transitions locales.
   \end{itemize}
 \end{definition}
@@ -128,11 +128,15 @@ vers l'action de \textsuperscript{**}
 \newcommand{\scfsymbol}{f}
 \newcommand{\scf}[1]{\scfsymbol^{(#1)}}
 \newcommand{\scfa}{\scf{A}}
-\newcommand{\scfb}{\scf{A \Cap B}}
+\newcommand{\scfb}{\scf{A \recouvre B}}
 
 \newcommand{\PHssr}[1][\PHs']{#1_{\srsymbol}}
 \newcommand{\PHsscfa}[1][\PHs']{#1^A_{\scfsymbol}}
 \newcommand{\PHsscfb}[1][\PHs']{#1^B_{\scfsymbol}}
+
+\newcommand{\PHhsr}[1][\PHh']{#1_{\srsymbol}}
+\newcommand{\PHhscfa}[1][\PHh']{#1^A_{\scfsymbol}}
+\newcommand{\PHhscfb}[1][\PHh']{#1^B_{\scfsymbol}}
 
 \begin{definition}[Représentation avec arcs neutralisants]
 \deflabel{phm2phan}
@@ -150,7 +154,7 @@ vers l'action de \textsuperscript{**}
       \begin{itemize}
         \item $\PHssr = \{ \sr{h} \mid h \in \PHh \}$,
         \item $\PHsscfa = \{ \scf{A} \mid \exists h \in \PHh, A = \hitter{h} \}$,
-        \item $\PHsscfb = \{ \scf{A \Cap B} \mid
+        \item $\PHsscfb = \{ \scf{A \recouvre B} \mid
           \exists h \in \PHh, h = \PHfrappemult{A}{B} \}$ ;
       \end{itemize}
     \item $\PHl' = \PHl \times
@@ -165,14 +169,35 @@ vers l'action de \textsuperscript{**}
           %\mysigma \in \PHsubl_{\sort{A}} \}$,
         \item $\forall \scfb \in \PHsscfb, \PHl_{\scfb} = \makesc{\scfb}$,
           %\{ \scfb_\mysigma \mid
-          %\mysigma \in \PHsubl_{\sort{A \Cap B}} \}$,
+          %\mysigma \in \PHsubl_{\sort{A \recouvre B}} \}$,
         \item $\PHl_\srg = \makesc{\srg^{(\theta)}}$
           avec $\theta = \{ \sr{h}_0 \mid \sr{h} \in \PHssr \}$ ;
           %\{ \srg_\mypi \mid
           %\mypi \in \PHsubl_{\{ \sr{h}_1 \mid \sr{h} \in \PHssr \}} \}$ ;
       \end{itemize}
-    \item $\PHh' = ...$
+    \item $\PHh'^{(1)} = \PHhscfa \cup \PHhscfb$ où :
+      \begin{itemize}
+        \item $\PHhsr = \{ \PHfrappe{a_i}{\scfa_\mysigma}{\scfa_{\mysigma'}} \mid
+          \exists h = \PHfrappemult{A}{B} \in \PHh \wedge
+          \scfa \in \PHsscfa \wedge
+          \scfa_\mysigma , \scfa_{\mysigma'} \in \PHl_{\scfa} \wedge
+          a \in \sortes{A} \wedge a_i \in \PHl_a \wedge
+          \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \recouvre a_i \}$,
+        \item $\PHhscfb = \{ \PHfrappe{b_j}{\scfb_\mysigma}{\scfb_{\mysigma'}} \mid
+          \exists h = \PHfrappemult{A}{B} \in \PHh \wedge
+          \scfb \in \PHsscfb \wedge
+          \scfb_\mysigma , \scfb_{\mysigma'} \in \PHl_{\scfb} \wedge
+          b \in \sortes{A \recouvre B} \wedge b_j \in \PHl_b \wedge
+          \PHget{\mysigma}{b} \neq b_j \wedge \mysigma' = \mysigma \recouvre b_j \}$;
+      \end{itemize}
+    \item $\PHh'^{(2)} = \PHhsr \cup \PHh'_R$ où :
+      \begin{itemize}
+        \item $\PHhsr = \{  \}$
+      \end{itemize}
+
+
   \end{itemize}
+  \todo{Revoir traduction avec 3 classes de priorités (plus simple)}
 \end{definition}
 
 
