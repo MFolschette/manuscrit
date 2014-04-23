@@ -108,7 +108,8 @@
 \newcommand{\angles}[1]{{\langle #1 \rangle}}
 \newcommand{\trans}[1]{\rightarrow_{#1}}
 %\newcommand{\bigtimes}[1]{\underset{#1}{\times}}
-\newcommand{\bigtimes}[1]{\times_{#1}}
+%\newcommand{\bigtimes}[1]{\times_{#1}}
+\newcommand{\bigtimes}[1]{\bigotimes_{#1}}
 
 % Sub-sets
 \newcommand{\PHsublize}[1]{#1^\lozenge}
@@ -131,10 +132,18 @@
 \newcommand{\ANi}{I}
 \newcommand{\ANt}{T}
 
-% Traduction en PHan ou PHp
-\newcommand{\mysc}[2]{#1^{(#2)}}
-\newcommand{\makesc}[1]{\lozenge #1}
-\newcommand{\lozsc}[2]{\makesc{#1^{(#2)}}}
+% Traduction en PHp
+%\newcommand{\phmtophpsymbol}{\f{PHp}}
+%\newcommand{\phmtophp}[1][\PH]{\phmtophpsymbol(#1)}
+\newcommand{\phmtophp}[1][\PH]{\llparenthesis #1 \rrparenthesis}
+\newcommand{\tophp}[1]{\llparenthesis #1 \rrparenthesis}
+\newcommand{\tophm}[1]{(\!(#1)\!)}
+\newcommand{\PHssr}[1][\PHs']{#1_{\srsymbol}}
+\newcommand{\PHsscf}[1][\PHs']{#1_{\scfsymbol}}
+\newcommand{\srsymbol}{r}
+\newcommand{\sr}[1]{\srsymbol^{#1}}
+\newcommand{\scfsymbol}{f}
+\newcommand{\scf}[1]{\scfsymbol^{#1}}
 
 % Flattening
 \newcommand{\ov}{\overline}

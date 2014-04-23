@@ -1,37 +1,55 @@
 \subsection{Frappes de Processus avec classes de priorités}
 \seclabel{php}
 
-Les Frappes de Processus avec $k$ classes de priorités
+Les Frappes de Processus avec \emph{classes de priorités}
 (aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
 consistent, comme formalisé par la \defref{php},
-en une extension des Frappes de Processus contenant, à la place d'un ensemble d'actions,
-$k$ ensembles d'actions, chacun étant associé à une classe de priorités distincte.
+en une extension des Frappes de Processus standard.
+À la place d'un ensemble d'actions,
+elles contiennent un nombre $k$ non nul d'ensembles d'actions,
+chacun étant associé à une classe de priorités distincte.
 Avec cette sémantique, une action est jouable dans un état si et seulement si,
 en plus de la condition de la présence du frappeur et de la cible,
 il n'y a aucune autre action appartenant à une classe de priorité plus grande
 qui soit aussi jouable dans cet état.
 
+Il devient ainsi notamment possible de distinguer les actions en fonction 
+de différent critères comme
+leur vitesse d'exécution (les actions les plus rapides étant jouées en priorité),
+ou tout autre paramètre permettant de déterminer l'existence de la préemption d'une action
+en fonction de la jouabilité d'une autre.
+L'application la plus poussée de cette utilisation consisterait à
+classer les actions d'un modèle en fonction d'un tel critère,
+et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
+afin de créer un ordre total entre chaque action, défini par sa priorité.
+%afin de rendre compte de la priorité de chaque action en fonction de chaque autre.
+
+De même, ces classes de priorités permettent de prendre en compte des comportements non biologiques
+inhérents à la modélisation.
+Il est par exemple possible de donner une priorité différente aux
+actions qui n'ont pas de sens biologique propre
+--- mais dont ce sens émerge uniquement dans leur relation avec d'autres actions.
+L'application la plus immédiate de ce cas est celle des actions de mise à jour
+des sortes coopérative \todo{ref PH canonique},
+où une classe de priorités supérieure offre l'avantage de supprimer les effets d'entrelacement,
+et ainsi de simuler le comportement d'une véritable porte logique sans décalage temporel.
+
 Cette représentation basée sur des classes de priorités permet de modéliser un système
 dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
 de leur vitesse d'exécution, ou encore d'autres facteurs leur donnant prévalence sur d'autres.
-
-Elle offre notamment la possibilité de distinguer les actions en fonction 
-de leur vitesse d'exécution (les actions les plus rapides étant jouées en priorité),
-de leur fonction (biologique donc lente ou non-biologique donc instantanée)
-ou d'autres paramètres permettant de déterminer l'existence de la préemption d'une action
-en fonction de la jouabilité d'une autre.
-L'application la plus poussée de cette modélisation consisterait à
-classer les actions d'un modèle en fonction d'un critère telle que la vitesse de réaction,
-et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
-afin de rendre compte de la priorité de chaque action en fonction des autres.
-
-Cette modélisation présente néanmoins quelques lacunes.
+Chaque action peut donc en préempter un ensemble d'autres en fonction de sa classe de priorités.
+Cela permet une représentation compacte des rapports de priorités entre actions.
+Elle présente néanmoins quelques lacunes.
 Les phénomènes d'accumulation, notamment, n'y sont pas représentés ;
 un cycle d'actions prioritaires ne peut jamais être interrompu par une action moins prioritaire,
 menant à un cycle infini et pouvant contredire la réalité biologique.
 De plus, les classes de priorités définies pour un modèle sont invariables;
 certains modèles pourraient cependant nécessiter l'évolution de certaines classes de priorités
 en fonction de la présence ou de l'absence d'un composant dans un état donné.
+Enfin, elles peuvent ne pas permettre la précision nécessaire à une représentation fidèle de
+certains modèles, notamment lorsqu'il est nécessaire de définir des préemptions ponctuelles
+comme le permettent les Frappes de Processus avec arcs neutralisants
+présentées à la \secref{phan}.
 
 \begin{definition}[Frappes de Processus avec $k$ classes de priorités]
 \deflabel{php}
@@ -40,7 +58,7 @@ en fonction de la présence ou de l'absence d'un composant dans un état donné.
   où $\PHh^{\langle k \rangle} = (\PHh^{(1)}; \dots; \PHh^{(k)})$ est un $k$-uplet, et :
   \begin{itemize}
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
-    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+    \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
       des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
@@ -74,3 +92,5 @@ l'extraction de la sorte d'un processus.
 %\todo{Est-ce une bonne idée ? L'opérateur pour la traduction est différent.}
 
 \todo{À faire : équivalence avec les automates synchronisés avec un seul bond (cf. def de TSI)}
+
+\todo{Traduction vers PHcanonique}

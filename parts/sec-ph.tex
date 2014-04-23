@@ -26,7 +26,9 @@ Les Frappes de Processus permettent une modélisation atomique des interactions 
 %
 \noindent
 On note $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus.
-La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$.
+La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$ ;
+on définit aussi l'ensemble des sortes d'un ensemble de processus par :
+$\forall A \subset \Proc, \sortes{A} = \{ \sorte{p} \mid p \in A \}$.
 Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
 par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
 Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
@@ -145,6 +147,12 @@ Enfin, on note dans la suite :
   est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
   L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
 \end{definition}
+
+
+
+\subsection{Sortes coopératives}
+
+\TODO
 
 
 

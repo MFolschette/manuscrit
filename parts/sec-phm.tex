@@ -1,4 +1,4 @@
-\section{Frappes de Processus avec actions plurielles}
+\section{Enrichissement avec simultanéité des actions : Frappes de Processus avec actions plurielles}
 \seclabel{phm}
 
 \todo{Introduction}
@@ -7,7 +7,8 @@ Les Frappes de Processus avec actions plurielles permettent de représenter des 
 de réactions biochimiques de la forme : $X + Y \rightarrow Y + Z$,
 c'est-à-dire comportant un ensemble de réactifs $X$, un ensemble de catalyseurs $Y$
 et un ensemble de produits $Z$.
-La représentation d'une telle réaction en Frappes de Processus aura cependant la forme suivante :
+La représentation d'une telle réaction en Frappes de Processus avec actons plurielles
+aura la forme suivante :
 $\PHfrappemult{A}{B}$ où $A = X \cup Y$ et $B = Z$,
 où $A$ et $B$ sont des ensembles des processus.
 
@@ -19,25 +20,38 @@ Cela implique toutefois que pour tout processus de $B$, on trouve un autre proce
 sorte dans $A$.
 
 On note cependant qu'une réaction de la forme $\PHfrappemult{\{ a_0, b_0, c_0 \}}{\{ a_1, b_1 \}}$
-ne peut être jouée l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
+ne peut être jouée si l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
 même si l'autre est au niveau $0$.
-Cela peut avoir un sens lorsque les différents processus d'une sorte ($a_0$ et $a_1$, par exemple)
+Un tel comportement a du sens lorsque les différents processus d'une sorte
+($a_0$ et $a_1$, par exemple)
 représentent différents états d'une même molécule :
 la réaction ne peut alors pas être jouée pour des raisons de stœchiométrie.
 Cependant, si ces différents processus représentent plutôt des niveaux de concentration
 ($a_1$ représentant par exemple un niveau de concentration de la molécule $a$ plus élevé que $a_0$),
-cela n'a plus de sens car une plus forte concentration d'une des entités ne devrait pas empêcher
-la réaction d'avoir lieu et de produire la seconde entité.
+cette restriction n'a plus de sens car une plus forte concentration d'une des entités
+ne devrait pas empêcher la réaction d'avoir lieu et de produire la seconde entité.
 Cela peut néanmoins être corrigé en ajoutant les actions
 $\PHfrappemult{\{ a_1, b_0, c_0 \}}{\{ a_1, b_1 \}}$ et
 $\PHfrappemult{\{ a_0, b_1, c_0 \}}{\{ a_1, b_1 \}}$,
 ou encore en séparant la production de $a_1$ et de $b_1$ en deux actions (ou ensemble d'actions)
 distinctes.
 
-Cette représentation des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
+On peut utiliser les Frappes de Processus avec actions plurielles pour représenter toute simultanéité
+entre les bonds ou entre les processus requis (aussi appelés frappeurs).
+Elle est particulièrement adaptée à la forme des réactions biochimiques,
+comme expliqué ci-dessus.
+
+Cette forme des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
 d'automates synchronisés, chaque sorte ayant le rôle d'un automate et chaque action celui d'un
 ensemble de transition étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
-arrivant dans le processus de la même sorte dans $A \recouvre B$.
+arrivant dans le processus de la même sorte dans $A \recouvre B$,
+comme décrit à la \secref{phm2an}.
+On peut aussi la représenter à l'aide de Frappes de Processus avec 4 classes de priorités,
+comme détaillé à la \secref{phm2php} ;
+cependant, cette représentation a l'inconvénient d'être moins claire car faisant intervenir
+un nombre important d'actions et de sortes supplémentaires.
+
+
 
 \subsection{Définition}
 
@@ -49,7 +63,7 @@ arrivant dans le processus de la même sorte dans $A \recouvre B$.
   par un triplet $\PH = (\PHs; \PHl; \PHh)$, où :
   \begin{itemize}
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
-    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+    \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
       des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
@@ -76,6 +90,7 @@ $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
 
 
 \subsection{Équivalence avec les automates synchronisés}
+\seclabel{phm2an}
 
 \todo{Gluer}
 On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défini par :
@@ -103,23 +118,10 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
 
 
 
-\subsection{Équivalence : cf. modélisation avec priorités ou arcs neutralisants ?}
+\subsection{Équivalence avec les Frappes de Processus avec 4 classes de priorités}
+\seclabel{phm2php}
 
-\TODO
-\todo{Idée :
-\begin{itemize}
-  \item création d'une sorte de réaction pour chaque action plurielle
-  \item SC 1 entre tous les processus de $A$
-  \item SC 2 entre toutes les sortes de réaction
-  \item SC 3 entre tous les processus de $B$
-  \item sorte de réaction activable ($sr_1$) si SC 1 et SC 2 ok
-  \item actions depuis $sr_1$ activant tous les processus de $B$ \textsuperscript{*}
-  \item sorte de réaction désactivable ($sr_0$) si SC 3 \textsuperscript{**}
-\end{itemize}
-OU : idem avec arcs neutralisants depuis les actions de \textsuperscript{*}
-vers l'action de \textsuperscript{**}
-}
-
+\begin{comment}
 \newcommand{\phmtophan}{\mathsf{phm2phan}}
 \newcommand{\srsymbol}{r}
 \newcommand{\sr}[1]{\srsymbol^{#1}}
@@ -192,15 +194,65 @@ vers l'action de \textsuperscript{**}
       \end{itemize}
     \item $\PHh'^{(2)} = \PHhsr \cup \PHh'_R$ où :
       \begin{itemize}
-        \item $\PHhsr = \{  \}$
+        \item $\PHhsr = ...$
       \end{itemize}
 
 
   \end{itemize}
   \todo{Revoir traduction avec 3 classes de priorités (plus simple)}
 \end{definition}
+\end{comment}
 
 
+
+\begin{definition}
+\deflabel{phm2php}
+  Soient $\PH = (\PHs; \PHl; \PHh)$ des Frappes de Processus avec actions plurielles,
+  et $\phmtophp = (\PHs'; \PHl'; \PHh'^{\langle 4 \rangle})$
+  leur traduction en Frappes de Processus avec $4$ classes de priorités, où :
+  \begin{itemize}
+    \item $\PHs' = \PHs \cup \{ \sr{h} \mid h \in \PHh \} \cup \{ \scf{h} \mid h \in \PHh \}$ ;
+    \item $\PHl' = \PHl \times \left( \bigtimes{h \in \PHh} \PHl_{\sr{h}} \right)
+      \times \left( \bigtimes{h \in \PHh} \PHl_{\scf{h}} \right)$, où :
+      \begin{itemize}
+        \item $\forall h \in \PHh, \PHl_{\sr{h}} = \{ \sr{h}_0 , \sr{h}_1 \}$,
+        \item $\forall h \in \PHh, \PHl_{\scf{h}} = \{ \scf{h}_\mysigma \mid
+          \mysigma \in \PHsubl_{\sortes{\frappeur{h}}} \}$ ;
+      \end{itemize}
+    \item $\PHh'^{\langle 4 \rangle} = ( \PHh'^{(1)} ; \PHh'^{(2)} ; \PHh'^{(3)} ; \PHh'^{(4)} )$, où :
+      \begin{itemize}
+        \item $\PHh'^{(1)} = \{ \PHhit{a_i}{\scf{h}_\mysigma}{\scf{h}_{\mysigma'}} \mid
+          h \in \PHh \wedge a \in \sortes{\frappeur{h}} \wedge a_i \in \PHl_a \wedge
+          \scf{h}_\mysigma , \scf{h}_{\mysigma'} \in \PHl_{\scf{h}} \wedge
+          \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \Cap a_i \}$,
+        \item $\PHh'^{(2)} = \{ \PHhit{\sr{h}_1}{b_j}{b_k} \mid
+          h \in \PHh \wedge b \in \sortes{\bond{h}} \wedge b_j, b_k \in \PHl_b \wedge
+          b_j \in \frappeur{h} \wedge b_k \in \cible{h} \}$,
+        \item $\PHh'^{(3)} = \{ \PHhit{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \mid h \in \PHh \}$,
+        \item $\PHh'^{(4)} = \{ \PHhit{\scf{h}_\mypi}{\sr{h}_0}{\sr{h}_1} \mid
+          h \in \PHh \wedge \Feval{\Fopphm{h}}{\mypi} \}$.
+      \end{itemize}
+  \end{itemize}
+  Pour tout état $s \in \PHl$ de $\PH$,
+  on note $\tophp{s}$ l'état correspondant dans $\phmtophp$ :
+  \begin{itemize}
+    \item $\forall a \in \PHs, \PHget{\tophp{s}}{a} = \PHget{s}{a}$,
+    \item $\forall h \in \PHh, \PHget{\tophp{s}}{\sr{h}} = \sr{h}_0$,
+    \item $\forall h \in \PHh, \PHget{\tophp{s}}{\scf{h}} = \scf{h}_\mysigma$,
+      tel que $\forall a \in \sortes{\frappeur{h}}, \PHget{\mysigma}{a} = \PHget{\tophp{s}}{a}$.
+  \end{itemize}
+  À l'inverse, pour tout état $s' \in \PHl'$ de $\phmtophp$,
+  on note $\tophm{s'}$ l'état correspondant dans $\PH$ :
+  $\forall a \in \PHs, \PHget{\tophm{s'}}{a} = \PHget{s'}{a}$.
+\end{definition}
+
+\begin{theorem}[$\PH \approx \phmtophp$]
+\thmlabel{phmequivphp}
+  \[\forall s_1, s_2 \in \PHl, s \PHtrans s' \Longleftrightarrow
+    \tophp{s_1} \trans{\phmtophp} \tophp{s_2} \enspace.\]
+\end{theorem}
+
+\todo{Preuve}
 
 
 

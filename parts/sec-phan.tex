@@ -4,25 +4,25 @@
 \todo{Ok avec la terminologie de cette section ?}
 
 Nous introduisons ici la notion d'arc neutralisant dans les Frappes de Processus (\defref{php})
-afin de représenter la préemption d'une action par une autre,
-ce qui permet une représentation plus atomique par rapport aux classes de priorités
-présentées à la \secref{php}.
+afin de représenter la préemption d'une action par une seule autre.
+Une telle représentation permet notamment une modélisation plus atomique
+par rapport aux classes de priorités présentées à la \secref{php}.
 
-Un arc neutralisant est un couple d'actions,
-la première étant appelée \emph{action bloquante},
-et pouvant préempter la seconde, appelée \emph{action bloquée},
+Un arc neutralisant est un couple d'actions noté $\PHan{h_1}{h_2}$,
+où $h_1$ est appelée \emph{action bloquante},
+et peut préempter $h_2$, qui appelée \emph{action bloquée},
 dans certaines situations.
 Avec la présence d'arcs neutralisants, une action est dite \emph{activée} dans un état donné si
 son frappeur et sa cible y sont présents ;
 le fait pour une action d'être activée remplace donc celui d'être jouable
 par rapport à la sémantique standard des Frappes de Processus telle que décrite à la \secref{ph}.
-Un action n'est \emph{jouable} que si elle est activée,
+Un action n'est ici \emph{jouable} que si elle est activée,
 et que pour tout arc neutralisant la bloquant, son action bloquante n'est pas activée.
-Une action activée qui n'est pas jouable est dite \emph{neutralisée}.
+Une action activée mais qui n'est pas jouable est dite \emph{neutralisée}.
 
 Il est à noter que la neutralisation d'une action par une autre ne dépend dont pas de la jouabilité
-de celle-ci, mais uniquement de son activation.
-Cela permet d'avoir un modèle cohérent car sans cela, certaines situations pourraient ne pas être
+de l'action bloquante, mais uniquement de son activation.
+Cela permet d'avoir un modèle cohérent, sans quoi certaines situations pourraient ne pas être
 définies, notamment dans le cas d'un interblocage.
 Ainsi, faire reposer la neutralisation d'une action bloquée sur la jouabilité de l'action bloquante
 devient inextricable dans un cas comme le suivant :
@@ -40,7 +40,7 @@ Nous ne nous avancerons cependant pas sur la signification biologique de ce fait
   un quadruplet $\PH = (\PHs ; \PHl ; \PHh ; \PHn)$, où :
   \begin{itemize}
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
-    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+    \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
       des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
@@ -65,3 +65,5 @@ On réutilise par ailleurs les autres notations définies à la \secref{ph}.
     \left( \bigwedge_{\substack{u \in \PHn\\u = \PHan{g}{h}}}
     \neg \left( \target{g} \wedge \hitter{g} \right) \right)\]
 \end{definition}
+
+\todo{Traduction vers PHcanonique}
