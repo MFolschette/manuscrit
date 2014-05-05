@@ -1,8 +1,6 @@
 \subsection{Frappes de Processus avec arcs neutralisants}
 \seclabel{phan}
 
-\todo{Ok avec la terminologie de cette section ?}
-
 Nous introduisons ici la notion d'arc neutralisant dans les Frappes de Processus (\defref{php})
 afin de représenter la préemption d'une action par une seule autre.
 Une telle représentation permet notamment une modélisation plus atomique
@@ -10,7 +8,7 @@ par rapport aux classes de priorités présentées à la \secref{php}.
 
 Un arc neutralisant est un couple d'actions noté $\PHan{h_1}{h_2}$,
 où $h_1$ est appelée \emph{action bloquante},
-et peut préempter $h_2$, qui appelée \emph{action bloquée},
+et peut préempter $h_2$, appelée \emph{action bloquée},
 dans certaines situations.
 Avec la présence d'arcs neutralisants, une action est dite \emph{activée} dans un état donné si
 son frappeur et sa cible y sont présents ;
@@ -20,7 +18,7 @@ Un action n'est ici \emph{jouable} que si elle est activée,
 et que pour tout arc neutralisant la bloquant, son action bloquante n'est pas activée.
 Une action activée mais qui n'est pas jouable est dite \emph{neutralisée}.
 
-Il est à noter que la neutralisation d'une action par une autre ne dépend dont pas de la jouabilité
+Il est à noter que la neutralisation d'une action par une autre ne dépend donc pas de la jouabilité
 de l'action bloquante, mais uniquement de son activation.
 Cela permet d'avoir un modèle cohérent, sans quoi certaines situations pourraient ne pas être
 définies, notamment dans le cas d'un interblocage.
@@ -63,7 +61,7 @@ On réutilise par ailleurs les autres notations définies à la \secref{ph}.
   L'opérateur de jouabilité des Frappes de Processus avec arcs neutralisants est défini par :
   \[\forall h \in \PHh, \Fopphan{h} \equiv \hitter{h} \wedge \target{h} \wedge
     \left( \bigwedge_{\substack{u \in \PHn\\u = \PHan{g}{h}}}
-    \neg \left( \target{g} \wedge \hitter{g} \right) \right)\]
+    \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
 \end{definition}
 
 \todo{Fonctionne encore à condition de prendre en compte les préemptions : analyse stochastique}

@@ -1,10 +1,62 @@
 
 \chapter{Enrichissement des Frappes de Processus}
 
+\chapeau{%
+La sémantique standard des Frappes de Processus de la \secref{ph} peut s'avérer insuffisante pour
+prendre en compte certaines informations connues sur le système étudié, comme des informations
+en terme de vitesse de réaction.
+Ce chapitre propose d'étendre sa sémantique afin d'enrichir les modèles sur deux axes :
+\begin{itemize}
+  \item la préemption entre actions, qui permet d'empêcher le jeu d'une action sous certaines
+    conditions,
+  \item la simultanéité d'actions, qui permet de forcer le jeu simultané de plusieurs actions.
+\end{itemize}
+Ces deux axes ont pour but de permettre ou de faciliter l'intégration de telles informations au sein
+des modèles.
+
+Les trois extensions aux Frappes de Processus proposées dans ce chapitre prennent la forme
+de classes de priorités, d'arcs neutralisants et d'actions plurielles.
+Nous montrons de plus que les trois modèles qui en résultent sont (faiblement) bisimilaires.
+Enfin, il est à noter que l'analyse statique développée au chapitre \todo{suivant}
+peut s'appliquer à toutes ces extensions, les classes de priorités étant d'ailleurs réutilisées
+pour définir la forme canonique des Frappes de Processus.
+}
+
+La sémantique standard des Frappes de Processus telle que rappelée à la \secref{ph}
+ne permet pas d'inclure de contraintes dérivées d'informations biologiques au sein des modèles créés,
+comme les vitesses de réaction, la connaissance d'inhibitions entre composants et réactions,
+ou la connaissance des réactions précises ayant lieu au sein du système.
+Pourtant, la connaissance de telles informations peut permettre de privilégier un chemin sur un autre
+à d'un moment clef de l'évolution du système, empêchant ainsi une certaine évolution du système,
+en favorisant l'apparition d'une autre.
+Leur intégration permet donc d'affiner le modèle en réduisant les comportements possibles
+afin d'obtenir un modèle plus proche du système étudié.
+Ces connaissances peuvent être intégrées sous la forme de préemptions (la jouabilité d'une action
+peut empêcher la jouabilité d'une autre action) ou de simultanéité
+(plusieurs processus peuvent évoluer simultanément).
+
+De même, au niveau de la modélisation, la représentation des coopérations avec des Frappes de
+Processus standards souffre de certaines lacunes.
+Ces coopérations sont modélisées à l'aide de sortes coopératives telles que décrites à la \secref{sc},
+%dont la dynamique n'est pas strictement équivalente à celle d'une porte logique autorisant
+%le jeu d'une action en présence de certains processus donnés.
+et souffrent d'un décalage temporel entre les sortes à représenter et
+la mise à jour du processus actif de la sortie coopérative,
+qui peut entraîner l'existence de «~faux états~» pour la sorte coopérative.
+%Ce décalage temporel implique que ce processus actif représente toujours
+%une combinaison d'états passés des sortes en amont.
+%S'il s'avère que cette combinaison coïncide dans la majeure partie des cas avec un état passé
+%effectif,
+%ou avec l'état présent, cela n'est pas toujours le cas, et il est possible qu'une sorte coopérative
+%représente une combinaison d'états en pratique inaccessible pour les sortes en amont.
+Plusieurs solutions sont proposées dans ce chapitre, qu'il s'agisse de rendre les actions de mise à
+jour des sortes coopératives prioritaires ou plus simplement de les remplacer par une forme plus
+complexe d'action.
+
 L'une des pistes permettant d'affiner un modèle de Frappes de Processus consiste à y intégrer
 des informations de préemption entre les actions afin de limiter la dynamique.
 Une telle approche permet de modéliser des contraintes temporelles,
-l'action modélisant une réaction très rapide étant par exemple systématiquement jouée
+toute action modélisant une réaction très rapide étant par exemple systématiquement jouée
 avant les actions modélisant des réactions plus lentes.
 D'autres contraintes peuvent aussi être prises en compte, comme la concurrence entre réactions,
 mais aussi la représentation de processus propres à la modélisation et n'ayant pas nécessairement
@@ -14,21 +66,28 @@ Les formes alternatives de Frappes de Processus présentées dans ce chapitre se
 sur les notions de préemption et de simultanéité d'une action par rapport à une autre.
 La préemption permet à une action d'avoir priorité sur une autre ou, du point de vue inverse,
 permet d'empêcher le jeu d'une action dans une situation où elle devrait normalement être jouable
-selon la dynamique des Frappes de Processus standard.
+selon la dynamique des Frappes de Processus standards.
 Une telle préemption peut être opérée de façon généralisée
 %par une action sur un ensemble d'autres,
-comme c'est le cas pour les Frappes de Processus avec classes de priorités,
+comme c'est le cas pour les Frappes de Processus avec classes de priorités (\secref{php}),
 où chaque action peut bloquer l'ensemble des actions de priorité inférieure ;
-ou de façon ponctuelle, comme au sein des Frappes de Processus avec arcs neutralisants,
-ce qui permet de définir des relations plus fines de préemption entre actions individuelles.
+ou de façon ponctuelle, comme au sein des Frappes de Processus avec arcs neutralisants (\secref{phan}),
+qui permet de définir des relations plus fines de préemption entre actions individuelles.
 À l'inverse, la simultanéité entre actions permet de s'assurer qu'un ensemble de frappes est joué
 de façon simultanée, ou plus généralement qu'un ensemble de processus bondit en même temps,
-comme le permettent de le représenter les Frappes de Processus avec actions plurielles.
+comme permettent de le représenter les Frappes de Processus avec actions plurielles (\secref{phm}).
+Nous montrons au cours de ce chapitre que ces différentes sémantiques sont deux à deux aussi
+expressives \todo{ref}.
 
 Les apports de ces formes alternatives de Frappes de Processus permettent de restreindre la dynamique
-d'un modèle par rapport aux Frappes de Processus standard.
-Nous montrons qu'elles sont deux à deux aussi expressives \todo{ref}.
-Cependant, leur usage peut simplifier l'écriture et la lecture d'un modèle.
+d'un modèle par rapport aux Frappes de Processus standards.
+Elles se posent en alternatives à l'ajout de paramètres stochastiques dans les Frappes de Processus
+\todo{ref},
+qui permettent d'ajouter une dimension probabiliste dans ce formalisme.
+Leur premier avantage est de simplifier l'écriture et la lecture d'un modèle selon les informations
+que l'on souhaite y intégrer.
+Leur second avantage est la possibilité d'appliquer les méthodes d'analyse statique
+qui sont étendues et adaptées à ces formalismes au chapitre \todo{suivant}.
 
 
 

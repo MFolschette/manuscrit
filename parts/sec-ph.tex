@@ -1,4 +1,4 @@
-\section{Les Frappes de Processus standard}
+\section{Les Frappes de Processus standards}
 
 \subsection{Définition}
 \seclabel{ph}
@@ -42,8 +42,8 @@ ce qui permet de ne considérer qu'une partie d'un état complet.
 Nous notons qu'un état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
 Le recouvrement d'un état $s$ par un processus $a_i$ est formalisé à la \defref{statecap}
 par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
-ce qui permet de définir la dynamique des Frappes de Processus avec $k$ classes de priorités
-dans la \defref{play}.
+ce qui permettra de définir la dynamique des Frappes de Processus %avec $k$ classes de priorités
+à la \defref{play}.
 La définition de recouvrement est aussi étendue à un sous-ensemble,
 autrement dit, un ensemble de processus contenant au plus un processus par sorte.
 
@@ -72,9 +72,9 @@ autrement dit, un ensemble de processus contenant au plus un processus par sorte
   Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
   $(s \recouvre a_i)$ est l'état défini par :
   $\PHget{(s \recouvre a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \recouvre a_i)}{b} = \PHget{s}{b}$.
-  On étend de plus cette définition à un tout ensemble de processus,
-  à condition que tous les processus soient tous de sortes différentes,
-  par le recouvrement de l'état par chaque processus :
+  On étend de plus cette définition à un ensemble de processus
+  par le recouvrement de l'état par chaque processus,
+  à condition que les processus de l'ensemble soient tous de sortes différentes :
   $\forall ps \in \PHsublset, s \recouvre ps = s \underset{a_i \in ps}{\recouvre} a_i$.
 \end{definition}
 
@@ -151,6 +151,7 @@ Enfin, on note dans la suite :
 
 
 \subsection{Sortes coopératives}
+\seclabel{sc}
 
 \TODO
 

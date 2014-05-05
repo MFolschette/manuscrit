@@ -7,7 +7,7 @@ consistent, comme formalisé par la \defref{php},
 en une extension des Frappes de Processus standard.
 À la place d'un ensemble d'actions,
 elles contiennent un nombre $k$ non nul d'ensembles d'actions,
-chacun étant associé à une classe de priorités distincte.
+chacun étant associé à une classe de priorité distincte.
 Avec cette sémantique, une action est jouable dans un état si et seulement si,
 en plus de la condition de la présence du frappeur et de la cible,
 il n'y a aucune autre action appartenant à une classe de priorité plus grande
@@ -21,7 +21,7 @@ en fonction de la jouabilité d'une autre.
 L'application la plus poussée de cette utilisation consisterait à
 classer les actions d'un modèle en fonction d'un tel critère,
 et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
-afin de créer un ordre total entre chaque action, défini par sa priorité.
+afin de créer un ordre total entre toutes les actions défini par leurs priorités.
 %afin de rendre compte de la priorité de chaque action en fonction de chaque autre.
 
 De même, ces classes de priorités permettent de prendre en compte des comportements non biologiques
@@ -38,8 +38,9 @@ Cette représentation basée sur des classes de priorités permet de modéliser 
 dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
 de leur vitesse d'exécution, ou encore d'autres facteurs leur donnant prévalence sur d'autres.
 Chaque action peut donc en préempter un ensemble d'autres en fonction de sa classe de priorités.
-Cela permet une représentation compacte des rapports de priorités entre actions.
-Elle présente néanmoins quelques lacunes.
+Cela permet une représentation compacte, des rapports de priorités entre actions
+ou, autrement dit, de leur ordonnancement,
+qui présente néanmoins quelques lacunes.
 Les phénomènes d'accumulation, notamment, n'y sont pas représentés ;
 un cycle d'actions prioritaires ne peut jamais être interrompu par une action moins prioritaire,
 menant à un cycle infini et pouvant contredire la réalité biologique.
