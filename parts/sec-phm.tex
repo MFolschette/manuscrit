@@ -1,25 +1,53 @@
 \section{Enrichissement avec simultanéité des actions : Frappes de Processus avec actions plurielles}
 \seclabel{phm}
 
-\todo{Introduction}
+Il peut être intéressant de vouloir représenter un système au niveau de ses réactions biochimiques,
+c'est-à-dire des réactions entre les différents composants présents.
+De telles réactions peuvent avoir différentes formes (transformation, complexation, dissociation...),
+et il est fréquent qu'elles fassent intervenir plusieurs réactifs et plusieurs produits.
+Biocham \todo{ref} propose par exemple de modéliser un tel système de réactions biochimiques à l'aide
+d'un ensemble de règles de réaction de la forme :
+$X \xrightarrow{Y} Z$,
+ou encore :
+$X + Y \rightarrow Y + Z$,
+où $X$ est un ensemble de réactifs, $Y$ un ensemble de catalyseurs et $Z$ un ensemble de produits.
 
-Les Frappes de Processus avec actions plurielles permettent de représenter des systèmes
-de réactions biochimiques de la forme : $X + Y \rightarrow Y + Z$,
-c'est-à-dire comportant un ensemble de réactifs $X$, un ensemble de catalyseurs $Y$
-et un ensemble de produits $Z$.
-La représentation d'une telle réaction en Frappes de Processus avec actons plurielles
-aura la forme suivante :
-$\PHfrappemult{A}{B}$ où $A = X \cup Y$ et $B = Z$,
-où $A$ et $B$ sont des ensembles des processus.
-
+Les \emph{Frappes de Processus avec actions plurielles} permettent de représenter de telles réactions
+mettant en jeu un nombre arbitraire de réactifs, de produits et de catalyseurs.
+Ainsi, une réaction de la forme : $X \xrightarrow{Y} Z$
+peut être représentée à l'aide de l'action $\PHfrappemult{A}{B}$
+où $A$ et $B$ sont deux ensembles des processus,
+$A$ regroupant tous les processus représentant les composants nécessaires à initier la réaction,
+et $B$ tous les processus qui ont évolué pendant la réaction.
+%$A$ regroupant tous les processus permettant de représenter les composants de $X \cup Y$,
+%et $B$ ceux de $Z$.
 Une telle action peut donc être jouée dans un état contenant tous les processus de $A$
-(c'est-à-dire les réactifs et les catalyseurs)
-et fait évoluer celui-ci vers un état contenant tous les processus de $B$ (les produits),
-les autres processus restant inchangés (car n'intervenant pas ou en tant que catalyseurs).
-Cela implique toutefois que pour tout processus de $B$, on trouve un autre processus de la même
+%(c'est-à-dire les réactifs et les catalyseurs)
+et fait évoluer celui-ci vers un état contenant tous les processus de $B$, % (les produits),
+les autres processus restant inchangés. % (car n'intervenant pas ou en tant que catalyseurs).
+Cela implique toutefois que pour tout processus de $B$, il existe un autre processus de la même
 sorte dans $A$.
+Les Frappes de Processus avec actions plurielles permettent donc de représenter
+un nombre arbitraire de bonds simultanés
+---~autrement dit, de changements simultanés de processus actifs~---
+déclenchés par un nombre arbitraire de requis
+---~sous la forme de processus actifs .
 
-On note cependant qu'une réaction de la forme $\PHfrappemult{\{ a_0, b_0, c_0 \}}{\{ a_1, b_1 \}}$
+Un parallèle peut être tracé d'une part entre $A$ et l'ensemble des réactifs et catalyseurs,
+et d'autre part entre $B$ et l'ensemble des produits.
+Cependant, la modélisation par Frappes de Processus avec actions plurielles
+nécessite aussi de donner explicitement les composants sont absents.
+Par exemple, une réaction de complexation du type : $x + y \rightarrow c$ %x\!\!-\!\!y$
+sera représentée en Frappes de Processus avec actions plurielles par trois sortes de deux processus
+$x$, $y$ et $c$ représentant respectivement les deux réactifs et le complexe produit,
+et par l'action $\PHfrappemults{x_1, y_1, c_0}{x_0, y_0, c_1}$.
+%si on ne prend pas en compte la disparition des réactifs.
+Autrement dit, il est nécessaire de décomposer chaque élément en fonction de sa présence
+($x_1$ et $y_1$)
+ou de son absence ($c_0$) au début comme à la fin de la réaction,
+et pas uniquement d'indiquer les composants présents en tant que réactifs ou produits.
+
+On note ainsi qu'une réaction de la forme $\PHfrappemult{\{ a_0, b_0, c_0 \}}{\{ a_1, b_1 \}}$
 ne peut être jouée si l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
 même si l'autre est au niveau $0$.
 Un tel comportement a du sens lorsque les différents processus d'une sorte
@@ -36,14 +64,9 @@ $\PHfrappemult{\{ a_0, b_1, c_0 \}}{\{ a_1, b_1 \}}$,
 ou encore en séparant la production de $a_1$ et de $b_1$ en deux actions (ou ensemble d'actions)
 distinctes.
 
-On peut utiliser les Frappes de Processus avec actions plurielles pour représenter toute simultanéité
-entre les bonds ou entre les processus requis (aussi appelés frappeurs).
-Elle est particulièrement adaptée à la forme des réactions biochimiques,
-comme expliqué ci-dessus.
-
 Cette forme des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
 d'automates synchronisés, chaque sorte ayant le rôle d'un automate et chaque action celui d'un
-ensemble de transition étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
+ensemble de transitions étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
 arrivant dans le processus de la même sorte dans $A \recouvre B$,
 comme décrit à la \secref{phm2an}.
 On peut aussi la représenter à l'aide de Frappes de Processus avec 4 classes de priorités,
@@ -51,11 +74,15 @@ comme détaillé à la \secref{phm2php} ;
 cependant, cette représentation a l'inconvénient d'être moins claire car faisant intervenir
 un nombre important d'actions et de sortes supplémentaires.
 
+\todo{Schéma exemple}
+
 
 
 \subsection{Définition}
 
 \todo{Gluer}
+
+\todo{$A \in \Proc$ ?}
 
 \begin{definition}[Frappes de Processus avec actions plurielles]
 \deflabel{phm}
@@ -76,7 +103,7 @@ un nombre important d'actions et de sortes supplémentaires.
 %
 \noindent
 Pour toute action $h = \PHfrappemult{A}{B} \in \PHh$,
-$A$ est appelé le \emph{frappeur}, et $b_k$ le \emph{bond} de $h$,
+$A$ est appelé le \emph{frappeur} et $B$ le \emph{bond} de $h$,
 et on note : $\hitter{h} = A$, $\bounce{h} = B$.
 On note de plus :
 $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
@@ -89,11 +116,15 @@ $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
 
 
 
-\subsection{Équivalence avec les automates synchronisés}
+\subsection{Équivalence avec les réseaux d'automates synchronisés}
 \seclabel{phm2an}
 
-\todo{Gluer}
-On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défini par :
+\todo{Définition des RAS (def + dynamique)}
+
+\todo{Glu}
+
+%On note $\phmtoan$ le réseau d'automates synchronisés équivalent aux frappes de processus $\PH$,
+%défini par :
 
 \begin{definition}[Automate équivalent ($\phmtoansymbol$)]
 \deflabel{phm2an}
@@ -107,8 +138,6 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
   \end{itemize}
 \end{definition}
 
-\todo{Définir la dynamique des réseaux d'automates}
-
 \begin{theorem}[$\PH \approx \phmtoan$]
 \thmlabel{phmequivan}
   \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow s \trans{\phmtoan} s' \enspace.\]
@@ -121,89 +150,38 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
 \subsection{Équivalence avec les Frappes de Processus avec 4 classes de priorités}
 \seclabel{phm2php}
 
-\begin{comment}
-\newcommand{\phmtophan}{\mathsf{phm2phan}}
-\newcommand{\srsymbol}{r}
-\newcommand{\sr}[1]{\srsymbol^{#1}}
-\newcommand{\srgsymbol}{R}
-\newcommand{\srg}{\srgsymbol}
-\newcommand{\scfsymbol}{f}
-\newcommand{\scf}[1]{\scfsymbol^{(#1)}}
-\newcommand{\scfa}{\scf{A}}
-\newcommand{\scfb}{\scf{A \recouvre B}}
+Nous proposons dans cette section une traduction des Frappes de Processus
+avec actions plurielles en Frappes de Processus avec 4 classes de priorités (\defref{phm2php})
+et nous montrons que les modèles obtenus de cette façon sont faiblement bisimilaires
+(\thmref{phmbisimphp}).
+Nous en déduisons que ces deux formalismes ont une expressivité équivalente (\thmref{phmequivphp}).
 
-\newcommand{\PHssr}[1][\PHs']{#1_{\srsymbol}}
-\newcommand{\PHsscfa}[1][\PHs']{#1^A_{\scfsymbol}}
-\newcommand{\PHsscfb}[1][\PHs']{#1^B_{\scfsymbol}}
-
-\newcommand{\PHhsr}[1][\PHh']{#1_{\srsymbol}}
-\newcommand{\PHhscfa}[1][\PHh']{#1^A_{\scfsymbol}}
-\newcommand{\PHhscfb}[1][\PHh']{#1^B_{\scfsymbol}}
-
-\begin{definition}[Représentation avec arcs neutralisants]
-\deflabel{phm2phan}
-  On note : $\forall A \in \PHsublset, \lozsc{x}{A} =
-  \{ \mysc{x}{A}_\mysigma \mid \mysigma \in \PHsubl_{\sortes{A}} \}$
-  où $\sortes{A} = \{ \sorte{p} \mid p \in A \}$.
-  De plus, on note : $\mysc{x}{A}_\mypi \in \lozsc{x}{A}$
-  le processus tel que $\Feval{\Fconj{A}}{\mypi}$.
-
-  Soit $\PH = (\PHs; \PHl; \PHh)$ et $\phmtophan(\PH) = (\PHs'; \PHl'; \PHh'; \PHn')$
-  sa traduction en Frappes de Processus avec arcs neutralisants.
-  \begin{itemize}
-    \item $\PHs' = \PHs \cup \PHs'_{\srsymbol} \cup \PHs'^A_{\scfsymbol} \cup
-      \PHs'^B_{\scfsymbol} \cup \{ \srg \}$ où :
-      \begin{itemize}
-        \item $\PHssr = \{ \sr{h} \mid h \in \PHh \}$,
-        \item $\PHsscfa = \{ \scf{A} \mid \exists h \in \PHh, A = \hitter{h} \}$,
-        \item $\PHsscfb = \{ \scf{A \recouvre B} \mid
-          \exists h \in \PHh, h = \PHfrappemult{A}{B} \}$ ;
-      \end{itemize}
-    \item $\PHl' = \PHl \times
-      \left( \bigtimes{\sr{h} \in \PHssr} \PHl_{\sr{h}} \right) \times
-      \left( \bigtimes{\scfa \in \PHsscfa} \PHl_{\scfa} \right) \times
-      \left( \bigtimes{\scfb \in \PHsscfa} \PHl_{\scfb} \right) \times
-      \PHl_\srg$ où :
-      \begin{itemize}
-        \item $\forall \sr{h} \in \PHssr, \PHl_{\sr{h}} = \{ \sr{h}_0, \sr{h}_1 \}$,
-        \item $\forall \scfa \in \PHsscfa, \PHl_{\scfa} = \makesc{\scfa}$,
-          %\{ \scfa_\mysigma \mid
-          %\mysigma \in \PHsubl_{\sort{A}} \}$,
-        \item $\forall \scfb \in \PHsscfb, \PHl_{\scfb} = \makesc{\scfb}$,
-          %\{ \scfb_\mysigma \mid
-          %\mysigma \in \PHsubl_{\sort{A \recouvre B}} \}$,
-        \item $\PHl_\srg = \makesc{\srg^{(\theta)}}$
-          avec $\theta = \{ \sr{h}_0 \mid \sr{h} \in \PHssr \}$ ;
-          %\{ \srg_\mypi \mid
-          %\mypi \in \PHsubl_{\{ \sr{h}_1 \mid \sr{h} \in \PHssr \}} \}$ ;
-      \end{itemize}
-    \item $\PHh'^{(1)} = \PHhscfa \cup \PHhscfb$ où :
-      \begin{itemize}
-        \item $\PHhsr = \{ \PHfrappe{a_i}{\scfa_\mysigma}{\scfa_{\mysigma'}} \mid
-          \exists h = \PHfrappemult{A}{B} \in \PHh \wedge
-          \scfa \in \PHsscfa \wedge
-          \scfa_\mysigma , \scfa_{\mysigma'} \in \PHl_{\scfa} \wedge
-          a \in \sortes{A} \wedge a_i \in \PHl_a \wedge
-          \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \recouvre a_i \}$,
-        \item $\PHhscfb = \{ \PHfrappe{b_j}{\scfb_\mysigma}{\scfb_{\mysigma'}} \mid
-          \exists h = \PHfrappemult{A}{B} \in \PHh \wedge
-          \scfb \in \PHsscfb \wedge
-          \scfb_\mysigma , \scfb_{\mysigma'} \in \PHl_{\scfb} \wedge
-          b \in \sortes{A \recouvre B} \wedge b_j \in \PHl_b \wedge
-          \PHget{\mysigma}{b} \neq b_j \wedge \mysigma' = \mysigma \recouvre b_j \}$;
-      \end{itemize}
-    \item $\PHh'^{(2)} = \PHhsr \cup \PHh'_R$ où :
-      \begin{itemize}
-        \item $\PHhsr = ...$
-      \end{itemize}
-
-
-  \end{itemize}
-  \todo{Revoir traduction avec 3 classes de priorités (plus simple)}
-\end{definition}
-\end{comment}
-
-
+La traduction proposée repose sur l'utilisation de deux types de sortes particulières :
+\begin{itemize}
+  \item des sortes coopératives pour vérifier la présence de tous les processus du frappeur,
+  \item des \emph{sortes de réaction} permettant de modéliser le déclenchement d'une \emph{réaction},
+    ou son arrêt.
+\end{itemize}
+Une réaction modélise le fait qu'un ensemble d'actions est en train
+de simuler le jeu d'une action plurielle.
+À toute action plurielle $h$ du modèle d'origine correspond une sorte coopérative $\scf{h}$
+entre les sortes des processus de $A$
+et une sorte de réaction $\sr{h}$ dans le modèle résultant de cette traduction.
+La sorte coopérative comporte notamment un processus $\scf{h}_\mypi$ qui représente le sous-état
+où tous les processus de $A$ sont présents ; une action de priorité 4 de la forme
+$\PHhit{\scf{h}_\mypi}{\sr{h}_0}{\sr{h}_1}$ permet d'activer la sorte de réaction.
+Une auto-action de priorité 3 de la forme $\PHhit{\sr{h}_1}{\sr{h}_1}{\sr{h}_0}$
+permet de plus la désactivation de la sorte de réaction
+une fois que toutes les actions de priorité 2 auront été jouées.
+Les actions de priorité 2 ont la forme $\PHhit{\sr{h}_1}{b_j}{b_k}$
+avec $b_j \in A$ et $b_k \in B$,
+ce qui permet d'effectuer tous les bonds nécessaires à l'activation des processus de $B$.
+Enfin, les sortes coopératives sont toutes mises à jour par des actions de priorité 1,
+de façon similaire à \todo{ref PHcanonique}, afin d'éviter les problèmes d'entrelacement.
+L'agencement de ces classes de priorités permet ainsi de simuler des actions plurielles
+tout en empêchant l'entrelacement entre réactions
+---~car deux réactions ayant lieu en même temps pourraient potentiellement
+amener le système dans un état normalement inaccessible.
 
 \begin{definition}
 \deflabel{phm2php}
@@ -247,12 +225,26 @@ On note $\phmtoan$ l'automate équivalent aux frappes de processus $\PH$, défin
 \end{definition}
 
 \begin{theorem}[$\PH \approx \phmtophp$]
-\thmlabel{phmequivphp}
+\thmlabel{phmbisimphp}
   \[\forall s_1, s_2 \in \PHl, s \PHtrans s' \Longleftrightarrow
     \tophp{s_1} \trans{\phmtophp} \tophp{s_2} \enspace.\]
 \end{theorem}
 
 \todo{Preuve}
+
+\begin{theorem}[Équivalence]
+\thmlabel{phmequivphp}
+  Les Frappes de Processus avec actions plurielles
+  et les Frappes de Processus avec $k$ classes de priorités
+  ont une expressivité équivalente.
+\end{theorem}
+
+\begin{demo}
+  D'après \thmref{phmbisimphp} d'une part,
+  et d'après \todo{ref trad PHcanonique} d'autre part,
+  la traduction de \todo{PHcanonique} vers les Frappes de Processus avec actions plurielles
+  étant triviale.
+\end{demo}
 
 
 

@@ -1,23 +1,29 @@
 \subsection{Frappes de Processus avec classes de priorités}
 \seclabel{php}
 
-Les Frappes de Processus avec \emph{classes de priorités}
-(aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
-consistent, comme formalisé par la \defref{php},
-en une extension des Frappes de Processus standard.
-À la place d'un ensemble d'actions,
-elles contiennent un nombre $k$ non nul d'ensembles d'actions,
-chacun étant associé à une classe de priorité distincte.
-Avec cette sémantique, une action est jouable dans un état si et seulement si,
-en plus de la condition de la présence du frappeur et de la cible,
-il n'y a aucune autre action appartenant à une classe de priorité plus grande
-qui soit aussi jouable dans cet état.
+\todo{Mise en perspective}
 
-Il devient ainsi notamment possible de distinguer les actions en fonction 
-de différent critères comme
+Pour tout entier naturel $k$ non nul,
+les \emph{Frappes de Processus avec $k$ classes de priorités}
+%(aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
+sont des Frappes de Processus dont l'ensemble des actions est partitionné
+en $k$ ensembles, chacun étant associé à une classe de priorité distincte.
+Cela signifie qu'une action est jouable dans un état si et seulement si,
+en plus de la condition de la présence du frappeur et de la cible,
+il n'existe aucune autre action appartenant à une classe de priorité plus grande
+qui soit aussi jouable dans cet état.
+Il est à noter que les classes de priorités sont étiquetées de façon décroissante par les entiers de
+l'ensemble $\segm{1}{k}$ en fonction de l'importance de la priorité ;
+autrement dit, la classe de priorités 1 contient les actions les plus prioritaires,
+ne pouvant jamais être préemptées,
+tandis que la jouabilité d'une action de la classe de priorité $k$ ne peut pas empêcher le jeu
+d'une autre action.
+
+Cette modélisation permet notamment de distinguer les actions en fonction 
+de différents critères comme
 leur vitesse d'exécution (les actions les plus rapides étant jouées en priorité),
 ou tout autre paramètre permettant de déterminer l'existence de la préemption d'une action
-en fonction de la jouabilité d'une autre.
+en fonction de la possibilité d'en jouer une autre.
 L'application la plus poussée de cette utilisation consisterait à
 classer les actions d'un modèle en fonction d'un tel critère,
 et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
@@ -32,7 +38,7 @@ actions qui n'ont pas de sens biologique propre
 L'application la plus immédiate de ce cas est celle des actions de mise à jour
 des sortes coopérative \todo{ref PH canonique},
 où une classe de priorités supérieure offre l'avantage de supprimer les effets d'entrelacement,
-et ainsi de simuler le comportement d'une véritable porte logique sans décalage temporel.
+et ainsi de simuler le comportement d'une véritable porte logique sans décalage temporel \todo{ref}.
 
 Cette représentation basée sur des classes de priorités permet de modéliser un système
 dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
@@ -51,6 +57,8 @@ Enfin, elles peuvent ne pas permettre la précision nécessaire à une représen
 certains modèles, notamment lorsqu'il est nécessaire de définir des préemptions ponctuelles
 comme le permettent les Frappes de Processus avec arcs neutralisants
 présentées à la \secref{phan}.
+
+\todo{Schéma exemple}
 
 \begin{definition}[Frappes de Processus avec $k$ classes de priorités]
 \deflabel{php}
@@ -82,6 +90,27 @@ l'extraction de la sorte d'un processus.
 %Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
 %par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
 %Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+
+À l'instar de la \secref{ph}, il faut définir un opérateur de jouabilité
+pour déterminer la dynamique des Frappes de Processus avec $k$ classes de priorités.
+Cependant, à l'inverse de celui des Frappes de Processus standard (\defref{fopph})
+il faut ici prendre en compte la possible présence d'actions jouables appartenant à des
+classes de priorités supérieures.
+Pour cela, il est suffisant de vérifier que le frappeur et la cible de toute action
+de priorité plus importante ne sont pas simultanément présents.
+En effet, prenons deux actions $g, h \in \PHh$ avec : $\prio(g) < \prio(h)$, et
+un état $s \in \PHl$ tel que $\frappeur{g} \in s \wedge \cible{g} \in s$ ;
+Deux cas de figures sont alors possibles :
+\begin{itemize}
+  \item l'action $g$ est jouable dans $s$ --- autrement dit, aucune autre action de priorité plus
+    importante ne la préempte -- et elle préempte $h$ en conséquence,
+  \item l'action $g$ n'est pas jouable dans $s$, ce qui signifie qu'elle est préemptée par une
+    action de priorité plus importante, qui préempte alors aussi l'action $h$.
+\end{itemize}
+Dans les deux cas, $h$ n'est pas jouable, ce qui montre qu'il est suffisant de n'observer
+que la présence simultanée du frappeur et de la cible de chaque action de priorité supérieure
+pour déterminer la jouabilité de $h$.
+Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
 
 \begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphpsubsymbol : \PHh \rightarrow \F$)]
 \deflabel{fopphp}

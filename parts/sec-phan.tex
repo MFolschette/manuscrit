@@ -1,9 +1,10 @@
 \subsection{Frappes de Processus avec arcs neutralisants}
 \seclabel{phan}
 
-Nous introduisons ici la notion d'arc neutralisant dans les Frappes de Processus (\defref{php})
+Nous introduisons ici la notion d'\emph{arc neutralisant} dans les Frappes de Processus
 afin de représenter la préemption d'une action par une seule autre.
-Une telle représentation permet notamment une modélisation plus atomique
+Les \emph{Frappes de Processus avec arcs neutralisants} (\defref{php})
+permettent notamment une modélisation plus atomique
 par rapport aux classes de priorités présentées à la \secref{php}.
 
 Un arc neutralisant est un couple d'actions noté $\PHan{h_1}{h_2}$,
@@ -12,9 +13,10 @@ et peut préempter $h_2$, appelée \emph{action bloquée},
 dans certaines situations.
 Avec la présence d'arcs neutralisants, une action est dite \emph{activée} dans un état donné si
 son frappeur et sa cible y sont présents ;
-le fait pour une action d'être activée remplace donc celui d'être jouable
-par rapport à la sémantique standard des Frappes de Processus telle que décrite à la \secref{ph}.
-Un action n'est ici \emph{jouable} que si elle est activée,
+une action est donc activée pour les Frappes de Processus avec arcs neutralisants
+là où elle était immédiatement jouable pour les Frappes de Processus standards (\defref{fopph}).
+Une action est \emph{jouable} pour les Frappes de Processus avec arcs neutralisants
+si et seulement si elle est activée,
 et que pour tout arc neutralisant la bloquant, son action bloquante n'est pas activée.
 Une action activée mais qui n'est pas jouable est dite \emph{neutralisée}.
 
@@ -25,12 +27,14 @@ définies, notamment dans le cas d'un interblocage.
 Ainsi, faire reposer la neutralisation d'une action bloquée sur la jouabilité de l'action bloquante
 devient inextricable dans un cas comme le suivant :
 $\PHan{h_1}{h_2}$, $\PHan{h_2}{h_3}$ et $\PHan{h_3}{h_1}$,
-car si les trois actions $h1$, $h2$ et $h3$ sont actives, leur jouabilité resté indéterminée.
+car si les trois actions $h1$, $h2$ et $h3$ sont actives, leur jouabilité reste indéterminée.
 En revanche, si cette neutralisation repose sur l'état activé d'une action,
 la situation précédente se résout immédiatement car aucune des trois actions n'est jouable.
 On constate par ailleurs qu'une action peut en neutraliser une autre
 même si elle-même est neutralisée.
 Nous ne nous avancerons cependant pas sur la signification biologique de ce fait.
+
+\todo{Schéma exemple}
 
 \begin{definition}[Frappes de Processus avec arcs neutralisants]
 \deflabel{phan}
@@ -56,8 +60,14 @@ On note $\PHbloquant(u) = h_1$ la première action du couple $u$
 et $\PHbloque(u) = h_2$ sa seconde action.
 On réutilise par ailleurs les autres notations définies à la \secref{ph}.
 
+L'opérateur de jouabilité des frappes de Processus avec arcs neutralisants (\defref{fopphan})
+se concentre sur la présence du frappeur et de la cible de l'action considérée,
+et sur celle de toutes ses actions bloquantes.
+En ce sens, il est semblable à celui des Frappes de Processus avec $k$ classes de priorités
+(\defref{fopphp}).
+
 \begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphansubsymbol : \PHh \rightarrow \F$)]
-\deflabel{fophan}
+\deflabel{fopphan}
   L'opérateur de jouabilité des Frappes de Processus avec arcs neutralisants est défini par :
   \[\forall h \in \PHh, \Fopphan{h} \equiv \hitter{h} \wedge \target{h} \wedge
     \left( \bigwedge_{\substack{u \in \PHn\\u = \PHan{g}{h}}}
