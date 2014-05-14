@@ -1,0 +1,358 @@
+
+\subsection{Définition}
+\seclabel{phcanonique-def}
+
+Nous donnons dans cette section la définition des Frappes de Processus canoniques,
+qui sont un sous-ensemble des Frappes de Processus avec classes de priorités.
+Un modèle de Frappes de Processus est dit \emph{canonique} s'il comporte 2 classes de priorités
+et qu'il respecte un certain nombre de critères concernant l'utilisation des actions prioritaires.
+Il faut notamment que celles-ci soient uniquement utilisées pour la mise à jour des sortes
+coopératives, et que cette mise à jour soit correctement formée (pas d'action manquantes ou en trop).
+Cette forme particulière des Frappes de Processus assure un certain nombre de bonnes propriétés
+qui seront explicitées par la suite et qui permettent l'utilisation des méthodes d'analyse statique
+développées à la section \todo{suivante}.
+Dans la suite de cette section, nous travaillons sur des modèles de Frappes de Processus avec $k$
+classes de priorités, pour $k \in \sN^*$.
+
+
+
+Nous définissons pour commencer la \emph{réduction} d'un modèle donné de Frappes de Processus
+comme le modèle équivalent dont on a retiré toutes les actions qui ne sont pas de priorité 1
+(\defref{reduction}).
+Cette définition permet dans la suite de considérer le comportement des actions les plus prioritaires
+d'un modèle afin d'en contraindre la forme.
+
+\begin{definition}[Réduction ($\reductionsymbol{\PH}$)]
+\deflabel{reduction}
+  Si $\PH = (\PHs; \PHl; \PHh^{\langle k \rangle})$ sont des Frappes de Processus avec $k$
+  classes de priorités, on note $\reduction[\PH] = (\PHs; \PHl; \PHh^{(1)})$
+  la \emph{réduction} de $\PH$.
+  $\reduction$ est un modèle de Frappes de Processus standard
+  (ou encore : avec 1 classe de priorité).
+  Si $s \in \PHl$, on note de plus : $\reduction[\Sce](s)$ l'ensemble des scénarios
+  depuis l'état $s$ dans les Frappes de Processus $\reduction$.
+\end{definition}
+
+\begin{example}
+  La \figref{ph-livelock} donne un exemple de Frappes de Processus avec 2 classes de priorités avec :
+  \begin{align*}
+    \PHs &= \{ a, b, c, ab \} \enspace, \\
+    \PHl_a &= \{ a_0, a_1 \} \enspace, & \PHl_b &= \{ b_0, b_1 \} \enspace, \\
+    \PHl_c &= \{ c_0, c_1 \} \enspace, & \PHl_{ab} &= \{ ab_{00}, ab_{01}, ab_{10}, ab_{11} \}
+    \enspace.
+  \end{align*}
+  On note que :
+  $\{ \PHhit{ab_{11}}{c_0}{c_1}, \PHhit{a_1}{a_1}{a_0}, \PHhit{a_0}{b_0}{b_1} \} \subseteq \PHh^{(2)}$.
+
+\begin{figure}[tb]
+  \centering
+  \scalebox{1.2}{
+  \begin{tikzpicture}
+    \TSort{(0,0)}{a}{2}{l}
+    \TSort{(0,4)}{b}{2}{l}
+    \TSort{(7,2.5)}{c}{2}{r}
+
+    \TSetTick{ab}{0}{00}
+    \TSetTick{ab}{1}{01}
+    \TSetTick{ab}{2}{10}
+    \TSetTick{ab}{3}{11}
+    \TSort{(2,2.5)}{ab}{4}{t}
+
+    \THit{a_0}{prio}{ab_3}{.south}{ab_1}
+    \THit{a_0}{prio}{ab_2}{.south}{ab_0}
+    \THit{a_1}{prio}{ab_1}{.south}{ab_3}
+    \THit{a_1}{prio}{ab_0}{.south}{ab_2}
+
+    \THit{b_0}{prio}{ab_3}{.north}{ab_2}
+    \THit{b_0}{prio}{ab_1}{.north}{ab_0}
+    \THit{b_1}{prio}{ab_2}{.north}{ab_3}
+    \THit{b_1}{prio}{ab_0}{.north}{ab_1}
+    
+    \THit{a_1}{selfhit}{a_1}{.west}{a_0}
+    \THit{b_1}{selfhit}{b_1}{.west}{b_0}
+    \THit{a_0.north}{bend left}{b_0}{.west}{b_1}
+    \THit{b_0.south}{bend right=60}{a_0}{.west}{a_1}
+
+    \THit{ab_3}{}{c_0}{.west}{c_1}
+
+  \path[bounce, bend right=55]
+      \TBounce{ab_0}{}{ab_2}{.west}
+      \TBounce{ab_1}{}{ab_3}{.west}
+  ;
+  \path[bounce, bend left=20]
+      \TBounce{ab_3}{}{ab_1}{.south east}
+      \TBounce{ab_2}{}{ab_0}{.south east}
+  ;
+    \path[bounce, bend right=20]
+      \TBounce{ab_3}{}{ab_2}{.north east}
+      \TBounce{ab_1}{}{ab_0}{.north east}
+    ;
+    \path[bounce, bend left=30]
+      \TBounce{ab_2}{}{ab_3}{.west}
+      \TBounce{ab_0}{}{ab_1}{.west}
+    ;
+    \path[bounce, bend right]
+      \TBounce{a_1}{}{a_0}{.north west}
+      \TBounce{b_1}{}{b_0}{.north west}
+    ;
+    \path[bounce, bend left]
+      \TBounce{a_0}{}{a_1}{.south west}
+      \TBounce{b_0}{}{b_1}{.south west}
+    ;
+    \path[bounce, bend left]
+      \TBounce{c_0}{}{c_1}{.south west}
+    ;
+    \TState{a_1, b_0, ab_2, c_0}
+  \end{tikzpicture}
+  }
+  \caption{
+  \figlabel{ph-livelock}
+    Un exemple de Frappes de Processus canonique.
+    Les actions de priorité 1 sont dessinées en traits doubles tandis que les actions
+    de priorité 2 sont représentées avec des traits simples.
+    Les processus grisés présentent un exemple d'état de départ :
+    $\PHstate{a_1, b_0, c_0, ab_{10}}$.
+  }
+\end{figure}
+
+\end{example}
+
+
+
+\subsection{Restrictions}
+\seclabel{restrictions}
+
+Les Frappes de Processus canoniques consistent en une classe particulière de Frappes de Processus
+avec 2 classes de priorités, et cette section a pour objectif d'en donner la définition.
+Les restrictions permettant de définit des Frappes de Processus canoniques portent sur
+les actions les plus prioritaires mettant à jour les sortes coopératives.
+Cependant, afin de poser un cadre plus général et permettre une réutilisation de ces définitions
+\stodo{ref},
+nous considérerons le cas de Frappes de Processus avec $k$ classes de priorités dans les définitions
+et critères qui suivent.
+
+Dans la suite, nous appelons \emph{actions primaires} les actions de l'ensemble $\PHh^{(1)}$,
+c'est-à-dire les actions les plus prioritaires.
+Ces actions auront pour unique but de mettre à jour des sortes coopératives, permettant
+à celles-ci de modéliser des portes logiques sans décalage temporel \stodo{ref}.
+De fait, on peut dans certains cas considérer ces actions comme «~non biologiques~»,
+ou «~instantanées~»,
+car elles sont présentes principalement pour des raisons de modélisation.
+À l'inverse, les actions de l'ensemble $\PHh \setminus \PHh^{(1)}$, qui ne sont pas de priorité 1,
+seront appelées \emph{actions secondaires}.
+Comme elles permettent de représenter les différentes réactions et régulations intervenant au sein du
+système, elles peuvent par conséquent être qualifiées d'actions «~biologiques~» ou «~lentes~».
+
+La définition de la forme canonique des Frappes de Processus début avec la
+\crref{tf} qui stipule que la dynamique ne doit pas contenir de séquence infinie
+d'actions primaires.
+En effet, pour que ces actions effectuent une mise à jour des sortes coopératives sans perturber
+le reste du système, il est nécessaire qu'elles ne puissent pas préempter les actions secondaires
+indéfiniment.
+Sans cela, le modèle serait victime du paradoxe de Zénon,
+où une suite infinie d'actions peut être jouée en un temps nul et ainsi
+bloquer l'évolution du système.
+Il est donc nécessaire de postuler que tous les scénarios d'actions primaires sont finis,
+ce qui a par ailleurs pour conséquence que $\reductionsce$ est un ensemble fini.
+
+\begin{condition}[Terminaison finie]
+\crlabel{tf}
+  La dynamique de $\reduction$ ne contient aucun cycle :
+  $\exists N \in \sN, \forall s \in \PHl, \forall \delta \in \reductionsce(s),
+    |\delta| \leq N$.
+\end{condition}
+
+Étant donnée une sorte $a \in \PHs$ et un état $s \in \PHl$,
+on note $\pfp_s(a)$ (\defref{pfp}) l'ensemble des processus de la sorte $a$ qui peuvent être présents
+après avoir joué tous les scénarios d'actions de priorité 1 depuis l'état $s$.
+Cet ensemble est toujours défini du fait de la \crref{tf}.
+
+\todo{Redéfinir $\pfp$ avec $\compin$ de façon à simplifier et rendre locale la définition ?}
+
+\begin{definition}[$\pfp : \PHl \times \PHs \rightarrow \powerset(\PHproc)$]
+\deflabel{pfp}
+  Pour tout état $s \in \PHl$ et pour toute sorte $a \in \PHs$,
+  \begin{align*}
+    \pfp_s(a) = \{ \get{(s\play\delta)}{a} \in \PHl_a &\mid \delta \in \reductionsce(s)
+          \wedge\nexists h\in\PHh^{(1)}, (\delta; h) \in \reductionsce(s) \}
+  \end{align*}
+\end{definition}
+
+Nous définissons dans la suite la notion de \emph{composant bien formé} (\defref{component})
+et de \emph{sorte coopérative bien formée} (\defref{cs}).
+Un composant bien formé n'est frappé que par des actions secondaires,
+car il ne subit que des influences «~biologiques~».
+Une sorte coopérative bien formée n'est frappée que par des actions primaires «~non biologiques~»
+qui convergent toujours vers le même processus en fonction de l'état des sortes qui l'influencent
+(\defref{comp}), afin qu'elle représente chaque configuration de ces sortes par un unique processus.
+La \crref{part} stipule alors que l'ensemble des sortes des Frappes de Processus canoniques
+($\PHs$) est une partition entre un ensemble de composants bien formés (noté $\components$)
+et un ensemble de sortes coopératives bien formées (noté $\cs$).
+
+\begin{definition}[Composant bien formé ($\components$)]
+\deflabel{component}
+  Une sorte $a \in \PHs$ est un \emph{composant bien formé} si et seulement si :
+    \[\forall h \in \PHh, \PHsort(\target{h}) = a \Rightarrow \prio(h) \geq 2 \enspace.\]
+\end{definition}
+
+\begin{definition}[Influence ($\compin : \PHs \to \powerset(\components)$)]
+\deflabel{comp}
+  Pour toute sorte $a \in \PHs$, on définit : $\compin(a) \DEF \conn(a) \cap \components$ où
+  $\conn(a) \subset \PHs$ est le plus petit ensemble de sortes satisfaisant :
+  \begin{align*}
+    a \in \conn(a) & \\
+    \forall h \in \PHh^{(1)},
+      \sort{\target{h}} \in \conn(a) & \Rightarrow \sort{\hitter{h}} \in \conn(a)
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Sorte coopérative bien formée ($\cs$)]
+\deflabel{cs}
+  Une sorte $a \in \PHs$ est une \emph{sorte coopérative bien formée} si et seulement si :
+  \begin{enumerate}[(i)]
+    \item $\forall h \in \PHh, \sort{\target{h}} = a \Rightarrow \prio(h) = 1$,
+    \item \label{csai} $\forall s \in \PHl, \card{\pfp_s(a)} = 1$,
+    \item \label{css} $\forall a_i \in \PHl_a, \exists s \in \PHl, a_i \in \pfp_s(a)$,
+    \item $\forall \mysigma \in \PHsubl[\PHl]_{\compin(a)}, \forall s, s' \in \PHl,
+        (\mysigma \subseteq s \wedge \mysigma \subseteq s') \Rightarrow \pfp_s(a) = \pfp_{s'}(a)$.
+  \end{enumerate}
+\end{definition}
+
+\begin{condition}[Partition des composants et des sortes coopératives]
+\crlabel{part}
+  \[\PHs = \components \cup \cs \wedge \components \cap \cs = \emptyset\]
+\end{condition}
+
+Il est à noter qu'une sorte $a$ qui n'est frappée par aucune action,
+c'est-à-dire telle que $\forall h \in \PHh, \sort{\target{h}} \neq a$,
+est en accord à la fois avec la définition de composant bien formé
+et avec celle de sorte coopérative bien formée.
+Cette sorte peut être arbitrairement et indifféremment affectée à $\components$ ou à $\cs$.
+Un tel cas peut se produire pour des composants ayant un rôle d'«~entrée~»,
+c'est-à-dire dont le niveau d'expression est uniquement déterminé par l'état initial,
+ou par certaines constructions particulières de sortes coopératives créées par la traduction
+\stodo{ref}.
+
+Pour toute sorte $a \in \PHs$ et tout état $s \in \PHl$,
+étant donné le point (\ref{csai}) de la \defref{cs}, on a toujours :
+$\exists a_i \in \PHl_a, \pfp_s(a) = \{ a_i \}$.
+On notera donc dans la suite : $\pfp_s(a) = a_i$.
+De plus, du fait du point (\ref{css}) de la \defref{cs}, on introduit la notation
+$\csState(a_i)$ permettant de caractériser l'ensemble des sous-états représentés par le
+processus $a_i$ de toute sorte coopérative bien formée $a$ (\defref{csState}).
+
+\begin{definition}[$\csState : \PHproc \rightarrow \powerset(\PHproc)$]
+\label{def:csState}
+  Pour tout $a \in \cs$ et $a_i \in \PHl_a$, 
+    \[\csState(a_i) \DEF \{ \toset{ps} \mid ps \in \PHsubl[\PHl]_{\compin(a)} \wedge
+      \exists s \in \PHl, (ps \subseteq s \wedge \pfp_s(a) = a_i) \}\]
+\end{definition}
+
+Dans la suite, on écrira simplement «~composant~» (\resp «~sorte coopérative~»)
+en lieu et place de «~composant bien formé~» (\resp «~sorte coopérative bien formée~»).
+
+\begin{example}
+  Les Frappes de Processus de la \figref{ph-livelock} comprennent trois composants ($a$, $b$ et $c$)
+  et une sorte coopérative ($ab$).
+  La sorte coopérative $ab$ modélise la coopération entre $a$ et $b$ car $\compin(ab) = \{ a, b \}$.
+\end{example}
+
+Enfin, la \defref{phcanonique} définit la notion de Frappes de Processus canoniques.
+La forme particulière de ces Frappes de Processus permettra de développer une méthode efficace
+d'analyse statique pour le problème d'atteignabilité défini à la \secref{sa},
+grâce notamment aux résultats développés dans la section suivante.
+
+\begin{definition}[Frappes de Processus canoniques]
+\deflabel{phcanonique}
+  Les \emph{Frappes de Processus canoniques}
+  sont des Frappes de Processus avec 2 classes de priorités
+  respectant les \allcr.
+\end{definition}
+
+
+
+\subsection{Conséquences des restrictions}
+
+Dans cette section, nous donnons plusieurs résultats généraux qui peuvent être dérivés des
+restrictions de la \secref{restrictions}.
+Nous considérons donc dans la suite des Frappes de Processus avec $k$ classes de priorités
+$\PH = (\PHs; \PHl; \PHa^{\langle k \rangle})$, avec $k \in \sN^*$,
+respectant les \allcr.
+\todo{Avec 2 classes de priorités ?}
+Ces résultats permettront de construire la méthode d'analyse statique de la \stodo{section suivante}.
+
+Pour tout état $s \in \PHl$, on appelle $\update(s)$ l'état dans lequel tous les composants
+ont le même processus actif que dans $s$
+mais où sortes coopératives ont été mises à jour en fonction (\defref{update}).
+Cet état est unique du fait des propriétés de $\pfp$ données dans la section précédente.
+Le \lemref{update} stipule ensuite que depuis tout état $s$, il existe un scénario d'actions primaires
+mettant à jour toutes les sortes coopératives de façon à arriver dans $\update(s)$.
+%ghtrjy <= Raphaël was here!
+
+\begin{definition}[$\update : \PHl \rightarrow \PHl$]
+\deflabel{update}
+  Pour tout $s \in \PHl$, on définit :
+  \begin{align*}
+    \update(s) = s \Cap \{ \pfp_{s}(a) \mid a \in \cs \} \enspace.
+  \end{align*}
+\end{definition}
+
+\begin{lemma}
+\lemlabel{update}
+  $\forall s \in \PHl, \exists \delta \in \reductionsce(s), s \PHplay \delta = \update(s)$
+\end{lemma}
+
+\begin{demo}[\Lemref{update}]
+  Soit $s \in \PHl$ un état.
+  Soit $a \in \cs$ une sorte coopérative telle que $\PHget{s}{a} \neq \pfp_s(a)$.
+  Étant donnée la définition de $\pfp_s(a)$, il existe un scénario $\delta$ mettant à jour $a$
+  dans $s$ tel que :
+  $\forall \delta' \in \reductionsce(s \PHplay \delta),
+    \PHget{(s \PHplay \delta \PHplay \delta')}{a} = \pfp_s(a)$.
+  \todo{À revoir}
+\end{demo}
+
+Le \lemref{hcompcomp} stipule que pour un état donné $s \in \PHl$, et pour toute action secondaire
+$h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ où $a$ et $b$ sont des composants,
+si $\PHget{s}{a} = a_i$ et $\PHget{s}{b} = b_j$, alors
+$h$ peut toujours être jouée après une série d'actions primaires,
+et ces actions n'empêchent pas son jeu.
+
+De façon complémentaire, le \lemref{hcscomp} énonce le même résultat si $a$ est une sorte coopérative,
+sous la condition que $a$ soit déjà à jour dans $s$.
+
+\begin{lemma}
+\lemlabel{hcompcomp}
+  $\forall s \in \PHl, \forall a,b \in \components, \forall h = \PHhit{a_i}{b_j}{b_k} \in \PHh,$\\
+  $(\PHget{s}{a} = a_i \wedge \PHget{s}{b} = b_j) \Rightarrow
+    (\exists \delta \in \reductionsce(s),
+%    (s \PHplay \delta) \PHtrans (s \PHplay \delta \PHplay h))$
+    \Feval{\Fopphp{h}}{s \PHplay \delta})$
+\end{lemma}
+
+\begin{demo}[\Lemref{hcompcomp}]
+  Soient $s \in \PHl$ un état, $a,b \in \components$ deux composants et
+  $h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ une action.
+  D'après le \lemref{update}, il existe un scénario $\delta$ tel que :
+  $(s \PHplay \delta) = \update(s)$.
+  Étant donné que $a$ et $b$ sont des composants,
+  $a_i \in (s \PHplay \delta)$ et $b_j \in (s \PHplay \delta)$.
+  De plus, par définition de $\update(s)$, aucune action primaire n'est jouable
+  dans $(s \PHplay \delta)$.
+  $h$ est donc jouable dans $(s \PHplay \delta)$.
+\end{demo}
+
+\begin{lemma}
+\lemlabel{hcscomp}
+  $\forall s \in \PHl, \forall a \in \cs, \forall b \in \components,
+    \forall h = \PHhit{a_i}{b_j}{b_k} \in \PHh,$\\
+  $(\PHget{s}{a} = a_i \wedge \PHget{s}{b} = b_j \wedge \pfp_s(a) = a_i) \Rightarrow
+    (\exists \delta \in \reductionsce(s),
+%    (s \PHplay \delta) \PHtrans (s \PHplay \delta \PHplay h))$
+    \Feval{\Fopphp{h}}{s \PHplay \delta})$
+\end{lemma}
+
+\begin{demo}[\Lemref{hcscomp}]
+  Similaire à la preuve du \lemref{hcompcomp} ;
+  étant donné que $a_i \in \pfp_s(a)$, on a : $a_i \in (s \PHplay \delta)$.
+\end{demo}

@@ -1,8 +1,10 @@
 % Macros relatives à la traduction de PH avec arcs neutralisants vers PH à k-priorités fixes
 
 % Macros définitions
-\def\DEF{\stackrel{\Delta}=}
-\def\EQDEF{\stackrel{\Delta}\Leftrightarrow}
+%\def\DEF{\stackrel{\Delta}=}
+%\def\EQDEF{\stackrel{\Delta}\Leftrightarrow}
+\def\DEF{\stackrel{def}=}
+\def\EQDEF{\stackrel{def}\Leftrightarrow}
 
 % Macros générales
 \newcommand{\sN}{\mathbb{N}}
@@ -34,6 +36,7 @@
 \newcommand{\sorte}{\sort}
 \newcommand{\PHsorts}{\mathsf{sortes}}
 \newcommand{\sortes}[1]{\PHsorts(#1)}
+\newcommand{\sorts}{\sortes}
 
 \newcommand{\hitter}[1]{\PHhitter(#1)}
 \newcommand{\target}[1]{\PHtarget(#1)}
@@ -73,6 +76,7 @@
 \newcommand{\PHhbounce}[2]{#1\PHhitB#2}
 \newcommand{\PHobj}[2]{\mbox{$#1\PHhitB^*\!#2$}}
 \newcommand{\PHconcat}{::}
+\newcommand{\cons}{::}
 %\newcommand{\PHneutralise}{\rtimes}
 
 \def\PHget#1#2{{#1[#2]}}
@@ -83,9 +87,14 @@
 
 \newcommand{\PHstate}[1]{\mbox{$\langle #1 \rangle$}}
 
-\def\supp{\mathsf{support}}
-\def\first{\mathsf{first}}
-\def\last{\mathsf{last}}
+\newcommand{\premsymbol}{\mathsf{premier}}
+\newcommand{\dersymbol}{\mathsf{dernier}}
+\newcommand{\suppsymbol}{\mathsf{support}}
+\newcommand{\finsymbol}{\mathsf{fin}}
+\newcommand{\prem}[2]{\premsymbol_{#1}(#2)}
+\newcommand{\der}[2]{\dersymbol_{#1}(#2)}
+\newcommand{\supp}[1]{\suppsymbol(#1)}
+\newcommand{\fin}[1]{\finsymbol(#1)}
 
 \def\DNtrans{\rightarrow_{ADN}}
 \def\DNdef{(\mathbb F, \langle f^1, \dots, f^n\rangle)}
@@ -179,5 +188,27 @@
 \newcommand{\m}[1][h,i]{m^{#1}}
 
 \def\toset#1{\widetilde{#1}}
+
+% PH canonique
+
+\newcommand{\components}{\Gamma}
+\newcommand{\cs}{\Delta}
 \def\conn{\f{conn}^1}
 \def\compin{\f{comp}^1}
+\newcommand{\update}{\mathsf{update}}
+% \def\restriction#1#2{\mathchoice
+%               {\setbox1\hbox{${\displaystyle #1}_{\scriptstyle #2}$}
+%               \restrictionaux{#1}{#2}}
+%               {\setbox1\hbox{${\textstyle #1}_{\scriptstyle #2}$}
+%               \restrictionaux{#1}{#2}}
+%               {\setbox1\hbox{${\scriptstyle #1}_{\scriptscriptstyle #2}$}
+%               \restrictionaux{#1}{#2}}
+%               {\setbox1\hbox{${\scriptscriptstyle #1}_{\scriptscriptstyle #2}$}
+%               \restrictionaux{#1}{#2}}}
+% \def\restrictionaux#1#2{{#1\,\smash{\vrule height .8\ht1 depth .85\dp1}}_{\,#2}} 
+
+%\newcommand{\reductionsymbol}[1]{#1_{\restriction_{1}}}
+%\newcommand{\reductionsymbol}[1]{#1_{|_{1}}}
+\newcommand{\reductionsymbol}[1]{#1^1}
+\newcommand{\reduction}[1][\PH]{\reductionsymbol{#1}}
+\newcommand{\reductionsce}[1][\Sce]{\reductionsymbol{#1}}

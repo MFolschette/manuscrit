@@ -1,0 +1,489 @@
+
+\section{Analyse statique}
+\seclabel{sa}
+
+\todo{Revoir la glu}
+
+L'objectif de cette section est de définir le problème de l'\emph{atteignabilité} dans des
+Frappes de Processus,
+aussi appelée \emph{accessibilité},
+et de proposer une sous-approximation permettant de la résoudre efficacement
+dans les Frappes de Processus canoniques.
+
+La méthode développée ici est inspirée de \stodo{PMR12-MSCS}.  %~\cite{PMR12-MSCS}.
+
+Le problème de l'atteignabilité dans les Frappes de Processus consiste à rechercher l'existence
+d'un scénario qui permette d'activer un ou plusieurs processus donné(s).
+Il peut se résumer à la question suivante :
+«~Étant donné un état initial, existe-t-il un scénario partant de cet état et
+qui permette d'activer un processus donné ?~»
+ou, de façon plus générale pour un ensemble de processus :
+«~Étant donné un état initial $\ctx$ et une séquence de processus $\w$ donnés,
+existe-t-il un scénario $\delta$ jouable dans $\ctx$ et permettant d'activer successivement
+chacun des processus de $\w$ dans l'ordre ?~»
+
+La résolution du problème de l'atteignabilité peut parfois être résolu à l'aide des outils
+de model checking classiques.
+Cependant, de telles méthodes reposent généralement sur l'analyse de la dynamique du modèle.
+Pour de grands modèles, ces méthodes se heurtent donc à l'explosion combinatoire inhérente
+au calcul du graphe des états.
+La méthode proposée ici repose en revanche sur une sous-approximation du modèle analysé.
+Cela permet d'éviter une complexité exponentielle
+et d'avoir à la place un problème de complexité polynomiale
+sous la condition que chaque sorte du modèle possède un nombre restreint de processus
+(une sorte de quatre processus ou moins satisfaisant ce critère).
+
+On considère dans cette section un modèle de Frappes de Processus canoniques
+$\PH = (\PHs; \PHl; (\PHa^{(1)};\PHa^{(2)}))$
+tel que défini à la \defref{phcanonique}.
+
+
+
+
+
+
+\subsection{Définitions préliminaires}
+\seclabel{sa-defs}
+
+L'atteignabilité d'un processus $a_j$ d'une sorte donnée $a$ depuis un autre processus $a_i$
+de la même sorte est le fait, depuis un état où $a_i$ est actif,
+de pouvoir jouer scénario menant dans un état où $a_j$ est actif.
+La question de l'existence d'un tel scénario se représente sous la forme d'un \emph{objectif},
+noté $\PHobjp{a}{i}{j}$ (\defref{obj}).
+De plus, une \emph{séquence d'objectifs} est une séquence d'éléments de $\Obj$ telle que
+la cible de chaque objectif est égale au bond de l'objectif précédent de la même sorte
+dans la séquence, s'il existe (\defref{os}).
+
+\begin{definition}[Objectif ($\Obj$)]
+\deflabel{obj}
+  Si $a \in \components$, l'atteignabilité d'un processus $a_j$ depuis un processus $a_i$
+  est appelé un \emph{objectif}, noté $\PHobj{a_i}{a_j}$.
+  L'ensemble de tous les objectifs est noté
+  $\Obj \DEF \{ \PHobj{a_i}{a_j} \mid
+    a \in \components \wedge (a_i, a_j) \in \PHl_a \times \PHl_a \}$.
+  Pour tout objectif $P = \PHobj{a_i}{a_j} \in \Obj$, on note
+  $\sort{P} \DEF a$ la sorte de l'objectif $P$,
+  $\target{P} \DEF a_i$ sa cible et $\bounce{P} \DEF a_j$ son bond.
+  Enfin, $P$ est dit \emph{trivial} si $a_i = a_j$.
+\end{definition}
+
+\begin{definition}[Séquence d'objectif ($\Obj$)]
+\deflabel{os}
+  Une \emph{séquence d'objectifs} est une séquence $\w = P_1 \cons \ldots \cons P_{\card{\w}}$,
+  où $\forall n \in \indexes{\w}, \w_n \in \Obj$
+  et $\cible{\w_n} = a_i \Rightarrow \der{a}{\w_{1 \ldots n-1}} \in \{ \varnothing, a_i \}$.
+  L'ensemble des séquences d'objectifs est référé par $\OS$.
+%  Les définitions de $\premsymbol_a$ (\eqref{prem}), $\dersymbol_a$ (\eqref{der}),
+%  $\suppsymbol$ (\eqref{supp}) et $\finsymbol$ (\eqref{fin}) sont étendues aux
+  Les définitions de $\premsymbol_a$, $\dersymbol_a$,  $\suppsymbol$ et $\finsymbol$
+  (\defref{premder}) sont étendues aux séquences d'objectifs en omettant le cas des frappeurs.
+\end{definition}
+
+La \defref{ctx} introduit la notion de \emph{contexte} qui étend celle d'état
+afin de pouvoir représenter un ensemble d'états initiaux possibles :
+plutôt que d'attribuer un seul processus actif à chaque sorte, comme pour un état,
+un contexte permet d'en attribuer plusieurs.
+La notion de recouvrement est aussi étendue aux contextes dans la \defref{ctxcap}.
+
+\begin{definition}[Contexte ($\Ctx$)]
+\deflabel{ctx}
+  Un \emph{contexte} $\ctx$ associe à chaque sorte dans $\PHs$ un sous-ensemble non vide
+  de ses processus :
+  $\forall a \in \PHs, \PHget{\ctx}{a} \subseteq \PHl_a \wedge \PHget{\ctx}{a} \neq \emptyset$.
+  On note $\Ctx$ l'ensemble de tous les contextes.
+\end{definition}
+
+\begin{definition}[Recouvrement ($\recouvre : \Ctx \times \powerset(\PHproc) \rightarrow \Ctx$)]
+\label{def:ctxcap}
+  Pour tout contexte $\ctx \in \Ctx$ et tout ensemble de processus $ps \subset \Proc$,
+  le recouvrement de $\ctx$ par $ps$ est noté $\ctx \recouvre ps$ et est défini par :
+    \[ \forall a \in \PHs, \PHget{(\ctx \recouvre ps)}{a} \DEF
+      \begin{cases}
+        \{ p \in ps \mid \PHsort(p)=a \} & \text{si } \exists p \in ps, \PHsort(p)=a,\\
+        \PHget{\ctx}{a} & \text{sinon.}
+      \end{cases} \]
+\end{definition}
+
+Pour tout contexte $\ctx \in \Ctx$ et tout processus $a_i \in \Proc$, on note :
+$a_i \in \ctx \EQDEF a_i \in \PHget{\ctx}{a}$,
+et pour tout état $ps \in \PHl$ ou ensemble de processus $ps \subset \Proc$, on note :
+$ps \subseteq \ctx \EQDEF \forall a_i \in ps, a_i \in \ctx$.
+De plus, une séquence d'actions $\delta$ est \emph{jouable} dans un contexte $\ctx$
+si et seulement si $\exists s \subseteq \ctx, \delta \in \Sce(s)$ ;
+on note alors : $\delta \in \Sce(\ctx)$,
+et le jeu de $\delta$ dans $\ctx$ est : $\ctx \PHplay \delta = \ctx \Cap \fin{\delta}$.
+
+Finalement, une séquence de bonds sur une sorte $a$ (\defref{bs}) est une séquence d'actions
+frappant $a$ dans laquelle le bond de chaque action est égal au frappeur de l'action suivante.
+Les séquences de bonds sont utilisées pour trouver les solutions locales d'un objectif donné.
+Une séquence de bonds sur $a$ peut être abstraite par l'ensemble de ses frappeurs qui ne sont
+pas dans $a$ (\defref{aBS}).
+Cette abstraction permet de résoudre un objectif qui concerne une sorte $a$
+à l'aide d'autres objectifs concernant d'autres sortes.
+On note dans la suite : $\Sol = \powerset(\PHproc)$.
+
+\begin{definition}[Séquence de bonds ($\BS$)]
+\deflabel{bs}
+  Une \emph{séquence de bonds} $\zeta$ est une séquence d'actions telle que
+  $\forall n \in \indexes{\zeta}, n < \card{\zeta}, \PHbounce(\zeta_{n}) = \PHtarget(\zeta_{n+1})$.
+  L'ensemble de toutes les séquences de bonds est appelé $\BS$,
+  et l'ensemble de toutes les séquences de bonds \emph{résolvant} un objectif $P$, appelé $\BS(P)$,
+  est défini par :
+    \[ \BS(\PHobj{a_i}{a_j}) \DEF \{ \zeta \in \BS \mid
+      \PHtarget(\zeta_1) = a_i \wedge \PHbounce(\zeta_{\card{\zeta}}) = a_j \} \enspace. \]
+\end{definition}
+
+On remarque que pour tout objectif $\obj{a_i}{a_j} \in \Obj$,
+$\BS(\obj{a_i}{a_j}) = \emptyset$ s'il n'existe aucune moyen d'atteindre $a_j$ depuis $a_i$.
+À l'inverse, la séquence vide appartient toujours à
+l'ensemble des séquences de bonds résolvant un objectif trivial :
+$\forall a_i \in \Proc, \emptyseq \in \BS(\obj{a_i}{a_i})$.
+
+\begin{definition}[Séquence de bonds abstraite ($\aBS:\Obj \rightarrow \powerset(\Sol)$)]
+\deflabel{aBS}
+  \[
+    \aBS(P) \DEF \{ \abstr{\zeta} \in \Sol \mid \zeta \in \BS(P), \nexists \zeta' \in \BS(P), \abstr{\zeta'} \subsetneq \abstr{\zeta} \} \enspace,
+  \]
+  où $\abstr{\zeta} \DEF \{ \PHhitter(\zeta_n) \mid  n \in \indexes{\zeta} \wedge \PHsort(\PHhitter(\zeta_n)) \neq \PHsort(P) \}$.
+\end{definition}
+
+\subsection{Sous-approximation}
+\seclabel{ua}
+
+On note $\concr(\w)$ (\defref{concr}) l'ensemble des scénarios concrétisant
+une séquence d'objectifs $\w$ dans le contexte $\ctx$,
+et $\uconcr(\w)$ (\defref{uconcr}) est défini comme étant égal à $\concr(\w)$ si et seulement si,
+pour chaque état $s \subseteq \ctx$,
+$\concr(\w) \cap \Sce(s) \neq \emptyset$.
+
+\begin{definition}[$\concr : \OS \to \powerset(\Sce)$]
+\deflabel{concr}
+  Pour toute séquence d'objectifs $\w \in \OS$, $\concr(\w)$ est l'ensemble des
+  de scénarios minimaux concrétisant $\w$ dans le contexte $\ctx$.
+  Il est défini comme le plus grand ensemble satisfaisant les conditions suivantes :
+  \begin{enumerate}[(i)]
+  \item $\forall \delta \in \concr(\w), \exists s \subseteq \ctx, \delta \in \Sce(s)$,
+  \item $\forall \delta \in \concr(\w), \exists \phi : \indexes{\w} \to \indexes{\delta},
+      (\forall n, m \in \indexes{\w}, n < m \Leftrightarrow \phi(n) \leq \phi(m)),
+      \forall n \in \indexes{\w}, \PHbounce(\w_n) \in \ctx \play \delta_{1 \ldots \phi(n)}$,
+  \item $\forall \delta, \delta' \in \concr(\w),
+      \card{\delta} \leq \card{\delta'} \Rightarrow \delta \neq \delta'_{1 \ldots \card{\delta}}$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[$\uconcr : \OS \to \powerset(\Sce)$]
+\deflabel{uconcr}
+  \[ \uconcr(\w) \DEF
+    \begin{cases}
+      \concr(\w) & \text{si } \forall s \in \PHl, s \subseteq \ctx, \exists \delta \in \concr(\w),
+        \delta \in \Sce(s) \\
+      \emptyset & \text{sinon.}
+    \end{cases} \]
+\end{definition}
+
+\begin{lemma}
+\lemlabel{uconcr-ctx}
+  $\ctx \subseteq \ctx' \wedge \muconcr_{\ctx'}(\w) \neq \emptyset \Rightarrow
+    \muconcr_{\ctx}(\w) \neq \emptyset$.
+\end{lemma}
+
+Pour tout objectif $P \in \Obj$ et tout contexte $\ctx \in \Ctx$, la \defref{maxCont}
+fournit l'ensemble des processus de la sorte $\sorte{P}$ requis pour résoudre $P$ dans $\ctx$,
+appelé $\gCont_\ctx(\PHsort(P), P)$.
+\begin{definition}[$\gCont_\ctx : \Sigma \times \Obj \to \powerset(\PHproc)$]
+\deflabel{maxCont}
+  \begin{align*}
+    \gCont_\ctx(a,P) \DEF
+    \{ p \in \PHproc &\mid \exists ps \in \aBS(P), \exists b_i \in ps, b = a \wedge p = b_i \\
+      & \vee b \neq a \wedge p \in \gCont_\ctx(a, \PHobj{b_j}{b_i}) \wedge b_j \in \PHget{\ctx}{b} \}
+    \enspace.
+  \end{align*}
+\end{definition}
+
+Pour une séquence d'objectifs $\w$ et un contexte $\ctx$ donnés,
+le \emph{graphe de causalité locale} $\cwB$ (\defref{glc}) représente une sous-approximation de
+l'atteignabilité de cette séquence d'objectifs dans $\ctx$.
+Pour cela, il relie les objectifs à des solutions à
+l'aide des séquences de bonds abstraites de la \defref{aBS}, ce qui produit de nouveaux objectifs
+résolus récursivement.
+Il s'agit donc d'un graphe dont les nœuds sont des éléments de $\Proc \cup \Obj \cup \Sol$,
+c'est-à-dire des processus, des objectifs et des ensembles de processus qui ont le rôle
+de \emph{solutions} :
+\begin{itemize}
+  \item Un nœud dans $\Obj$ représente un objectif requis pour la résolution de $\w$,
+    soit faisant directement partie de la séquence d'objectifs $\w$,
+    soit indirectement nécessaire à sa résolution ;
+  \item Un nœud dans $\Sol$ représente un ensemble de processus nécessaires pour résoudre
+    un objectif, c'est-à-dire un élément parmi ses séquences de bonds abstraites ;
+  \item Un nœud dans $\Proc$ représente un processus requis pour la résolution,
+    c'est-à-dire mentionné dans un nœud solution.
+\end{itemize}
+
+Un objectif $P \in \Obj$ est soluble si tous les processus contenus dans au moins une de ses
+abstractions de séquences de bonds $\aBS(P) \in \Sol$ (\cf \defref{aBS})
+peuvent être activés (\eqref{ESol1}).
+Une telle solution représente donc un ensemble de processus qui doivent être activés
+pour la résolution de $P$ (\eqref{ESol2}).
+Si $a \in \components$, l'atteignabilité d'un de ses processus $a_i$ est approximée par
+la possibilité de résoudre tous les objectifs de la forme $\PHobjp{a}{j}{i} \in \Obj$
+pour tout $a_j$ dans le contexte initial $\ctx$ (\eqref{EReq}) ;
+si $a \in \cs$, l'atteignabilité de $a_i$ est possible si tous les processus du sous-état
+$\csState(a_i)$ (\cf \defref{csState}) qu'il représente sont atteignables (\eqref{EPrio}).
+La résolution d'un objectif $P$ peut nécessiter un processus de $\PHsort(P)$,
+autrement dit : $\gCont(\PHsort(P), P) \neq \emptyset$ (\cf \defref{maxCont}) ;
+dans ce cas, $P$ est re-centré (\eqref{ECont}).
+Enfin, \eqref{Vw,Vproc,VE} assurent que l'ensemble des nœuds est complet.
+
+Étant donné que le processus actif de chaque sorte peut évoluer au cours de la résolution,
+le graphe de causalité locale $\cwB$ est obtenu par saturation avec tous les processus
+qu'il contient, \cad en recouvrant le contexte initial $\ctx$ par $\allprocs(\V, \E)$, défini par:
+  \[\allprocs(\V, \E) = (V \cap \Proc) \cup
+    \{ \PHtarget(P), \PHbounce(P) \mid P \in \V \cap \Obj \} \enspace.\]
+
+\begin{definition}
+\deflabel{glc}
+  Le graphe de causalité locale $\cwB \DEF (\Bv, \Be)$ est défini par :
+  $\cwB \DEF \lfp{\aB^\w_\ctx}{\myB}{\aB^\w_{\ctx \Cap \allprocs(\myB)}}$,
+  où $\myB \DEF (\cwV, \cwE)$ est le plus petit graphe respectant
+  $\cwV \subseteq \Proc \cup \Obj \cup \Sol$ et $\cwE \subseteq \cwV \times \cwV$
+  tel que :
+  \begin{align}
+    \w &\subseteq \cwV \label{eq:Vw} \\
+    P \in \cwVObj &\Rightarrow \PHbounce(P) \in \cwV \label{eq:Vproc} \\
+    (x, y) \in \cwE &\Rightarrow y \in \cwV \label{eq:VE} \\
+    P \in \cwVObj \wedge ps \in \BS(P) &\Rightarrow (P, ps) \in \cwE \label{eq:ESol1} \\
+    ps \in \cwVSol \wedge a_i \in ps &\Rightarrow (ps, a_i) \in \cwE \label{eq:ESol2} \\
+    a \in \components \wedge a_i \in \cwVProc \wedge a_j \in \ctx &\Rightarrow (a_i, \PHobjp{a}{j}{i}) \in \cwE \label{eq:EReq} \\
+    a \in \cs \wedge a_i \in \cwVProc \wedge ps \in \csState(a_i) &\Rightarrow (a_i, ps) \in \cwE \label{eq:EPrio} \\
+    P \in \cwVObj \wedge q \in \gCont_\ctx(\PHsort(P), P) &\Rightarrow (P, \PHobj{q}{\PHbounce(P)}) \in \cwE \label{eq:ECont} \!
+  \end{align}
+\end{definition}
+
+Au sein de ce graphe de causalité locale, un arc $(p, ps) \in \Proc \times \Sol$
+est dit \emph{cohérent} (\defref{coherent}) si aucun des processus dans $ps$
+n'entre en conflit avec les processus fils du nœud $ps$,
+\cad s'il n'existe pas un processus dans $ps$ et un processus parmi les fils de $ps$
+qui soient différents mais appartenant à la même sorte.
+Si tous les arcs du graphe sont cohérents, alors le \thmref{approxinf}
+donne une condition suffisante pour la concrétisation de la séquence d'objectifs $\w$
+dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
+
+\begin{definition}[Arc cohérent]
+\deflabel{coherent}
+  Un arc $(x, y) \in \cwE$ est dit \emph{cohérent} si et seulement si :
+  $(x, y) \in \Be \cap (\Proc \times \Sol) \Rightarrow y$ n'a aucun fils $a_j \in \Bv \cap \Proc$
+  tel que $\exists a_i \in y, \sorte{a_i} = \sorte{a_j} \wedge a_i \neq a_j$.
+\end{definition}
+
+\begin{theorem}[Sous-Approximation]
+\thmlabel{approxinf}
+  Étant données des Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)};\PHa^{(2)}))$,
+  un contexte $\ctx \in \Ctx$ et une séquence d'objectifs $\w \in \OS$,
+  si le graphe $\cwB$ ne contient aucun cycle,
+  que tous ses nœuds objectifs possèdent au moins une solution
+  et que tous ses arcs sont cohérents,
+  alors $\uconcr(\w) \neq \emptyset$.
+\end{theorem}
+
+
+\todo{Recopier la preuve}
+
+
+
+%\end{document}
+
+
+\begin{comment}
+\begin{example}
+  Let $\PH' = (\PHs, \PHl, \PHh'^{\langle 1 \rangle})$ be the “merged” version of the PH in \pref{fig:ph-livelock}, that is: $\PHh'^{\langle 1 \rangle} = \PHh^{(1)} \cup \PHh^{(2)}$,
+  which is how it would have been represented in the semantics without priorities.
+  Due to spurious behaviours inherent to the cooperative sorts in this semantics, 
+  the original under-approximation developed in~\cite{PMR12-MSCS} concludes that $c_1$ is reachable in $\PH'$ from $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
+  
+  Such unwanted behaviours are palliated by the semantics of PH with priorities proposed in this paper.
+  Indeed, the under-approximation given in \pref{th:approxinf} does not conclude regarding the reachability of $c_1$,
+  as one of the edges of the resulting graph of local causality is not coherent (\pref{def:coherent}),
+  as shown in in \pref{fig:sa-livelock}.
+  (However, from the inconclusiveness of \pref{th:approxinf}, one cannot conclude about the unreachability of $c_1$.
+  Such analysis should be driven for instance with over-approximation methods developed in~\cite{PMR12-MSCS}.)
+  
+  However, if $\PHhit{a_0}{b_0}{b_1}$ and $\PHhit{b_0}{a_0}{a_1}$ are replaced by the auto-actions
+  $\PHhit{a_0}{a_0}{a_1}$ and $\PHhit{b_0}{b_0}{b_1}$,
+  then \pref{th:approxinf} concludes that $c_1$ is reachable from $\ctx$.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}[aS]
+    \node[Aproc] (c1) {$c_1$};
+    \node[Aobj,below of=c1] (c01) {$\PHobj{c_0}{c_1}$};
+    \node[Asol,below of=c01] (c01s) {};
+
+    \node[AprocPrio,below of=c01s] (ab11) {$ab_{11}$};
+    \node[AsolPrio,below of=ab11] (ab11s) {};
+
+    \node[Aproc,below left of=ab11s] (a1) {$a_1$};
+    \node[Aobj,below of=a1] (a11) {$\PHobj{a_1}{a_1}$};
+    \node[Asol,below of=a11] (a11s) {};
+    \node[Aobj,below left of=a1] (a01) {$\PHobj{a_0}{a_1}$};
+    \node[Asol,below of=a01] (a01s) {};
+    \node[Aproc,below of=a01s] (b0) {$b_0$};
+    \node[Aobj,below of=b0] (b00) {$\PHobj{b_0}{b_0}$};
+    \node[Asol,below of=b00] (b00s) {};
+    \node[Aobj,below left of=b0] (b10) {$\PHobj{b_1}{b_0}$};
+    \node[Asol,below of=b10] (b10s) {};
+
+    \node[Aproc,below right of=ab11s] (b1) {$b_1$};
+    \node[Aobj,below of=b1] (b11) {$\PHobj{b_1}{b_1}$};
+    \node[Asol,below of=b11] (b11s) {};
+    \node[Aobj,below right of=b1] (b01) {$\PHobj{b_0}{b_1}$};
+    \node[Asol,below of=b01] (b01s) {};
+    \node[Aproc,below of=b01s] (a0) {$a_0$};
+    \node[Aobj,below of=a0] (a00) {$\PHobj{a_0}{a_0}$};
+    \node[Asol,below of=a00] (a00s) {};
+    \node[Aobj,below right of=a0] (a10) {$\PHobj{a_1}{a_0}$};
+    \node[Asol,below of=a10] (a10s) {};
+
+    \path
+    (c1) edge (c01)
+    (c01) edge (c01s)
+    (c01s) edge (ab11)
+    (ab11) edge[aSPrio] (ab11s)
+    (ab11s) edge (a1) edge (b1)
+
+    (a1) edge (a01) edge (a11)
+    (a01) edge (a01s)
+    (a01s) edge (b0)
+    (a11) edge (a11s)
+    (a0) edge (a10) edge (a00)
+    (a10) edge (a10s)
+    (a00) edge (a00s)
+
+    (b0) edge (b10) edge (b00)
+    (b10) edge (b10s)
+    (b00) edge (b00s)
+    (b1) edge (b01) edge (b11)
+    (b01) edge (b01s)
+    (b01s) edge (a0)
+    (b11) edge (b11s)
+    ;
+    \end{tikzpicture}
+  \caption{
+  \label{fig:sa-livelock}
+    The graph of local causality of the PH model in \pref{fig:ph-livelock}
+    for the objective $\w = \PHobj{c_0}{c_1}$ and the initial context $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
+    Rectangular nodes containing a single process are elements in $\Proc$,
+    borderless nodes containing a couple of processes are elements in $\Obj$
+    and circle nodes are elements in $\Sol$.
+    \pref{th:approxinf} is inconclusive on this example as edge $(ab_{11}, \{ a_1, b_1 \}) \in \Proc \times \Sol$ (here represented with a double line) is not coherent (\pref{def:coherent}).
+    Indeed, $a_0 \in \Proc$ is a child of $\{ a_1, b_1 \}$, but $a_0 \neq a_1$ (and the same also stands for $b_0$).
+  }
+\end{figure}
+\end{example}
+
+
+\subsection{Reachability of a state}
+
+\newcommand{\total}{\tau}
+\newcommand{\reach}{\sigma}
+
+The reachability property studied so far concerns a single process at a time.
+However, we remark that the reachability of a partial or global state can be
+addressed with the very same analysis by introducing a dedicated cooperative
+sort in the scope of the PH semantics with $2$ classes of priorities.
+
+Indeed, let $\PH = (\PHs, \PHl, (\PHh^{(1)}, \PHh^{(2)}))$ be a PH and suppose that we want to study the reachability of a state $s \in \PHl$.
+Let $\PH' = (\PHs', \PHl', (\PHh'^{(1)}, \PHh'^{(2)}))$
+with: $\PHs' = \PHs \cup \{ \total, \reach \}$ and $\PHl' = \PHl \times \PHl_\total \times \PHl_\reach$,
+where $\total$ is a cooperative sort on all components $\components$ of $\PH$ (thus $\PHl_\total = \underset{a \in \components}{\times} \PHl_a$)
+and $\reach$ is a component with $\PHl_\reach = \{ \reach_0, \reach_1 \}$;
+furthermore, $\PHh'^{(1)}$ is the set $\PHh^{(1)}$ completed with all actions updating the cooperative sort $\total$,
+and $\PHh'^{(2)} = \PHh^{(2)} \cup \{ \PHhit{\pfp_s(\total)}{\reach_0}{\reach_1} \}$.
+
+Given an initial context $\ctx$, the reachability of $s$ in $\PH$ is equivalent to the concretisation of $\PHobjp{\reach}{0}{1}$ in $\PH'$ from the initial context $\ctx \cup \{ \reach_0 \}$ (the initial state of $\total$ does not matter), which can be efficiently under-approximated using \pref{th:approxinf}.
+Indeed, the additional action $\PHhit{\pfp_s(\total)}{\reach_0}{\reach_1}$ in $\PHh'^{(2)}$ allows to conclude on the reachability of process $\pfp_s(\total)$, that is, on the reachability of the state $s$ (considering only the components).
+
+It is also possible to compute the reachability of a set of states $S \subseteq \PHl$ by creating several actions $\PHhit{\total_s}{\reach_0}{\reach_1}$ in $\PHh^{(2)}$ for each state $s \in S$,
+or on a sub-state $s \in \PHsubl[\PHl]_S$ of a set of components $S \subset \PHs$ by adapting the sort $\total$ with: $\PHl_\total = \PHsubl[\PHl]_S$
+
+
+\subsection{Sequential under-approximation}
+\label{ssec:ordered-ua}
+
+In this section, we briefly explain an alternative sufficient condition that
+progressively takes into account the successive objectives, instead of
+considering all of them at a time, as it is done in the previous sections.
+Because objectives are taken into account individually, such an approach
+considers only a subset of scenarios.
+However, because each iteration focuses on a smaller part of the network, this
+sequential under-approximation may be more conclusive.
+
+Let us define a sequence of objectives $\w=\obj{a_i}{a_j}\concat\w'$ with
+$a_i\neq a_j$ and a state $s\in \PHl$ with $\get{s}{a}=a_i$.
+One can remark that any scenario reaching $a_j$ necessarily includes one of the
+bounce sequences in $\BS(\obj{a_i}{a_j})$, and, in particular,
+any minimal scenario reaching $a_j$ ends in a state where $a_j$ is present but
+also the hitter of the last bounce of one bounce sequence in $\BS(\obj{a_i}{a_j})$.
+If such hitter $b_k$ is in a cooperative sort $b\in\cs$, it also means that one of the sub-states
+in $\csState(b_k)$ is included in the ending state.
+\pref{def:lastprocs} defines $\lastprocs(\obj{a_i}{a_j})$ as the set of set of
+processes that may be present just after reaching $a_j$.
+
+From \pref{th:approxinf}, we can deduce that
+for any scenario $\delta$ in $\uconcr(P)$,
+there exists a set of processes $ps\in\lastprocs(P)$
+such that $ps \subset (s\play\delta)$.
+Hence, if $\muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset$,
+with $\ctx'=\ctx\Cap\procs(\mycwB{\ctx}{P})$,
+there exists a scenario $\delta'$ concretising $\w'$ from the
+state $(s\play\delta)$.
+Therefore, the scenario $\delta\concat\delta'$ concretises
+$\w$.
+
+\begin{definition}[$\lastprocs$]
+\label{def:lastprocs}
+Given an objective $\obj{a_i}{a_j}$, $\lastprocs:
+\Obj\to\powerset(\powerset(\Proc))$ is
+defined as the largest set such that, $\forall lps\in\lastprocs(\obj{a_i}{a_j})$, 
+$lps\in\powerset(\Proc)$,
+\begin{enumerate}
+\item $a_j\in lps$;
+\item $\exists\zeta\in\BS(\obj{a_i}{a_j}),
+    \PHsort(\hitter{\zeta_{\card\zeta}}) \neq 
+    \PHsort(\bounce{\zeta_{\card\zeta}})
+     \Rightarrow
+      \hitter{\zeta_{\card\zeta}}\in lps$;
+\item $\forall b_j\in lps, b\in\cs, \exists ps\in\csState(b_j), ps\subset lps$;
+\item $\nexists lps'\in\lastprocs(\obj{a_i}{a_j}), lps'\subset lps \wedge
+                  lps'\neq lps$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Sequential under-approximation]
+\label{thm:ordered-ua}
+Given a Process Hitting $(\PHs; \PHl; \PHa^{\langle 2 \rangle})$
+that satisfies \pref{cr:bounded} and \pref{cr:compcs},
+a context $\ctx$ and an objective sequence $\w =
+P\concat\w'\in\OS$,
+$\uconcr(P)\neq\emptyset \wedge
+  \forall ps \in\lastprocs(P),
+  \muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset
+  \Longrightarrow \uconcr(\w)\neq\emptyset$,
+where $\ctx' = \ctx\Cap\procs(\mycwB{\ctx}{P})$.
+\end{theorem}
+\begin{proof}
+If $\uconcr(P)\neq\emptyset$,
+for all $s\in \PHl, s\subset\ctx$,
+there exists a scenario $\delta\in\uconcr(P)\cap\Sce(s)$;
+from \pref{def:lastprocs} and proof of \pref{th:approxinf},
+$\exists ps\in\lastprocs(P)$ such that
+$(s\play\delta)\subset\ctx'\Cap ps$.
+Hence, if $\muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset$,
+there exists a scenario $\delta'\in\muconcr_{\ctx'\Cap ps}(\w')$ such that
+$\delta'\in\Sce(s\play\delta)$.
+Hence, $\delta\concat\delta'$ is a scenario playable in $s$.
+Therefore, for all $s\in \PHl, s\subset\ctx$, there exists a scenario
+concretising $\w$.
+Hence, $\uconcr(\w)\neq\emptyset$.
+\end{proof}
+
+\end{comment}
