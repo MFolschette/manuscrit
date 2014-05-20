@@ -290,26 +290,76 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 
 
-%\end{document}
-
-
-\begin{comment}
 \begin{example}
-  Let $\PH' = (\PHs, \PHl, \PHh'^{\langle 1 \rangle})$ be the “merged” version of the PH in \pref{fig:ph-livelock}, that is: $\PHh'^{\langle 1 \rangle} = \PHh^{(1)} \cup \PHh^{(2)}$,
-  which is how it would have been represented in the semantics without priorities.
-  Due to spurious behaviours inherent to the cooperative sorts in this semantics, 
-  the original under-approximation developed in~\cite{PMR12-MSCS} concludes that $c_1$ is reachable in $\PH'$ from $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
+  Comparons les Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)};\PHa^{(2)}))$
+  définies à la \figref{ph-livelock} avec 
+  les Frappes de Processus standards $\PH' = (\PHs; \PHl; \PHh')$
+  telles que $\PHh' = \PHh^{(1)} \cup \PHh^{(2)}$.
+  En d'autres termes, $\PH'$ est la version sans priorités de $\PH$,
+  c'est-à-dire où toutes les actions sont présentes mais où la notion de classes de priorités
+  a été supprimée.
   
-  Such unwanted behaviours are palliated by the semantics of PH with priorities proposed in this paper.
-  Indeed, the under-approximation given in \pref{th:approxinf} does not conclude regarding the reachability of $c_1$,
-  as one of the edges of the resulting graph of local causality is not coherent (\pref{def:coherent}),
-  as shown in in \pref{fig:sa-livelock}.
-  (However, from the inconclusiveness of \pref{th:approxinf}, one cannot conclude about the unreachability of $c_1$.
-  Such analysis should be driven for instance with over-approximation methods developed in~\cite{PMR12-MSCS}.)
+  Intéressons-nous à la dynamique de $\PH'$.
+  Comme expliqué au \stodo{\S{} sur la modélisation des coopérations},
+  ce modèle comporte une sorte coopérative $ab$ qui est définie de la façon
+  dont le sont toutes les sortes coopératives en
+  en Frappes de Processus standards, faute de priorités.
+  Cette version sans priorités introduit des comportements supplémentaires qui ne sont pas
+  désirables pour représenter une porte logique exacte.
+  En effet, on pourrait s'attendre à ce que $ab_{11}$ représente la présence simultanée
+  de $a$ et $b$ dans un état passé, c'est-à-dire :
+  ou, en d'autres termes, que seule la présence simultanée de $a_1$ et $b_1$ pourrait
+  permettre l'activation de $ab_{11}$.
+  Or on constate que ce n'est pas le cas, car le scénario suivant permet par exemple d'activer
+  ce processus, sans pour autant que $a_1$ et $b_1$ ne soient simultanément présents,
+  et bien que le processus initial de $ab$ soit cohérent avec ceux de $a$ et $b$ :
+  $\PHstate{a_1, b_0, c_0, ab_{10}} \PHtrans[\PH']
+  \PHstate{a_0, b_0, c_0, ab_{10}} \PHtrans[\PH']
+  \PHstate{a_0, b_1, c_0, ab_{10}} \PHtrans[\PH']
+  \PHstate{a_0, b_1, c_0, ab_{11}}$.
+  En effet, il se trouve que l'activation de $ab_{11}$ ne représente pas la présence simultanée
+  de $a_1$ et $b_1$ dans un même état, mais leur présence consécutive dans
+  différents états.
+  En d'autres termes, la présence de $ab_{11}$ dans un état n'implique pas
+  $a_1 \wedge b_1$ dans le même état, ni même
+  $\tempop(a_1 \wedge b_1)$, mais plutôt : $\tempop(a_1) \wedge \tempop(b_1)$
+  où $\tempop$ signifie : «~précédemment~».
+  On constate d'ailleurs que l'analyse statique développée dans~\cite{PMR12-MSCS}
+  répond positivement quand à l'accessibilité de $c_1$ depuis l'état
+  $\PHstate{a_1, b_0, c_0, ab_{10}}$.
   
-  However, if $\PHhit{a_0}{b_0}{b_1}$ and $\PHhit{b_0}{a_0}{a_1}$ are replaced by the auto-actions
-  $\PHhit{a_0}{a_0}{a_1}$ and $\PHhit{b_0}{b_0}{b_1}$,
-  then \pref{th:approxinf} concludes that $c_1$ is reachable from $\ctx$.
+  Un tel comportement est indésirable si on souhaite utiliser les sortes coopératives en tant
+  que portes logiques exactes, c'est-à-dire sans ce décalage temporel menant à une sur-approximation
+  de la dynamique.
+  Les Frappes de Processus canoniques permettent alors de modéliser un comportement (faiblement)
+  bisimilaire au comportement voulu \stodo{ref?}, les actions primaires permettant la mise à jour
+  sans délai des sortes coopératives, comme pour le modèle $\PH$ de la \figref{ph-livelock}.
+  En effet, le processus $ab_{11}$ est impossible à activer si $a_1$ et $b_1$ ne sont
+  pas simultanément actifs, et ce cas ne peut se présenter que dans l'état initial.
+  Il s'agit d'un jardin d'Eden dans le sens développé dans \stodo{la thèse de Loïc}.
+  La sous-approximation développée dans cette section au \thmref{approxinf}
+  ne conclut d'ailleurs pas quant à l'accessibilité de $c_1$ depuis l'état
+  $\PHstate{a_1, b_0, c_0, ab_{10}}$.
+  En effet, comme le montre la \figref{glc-livelock},
+  l'arc représenté en double trait liant le nœud processus $ab_{11}$ à son unique solution
+  n'est pas cohérent selon la
+  \defref{coherent}, ce qui empêche l'application du théorème.
+  Cependant, il faut noter que la sur-approximation de~\cite{PMR12-MSCS}
+  est toujours valable sur les Frappes de Processus canoniques à condition de l'appliquer
+  sur une version sans priorités (\cad dans le cas présent, l'appliquer sur $\PH'$
+  pour obtenir un résultat quant à $\PH$).
+  Ainsi, cette sur-approximation renvoie un résultat lui aussi non-conclusif,
+  ce qui fait que la méthode d'analyse statique ne répond globalement pas sur cet exemple,
+  et de façon plus générale sur tous les exemples dont l'atteignabilité recherchée
+  est rendue impossible par simple ajout de classes de priorités.
+  
+  On note pour finir que le \thmref{approxinf} est conclusif sur l'atteignabilité de $c_1$
+  depuis $\PHstate{a_1, b_0, c_0, ab_{10}}$ dans les Frappes de Processus canoniques $\PH''$, où :
+  $\PH'' = (\PHs; \PHl; (\PHa^{(1)};\PHa'^{(2)}))$ avec :
+  \[\PHa'^{(2)} = (\PHa^{(2)} \setminus \{ \PHhit{a_0}{b_0}{b_1}, \PHhit{b_0}{a_0}{a_1} \})
+    \cup \{ \PHhit{a_0}{a_0}{a_1}, \PHhit{b_0}{b_0}{b_1} \} \enspace.\]
+  En effet, dans ce cas les processus $a_0$ et $b_0$ du graphe de la \figref{glc-livelock}
+  sont permutés, ce qui tous les arcs cohérents.
 
 \begin{figure}[tp]
   \centering
@@ -368,43 +418,79 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
     ;
     \end{tikzpicture}
   \caption{
-  \label{fig:sa-livelock}
-    The graph of local causality of the PH model in \pref{fig:ph-livelock}
-    for the objective $\w = \PHobj{c_0}{c_1}$ and the initial context $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
-    Rectangular nodes containing a single process are elements in $\Proc$,
-    borderless nodes containing a couple of processes are elements in $\Obj$
-    and circle nodes are elements in $\Sol$.
-    \pref{th:approxinf} is inconclusive on this example as edge $(ab_{11}, \{ a_1, b_1 \}) \in \Proc \times \Sol$ (here represented with a double line) is not coherent (\pref{def:coherent}).
-    Indeed, $a_0 \in \Proc$ is a child of $\{ a_1, b_1 \}$, but $a_0 \neq a_1$ (and the same also stands for $b_0$).
+  \figlabel{glc-livelock}
+    Le graphe de causalité locale des Frappes de Processus de la \figref{ph-livelock}
+    pour l'objectif $\w = \PHobj{c_0}{c_1}$
+    et le contexte initial $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
+    Les nœuds rectangulaires représentent les éléments de $\Proc$,
+    les nœuds sans bordure sont les éléments de $\Obj$
+    et les cercles sont les éléments de $\Sol$.
+    Le processus $ab_{11}$, ainsi que son unique solution et l'arc qui les relie,
+    sont mis en valeur avec des traits doubles car il s'agit du principal ajout de la méthode
+    présentée à la \secref{ua}.
+    Il est à noter que l'arc dessiné avec un trait double n'est pas cohérent
+    au sens de la \defref{coherent}
+    En effet, sa cible est la solution $\{ a_1, b_1 \}$,
+    or l'un de ses successeurs indirects est $a_0$, qui est un autre processus de la même sorte
+    que $a_1$ (et le même raisonnement fonctionne pour $b_0$).
   }
 \end{figure}
 \end{example}
 
 
-\subsection{Reachability of a state}
 
-\newcommand{\total}{\tau}
-\newcommand{\reach}{\sigma}
+\subsection{Atteignabilité d'un état}
 
-The reachability property studied so far concerns a single process at a time.
-However, we remark that the reachability of a partial or global state can be
-addressed with the very same analysis by introducing a dedicated cooperative
-sort in the scope of the PH semantics with $2$ classes of priorities.
+\newcommand{\uastotal}{\tau}
+\newcommand{\uasreach}{\rho}
+\newcommand{\uasps}{{ps}}
 
-Indeed, let $\PH = (\PHs, \PHl, (\PHh^{(1)}, \PHh^{(2)}))$ be a PH and suppose that we want to study the reachability of a state $s \in \PHl$.
-Let $\PH' = (\PHs', \PHl', (\PHh'^{(1)}, \PHh'^{(2)}))$
-with: $\PHs' = \PHs \cup \{ \total, \reach \}$ and $\PHl' = \PHl \times \PHl_\total \times \PHl_\reach$,
-where $\total$ is a cooperative sort on all components $\components$ of $\PH$ (thus $\PHl_\total = \underset{a \in \components}{\times} \PHl_a$)
-and $\reach$ is a component with $\PHl_\reach = \{ \reach_0, \reach_1 \}$;
-furthermore, $\PHh'^{(1)}$ is the set $\PHh^{(1)}$ completed with all actions updating the cooperative sort $\total$,
-and $\PHh'^{(2)} = \PHh^{(2)} \cup \{ \PHhit{\pfp_s(\total)}{\reach_0}{\reach_1} \}$.
+La propriété d'atteignabilité développée à la \secref{ua}
+sur les Frappes de Processus canoniques
+ne traite l'atteignabilité d'un ensemble de processus que de façon séquentielle.
+Cependant, il est possible de vérifier l'atteignabilité d'un sous-état
+(autrement dit, l'atteignabilité simultanée d'un ensemble de processus)
+à l'aide d'une sorte coopérative.
 
-Given an initial context $\ctx$, the reachability of $s$ in $\PH$ is equivalent to the concretisation of $\PHobjp{\reach}{0}{1}$ in $\PH'$ from the initial context $\ctx \cup \{ \reach_0 \}$ (the initial state of $\total$ does not matter), which can be efficiently under-approximated using \pref{th:approxinf}.
-Indeed, the additional action $\PHhit{\pfp_s(\total)}{\reach_0}{\reach_1}$ in $\PHh'^{(2)}$ allows to conclude on the reachability of process $\pfp_s(\total)$, that is, on the reachability of the state $s$ (considering only the components).
+En effet, soient $\PH = (\PHs, \PHl, (\PHh^{(1)}, \PHh^{(2)}))$ des Frappes de Processus
+canoniques et supposons que l'ont cherche à étudier l'atteignabilité d'un sous-état
+$\uasps \in \PHsubl_S$, avec $S \subset \PHs$.
+On pose alors : $\PH' = (\PHs', \PHl', (\PHh'^{(1)}, \PHh'^{(2)}))$
+les Frappes de Processus canoniques telles que :
+\begin{itemize}
+  \item $\PHs' = \PHs \cup \{ \uastotal, \uasreach \}$,
+  \item $\PHl' = \PHl \times \PHl_\uastotal \times \PHl_\uasreach$, où
+    $\PHl_\uastotal = \PHsubl_S$ et $\PHl_\uasreach = \{ \uasreach_0, \uasreach_1 \}$,
+  \item $\PHh'^{(1)} = \PHh^{(1)} \cup
+      \{ \PHfrappe{a_i}{\uastotal_\mysigma}{\uastotal_{\mysigma'}} \mid
+      a \in S, \mysigma, \mysigma' \in \PHl_\uastotal,
+      \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \recouvre a_i \}$,
+  \item $\PHh'^{(2)} = \PHh^{(2)} \cup \{ \PHfrappe{\uastotal_\uasps}{\uasreach_0}{\uasreach_1} \}$.
+\end{itemize}
+Cette transformation consiste donc à ajouter au modèle
+une sorte coopérative $\uastotal$ sur toutes les sortes de $S$,
+et un composant $\uasreach$ qui ne puisse changer de processus que lorsque le sous-état $\uasps$
+est présent (ce qui est déterminé par $\uastotal$).
+Ainsi, l'atteignabilité du sous-état $\uasps$ depuis un contexte initial $\ctx$ dans $\PH$
+est équivalente à celle du processus $\uasreach_1$ depuis le contexte
+$\ctx \cup \{ \uasreach_0 \}$ dans $\PH'$
+(l'état initial de $\uastotal$ n'a pas d'importance et peut être arbitrairement choisi),
+qui peut être traitée grâce au \thmref{approxinf}.
 
-It is also possible to compute the reachability of a set of states $S \subseteq \PHl$ by creating several actions $\PHhit{\total_s}{\reach_0}{\reach_1}$ in $\PHh^{(2)}$ for each state $s \in S$,
-or on a sub-state $s \in \PHsubl[\PHl]_S$ of a set of components $S \subset \PHs$ by adapting the sort $\total$ with: $\PHl_\total = \PHsubl[\PHl]_S$
+Nous pouvons donc répondre à des questions d'atteignabilité simultanée de plusieurs processus
+directement à l'aide des Frappes de Processus canoniques (\defref{phcanonique})
+et de l'analyse statique développée pour ce formalisme (\thmref{approxinf}).
+Cette méthode peut naturellement être adaptée pour répondre quant à
+l'accessibilité d'un ensemble de sous-états.
+Il est à noter cependant que le nombre de processus de la sorte coopérative $\uastotal$
+croît exponentiellement avec le nombre de sortes dans $S$, ce qui peut fortement impacter
+la vitesse de résolution de l'analyse statique.
+Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative comme expliqué
+à la section \toref.
 
+
+
+\end{document}
 
 \subsection{Sequential under-approximation}
 \label{ssec:ordered-ua}
