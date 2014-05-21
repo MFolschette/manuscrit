@@ -286,7 +286,80 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 \end{theorem}
 
 
-\todo{Recopier la preuve}
+\todo{«~Successeurs~» ou «~fils~» ? Il est temps de choisir !}
+
+\begin{demo}[\Thmref{approxinf}]
+  On note dans la suite :
+  $\Bee{X}{Y} = \Be \cap (X \times Y)$, avec $X, Y$ parmi $\PHproc$, $\Obj$ et $\Sol$,
+  et : $max\ctx = \ctx \Cap \allprocs(\cwB)$ le contexte accepté par $\cwB$.
+  
+  Soit $(a_i, ps) \in \Bee{\Proc}{\Sol}$ un arc liant un processus requis de sorte coopérative à
+  une solution et supposons que tous les enfants de $ps$ sont concrétisables.
+  On étiquette tous les processus de $ps$ par un entier : $ps = \{ p_n \}_{n \in \indexes{ps}}$.
+  Montrons par récurrence que pour tout $n \in \segm{0}{\card{ps}}$,
+  il existe un scénario $\delta_n$ tel que :
+  $\forall i \in \segm{1}{n}, \PHget{(s \PHplay \delta_n)}{\PHsort(p_i)} = p_i$.
+  \begin{itemize}
+    \item Le cas $\delta_0 = \varepsilon$ est immédiat.
+    \item Soit $n \in \segm{0}{\card{ps} - 1}$.
+      On suppose qu'il existe $\delta_n$ tel que décrit ci-dessus.
+      Posons $q = \PHget{(s \PHplay \delta_n)}{\PHsort(p_{n+1})}$.
+      Par hypothèse, $(a_i, ps)$ est cohérent (\defref{coherent}) et tous les processus
+      de $ps$ sont des processus de composants \todo{???} ;
+      cela signifie qu'aucun des processus requis pour résoudre $p_{n+1}$ n'est un autre processus
+      de la même sorte qu'un processus de $ps$.
+      Par conséquent, il existe un scénario
+      $\delta' \in \muconcr_{s \PHplay \delta_n}(\PHobj{q}{p_{n+1}})$
+      tel que $\forall i \in \segm{1}{n+1},
+        \PHget{(s \PHplay \delta_n \PHplay \delta')}{\PHsort(p_{i})} = p_{i}$.
+      Finalement, d'après le \lemref{update}, il existe un scénario
+      $\delta'' \in \reductionsce(s \PHplay \delta_n \PHplay \delta')$
+      tel que $\update(s \PHplay \delta_n \PHplay \delta') = s \PHplay \delta_{n+1}$
+      avec $\delta_{n+1} = \delta_n \PHplay \delta' \PHplay \delta''$,
+      et d'après le \lemref{hcscomp} :
+      $\forall i \in \segm{1}{n+1}, \PHget{(s \PHplay \delta_{n+1})}{\PHsort(p_i)} = p_i$
+  \end{itemize}
+  Ainsi, $\delta = \delta_{|ps|}$ existe, et étant donné ses propriétés, on a immédiatement :
+  $\PHget{(s \PHplay \delta)}{a} = a_i$ et $\update(s \PHplay \delta) = s \PHplay \delta$.
+  
+  Soit un état $s \in L$ tel que $s \subseteq max\ctx$.
+  Étant donné qu'il n'y a aucun cycle dans $\cwB$, montrons par récurrence que
+  pour tout objectif $P \in \Bv \cap \Obj$ tel que $\PHtarget(P) \in s$,
+  $\exists \delta \in \muconcr_s(P)$.
+  \begin{itemize}
+    \item Si $(P, \emptyset) \in \Bee{\Obj}{\Sol}$,
+      soit on a $\PHtarget(P) = \PHbounce(P)$ et $\delta = \emptyseq$,
+      soit on a $\forall \zeta \in \BS(P), \zeta \in \Sce(s) \wedge \PHsort(\zeta) = \{ \PHsort(P) \}$
+      et dans ce cas $\delta = \delta_1 \PHplay \zeta_1 \PHplay \dots \PHplay
+        \delta_{|\zeta|} \PHplay \zeta_{|\zeta|}$
+      est une séquence valide donnée par le \lemref{hcompcomp}.
+    \item Supposons que tous les objectifs qui sont les successeurs de $P$ sont concrétisables.
+      Si $\exists (P, Q) \in \Bee{\Obj}{\Obj}$, alors, par hypothèse,
+        $\muconcr_{s}(\obj{\PHtarget(P)}{\PHtarget(Q)} \concat Q) \neq \emptyset$, et donc
+        $\muconcr_{s}(P) \neq \emptyset$.
+      Sinon, d'après la \defref{maxCont}, la concrétisation des successeurs de $P$ ne requiert
+        aucun processus de la sorte $\PHsort(P)$.
+        De plus, il existe $\zeta \in \BS(P)$ tel que $(P, \aZ) \in \Bee{\Obj}{\Sol}$.
+        Montrons par récurrence que pour tout $n \in \indexes{\zeta}$, il existe un scénario
+        $\delta_n$ tel que $\PHget{(s \PHplay \delta_n)}{\PHsort(P)} = \PHbounce(\zeta_n)$.
+        \begin{itemize} %\item[$\circ$]
+          \item[$\circ$] Supposons que $\delta_n$ existe et posons $\zeta_n = \PHhit{b_i}{a_j}{a_k}$.
+            Par hypothèse, il existe $\delta' \in \muconcr_{s \PHplay \delta_n}(\PHobj{\any}{b_i})$
+            avec $\PHsort(P) \notin \PHsort(\delta')$ (\defref{maxCont}).
+            D'après le \lemref{update}, il existe
+            $\delta'' \in \reductionsce(s \PHplay \delta')$ tel que
+            $\update(s \PHplay \delta') = s \PHplay \delta' \PHplay \delta''$.
+            De plus, $\PHget{(s \PHplay \delta' \PHplay \delta'')}{b} = b_j$
+            (D'après le \lemref{hcompcomp} si $b \in \components$
+            ou le \lemref{hcscomp} si $b \in \cs$).
+            Ainsi, $\delta_{n+1} = \delta_n \PHplay \delta' \PHplay \delta'' \PHplay \zeta_n$.
+        \end{itemize}
+      On a donc :$\delta_{|\zeta|} \in \muconcr_s(P)$. % and $\ceil(\delta) \subseteq max\ctx$.
+  \end{itemize}
+  Finalement, étant donné $\muconcr_{max\ctx}(\w) \neq \emptyset$,
+  et d'après le \lemref{uconcr-ctx},
+  on a : $\uconcr(\w) \neq \emptyset$.
+\end{demo}
 
 
 
@@ -490,86 +563,73 @@ Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative 
 
 
 
-\end{document}
+\subsection{Raffinement de la Sous-approximation séquentielle}
+\seclabel{approxinf-ordonnee}
 
-\subsection{Sequential under-approximation}
-\label{ssec:ordered-ua}
+Dans cette section, nous donnons une alternative à la condition suffisante du \thmref{approxinf}
+qui permet de prendre en compte la séquentialité des objectifs plutôt que de les considérer
+simultanément, tel que cela est fait dans la version actuelle.
+Comme les objectifs sont prix en compte individuellement, une telle approche ne prend en compte
+qu'un sous-ensemble des scénarios possibles.
+Cependant, en se concentrant à chaque itération sur une plus petite partie du réseau, 
+cette sous-approximation séquentielle peut s'avérer plus souvent conclusive.
 
-In this section, we briefly explain an alternative sufficient condition that
-progressively takes into account the successive objectives, instead of
-considering all of them at a time, as it is done in the previous sections.
-Because objectives are taken into account individually, such an approach
-considers only a subset of scenarios.
-However, because each iteration focuses on a smaller part of the network, this
-sequential under-approximation may be more conclusive.
+Définissions une séquence d'objectifs $\w = \obj{a_i}{a_j} \concat \w'$ avec
+$a_i \neq a_j$ et un état $s \in \PHl$ tel que $\get{s}{a} = a_i$.
+On peut remarquer que tout scénario atteignant $a_j$ inclut nécessairement l'une des séquences
+de bonds dans $\BS(\obj{a_i}{a_j})$ et, en particulier,
+tout scénario minimal atteignant $a_j$ termine dans un état où son présents à la fois
+$a_j$ et le frappeur $a_k$ de la dernière action d'une des séquences de bonds
+dans $\BS(\obj{a_i}{a_j})$.
+Si la sorte $b$ d'un tel frappe est de surcroît une sorte coopérative ($b \in \cs$),
+cela signifie alors aussi que l'un des sous-états dans $\csState(b_k)$
+est inclus dans l'état final.
+La \defref{lastprocs} définit $\lastprocs(\obj{a_i}{a_j})$ comme étant l'ensemble des ensembles
+de processus qui peuvent être présents juste après avoir atteint $a_j$.
 
-Let us define a sequence of objectives $\w=\obj{a_i}{a_j}\concat\w'$ with
-$a_i\neq a_j$ and a state $s\in \PHl$ with $\get{s}{a}=a_i$.
-One can remark that any scenario reaching $a_j$ necessarily includes one of the
-bounce sequences in $\BS(\obj{a_i}{a_j})$, and, in particular,
-any minimal scenario reaching $a_j$ ends in a state where $a_j$ is present but
-also the hitter of the last bounce of one bounce sequence in $\BS(\obj{a_i}{a_j})$.
-If such hitter $b_k$ is in a cooperative sort $b\in\cs$, it also means that one of the sub-states
-in $\csState(b_k)$ is included in the ending state.
-\pref{def:lastprocs} defines $\lastprocs(\obj{a_i}{a_j})$ as the set of set of
-processes that may be present just after reaching $a_j$.
+D'après le \thmref{approxinf}, on peut déduire que pour tout scénario $\delta \in \uconcr(P)$,
+il existe un ensemble de processus $ps \in \lastprocs(P)$ tel que $ps \subset (s \play \delta)$.
+Donc, si $\muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset$,
+avec $\ctx' = \ctx \Cap \procs(\mycwB{\ctx}{P})$,
+il existe alors un scénario $\delta'$ concrétisant $\w'$ depuis l'état $(s \play \delta)$.
+Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
 
-From \pref{th:approxinf}, we can deduce that
-for any scenario $\delta$ in $\uconcr(P)$,
-there exists a set of processes $ps\in\lastprocs(P)$
-such that $ps \subset (s\play\delta)$.
-Hence, if $\muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset$,
-with $\ctx'=\ctx\Cap\procs(\mycwB{\ctx}{P})$,
-there exists a scenario $\delta'$ concretising $\w'$ from the
-state $(s\play\delta)$.
-Therefore, the scenario $\delta\concat\delta'$ concretises
-$\w$.
+\todo{Renommer $\lastprocs$ ? En $\f{derprocs}$ ?}
 
-\begin{definition}[$\lastprocs$]
-\label{def:lastprocs}
-Given an objective $\obj{a_i}{a_j}$, $\lastprocs:
-\Obj\to\powerset(\powerset(\Proc))$ is
-defined as the largest set such that, $\forall lps\in\lastprocs(\obj{a_i}{a_j})$, 
-$lps\in\powerset(\Proc)$,
-\begin{enumerate}
-\item $a_j\in lps$;
-\item $\exists\zeta\in\BS(\obj{a_i}{a_j}),
-    \PHsort(\hitter{\zeta_{\card\zeta}}) \neq 
-    \PHsort(\bounce{\zeta_{\card\zeta}})
-     \Rightarrow
-      \hitter{\zeta_{\card\zeta}}\in lps$;
-\item $\forall b_j\in lps, b\in\cs, \exists ps\in\csState(b_j), ps\subset lps$;
-\item $\nexists lps'\in\lastprocs(\obj{a_i}{a_j}), lps'\subset lps \wedge
-                  lps'\neq lps$.
-\end{enumerate}
+\begin{definition}[$\lastprocs : \Obj \to \powerset(\powerset(\Proc))$]
+\deflabel{lastprocs}
+  Pour tout objectif $\obj{a_i}{a_j} \in \Obj$, $\lastprocs(\obj{a_i}{a_j})$
+  est défini comme le plus grand ensemble tel que :
+  $\forall lps \in \lastprocs(\obj{a_i}{a_j}), lps \in \powerset(\Proc)$,
+  \begin{enumerate}
+    \item $a_j \in lps$,
+    \item $\exists \zeta \in \BS(\obj{a_i}{a_j}),
+        \sorte{\hitter{\zeta_{\card{\zeta}}}} \neq \sorte{\bounce{\zeta_{\card{\zeta}}}}
+        \Rightarrow \hitter{\zeta_{\card{\zeta}}} \in lps$,
+    \item $\forall b_j \in lps, b \in \cs \Rightarrow \exists ps \in \csState(b_j), ps \subset lps$,
+    \item $\nexists lps'\in \lastprocs(\obj{a_i}{a_j}), lps' \varsubsetneq lps$.
+  \end{enumerate}
 \end{definition}
 
-\begin{theorem}[Sequential under-approximation]
-\label{thm:ordered-ua}
-Given a Process Hitting $(\PHs; \PHl; \PHa^{\langle 2 \rangle})$
-that satisfies \pref{cr:bounded} and \pref{cr:compcs},
-a context $\ctx$ and an objective sequence $\w =
-P\concat\w'\in\OS$,
-$\uconcr(P)\neq\emptyset \wedge
-  \forall ps \in\lastprocs(P),
-  \muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset
-  \Longrightarrow \uconcr(\w)\neq\emptyset$,
-where $\ctx' = \ctx\Cap\procs(\mycwB{\ctx}{P})$.
+\begin{theorem}[Sous-approximation séquentielle]
+\thmlabel{approxinf-ordonnee}
+  Pour toutes Frappes de Processus canoniques $(\PHs; \PHl; \PHa^{\langle 2 \rangle})$,
+  tout contexte $\ctx \in \Ctx$ et toute séquence d'objectifs $\w = P \concat \w' \in \OS$,
+  $\uconcr(P) \neq \emptyset \wedge \forall ps \in \lastprocs(P),
+    \muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset
+    \Rightarrow \uconcr(\w) \neq \emptyset$,
+  où $\ctx' = \ctx \Cap \procs(\mycwB{\ctx}{P})$.
 \end{theorem}
-\begin{proof}
-If $\uconcr(P)\neq\emptyset$,
-for all $s\in \PHl, s\subset\ctx$,
-there exists a scenario $\delta\in\uconcr(P)\cap\Sce(s)$;
-from \pref{def:lastprocs} and proof of \pref{th:approxinf},
-$\exists ps\in\lastprocs(P)$ such that
-$(s\play\delta)\subset\ctx'\Cap ps$.
-Hence, if $\muconcr_{\ctx'\Cap ps}(\w')\neq\emptyset$,
-there exists a scenario $\delta'\in\muconcr_{\ctx'\Cap ps}(\w')$ such that
-$\delta'\in\Sce(s\play\delta)$.
-Hence, $\delta\concat\delta'$ is a scenario playable in $s$.
-Therefore, for all $s\in \PHl, s\subset\ctx$, there exists a scenario
-concretising $\w$.
-Hence, $\uconcr(\w)\neq\emptyset$.
-\end{proof}
 
-\end{comment}
+\begin{demo}[\Thmref{approxinf-ordonnee}]
+  Si $\uconcr(P) \neq \emptyset$, alors pour tout état $s \in \PHl, s \subset \ctx$,
+  il existe un scénario $\delta \in \uconcr(P) \cap \Sce(s)$.
+  D'après la \defref{lastprocs} et la démonstration du \stodo{ref : th:approxinf},
+  il existe $ps \in \lastprocs(P)$ tel que $(s \play \delta) \subset \ctx' \Cap ps$.
+  Ainsi, si $\muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset$,
+  alors il existe un scénario $\delta' \in \muconcr_{\ctx' \Cap ps}(\w')$ tel que
+  $\delta' \in \Sce(s \play \delta)$.
+  Par conséquent, $\delta \concat \delta'$ est un scénario jouable dans $s$.
+  Donc, pour tout $s \in \PHl, s \subset \ctx$, il existe un scénario concrétisant $\w$.
+  D'où : $\uconcr(\w) \neq \emptyset$.
+\end{demo}

@@ -79,7 +79,9 @@
 \newcommand{\cons}{::}
 %\newcommand{\PHneutralise}{\rtimes}
 
-\def\PHget#1#2{{#1[#2]}}
+\newcommand{\PHget}[2]{{#1[#2]}}
+\newcommand{\get}{\PHget}
+%\def\PHget#1#2{{#1[#2]}}
 %\newcommand{\PHchange}[2]{#1\langle #2 \rangle}
 %\newcommand{\PHchange}[2]{(#1 \Lleftarrow #2)}
 %\newcommand{\PHarcn}[2]{\mbox{$#1\PHneutralise#2$}}
