@@ -1,6 +1,6 @@
 
 \section{Analyse statique}
-\seclabel{sa}
+\seclabel{as}
 
 \todo{Revoir la glu}
 
@@ -261,17 +261,22 @@ qu'il contient, \cad en recouvrant le contexte initial $\ctx$ par $\allprocs(\V,
 
 Au sein de ce graphe de causalité locale, un arc $(p, ps) \in \Proc \times \Sol$
 est dit \emph{cohérent} (\defref{coherent}) si aucun des processus dans $ps$
-n'entre en conflit avec les processus fils du nœud $ps$,
-\cad s'il n'existe pas un processus dans $ps$ et un processus parmi les fils de $ps$
-qui soient différents mais appartenant à la même sorte.
+n'est «~compromis~» par un processus successeur du nœud $ps$,
+%n'entre en conflit avec les processus successeur du nœud $ps$,
+\cad si, pour tout processus de $ps$,
+il n'existe pas de processus différent de la même sorte parmi tous les successeurs de $ps$.
+%
+%s'il n'existe pas un processus dans $ps$ et un processus parmi les successeurs de $ps$
+%qui soient différents mais appartenant à la même sorte.
 Si tous les arcs du graphe sont cohérents, alors le \thmref{approxinf}
 donne une condition suffisante pour la concrétisation de la séquence d'objectifs $\w$
 dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 \begin{definition}[Arc cohérent]
 \deflabel{coherent}
-  Un arc $(x, y) \in \cwE$ est dit \emph{cohérent} si et seulement si :
-  $(x, y) \in \Be \cap (\Proc \times \Sol) \Rightarrow y$ n'a aucun fils $a_j \in \Bv \cap \Proc$
+  Un arc $(x, y) \in \cwE$ est dit \emph{cohérent} si et seulement si
+  $(x, y) \in \Be \cap (\Proc \times \Sol) \Rightarrow y$ n'a aucun successeur
+  $a_j \in \Bv \cap \Proc$
   tel que $\exists a_i \in y, \sorte{a_i} = \sorte{a_j} \wedge a_i \neq a_j$.
 \end{definition}
 
@@ -284,9 +289,6 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   et que tous ses arcs sont cohérents,
   alors $\uconcr(\w) \neq \emptyset$.
 \end{theorem}
-
-
-\todo{«~Successeurs~» ou «~fils~» ? Il est temps de choisir !}
 
 \begin{demo}[\Thmref{approxinf}]
   On note dans la suite :
@@ -364,7 +366,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 
 \begin{example}
-  Comparons les Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)};\PHa^{(2)}))$
+  Comparons les Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)}; \PHa^{(2)}))$
   définies à la \figref{ph-livelock} avec 
   les Frappes de Processus standards $\PH' = (\PHs; \PHl; \PHh')$
   telles que $\PHh' = \PHh^{(1)} \cup \PHh^{(2)}$.
@@ -584,30 +586,28 @@ dans $\BS(\obj{a_i}{a_j})$.
 Si la sorte $b$ d'un tel frappe est de surcroît une sorte coopérative ($b \in \cs$),
 cela signifie alors aussi que l'un des sous-états dans $\csState(b_k)$
 est inclus dans l'état final.
-La \defref{lastprocs} définit $\lastprocs(\obj{a_i}{a_j})$ comme étant l'ensemble des ensembles
+La \defref{lastprocs} définit $\derprocs(\obj{a_i}{a_j})$ comme étant l'ensemble des ensembles
 de processus qui peuvent être présents juste après avoir atteint $a_j$.
 
 D'après le \thmref{approxinf}, on peut déduire que pour tout scénario $\delta \in \uconcr(P)$,
-il existe un ensemble de processus $ps \in \lastprocs(P)$ tel que $ps \subset (s \play \delta)$.
+il existe un ensemble de processus $ps \in \derprocs(P)$ tel que $ps \subset (s \play \delta)$.
 Donc, si $\muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset$,
 avec $\ctx' = \ctx \Cap \procs(\mycwB{\ctx}{P})$,
 il existe alors un scénario $\delta'$ concrétisant $\w'$ depuis l'état $(s \play \delta)$.
 Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
 
-\todo{Renommer $\lastprocs$ ? En $\f{derprocs}$ ?}
-
-\begin{definition}[$\lastprocs : \Obj \to \powerset(\powerset(\Proc))$]
+\begin{definition}[$\derprocs : \Obj \to \powerset(\powerset(\Proc))$]
 \deflabel{lastprocs}
-  Pour tout objectif $\obj{a_i}{a_j} \in \Obj$, $\lastprocs(\obj{a_i}{a_j})$
+  Pour tout objectif $\obj{a_i}{a_j} \in \Obj$, $\derprocs(\obj{a_i}{a_j})$
   est défini comme le plus grand ensemble tel que :
-  $\forall lps \in \lastprocs(\obj{a_i}{a_j}), lps \in \powerset(\Proc)$,
+  $\forall lps \in \derprocs(\obj{a_i}{a_j}), lps \in \powerset(\Proc)$,
   \begin{enumerate}
     \item $a_j \in lps$,
     \item $\exists \zeta \in \BS(\obj{a_i}{a_j}),
         \sorte{\hitter{\zeta_{\card{\zeta}}}} \neq \sorte{\bounce{\zeta_{\card{\zeta}}}}
         \Rightarrow \hitter{\zeta_{\card{\zeta}}} \in lps$,
     \item $\forall b_j \in lps, b \in \cs \Rightarrow \exists ps \in \csState(b_j), ps \subset lps$,
-    \item $\nexists lps'\in \lastprocs(\obj{a_i}{a_j}), lps' \varsubsetneq lps$.
+    \item $\nexists lps'\in \derprocs(\obj{a_i}{a_j}), lps' \varsubsetneq lps$.
   \end{enumerate}
 \end{definition}
 
@@ -615,7 +615,7 @@ Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
 \thmlabel{approxinf-ordonnee}
   Pour toutes Frappes de Processus canoniques $(\PHs; \PHl; \PHa^{\langle 2 \rangle})$,
   tout contexte $\ctx \in \Ctx$ et toute séquence d'objectifs $\w = P \concat \w' \in \OS$,
-  $\uconcr(P) \neq \emptyset \wedge \forall ps \in \lastprocs(P),
+  $\uconcr(P) \neq \emptyset \wedge \forall ps \in \derprocs(P),
     \muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset
     \Rightarrow \uconcr(\w) \neq \emptyset$,
   où $\ctx' = \ctx \Cap \procs(\mycwB{\ctx}{P})$.
@@ -624,8 +624,9 @@ Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
 \begin{demo}[\Thmref{approxinf-ordonnee}]
   Si $\uconcr(P) \neq \emptyset$, alors pour tout état $s \in \PHl, s \subset \ctx$,
   il existe un scénario $\delta \in \uconcr(P) \cap \Sce(s)$.
-  D'après la \defref{lastprocs} et la démonstration du \stodo{ref : th:approxinf},
-  il existe $ps \in \lastprocs(P)$ tel que $(s \play \delta) \subset \ctx' \Cap ps$.
+  D'après la \defref{lastprocs},
+  et en s'inspirant de la démonstration du \thmref{approxinf},
+  il existe $ps \in \derprocs(P)$ tel que $(s \play \delta) \subset \ctx' \Cap ps$.
   Ainsi, si $\muconcr_{\ctx' \Cap ps}(\w') \neq \emptyset$,
   alors il existe un scénario $\delta' \in \muconcr_{\ctx' \Cap ps}(\w')$ tel que
   $\delta' \in \Sce(s \play \delta)$.

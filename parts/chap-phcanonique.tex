@@ -1,8 +1,103 @@
 
-\chapter{Représentation canonique et analyse du PH}
+\chapter{Représentation canonique et analyse des Frappes de Processus}
+
+\chapeau{%
+  Une analyse statique efficace des questions d'atteignabilité avait précédemment été développée
+  sur les Frappes de Processus standards dans~\stodo{PMR12-MSCS}.
+  Elle ne peut cependant pas être appliquée directement aux
+  formalismes alternatifs de Frappes de Processus présentés au \chapref{sem}.
+  
+  L'objectif de ce chapitre est de présenter les travaux ayant permis
+  de développer une nouvelle forme de sous-approximation pour l'analyse statique.
+  Celle-ci s'applique à une classe restreinte de Frappes de Processus avec 2 classes de priorités,
+  appelées \emph{Frappes de Processus canoniques}.
+  Nous montrons par ailleurs que toutes les sémantiques alternatives de Frappes de Processus
+  introduites au \chapref{sem} peuvent être traduites en Frappes de Processus canoniques,
+  prouvant d'une part la large expressivité de cette classe de modèles,
+  et permettant d'autre part d'appliquer la sous-approximation développée dans la suite
+  à tous ces formalismes.
+}
+
+Les Frappes de Processus standards (\defref{ph}) sont très atomiques,
+et leurs actions ont une forme particulière :
+un processus peut déclencher le bond d'un autre processus dans sa sorte.
+Autrement dit, le changement du processus actif d'une sorte est conditionné par la présence
+d'au plus un autre processus actif.
+Dans le cas d'une auto-action $\PHfrappe{b_j}{b_j}{b_k}$, par exemple,
+le frappeur et la cible $b_j$ sont confondus ;
+il n'y a donc formellement aucun prérequis pour que $a_i$ bondisse vers $a_k$.
+Dans le cas plus général d'une action $\PHfrappe{a_i}{b_j}{b_k}$, où $a_i \neq b_j$,
+alors le seul prérequis pour que $b_j$ bondisse en $b_k$ est la présence de $a_i$.
+
+Cette restriction sur la forme des actions permet une analyse efficace des questions d'atteignabilité
+au sein des Frappes de Processus standards, qui s'expriment de la façon suivante :
+\begin{center}
+  «~Partant d'un état donné, est-il possible, en jouant un nombre quelconque d'actions,
+  d'atteindre un état dans lequel un processus donné est actif ?~»
+\end{center}
+En termes plus formels, l'atteignabilité d'un processus $b_k$ depuis un état $s$
+se définit comme l'existence d'un scénario $\delta \in \Sce(s)$, tel que
+$\PHget{(s \play \delta)}{b} = b_k$.
+
+En effet, la forme particulière des actions impose au plus un prérequis pour pouvoir faire bondir
+le processus actif d'une sorte vers un autre niveau.
+Partant de ce constat, une analyse statique permettant de répondre efficacement aux
+questions d'atteignabilité a été développée par Loïc Paulevé dans~\stodo{PMR12-MSCS}.
+Si on considère l'exemple de l'atteignabilité d'un processus $b_k$ depuis un état $s$
+tel que $\PHget{s}{b} = b_j$, avec $b_j \neq b_k$,
+la méthode utilisée repose sur l'analyse de la dynamique locale de $b$, ou, autrement dit,
+sur l'analyse des bonds entre processus de $b$ produits par les actions frappant cette sorte.
+En particulier, si on reprend les deux exemples d'actions donnés ci-dessus,
+\begin{itemize}
+  \item s'il existe une auto-action $\PHfrappe{b_j}{b_j}{b_k}$, alors la réponse est immédiate
+    car $b_k$ est accessible en jouant cette action qui n'a pas de prérequis;
+  \item s'il existe une action $\PHfrappe{a_i}{b_j}{b_k}$, alors l'atteignabilité de $b_k$
+    est conditionnée par l'atteignabilité de $a_i$ --- à la condition près que cette
+    seconde atteignabilité laisse $b_j$ intact.
+\end{itemize}
+Dans le cas général, faire bondir un processus de $b_j$ à $b_k$ peur nécessiter plusieurs
+actions, ou aucune si le processus est déjà présent dans l'état initial.
+Ainsi, l'atteignabilité d'un processus peut nécessiter l'atteignabilité de plusieurs
+autres processus, ou d'aucun autre processus.
+Cette approche permet donc de résoudre un problème d'atteignabilité de façon récursive,
+les cas terminaux étant ceux pour lesquels la résolution ne nécessite aucune action,
+ou ne nécessite que des auto-actions.
+
+Cependant, cette méthode d'analyse statique ne s'applique pas totalement aux nouveau formalismes
+de Frappes de Processus présentés au \chapref{sem}.
+En effet, ces formalismes augmentent l'expressivité des Frappes de Processus,
+ce qui invalide, au moins en partie, la méthode développée.
+Nous proposons dans ce chapitre une nouvelle approche par analyse statique qui permet
+de répondre à des questions d'atteignabilité sur une classe particulière des Frappes de Processus
+avec 2 classes de priorités, appelées \emph{Frappes de Processus canoniques}.
+Néanmoins, nous montrons aussi que cette classe particulière est aussi expressive
+que toutes les Frappes de Processus avec $k$ classes de priorités,
+les Frappes de Processus avec arcs neutralisants,
+et les Frappes de Processus avec actions plurielles,
+et nous donnons les traductions appropriées pour pouvoir aussi traiter ces modèles.
+La méthode que nous proposons possède une efficacité proche de la méthode d'origine,
+le calcul du résultat étant de complexité polynomiale selon le nombre de sortes dans le modèle.
+Cependant, bien que le modèle traité par l'analyse statique permette de représenter de façon simple
+les modèles booléens avec portes logiques,
+les traductions depuis d'autres formalismes peut s'avérer coûteuse. \todo{complexité ?}
+
+Nous définissons dans un premier temps les Frappes de Processus canoniques
+de façon formelle dans la \secref{phcanonique}.
+Cette section aborde aussi la question de la traduction vers les Frappes de Processus canoniques
+depuis les autres formalismes présentés au \chapref{sem}.
+Elle donne enfin un certain nombre de résultats à leurs propos,
+qui sont par la suite réutilisés dans la \secref{as},
+qui présente formellement la méthode d'analyse statique développée.
 
 
-\section{PH canonique (avec sortes coopératives priorisées)}
+
+\section{Approche informelle}
+\TODO
+
+\todo{Explications informelles}
+
+\section{Les Frappes de Processus canoniques}
+\seclabel{phcanonique}
   % Définition
   \input{parts/sec-phcanonique}
   %Équivalence avec priorités quelconques

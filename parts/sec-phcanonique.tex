@@ -10,7 +10,7 @@ Il faut notamment que celles-ci soient uniquement utilisées pour la mise à jou
 coopératives, et que cette mise à jour soit correctement formée (pas d'action manquantes ou en trop).
 Cette forme particulière des Frappes de Processus assure un certain nombre de bonnes propriétés
 qui seront explicitées par la suite et qui permettent l'utilisation des méthodes d'analyse statique
-développées à la section \todo{suivante}.
+développées à la \secref{as}.
 Dans la suite de cette section, nous travaillons sur des modèles de Frappes de Processus avec $k$
 classes de priorités, pour $k \in \sN^*$.
 
@@ -167,14 +167,12 @@ on note $\pfp_s(a)$ (\defref{pfp}) l'ensemble des processus de la sorte $a$ qui 
 après avoir joué tous les scénarios d'actions de priorité 1 depuis l'état $s$.
 Cet ensemble est toujours défini du fait de la \crref{tf}.
 
-\todo{Redéfinir $\pfp$ avec $\compin$ de façon à simplifier et rendre locale la définition ?}
-
 \begin{definition}[$\pfp : \PHl \times \PHs \rightarrow \powerset(\PHproc)$]
 \deflabel{pfp}
   Pour tout état $s \in \PHl$ et pour toute sorte $a \in \PHs$,
   \begin{align*}
     \pfp_s(a) = \{ \get{(s\play\delta)}{a} \in \PHl_a &\mid \delta \in \reductionsce(s)
-          \wedge\nexists h\in\PHh^{(1)}, (\delta; h) \in \reductionsce(s) \}
+          \wedge\nexists h\in\PHh^{(1)}, (\delta \cons h) \in \reductionsce(s) \}
   \end{align*}
 \end{definition}
 
@@ -241,7 +239,6 @@ De plus, du fait du point (\ref{css}) de la \defref{cs}, on introduit la notatio
 $\csState(a_i)$ permettant de caractériser l'ensemble des sous-états représentés par le
 processus $a_i$ de toute sorte coopérative bien formée $a$ (\defref{csState}).
 
-\todo{$\csState : \PHproc \rightarrow \powerset(\components)$ ?}
 \begin{definition}[$\csState : \PHproc \rightarrow \powerset(\PHproc)$]
 \label{def:csState}
   Pour tout $a \in \cs$ et $a_i \in \PHl_a$, 
@@ -260,27 +257,32 @@ en lieu et place de «~composant bien formé~» (\resp «~sorte coopérative bie
 
 Enfin, la \defref{phcanonique} définit la notion de Frappes de Processus canoniques.
 La forme particulière de ces Frappes de Processus permettra de développer une méthode efficace
-d'analyse statique pour le problème d'atteignabilité défini à la \secref{sa},
+d'analyse statique pour le problème d'atteignabilité défini à la \secref{as},
 grâce notamment aux résultats développés dans la section suivante.
+
+\begin{definition}[Frappes de Processus pseudo-canoniques]
+\deflabel{phpseudocanonique}
+  Si $k \in \sN^*$, les \emph{Frappes de Processus pseudo-canoniques avec $k$ classes de priorités}
+  sont les Frappes de Processus avec $k$ classes de priorités
+  respectant les \allcr.
+\end{definition}
 
 \begin{definition}[Frappes de Processus canoniques]
 \deflabel{phcanonique}
   Les \emph{Frappes de Processus canoniques}
-  sont des Frappes de Processus avec 2 classes de priorités
-  respectant les \allcr.
+  sont les Frappes de Processus pseudo-canoniques avec 2 classes de priorités
+  (c'est-à-dire respectant les \allcr).
 \end{definition}
 
 
 
-\subsection{Conséquences des restrictions}
+\subsection{Résultats préliminaires sur les Frappes de Processus canoniques}
 
 Dans cette section, nous donnons plusieurs résultats généraux qui peuvent être dérivés des
 restrictions de la \secref{restrictions}.
-Nous considérons donc dans la suite des Frappes de Processus avec $k$ classes de priorités
-$\PH = (\PHs; \PHl; \PHa^{\langle k \rangle})$, avec $k \in \sN^*$,
-respectant les \allcr.
-\todo{Avec 2 classes de priorités ?}
-Ces résultats permettront de construire la méthode d'analyse statique de la \stodo{section suivante}.
+Nous considérons donc dans la suite des Frappes de Processus
+canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)}; \PHa^{(2)}))$.
+Ces résultats permettront de construire la méthode d'analyse statique de la \secref{as}.
 
 Pour tout état $s \in \PHl$, on appelle $\update(s)$ l'état dans lequel tous les composants
 ont le même processus actif que dans $s$
@@ -306,11 +308,12 @@ mettant à jour toutes les sortes coopératives de façon à arriver dans $\upda
 \begin{demo}[\Lemref{update}]
   Soit $s \in \PHl$ un état.
   Soit $a \in \cs$ une sorte coopérative telle que $\PHget{s}{a} \neq \pfp_s(a)$.
-  Étant donnée la définition de $\pfp_s(a)$, il existe un scénario $\delta$ mettant à jour $a$
+  Étant donnée la \defref{cs}, il existe un scénario $\delta$ mettant à jour $a$
   dans $s$ tel que :
   $\forall \delta' \in \reductionsce(s \PHplay \delta),
     \PHget{(s \PHplay \delta \PHplay \delta')}{a} = \pfp_s(a)$.
-  \todo{À revoir}
+  Ce raisonnement est applicable à chacune des sortes coopératives du modèle
+  indifféremment de leur ordre.
 \end{demo}
 
 Le \lemref{hcompcomp} stipule que pour un état donné $s \in \PHl$, et pour toute action secondaire
