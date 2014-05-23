@@ -290,7 +290,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   alors $\uconcr(\w) \neq \emptyset$.
 \end{theorem}
 
-\begin{demo}[\Thmref{approxinf}]
+\begin{proof} %[\Thmref{approxinf}]
   On note dans la suite :
   $\Bee{X}{Y} = \Be \cap (X \times Y)$, avec $X, Y$ parmi $\PHproc$, $\Obj$ et $\Sol$,
   et : $max\ctx = \ctx \Cap \allprocs(\cwB)$ le contexte accepté par $\cwB$.
@@ -361,7 +361,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   Finalement, étant donné $\muconcr_{max\ctx}(\w) \neq \emptyset$,
   et d'après le \lemref{uconcr-ctx},
   on a : $\uconcr(\w) \neq \emptyset$.
-\end{demo}
+\end{proof}
 
 
 
@@ -621,7 +621,7 @@ Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
   où $\ctx' = \ctx \Cap \procs(\mycwB{\ctx}{P})$.
 \end{theorem}
 
-\begin{demo}[\Thmref{approxinf-ordonnee}]
+\begin{proof} %[\Thmref{approxinf-ordonnee}]
   Si $\uconcr(P) \neq \emptyset$, alors pour tout état $s \in \PHl, s \subset \ctx$,
   il existe un scénario $\delta \in \uconcr(P) \cap \Sce(s)$.
   D'après la \defref{lastprocs},
@@ -633,4 +633,4 @@ Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
   Par conséquent, $\delta \concat \delta'$ est un scénario jouable dans $s$.
   Donc, pour tout $s \in \PHl, s \subset \ctx$, il existe un scénario concrétisant $\w$.
   D'où : $\uconcr(\w) \neq \emptyset$.
-\end{demo}
+\end{proof}

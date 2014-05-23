@@ -305,7 +305,7 @@ mettant à jour toutes les sortes coopératives de façon à arriver dans $\upda
   $\forall s \in \PHl, \exists \delta \in \reductionsce(s), s \PHplay \delta = \update(s)$
 \end{lemma}
 
-\begin{demo}[\Lemref{update}]
+\begin{proof} %[\Lemref{update}]
   Soit $s \in \PHl$ un état.
   Soit $a \in \cs$ une sorte coopérative telle que $\PHget{s}{a} \neq \pfp_s(a)$.
   Étant donnée la \defref{cs}, il existe un scénario $\delta$ mettant à jour $a$
@@ -314,7 +314,7 @@ mettant à jour toutes les sortes coopératives de façon à arriver dans $\upda
     \PHget{(s \PHplay \delta \PHplay \delta')}{a} = \pfp_s(a)$.
   Ce raisonnement est applicable à chacune des sortes coopératives du modèle
   indifféremment de leur ordre.
-\end{demo}
+\end{proof}
 
 Le \lemref{hcompcomp} stipule que pour un état donné $s \in \PHl$, et pour toute action secondaire
 $h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ où $a$ et $b$ sont des composants,
@@ -334,7 +334,7 @@ sous la condition que $a$ soit déjà à jour dans $s$.
     \Feval{\Fopphp{h}}{s \PHplay \delta})$
 \end{lemma}
 
-\begin{demo}[\Lemref{hcompcomp}]
+\begin{proof} %[\Lemref{hcompcomp}]
   Soient $s \in \PHl$ un état, $a,b \in \components$ deux composants et
   $h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ une action.
   D'après le \lemref{update}, il existe un scénario $\delta$ tel que :
@@ -344,7 +344,7 @@ sous la condition que $a$ soit déjà à jour dans $s$.
   De plus, par définition de $\update(s)$, aucune action primaire n'est jouable
   dans $(s \PHplay \delta)$.
   $h$ est donc jouable dans $(s \PHplay \delta)$.
-\end{demo}
+\end{proof}
 
 \begin{lemma}
 \lemlabel{hcscomp}
@@ -356,7 +356,7 @@ sous la condition que $a$ soit déjà à jour dans $s$.
     \Feval{\Fopphp{h}}{s \PHplay \delta})$
 \end{lemma}
 
-\begin{demo}[\Lemref{hcscomp}]
+\begin{proof} %[\Lemref{hcscomp}]
   Similaire à la preuve du \lemref{hcompcomp} ;
   étant donné que $a_i \in \pfp_s(a)$, on a : $a_i \in (s \PHplay \delta)$.
-\end{demo}
+\end{proof}

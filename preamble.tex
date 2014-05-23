@@ -22,16 +22,32 @@
 %rngtxt = \RSrngtxt, lsttwotxt = \RSlsttwotxt, lsttxt = \RSlsttxt}
 
 % Types de théorèmes
-\usepackage{ntheorem}
-\theorembodyfont{\upshape}
-\newtheorem{definition}{Définition}{}{}
-\newtheorem*{example}{Exemple}{}{}
+\usepackage{amsthm}
+
+%\newtheorem*{demo}{Démonstration}{}{}
+
 \newtheorem{property}{Propriété}{}{}
-\newtheorem{proposition}{Proposition}{}{}
 \newtheorem{theorem}{Théorème}{}{}
-\newtheorem*{demo}{Démonstration}{}{}
-\newtheorem{condition}{Condition}{}{}
 \newtheorem{lemma}{Lemme}{}{}
+\newtheorem{proposition}{Proposition}{}{}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}{}{}
+\newtheorem{condition}{Condition}{}{}
+
+\theoremstyle{remark}
+\newtheorem*{example}{Exemple}{}{}
+
+%  \usepackage{ntheorem}
+%  \theorembodyfont{\upshape}
+%  \newtheorem{definition}{Définition}{}{}
+%  \newtheorem*{example}{Exemple}{}{}
+%  \newtheorem{property}{Propriété}{}{}
+%  \newtheorem{proposition}{Proposition}{}{}
+%  \newtheorem{theorem}{Théorème}{}{}
+%  \newtheorem*{demo}{Démonstration}{}{}
+%  \newtheorem{condition}{Condition}{}{}
+%  \newtheorem{lemma}{Lemme}{}{}
 
 % Divers
 \usepackage{color}   % Couleurs du texte
