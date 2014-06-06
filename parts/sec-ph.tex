@@ -87,23 +87,25 @@ Ces notations sont formellement définies dans la \defref{premder}.
   \end{align}
 \end{definition}
 
-
 La \defref{substate} établit la notion de sous-état sur un ensemble de sortes,
 \cad un ensemble de processus qui sont deux à deux de sortes différentes,
 ce qui permet de ne considérer qu'une partie d'un état complet.
-Nous notons qu'un état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
+Nous notons $\PHsubl$ l'ensemble de tous les sous-états et nous constatons qu'un
+état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
+Nous notons de plus $\PHsublset$ l'ensemble des sous-états désordonnés,
+c'est-à-dire dont l'ordre entre les sortes a été oublié.
 Le recouvrement d'un état $s$ par un processus $a_i$ est formalisé à la \defref{statecap}
 par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
 ce qui permettra de définir la dynamique des Frappes de Processus %avec $k$ classes de priorités
 à la \defref{play}.
-La définition de recouvrement est aussi étendue à un sous-ensemble,
-autrement dit, un ensemble de processus contenant au plus un processus par sorte.
+La définition de recouvrement est aussi étendue à un sous-état désordonné,
+autrement dit, à un ensemble de processus contenant au plus un processus par sorte.
 
 \begin{definition}[Sous-états ($\PHsublize{\PHl}$)]
 \deflabel{substate}
-  Si $S \subset \PHs$ est un ensemble de sortes, un sous-ensemble sur $S$ est un élément de :
+  Si $S \subset \PHs$ est un ensemble de sortes, un sous-état sur $S$ est un élément de :
   $\PHsubl[\PHl]_S \DEF \bigtimes{a \in S} \PHl_a$.
-  L'ensemble de tous les sous-ensembles est noté :
+  L'ensemble de tous les sous-états est noté :
   $\PHsubl[\PHl] \DEF \bigcup_{S \in\powerset(\PHs)} \PHsubl[\PHl]_S$.
   
   \noindent
@@ -148,7 +150,7 @@ ce qui est immédiatement mis en pratique dans la \defref{fopph}.
       alors $\neg P$, $P \wedge Q$ et $P \vee Q$ appartiennent à $\F$.
   \end{itemize}
 %
-  Si $P \in \F$ est une propriété de jouabilité et $\mysigma \in \PHsubl$ est un sous-ensemble,
+  Si $P \in \F$ est une propriété de jouabilité et $\mysigma \in \PHsubl$ est un sous-état,
   on note $\Feval{P}{\mysigma}$ l'\emph{évaluation} de $P$ dans $\mysigma$:
   \begin{itemize}
     \item si $P = a_i \in \PHl_a$ est un atome, avec $a \in \PHs$,

@@ -1,4 +1,4 @@
-\subsection{Frappes de Processus avec classes de priorités}
+\section{Frappes de Processus avec classes de priorités}
 \seclabel{php}
 
 \todo{Mise en perspective}
@@ -59,6 +59,10 @@ comme le permettent les Frappes de Processus avec arcs neutralisants
 présentées à la \secref{phan}.
 
 \todo{Schéma exemple}
+
+
+
+\subsection{Définition}
 
 \begin{definition}[Frappes de Processus avec $k$ classes de priorités]
 \deflabel{php}
@@ -128,4 +132,15 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
 
 \todo{Ne fonctionne plus : analyse statique, mais adaptée pour certains cas précis (cf. PHcanonique)}
 
-\todo{Traduction vers PHcanonique}
+
+
+\subsection{Équivalences entres Frappes de Processus avec $k$ classes de priorités}
+
+Nous montrons à la \secref{aplatissement} que les Frappes de Processus avec $k$ classes
+de priorités sont aussi expressives que les Frappes de Processus avec $n$ classes de
+priorités, pour tout $k, n \in \sN^*$.
+Nous donnons pour cela un résultat encore plus fort : tout modèle de Frappes de Processus avec $k$
+classes de priorités peut être traduit en Frappes de Processus canoniques,
+comme défini à la \secref{phcanonique-def},
+c'est-à-dire en Frappes de Processus avec 2 classes de priorités et une restriction
+dans l'utilisation des actions de priorité haute.
