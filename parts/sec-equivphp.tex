@@ -1,14 +1,26 @@
 \section{Équivalence avec les autres formalismes de Frappes de Processus}
 \seclabel{phcanonique-equiv}
 
-\TODO
+Cette section vise à tracer des liens entre les différentes sémantiques des Frappes de Processus
+présentées au \chapref{sem}.
+Son principal apport est l'\emph{aplatissement} des Frappes de Processus avec $k$
+classes de priorités, donné à la \secref{aplatissement},
+et qui permet de les traduire en Frappes de Processus canoniques.
+Cette traduction permet donc, à partir d'un modèle de Frappes de Processus comprenant un nombre
+arbitraire de priorités, d'obtenir un modèle canonique respectant la même dynamique.
+Par la suite, le cas des Frappes de Processus avec arcs neutralisants est aussi traité,
+de façon analogue, dans la \secref{phan-aplatissement}.
+Enfin, la \secref{phm-aplatissement} réutilise ces résultats pour proposer aussi une traduction
+depuis les Frappes de Processus avec actions plurielles.
 
-\todo{Introduire une notion de forme canonique indépendante des critères ?\\
-Avantage : forme canonique $\Rightarrow$ critères}
+Ces différentes traductions et propriétés de bisimulation (faible) qu'elles proposent
+permettent d'établir que les différentes sémantiques de Frappes de Processus sont
+aussi expressives que les Frappes de Processus canoniques.
+Notamment, cela nous permet d'assurer que les Frappes de Processus avec plusieurs
+classes de priorités sont équivalentes ;
+autrement dit, considérer plus de deux classes de priorités n'augmente pas l'expressivité
+---~bien que cela puisse faciliter la modélisation.
 
-\todo{Traduction depuis les Frappes de Processus avec arcs neutralisants}
-
-\todo{Traduction depuis les Frappes de Processus avec actions plurielles}
 
 
 \subsection{Aplatissement des Frappes de Processus avec $k$ classes de priorités}
@@ -48,9 +60,13 @@ de classes de priorités utilisées.
 Dans ce second cas, on note, pour tout $i \in \segm{1}{\n}$ :
 $\PHdep{i}{h} = \{ \PHsort(p_{i,j}) \mid j \in \segm{1}{\m} \}$.
 
-Le \lemref{ppplaysubset} permet de caractériser la jouabilité d'une action dans un état
+L'opérateur d'aplatissement $\Fopsymbol_\Fopaplatsubsymbol$ donné à la \defref{fopaplat}
+permet de caractériser la jouabilité d'une action sans prendre en compte les actions primaires ;
+en d'autres termes, une action $h$ est jouable dans un état $s$ si et seulement si
+$\Feval{\Fopaplat{h}}{s}$ et aucune action de priorité 1 n'est jouable.
+Le \lemref{ppplaysubset} permet alors de caractériser la jouabilité d'une action dans un état
 à l'aide d'un sous-état correspondant à l'une des conjonctions de sa propriété
-de jouabilité en FND.
+d'aplatissement une fois traduite en FND.
 Enfin, la \defref{aplatissement} donne la construction de l'\emph{aplatissement} de $\PH$ :
 pour chaque action $h \in \PHh$, plusieurs sortes coopératives $f^{h,i}$
 permettent de refléter chaque conjonction de $\Fopphp{h}$,
@@ -59,7 +75,7 @@ Cette construction permet d'obtenir la même dynamique que pour $\PH$ en reprodu
 les préemptions possibles par d'autres actions plus prioritaires,
 comme établi par le \thmref{bisimulaplatissement}.
 
-On note pour finir que la \defref{aplatissement} ne s'applique qu'à des Frappes de Processus
+Il est à noter que la \defref{aplatissement} ne s'applique qu'à des Frappes de Processus
 pseudo-canoniques. Cependant, des Frappes de Processus avec $k$ classes de priorités quelconques
 sont \textit{a fortiori} des Frappes de Processus pseudo-canoniques à condition d'ajouter
 une classe vide d'actions de priorité supérieure.
@@ -67,34 +83,51 @@ En d'autres termes, il est possible d'ignorer le cas particulier des actions pri
 (mettant à jour les sortes coopératives) si les Frappes de Processus ne sont pas
 pseudo-canoniques.
 
-\todo{À supprimer ? On peut l'intégrer dans la démo du \thmref{bisimulaplatissement}.}
+%\todo{À supprimer ? On peut l'intégrer dans la démo du \thmref{bisimulaplatissement}.}
+
+\begin{definition}[Opérateur d'aplatissement
+  ($\Fopsymbol_\Fopaplatsubsymbol : \PHh \rightarrow \F$)]
+\deflabel{fopaplat}
+  L'opérateur d'aplatissement des Frappes de Processus avec $k$ classes de priorités
+  est défini par :
+  \[\forall h \in \PHh, \Fopaplat{h} \equiv \hitter{h} \wedge \target{h} \wedge
+    \left( \bigwedge_{\substack{g \in \PHh^{(n)}\\1 < n < \prio(h)}}
+    \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
+\end{definition}
 
 \begin{lemma}
 \lemlabel{ppplaysubset}
-  Soient $h \in \PHh$ et $s \in \PHl$.
-  %$h$ est jouable dans $s$ si et seulement si :
-  %\[\exists \mysigma \subseteq s, \Feval{\Fopphp{h}}{\mysigma} \enspace.\]
+  Soient $h \in \PHh \setminus \PHh^{(1)}$ et $s \in \PHl$.
   \[\Feval{\Fopphp{h}}{s} \Leftrightarrow
-    \exists \mysigma \subseteq s, \Feval{\Fopphp{h}}{\mysigma} \enspace.\]
+    \big(\exists \mysigma \subseteq s, \Feval{\Fopaplat{h}}{\mysigma}\big)
+    \wedge \big(\forall g \in \PHh^{(1)}, \Feval{\neg \Fopphp{g}}{s}\big)
+    \enspace.\]
 \end{lemma}
 %
 \begin{proof}
   ($\Rightarrow$)
-    Si $h$ est jouable dans $s$, alors $\Feval{\Fopphp{h}}{s}$.
-    Ainsi, $\Fopphp{h} \not\equiv \bot$ et, par propriété d'une FND,
-    au moins l'une des conjonctions de $\Fopphp{h}$ est vraie dans $s$.
+    Supposons $\Feval{\Fopphp{h}}{s}$.
+    Il n'existe donc aucune action primaire jouable dans $s$.
+    Par ailleurs, $\Fopphp{h} \Rightarrow \Fopaplat{h}$ donc
+    $\Fopaplat{h} \not\equiv \bot$ et, par propriété d'une FND,
+    au moins l'une des conjonctions de $\Fopaplat{h}$ est vraie dans $s$.
     On suppose que la $i$\textsuperscript{e} conjonction est vraie dans $s$,
     avec $i \in \segm{1}{\n}$;
     on a alors : $\forall j \in \segm{1}{\m}, p_{i,j} \in s$.
     Soit $\mysigma \in \PHsubl_{\PHdep{i}{h}}$
     avec $\forall b \in \PHdep{i}{h}, \PHget{\mysigma}{b} = \PHget{s}{b}$.
     On a alors immédiatement : $\mysigma \subseteq s$,
-    et, par construction de $\PHdep{i}{h}$, $\Feval{\Fopphp{h}}{\mysigma}$.
+    et, par construction de $\PHdep{i}{h}$, $\Feval{\Fopaplat{h}}{\mysigma}$.
   
   ($\Leftarrow$)
-    Supposons qu'il existe $\mysigma \subseteq s$ tel que $\Feval{\Fopphp{h}}{\mysigma}$.
-    On a alors immédiatement $\Feval{\Fopphp{h}}{s}$ car ajouter des processus au sous-état
+    Supposons qu'il existe $\mysigma \subseteq s$ tel que $\Feval{\Fopaplat{h}}{\mysigma}$,
+    et qu'aucune action primaire n'est jouable dans $s$.
+    On a alors immédiatement $\Feval{\Fopaplat{h}}{s}$
+    car ajouter des processus au sous-état
     d'évaluation ne peut pas rendre la propriété fausse.
+    De plus, comme aucune action primaire n'est jouable dans $s$, alors
+    $\Feval{\left( \bigwedge_{g \in \PHh^{(1)}} \neg (\hitter{g} \wedge \target{g}) \right)}{s}$,
+    donc $\Feval{\Fopphp{h}}{s}$.
 \end{proof}
 
 \begin{definition}
@@ -118,7 +151,7 @@ pseudo-canoniques.
       \PHget{\mysigma}{a} \neq a_k \wedge \mysigma' = \mysigma \Cap \{ a_k \} \}$;
     \item $\ov{\PHh}^{(2)}=\{ \PHhit{f^{h,i}_\mysigma}{\target{h}}{\bounce{h}} \mid
       h \in \PHh \setminus \PHh^{(1)} \wedge f^{h,i} \in \PHs_f \wedge
-      f^{h,i}_\mysigma \in \PHl_{f^{h,i}} \wedge \Feval{\Fopphp{h}}{\mysigma} \}$.
+      f^{h,i}_\mysigma \in \PHl_{f^{h,i}} \wedge \Feval{\Fopaplat{h}}{\mysigma} \}$.
   \end{itemize}
   De plus, étant donné un état $\os \in \ov{\PHl}$,
   on note $\unflats{\os} = s$ l'état correspondant dans $\PHl$ :
@@ -130,6 +163,15 @@ pseudo-canoniques.
   avec $f^{h,i}_\mysigma \in \PHl_{f^{h,i}}$
   et $\forall b \in \PHdep{i}{h}, \PHget{\mysigma}{b} = \PHget{s}{b}$.
 \end{definition}
+
+Nous notons que l'aplatissement $\PHflat(\PH)$ de toutes Frappes de Processus avec $k$
+classes de priorités $\PH = (\PHs, \PHl, \PHh^{\angles{k}})$
+sont des Frappes de Processus canoniques.
+En effet, une partie des sortes coopératives générées lors de cette traduction proviennent
+des Frappes de Processus d'origine, qui sont pseudo-canoniques et sont déjà contraintes de la
+même manière.
+L'autre partie constitue les sortes coopératives de l'ensemble $\PHs_f$ et leur définition
+respecte les \allcr.
 
 \begin{theorem}[$\PH \approx \PHflat(\PH)$]
 \thmlabel{bisimulaplatissement}
@@ -151,21 +193,22 @@ pseudo-canoniques.
     D'après la dynamique des Frappes de Processus (\defref{play}),
     si $s \trans{\PH} s'$, alors il existe une action $h \in \PHh$ jouable dans $s$,
     telle que $s' = s \PHplay h$.
-    On a alors : $\Feval{\Fopphp{h}}{s}$, et d'après le \lemref{ppplaysubset},
-    il existe $\mysigma \subseteq s$ tel que $\Feval{\Fopphp{h}}{\mysigma}$.
+    On a alors : $\Feval{\Fopphp{h}}{s}$.
     Par construction de $\oPH$ (\defref{aplatissement}) :
     \begin{itemize}
       \item Si $h \in \PHh^{(1)}$, alors il existe $g = h \in \ov{\PHh}^{(1)}$,
         et on a : $\hitter{g} \in \os$ et $\target{g} \in \os$.
-      \item Si, au contraire, $h \in \PHh^{(2)}$, alors il existe
+      \item Si, au contraire, $h \in \PHh \setminus \PHh^{(1)}$, alors il existe
         $g = \PHhit{f^{h,i}_\mysigma}{\target{h}}{\bounce{h}} \in \ov{\PHh}^{(2)}$.
-        De plus, par construction de $\os$ (\defref{aplatissement}),
+        De plus, d'après le \lemref{ppplaysubset}, il existe $\mysigma \subseteq s$
+        tel que $\Feval{\Fopaplat{h}}{\mysigma}$
+        et, par construction de $\os$ (\defref{aplatissement}),
         $\PHget{\os}{f^{h,i}} = f^{h,i}_\mysigma$.
     \end{itemize}
     Dans les deux cas, $g$ est jouable dans $\os$.
     Par la suite, dans l'état $\os \PHplay g$, les seules actions jouables sont celles dans
-    $\PHh^{(1)}$ ayant $\bounce{h} = \bounce{g}$ comme frappeur
-    et mettant à jour des sortes coopératives,
+    $\PHh^{(1)}$ qui mettent à jour les sortes coopératives dans lesquelles
+    $\bounce{h} = \bounce{g}$ est impliqué, directement ou indirectement,
     permettant donc d'accéder à l'état $\flats{s'}$ en un nombre fini d'actions.
     Ainsi, $\flats{s} \mtrans{\oPH} \flats{s'}$.
   
@@ -176,29 +219,101 @@ pseudo-canoniques.
     \begin{itemize}
       \item Si $g \in \ov{\PHh}^{(1)} \setminus \PHh^{(1)}$,
         alors $\unflats{\os} = \unflats{\os'}$ car seul le processus actif d'une sorte
-        coopérative qui n'est pas dans $\PHs$ a évolué.
+        coopérative dans $\PHs_f$ a évolué. % qui n'est pas dans $\PHs$ a évolué.
       \item Sinon, si il existe $h = g \in \PHh^{(1)}$,
         alors $h$ est jouable dans $s$ et : $\unflats{\os} \trans{\PH} \unflats{\os'}$
         avec $\unflats{\os'} = s \play h$.
       \item Autrement, si $g \in \ov{\PHh}^{(2)}$,
         on note : $g = \PHhit{f^{h,i}_\mysigma}{b_j}{b_k}$.
         Par construction de l'aplatissement (\defref{aplatissement}), il existe
-        $h \in \PHh$ tel que $\Feval{\Fopphp{h}}{\mysigma}$.
+        $h \in \PHh$ tel que $\Feval{\Fopaplat{h}}{\mysigma}$.
         Comme $g$ est jouable, cela signifie qu'aucune action de $\PHh^{(1)}$ n'est jouable,
         et notamment que la sorte coopérative $f^{h,i}$ est déjà mise à jour,
         ce qui a pour conséquence que : $\mysigma \subseteq s$.
         Ainsi, d'après \lemref{ppplaysubset}, $h$ est jouable dans $s$,
-        et $\unflats{\os} \trans{\PH} \unflats{\os'}$.
+        car $\Feval{\Fopphp{h}}{s}$, et $\unflats{\os} \trans{\PH} \unflats{\os'}$.
     \end{itemize}
 \end{proof}
 
-\todo{simplifications}
+Nous notons que l'aplatissement donné à la \defref{aplatissement}
+est, pour chaque action, exponentiel dans le nombre d'actions non primaires de
+priorité supérieure.
+En effet, il est nécessaire pour chaque action de convertir la propriété de jouabilité
+donnée par la \defref{fopphp} en une FND.
+Or la majorité des cas pratiques pour cette conversion sont proches du pire cas,
+qui est de complexité exponentielle en fonction du nombre d'atomes dans la propriété.
 
-Pour finir, nous notons que l'aplatissement $\PHflat(\PH)$ de toutes Frappes de Processus avec $k$
-classes de priorités $\PH = (\PHs, \PHl, \PHh^{\angles{k}})$
-sont des Frappes de Processus canoniques.
-En effet, une partie des sortes coopératives générées lors de cette traduction proviennent
-des Frappes de Processus d'origine, qui sont pseudo-canoniques et sont déjà contraintes de la
-même manière.
-L'autre partie constitue les sortes coopératives de l'ensemble $\PHs_f$ et leur définition
-respecte les \allcr.
+Pour finir, il est intéressant de noter que l'aplatissement de la \defref{aplatissement}
+n'est pas optimal en nombre d'actions et de processus créés dans le modèle final.
+En effet, il est possible de simplifier le modèle $\PHflat(\PH)$ de différentes manières,
+qui n'ont pas été prises en compte ici pour ne pas alourdir la définition.
+Nous donnons dans la suite quelques pistes pour obtenir des modèles plus simples
+mais au comportement équivalent, mais n'en donnons pas les preuves.
+
+\paragraph{Simplification des propriétés d'aplatissement}
+La propriété d'aplatissement $\Fopaplat{h}$ d'une action $h = \PHhit{a_i}{b_j}{b_k}$ peut être
+simplifiée à l'aide des propriétés suivantes, permettant d'éviter la création
+de certains éléments inutiles, comme des actions qui ne sont jamais jouables
+ou des coopérations qui sont toujours vraies :
+\begin{itemize}
+  \item il n'est pas nécessaire de faire apparaître la cible d'une action dans
+    sa propriété d'aplatissement car sa présence sera vérifiée par ailleurs,
+    au moment du tir effectif de l'action,
+    d'où : $b_j \equiv \top$ ;
+  \item Tout processus $b_l \neq b_j$ de la même sorte que la cible empêche toujours la jouabilité
+    de l'action, donc : $b_l \equiv \bot$ ;
+  \item si $c_p, c_q$ sont des processus différents ($c_p \neq c_q$) de la même sorte $c$,
+    alors $c_p \wedge c_q \equiv \bot$.
+\end{itemize}
+
+\paragraph{Suppression des sortes coopératives superflues}
+Il existe deux cas pour lesquels il est possible de supprimer la sorte coopérative $f^{h,i}$
+créée pour une action $h$ dans le modèle aplati :
+\begin{itemize}
+  \item si $\Fopaplat{h} \equiv \top$, alors l'action $h$ peut être traduite comme étant
+    une auto-action (car elle est toujours jouable dès lors que la cible est présente) ;
+  \item Si la $i$\textsuperscript{e} conjonction de $\Fopaplat{h}$ consiste
+    en un unique élément $p$, alors cette conjonction peut être traduite par une action simple
+    de la forme : $\PHhit{p}{\target{h}}{\bounce{h}}$ sans avoir recours à une sorte coopérative
+    (étant donné qu'en dehors de la cible, un seul processus, $p$, est requis).
+\end{itemize}
+
+
+
+\subsection{Aplatissement des Frappes de Processus avec arcs neutralisants}
+\seclabel{phan-aplatissement}
+
+À l'instar de la \secref{aplatissement}, il est possible de traduire les Frappes de Processus
+avec arcs neutralisants en Frappes de Processus canoniques.
+Le procédé est le même car il consiste, pour chaque action,
+en un calcul de propriété d'aplatissement
+qui est ici identique à la propriété de jouabilité.
+En effet, l'opérateur d'aplatissement de cette traduction est égal à l'opérateur de jouabilité 
+donné à la \defref{fopphan} : $\Fopsymbol_\Fopaplatsubsymbol = \Fopsymbol_\Fopphansubsymbol$.
+Par la suite, une fois cette propriété traduite en FND, il est possible de réutiliser
+la traduction de la \defref{aplatissement} afin d'obtenir un modèle canonique
+ayant la même dynamique, comme assuré par le \thmref{bisimulaplatissement}.
+
+Cette traduction est elle aussi de complexité exponentielle dans le nombre d'actions
+préemptant chaque action.
+Cependant, on note que l'utilisation d'arcs neutralisants peut rendre cet aplatissement
+beaucoup plus efficace.
+En effet, contrairement aux Frappes de Processus avec classes de priorités,
+les Frappes de Processus avec arcs neutralisants permettent une définition beaucoup plus fine
+des préemptions entre actions.
+Une des conséquences sur les modèles créés est un nombre bien moins important de relations
+préempteur/préempté entre les actions, rendant la traduction plus efficace.
+
+
+
+\subsection{Aplatissement des Frappes de Processus avec actions plurielles}
+\seclabel{phm-aplatissement}
+
+Il est possible de traduire les Frappes de Processus avec actions plurielles
+en Frappes de Processus canoniques à l'aide d'outils précédemment développés.
+En effet, la \defref{phm2php} offre une traduction des Frappes de Processus avec action plurielles
+en Frappes de Processus avec 4 classes de priorités, celles-ci pouvant être à leur tour traduites
+en Frappes de Processus canoniques à l'aide de la \defref{aplatissement}.
+Globalement, cette traduction est donc exponentielle dans le nombre d'actions dans le modèle
+initial, car la traduction de chacune d'entre elles crée une sorte coopérative et plusieurs
+actions de priorités différentes, qui doivent par la suite être aplaties.

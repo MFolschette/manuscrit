@@ -60,9 +60,12 @@ présentées à la \secref{phan}.
 
 \todo{Schéma exemple}
 
+\todo{Exemple avec Metazoan}
+
 
 
 \subsection{Définition}
+\seclabel{php-def}
 
 \begin{definition}[Frappes de Processus avec $k$ classes de priorités]
 \deflabel{php}
@@ -136,11 +139,48 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
 
 \subsection{Équivalences entres Frappes de Processus avec $k$ classes de priorités}
 
+\todo{À garder ?}
+
 Nous montrons à la \secref{aplatissement} que les Frappes de Processus avec $k$ classes
 de priorités sont aussi expressives que les Frappes de Processus avec $n$ classes de
-priorités, pour tout $k, n \in \sN^*$.
+priorités, pour tout $k, n \in \sNN$.
 Nous donnons pour cela un résultat encore plus fort : tout modèle de Frappes de Processus avec $k$
 classes de priorités peut être traduit en Frappes de Processus canoniques,
 comme défini à la \secref{phcanonique-def},
 c'est-à-dire en Frappes de Processus avec 2 classes de priorités et une restriction
 dans l'utilisation des actions de priorité haute.
+
+
+
+\subsection{Réutilisation des outils}
+
+\todo{Revoir le titre de cette section}
+
+\subsubsection{Points fixes}
+
+Il est à noter que l'ensemble des points fixes des Frappes de Processus avec $k$
+classes de priorités $\PH = (\PHs, \PHl, \PHh^{\angles{k}})$, où $k \in \sN^*$,
+est identique à l'ensemble des points fixes des Frappes de Processus standards
+$\PH' = (\PHs, \PHl, \PHh)$, c'est-à-dire du modèle dont l'ensemble des actions
+est l'union de toutes les classes de priorités de $\PH$.
+Ce résultat se déduit aisément du raisonnement qui a permis d'élaborer l'opérateur de jouabilité
+de la \defref{fopphp}.
+En effet, il existe une action jouable 
+En effet, un point fixe est caractérisé par l'impossibilité de jouer toutes les actions ;
+or, si une action est jouable dans $\PH'$, cela signifie que la même action dans $\PH$ :
+\begin{itemize}
+  \item soit qu'elle est jouable
+\end{itemize}
+
+\begin{theorem}[Point fixe des Frappes de Processus avec classes de priorités]
+\thmlabel{fixedpoints-php}
+  Soient $\PH = (\PHs, \PHl, \PHh^{\angles{k}})$, où $k \in \sN^*$,
+  des Frappes de Processus avec $k$ classes de priorités,
+  et $\PH' = (\PHs, \PHl, \PHh')$ les Frappes de Processus standards avec $\PHh' = \PHh$.
+  Une action est jouable dans un état $s$ de $\PH$ si et seulement si
+  une action est jouable dans le même état $s$ de $\PH'$ :
+  \[\exists s' \in \PHl, s \trans{\PH} s' \Leftrightarrow
+    \exists s'' \in \PHl, s \trans{\PH'} s''\]
+\end{theorem}
+
+\todo{À finir}
