@@ -1,33 +1,47 @@
 
-\chapter{Enrichissement des Frappes de Processus}
+\chapter{Enrichissement des Frappes de Processus pour l'aide à la modélisation}
 \chaplabel{sem}
 
 \chapeau{%
   La sémantique standard des Frappes de Processus de la \secref{ph} peut s'avérer insuffisante pour
   prendre en compte certaines informations connues sur le système étudié, comme des informations
   en terme de vitesse de réaction.
-  Ce chapitre propose d'étendre sa sémantique afin d'enrichir les modèles sur deux axes :
+  De plus, certains comportement non désirés apparaissent dans les Frappes de Processus standards
+  dès que l'on cherche à synchroniser plusieurs processus.
+  Ce chapitre propose d'étendre sa sémantique afin de pallier ces problèmes
+  en enrichissant les modèles sur deux axes :
   \begin{itemize}
     \item la préemption entre actions, qui permet d'empêcher le jeu d'une action sous certaines
       conditions,
     \item la simultanéité d'actions, qui permet de forcer le jeu simultané de plusieurs actions.
   \end{itemize}
-  Ces deux axes ont pour but de permettre ou de faciliter l'intégration de telles informations au sein
-  des modèles.
+  Ces deux axes ont pour but de permettre ou de faciliter l'intégration de telles informations
+  au sein des modèles.
 
-  Les trois extensions aux Frappes de Processus proposées dans ce chapitre prennent la forme
-  de classes de priorités, d'arcs neutralisants et d'actions plurielles.
-  Nous montrons de plus que les trois modèles qui en résultent sont (faiblement) bisimilaires.
-  Enfin, il est à noter que l'analyse statique développée au chapitre \todo{suivant}
-  peut s'appliquer à toutes ces extensions, les classes de priorités étant d'ailleurs réutilisées
-  pour définir la forme canonique des Frappes de Processus.
+  Du premier axe découlent deux extensions aux Frappes de Processus
+  prenant la forme d'arcs neutralisants, qui modélisent la préemption d'une action par une autre,
+  et de classes de priorités, qui modélisent la préemption d'un ensemble d'actions par un autre.
+  Le second axe apporte à une troisième extension, reposant sur la notion d'actions plurielles.
+%   Les trois extensions aux Frappes de Processus proposées dans ce chapitre prennent la forme
+%   de classes de priorités, d'arcs neutralisants et d'actions plurielles.
+  Après les avoir définis définies dans ce chapitre,
+  nous montrons que ces trois modélisations sont (faiblement) bisimilaires.
+  De plus, il est à noter que l'analyse statique développée au \chapref{phcanonique}
+  peut s'appliquer à toutes ces extensions, moyennant une traduction.
+%   Les classes de priorités sont d'ailleurs réutilisées
+%   pour définir la forme canonique des Frappes de Processus.
 }
 
+\todo{Référence à CS2Bio}
+
 La sémantique standard des Frappes de Processus telle que rappelée à la \secref{ph}
-ne permet pas d'inclure de contraintes dérivées d'informations biologiques au sein des modèles créés,
-comme les vitesses de réaction, la connaissance d'inhibitions entre composants et réactions,
-ou la connaissance des réactions précises ayant lieu au sein du système.
-Pourtant, la connaissance de telles informations peut permettre de privilégier un chemin sur un autre
+ne permet pas d'inclure de contraintes dérivées d'informations biologiques au sein
+des modèles créés,
+comme les vitesses de réaction,
+la connaissance d'inhibitions de réactions en présence de certains composants,
+ou celle des réactions précises ayant lieu au sein du système.
+Pourtant, la connaissance de telles informations peut permettre de privilégier un chemin
+sur un autre
 à d'un moment clef de l'évolution du système, empêchant ainsi une certaine évolution du système,
 en favorisant l'apparition d'une autre.
 Leur intégration permet donc d'affiner le modèle en réduisant les comportements possibles
@@ -38,7 +52,8 @@ peut empêcher la jouabilité d'une autre action) ou de simultanéité
 
 De même, au niveau de la modélisation, la représentation des coopérations avec des Frappes de
 Processus standards souffre de certaines lacunes.
-Ces coopérations sont modélisées à l'aide de sortes coopératives telles que décrites à la \secref{sc},
+Ces coopérations sont modélisées à l'aide de sortes coopératives telles que décrites à la
+\secref{sc},
 %dont la dynamique n'est pas strictement équivalente à celle d'une porte logique autorisant
 %le jeu d'une action en présence de certains processus donnés.
 et souffrent d'un décalage temporel entre les sortes à représenter et
@@ -72,7 +87,8 @@ Une telle préemption peut être opérée de façon généralisée
 %par une action sur un ensemble d'autres,
 comme c'est le cas pour les Frappes de Processus avec classes de priorités (\secref{php}),
 où chaque action peut bloquer l'ensemble des actions de priorité inférieure ;
-ou de façon ponctuelle, comme au sein des Frappes de Processus avec arcs neutralisants (\secref{phan}),
+ou de façon ponctuelle, comme au sein des Frappes de Processus avec arcs neutralisants
+(\secref{phan}),
 qui permet de définir des relations plus fines de préemption entre actions individuelles.
 À l'inverse, la simultanéité entre actions permet de s'assurer qu'un ensemble de frappes est joué
 de façon simultanée, ou plus généralement qu'un ensemble de processus bondit en même temps,
@@ -80,15 +96,31 @@ comme permettent de le représenter les Frappes de Processus avec actions plurie
 Nous montrons au cours de ce chapitre que ces différentes sémantiques sont deux à deux aussi
 expressives \todo{ref}.
 
-Les apports de ces formes alternatives de Frappes de Processus permettent de restreindre la dynamique
+Les apports de ces formes alternatives de Frappes de Processus permettent de restreindre
+la dynamique
 d'un modèle par rapport aux Frappes de Processus standards.
 Elles se posent en alternatives à l'ajout de paramètres stochastiques dans les Frappes de Processus
 \todo{ref},
 qui permettent d'ajouter une dimension probabiliste dans ce formalisme.
-Leur premier avantage est de simplifier l'écriture et la lecture d'un modèle selon les informations
-que l'on souhaite y intégrer.
-Leur second avantage est la possibilité d'appliquer les méthodes d'analyse statique
-qui sont étendues et adaptées à ces formalismes au chapitre \todo{suivant}.
+Leur principal atout est la simplification de l'écriture et de la lecture des modèles.
+%selon les informations que l'on souhaite y intégrer.
+Cependant, malgré une plus grande complexité, des méthodes d'analyse statique sont
+développées au \chapref{phcanonique} afin d'en permettre une analyse toujours efficace.
+% Leur second avantage est la possibilité d'appliquer les méthodes d'analyse statique
+% qui sont étendues et adaptées à ces formalismes au chapitre \chapref{phcanonique}.
+
+Ces différentes notions font naturellement écho aux problématiques plus générales d'enrichissement
+dans les modèles discrets.
+Ainsi, on peut par exemple rapprocher la notion d'arc neutralisant des Frappes de Processus
+à celle propre aux réseaux de Petri,
+à la différence que celle-ci permet de préempter des actions en fonction de l'activité
+d'une place (correspondant ici à un processus ou à une sorte, selon le point de vue).
+De même, la notion de priorités est aussi présente dans certaines sémantiques de réseaux
+de Petri \toref.
+Enfin, les actions plurielles permet de se rapprocher de la classe des modèles
+à dynamique synchrone.
+
+\todo{Insister davantage sur les résultats}
 
 
 

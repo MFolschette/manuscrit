@@ -250,7 +250,8 @@ qui n'ont pas été prises en compte ici pour ne pas alourdir la définition.
 Nous donnons dans la suite quelques pistes pour obtenir des modèles plus simples
 mais au comportement équivalent, mais n'en donnons pas les preuves.
 
-\paragraph{Simplification des propriétés d'aplatissement}
+\subsubsection{Simplification des propriétés d'aplatissement}
+
 La propriété d'aplatissement $\Fopaplat{h}$ d'une action $h = \PHhit{a_i}{b_j}{b_k}$ peut être
 simplifiée à l'aide des propriétés suivantes, permettant d'éviter la création
 de certains éléments inutiles, comme des actions qui ne sont jamais jouables
@@ -266,7 +267,8 @@ ou des coopérations qui sont toujours vraies :
     alors $c_p \wedge c_q \equiv \bot$.
 \end{itemize}
 
-\paragraph{Suppression des sortes coopératives superflues}
+\subsubsection{Suppression des sortes coopératives superflues}
+
 Il existe deux cas pour lesquels il est possible de supprimer la sorte coopérative $f^{h,i}$
 créée pour une action $h$ dans le modèle aplati :
 \begin{itemize}
@@ -317,3 +319,29 @@ en Frappes de Processus canoniques à l'aide de la \defref{aplatissement}.
 Globalement, cette traduction est donc exponentielle dans le nombre d'actions dans le modèle
 initial, car la traduction de chacune d'entre elles crée une sorte coopérative et plusieurs
 actions de priorités différentes, qui doivent par la suite être aplaties.
+
+
+
+\subsection{Représentation en Frappes de Processus avec actions plurielles}
+
+\TODO
+
+\begin{definition}
+  Soient $\PH = (\PHs; \PHl; (\PHh^{(1)}; \PHh^{(2)}))$ des Frappes de Processus canoniques.
+  On pose : $\oPH = (\PHs'; \PHl'; \PHh')$ les Frappes de Processus avec actions plurielles
+  telles que :
+  \begin{itemize}
+    \item $\PHs' = \components$ ;
+    \item $\PHl' = \bigtimes{a \in \PHs'} \PHl_a$ ;
+    \item $\PHh' = \{ \PHfrappemult{\big( ps \cup \{ \target{h} \} \big)}{\bounce{h}}
+      \mid h \in \PHh^{(2)} \wedge ps \in \virtualhitters(h) \}$
+    avec, si on note $\hitter{h} = a_i$ :
+    \[\virtualhitters(h) =
+      \begin{cases}
+        \{ \{ a_i \} \} & \text{si } a \in \components \\
+        \csState(a_i) & \text{si } a \in \cs
+      \end{cases}\]
+  \end{itemize}
+\end{definition}
+
+\todo{Preuve}

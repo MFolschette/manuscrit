@@ -34,7 +34,29 @@ On constate par ailleurs qu'une action peut en neutraliser une autre
 même si elle-même est neutralisée.
 Nous ne nous avancerons cependant pas sur la signification biologique de ce fait.
 
+Enfin, il semble nécessaire de faire un parallèle entre les arcs inhibiteurs développés ici
+et les arcs du même nom utilisés dans les réseaux de Petri \toref.
+Leur rôle est effectivement proche, leur but étant la préemption d'une action en fonction
+d'une condition extérieure à son déclenchement.
+Malgré tout, les arcs inhibiteurs des réseaux de Petri se différencient car ils
+reposent sur la présence d'un certain nombre de jetons dans une place
+---~ce qui se traduirait, en Frappes de Processus,
+par la présence d'un certain processus actif d'une sorte donnée~---
+là où les arcs inhibiteurs des Frappes de Processus ne permettent l'inhibition
+qu'en fonction de l'activité d'une autre action.
+Cependant, un tel choix de conception peut aisément se pallier dans un sens comme dans l'autre.
+En effet, représenter l'activité d'une action revient à créer deux arcs inhibiteurs en
+réseaux de Petri ---~l'un pour le frappeur et l'autre pour la cible.
+À l'inverse, il est possible qu'une action $h$ se bloque elle-même, à l'aide d'un 
+«~auto-arc neutralisant~» $\PHan{h}{h}$,
+permettant ainsi de bloquer une autre action $g$
+en fonction de la présence du processus $\frappeur{h}$
+à l'aide d'un deuxième arc neutralisant $\PHan{h}{g}$.
+
 \todo{Schéma exemple}
+
+\subsection{Définition}
+\seclabel{phan-def}
 
 \begin{definition}[Frappes de Processus avec arcs neutralisants]
 \deflabel{phan}
@@ -70,14 +92,152 @@ En ce sens, il est semblable à celui des Frappes de Processus avec $k$ classes 
 \deflabel{fopphan}
   L'opérateur de jouabilité des Frappes de Processus avec arcs neutralisants est défini par :
   \[\forall h \in \PHh, \Fopphan{h} \equiv \hitter{h} \wedge \target{h} \wedge
-    \left( \bigwedge_{\substack{u \in \PHn\\u = \PHan{g}{h}}}
+    \left( \bigwedge_{\substack{g \in \PHh\\\PHan{g}{h} \in \PHn}}
     \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
 \end{definition}
 
-\todo{Fonctionne encore à condition de prendre en compte les préemptions : analyse stochastique}
 
-\todo{Ne fonctionne plus : points fixes}
 
-\todo{Fonctionne avec traduction (PHcanonique) : analyse statique}
+\subsection{Équivalence avec les Frappes de Processus avec $k$ classes de priorités}
+\seclabel{phan-equiv-php}
 
-\todo{Traduction vers PHcanonique}
+Les Frappes de Processus avec arcs neutralisants ont une expressivité équivalente
+aux Frappes de Processus avec $k$ classes de priorité, où $k \in \sN^*$.
+En effet, la \thmref{phpbisimphan} propose une traduction des Frappes de Processus
+avec $k$ classes de priorités en Frappes de Processus avec arcs neutralisants.
+À l'inverse, les Frappes de Processus avec arcs neutralisants peuvent être représentée
+en Frappes de Processus canoniques, qui sont une sous-classe des Frappes de Processus avec
+2 classes de priorités, comme démontré à la \secref{phan-aplatissement}.
+
+\begin{theorem}[Équivalence avec les classes de priorités]
+\thmlabel{phpbisimphan}
+  Soient $\PH = (\PHs, \PHl, \PHh^{\angles{k}})$ des Frappes de Processus avec $k$ classes
+  de priorités, où $k \in \sN^*$.
+  Il existe un modèle $\oPH$ de Frappes de Processus avec arcs neutralisants tel que :
+  \[\forall s, s' \in \PHl, s \trans{\PH} s' \Longleftrightarrow s \trans{\oPH} s' \]
+\end{theorem}
+
+\begin{proof}
+  On pose : $\oPH = (\PHs, \PHl, \PHh, \PHn)$ les Frappes de Processus avec arcs neutralisants
+  dont l'ensemble des actions est l'union de toutes les classes de priorités de $\PH$, et :
+  $\PHn = \{ \PHan{g}{h} \mid g \in \PHh^{(n)}, h \in \PHh^{(k)}, n < k \}$.
+  Soit $h \in \PHh$. et
+  D'après la définition de $\oPH$, on constate que :
+  $\{ g \in \PHh \mid \PHan{g}{h} \in \PHn \} = \{ g \in \PHh \mid n < \prio(h) \}$.
+  Ainsi, $\forall h \in \PHh, \Fopphp{h} = \Fopphan{h}$,
+  ce qui implique que les action jouables dans l'état $s$ du le modèle $\PH$
+  sont exactement les actions jouables dans l'état $s$ du modèle $\oPH$.
+  D'où : $s \trans{\PH} s' \Longleftrightarrow s \trans{\oPH} s'$.
+\end{proof}
+
+
+
+\subsection{Réutilisation des outils existants}
+\seclabel{phan-outils}
+
+\todo{Revoir le titre de cette section}
+
+\todo{Faudrait-il fusionner cette section avec ses semblables des \secref{php} et \secref{phm} ?}
+
+\subsubsection{Points fixes}
+\seclabel{phan-outils-pf}
+
+De façon analogue à la \secref{php-outils-pf}, nous définissions ici
+la \emph{fusion} d'un modèle de Frappes de Processus avec arcs neutralisants
+comme étant le même modèle en Frappes de Processus standards,
+dont les arcs neutralisants ont été ignorés (\defref{phan-fusion}).
+Cette définition nous permet d'avancer le résultat suivant :
+les points fixes de $\PHmergean(\PH)$ sont des points fixes de $\PH$,
+d'après la contraposée du \thmref{php-pf}.
+Il n'est en effet pas possible d'avancer de résultat plus précis de façon immédiate,
+car les arcs neutralisants peuvent former des boucles d'actions qui se neutralisent entre elles,
+rajoutant ainsi des points fixes supplémentaires par rapport au modèle fusionné.
+Ce cas ne se présente pas pour les Frappes de Processus avec $k$ classes de priorités.
+
+\begin{definition}[Fusion ($\PHmergean$)]
+\deflabel{phan-fusion}
+  Soient $\PH = (\PHs, \PHl, \PHh, \PHn)$ des Frappes de Processus avec arcs neutralisants.
+  On note $\PHmergean(\PH) = (\PHs, \PHl, \PHh)$
+  les Frappes de Processus standards appelées \emph{fusion} de $\PH$,
+  dont on a retiré les arcs neutralisants.
+\end{definition}
+
+\begin{theorem}[Points fixes des Frappes de Processus avec arcs neutralisants]
+\thmlabel{phan-pf}
+  Soient $\PH = (\PHs, \PHl, \PHh, \PHn)$ des Frappes de Processus avec arcs neutralisants,
+  et $r \in \PHl$ :
+  \[\exists s \in \PHl, r \trans{\PH} s \Longrightarrow
+    \exists s' \in \PHl, r \trans{\PHmergean(\PH)} s'\]
+\end{theorem}
+
+\begin{proof}
+  Si une action est jouable dans $r$, cela signifie notamment
+  que son frappeur et sa cible sont présents dans $r$.
+  Cette condition est suffisante pour que cette même action soit jouable dans $\PHmergean(\PH)$.
+\end{proof}
+
+\todo{Les cycles d'actions sont-ils suffisants pour trouver tous les points fixes ?}
+
+Pur finir, il est toujours envisageable d'aplatir des Frappes de Processus avec
+arcs neutralisants en Frappes de Processus canoniques,
+comme décrit à la \secref{phan-aplatissement},
+afin d'effectuer une recherche de points fixes à l'aide de la méthode
+proposée à la \secref{php-outils-pf}.
+Comme le modèle aplati de Frappes de Processus avec arcs neutralisants possède la même dynamique,
+il est possible de retrouver les points fixes du modèle original de cette façon,
+en supprimant simplement les sortes coopératives des résultats.
+
+\subsubsection{Analyse statique}
+\seclabel{phan-outils-as}
+
+De même qu'à la \secref{php-outils-as},
+étant donné que les Frappes de Processus avec arcs neutralisants permettent de restreindre
+la dynamique par rapport aux Frappes de Processus standards, il est toujours possible
+d'utiliser l'analyse statique par sur-approximation,
+mais l'analyse statique par sous-approximation n'est plus valable.
+
+Cependant, nous proposons au \chapref{phcanonique}
+une traduction des Frappes de Processus avec arcs neutralisants en Frappes de Processus canoniques,
+qui sont des Frappes de Processus avec 2 classes de priorités avec des contraintes précises,
+ainsi qu'une nouvelle approche d'analyse statique par sous-approximation
+qui s'applique à cette classe particulière de modèles.
+L'analyse statique par sous-approximation est donc possible sur les Frappes de Processus
+avec arcs neutralisants, au prix de cette traduction.
+
+\subsubsection{Paramètres stochastiques}
+
+Enfin, à l'instar de la \secref{php-outils-stocha},
+il n'est pas possible d'utiliser directement les outils développés pour la simulation stochastique
+car ceux-ci ne prennent pas en compte la présence d'arcs neutralisants.
+Malgré cela, une telle utilisation reste théoriquement possible à condition de prendre
+en compte les neutralisations entre actions.
+
+Cependant, à nouveau, un parallèle intéressant peut être tracé entre les arcs neutralisants
+et l'introduction de paramètres stochastiques dans le modèle.
+En effet, étant donné un ensemble de paramètres stochastiques,
+si les intervalles de tir de deux actions sont disjoints,
+alors il est possible de modéliser cela par un arc neutralisant
+dont l'action bloquante est l'action la plus «~rapide~»
+(\cad donc l'intervalle est le plus proche de zéro)
+et l'action bloquée est la plus «~lente~»
+(\cad donc l'intervalle est le plus éloigné de zéro).
+
+Cette représentation est avantageuse par rapport à celle proposée à la
+\secref{php-outils-stocha}.
+En effet, il n'est pas nécessaire pour créer le modèle
+de distinguer des classes globales d'actions selon leurs
+intervalles de tir, mais seulement de déterminer si les intervalles de tir de toutes les actions
+sont, deux à deux, disjoints (voire assez éloignés selon des critères qui peuvent être
+fixés arbitrairement).
+Cela permet de plus d'obtenir des relations plus fines entre actions,
+là où les Frappes de Processus ne permettent que la distinction de classes de priorités
+globales, qui sont parfois trop grossières pour certaines modélisations.
+Cependant, le problème de la représentation de l'accumulation persiste :
+une partie du modèle évoluant «~plus rapidement~» peut totalement préempter une
+action «~plus lente~» si celle-ci est sans cesse neutralisées.
+Or en pratique, un tel cas devrait en définitive autoriser l'action «~lente~» à s'exécuter
+après un certain temps.
+Cela peut être corrigé en supprimant quelques arcs neutralisants bien choisis,
+ou encore en ne permettant pas la création d'arcs neutralisants entre les parties indépendantes
+du modèle, mais cela nécessite une analyse préalable assez poussée de la dynamique
+du système.

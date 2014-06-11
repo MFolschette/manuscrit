@@ -159,11 +159,6 @@
 \newcommand{\scfsymbol}{f}
 \newcommand{\scf}[1]{\scfsymbol^{#1}}
 
-% Flattening
-\newcommand{\ov}{\overline}
-\newcommand{\os}{\ov{s}}
-\newcommand{\oPH}{\ov{\PH}}
-
 % Propriétés de jouabilité
 \newcommand{\F}{F}
 \newcommand{\Fopsymbol}{\F}
@@ -171,6 +166,8 @@
 \newcommand{\Fconj}[1]{\mathsf{conj}(#1)}
 
 % Opérateurs de jouabilité
+\newcommand{\Feval}[2]{\left[#1\right](#2)}
+
 \newcommand{\Fopphansubsymbol}{{an}}
 \newcommand{\Fopphan}[1]{\Fopsymbol_\Fopphansubsymbol(#1)}
 \newcommand{\Fopphpsubsymbol}{{p}}
@@ -178,15 +175,22 @@
 \newcommand{\Fopphmsubsymbol}{{plur}}
 \newcommand{\Fopphm}[1]{\Fopsymbol_\Fopphmsubsymbol(#1)}
 
-\newcommand{\Fopaplatsubsymbol}{{plat}}
-\newcommand{\Fopaplat}[1]{\Fopsymbol_\Fopaplatsubsymbol(#1)}
+% Merge / Fusion
+\newcommand{\PHmerge}{\f{merge}}
+\newcommand{\PHmergean}{\f{merge}_{an}}
 
-\newcommand{\Feval}[2]{\left[#1\right](#2)}
+% Flattening / Aplatissement
+\newcommand{\ov}{\overline}
+\newcommand{\os}{\ov{s}}
+\newcommand{\oPH}{\ov{\PH}}
+
 \newcommand{\PHdep}[2]{\f{dep}^{#1}(#2)}
 \newcommand{\PHflat}{\f{flat}}
 \newcommand{\flats}[1]{\lceil #1 \rceil}
 \newcommand{\unflats}[1]{\lfloor #1 \rfloor}
-\newcommand{\virtualhitters}{\f{VirtualHitters}}
+
+\newcommand{\Fopaplatsubsymbol}{{plat}}
+\newcommand{\Fopaplat}[1]{\Fopsymbol_\Fopaplatsubsymbol(#1)}
 
 \newcommand{\mysigma}{\sigma}
 \newcommand{\mypi}{\pi}
@@ -194,6 +198,8 @@
 \newcommand{\m}[1][h,i]{m^{#1}}
 
 \def\toset#1{\widetilde{#1}}
+
+\newcommand{\virtualhitters}{\f{FrappeursVirtuels}}
 
 % PH canonique
 \newcommand{\components}{\Gamma}

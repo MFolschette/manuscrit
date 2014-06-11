@@ -146,6 +146,8 @@ $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
 
 \todo{Preuve}
 
+\todo{Sens ($\Leftarrow$) !}
+
 
 
 \subsection{Équivalence avec les Frappes de Processus avec 4 classes de priorités}
@@ -155,9 +157,18 @@ Nous proposons dans cette section une traduction des Frappes de Processus
 avec actions plurielles en Frappes de Processus avec 4 classes de priorités (\defref{phm2php})
 et nous montrons que les modèles obtenus de cette façon sont faiblement bisimilaires
 (\thmref{phmbisimphp}).
-Nous en déduisons que ces deux formalismes ont une expressivité équivalente (\thmref{phmequivphp}).
+Nous en déduisons que ces deux formalismes ont une expressivité équivalente,
+%(\thmref{phmequivphp}).
+car les Frappes de Processus avec 4 classes de priorités peuvent à leur tour être
+traduites en Frappes de Processus canoniques (comme expliqué à la \secref{phm-aplatissement}),
+celles-ci pouvant à leur tour être traduites en Frappes de Processus avec actions plurielles
+\TODO.
 
-La traduction proposée repose sur l'utilisation de deux types de sortes particulières :
+La traduction proposée permet d'obtenir un modèle de
+Frappes de Processus pseudo-canoniques avec 4 classes de priorités,
+telles que définies plus tard, à la \secref{phcanonique}.
+De façon informelle, ce modèle comporte 4 classes de priorités
+et repose sur l'utilisation de deux types de sortes particulières :
 \begin{itemize}
   \item des sortes coopératives pour vérifier la présence de tous les processus du frappeur,
   \item des \emph{sortes de réaction} permettant de modéliser le déclenchement d'une \emph{réaction},
@@ -178,7 +189,9 @@ Les actions de priorité 2 ont la forme $\PHhit{\sr{h}_1}{b_j}{b_k}$
 avec $b_j \in A$ et $b_k \in B$,
 ce qui permet d'effectuer tous les bonds nécessaires à l'activation des processus de $B$.
 Enfin, les sortes coopératives sont toutes mises à jour par des actions de priorité 1,
-de façon similaire à \todo{ref PHcanonique}, afin d'éviter les problèmes d'entrelacement.
+afin d'éviter les problèmes d'entrelacement
+et de correspondre à la définition de Frappes de Processus pseudo-canoniques
+(\defref{phpseudocanonique})
 L'agencement de ces classes de priorités permet ainsi de simuler des actions plurielles
 tout en empêchant l'entrelacement entre réactions
 ---~car deux réactions ayant lieu en même temps pourraient potentiellement
@@ -231,26 +244,68 @@ amener le système dans un état normalement inaccessible.
     \tophp{s_1} \trans{\phmtophp} \tophp{s_2} \enspace.\]
 \end{theorem}
 
+
+
+
 \todo{Preuve}
 
-\begin{theorem}[Équivalence]
-\thmlabel{phmequivphp}
-  Les Frappes de Processus avec actions plurielles
-  et les Frappes de Processus avec $k$ classes de priorités
-  ont une expressivité équivalente.
-\end{theorem}
+\todo{Formaliser l'équivalence PHplurielles / PHp de façon formelle ?}
 
-\begin{proof}
-  D'après \thmref{phmbisimphp} d'une part,
-  et d'après \todo{ref trad PHcanonique} d'autre part,
-  la traduction de \todo{PHcanonique} vers les Frappes de Processus avec actions plurielles
-  étant triviale.
-\end{proof}
+% \begin{theorem}[Équivalence]
+% \thmlabel{phmequivphp}
+%   Les Frappes de Processus avec actions plurielles
+%   et les Frappes de Processus avec $k$ classes de priorités
+%   ont une expressivité équivalente.
+% \end{theorem}
+% 
+% \begin{proof}
+%   D'après \thmref{phmbisimphp} d'une part,
+%   et d'après \todo{ref trad PHcanonique} d'autre part,
+%   la traduction de \todo{PHcanonique} vers les Frappes de Processus avec actions plurielles
+%   étant triviale.
+% \end{proof}
 
 
 
-\todo{Ne fonctionne plus : points fixes}
+\subsection{Réutilisation des outils existants}
+\seclabel{phm-outils}
 
-\todo{Fonctionne avec traduction (PHcanonique) : analyse statique et analyse stochastique}
+\todo{Revoir le titre de cette section}
 
-\todo{Traduction vers PHcanonique}
+\todo{Faudrait-il fusionner cette section avec ses semblables des \secref{php} et \secref{phan} ?}
+
+\subsubsection{Points fixes}
+\seclabel{phm-outils-pf}
+
+Du fait de la complexité des actions plurielles, il n'existe pas à l'heure actuelle de méthode
+générique efficace permettant de déduire les points fixes de Frappes de Processus avec
+actions plurielles.
+Cependant, à l'instar des Frappes de Processus avec arcs neutralisants
+(\secref{phan-outils-pf})
+il est possible d'obtenir ces points fixes les cherchant sur
+le modèle aplati (tel que défini à la \secref{phm-aplatissement}).
+En effet, sa dynamique étant équivalente, aux sortes coopératives près, le résultat
+peut être transposé au modèle d'origine.
+
+\subsubsection{Analyse statique}
+\seclabel{phm-outils-as}
+
+Du fait de la forme particulière des actions, les méthodes d'analyse statique ne s'appliquent pas
+directement aux Frappes de Processus avec actions plurielles.
+Cependant, moyennant l'utilisation de la traduction vers des Frappes de Processus
+avec 4 classes de priorités donnée à la \defref{phm2php},
+il est possible de les appliquer sur un modèle équivalent.
+
+\subsubsection{Paramètres stochastiques}
+\seclabel{phm-outils-stocha}
+
+Il est théoriquement possible d'associer des paramètres stochastiques à chaque action plurielle
+d'un modèle de Frappes de Processus avec actions plurielles.
+Un tel ajout aurait notamment l'avantage d'éviter l'utilisation de la valeur «~infinie~»
+d'absorption de stochasticité, qui avait principalement pour but de simuler des actions
+successives instantanées, afin notamment de pallier le fait qu'un seul processus
+ne peut évoluer pour chaque jeu d'action des Frappes de Processus standards.
+
+Une autre alternative consisterait à utiliser l'aplatissement de la \secref{phm-aplatissement},
+et d'attribuer aux actions correspondant à des activations de réaction
+dans le modèle obtenu les paramètres stochastiques voulus.
