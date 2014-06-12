@@ -58,9 +58,7 @@ certains modèles, notamment lorsqu'il est nécessaire de définir des préempti
 comme le permettent les Frappes de Processus avec arcs neutralisants
 présentées à la \secref{phan}.
 
-\todo{Schéma exemple}
-
-\todo{Exemple avec Metazoan}
+\pref{fig:metazoan-php}
 
 
 
@@ -126,6 +124,140 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
     \left( \bigwedge_{\substack{g \in \PHh^{(n)}\\n < \prio(h)}}
     \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
 \end{definition}
+
+
+
+\begin{example}
+\exlabel{metazoan-php}
+  Nous illustrons les possibilités offertes par l'introduction des classes de priorités
+  par la \figref{metazoan-php} qui représente un modèle de Frappes de Processus
+  avec 3 classes de priorités $\PH = (\PHs, \PHl, \PHh^{\angles{3}})$.
+  Celui-ci reprend la structure du modèle de Frappes de Processus standards
+  de la \figref{metazoan-ph},
+  en y ajoutant trois classes de priorités permettant de distinguer trois types d'actions :
+  \begin{itemize}
+    \item les actions de $\PHh^{(1)}$ permettent d'assigner une priorité maximale
+      aux actions mettant à jour la sorte coopérative $fc$,
+      et peuvent être considérées comme «~instantanées~» du point de vue du reste du modèle ;
+    \item les actions de $\PHh^{(2)}$ assurent que la sorte $a$ est mise à jour immédiatement
+      en fonction de l'évolution de $f$ et $c$,
+      et peuvent être vues comme «~urgentes~» par rapport aux actions de $\PHh^{(3)}$ ;
+    \item enfin, les actions restantes sont par conséquent considérées comme «~lentes~»
+      ou «~peu urgentes~» en regard du reste du modèle ;
+      il s'agit des actions de $\PHh^{(3)}$, qui représentent des processus biologiques
+      plus lents.
+  \end{itemize}
+  Comme expliqué par la suite au \chapref{phcanonique},
+  assigner la priorité maximale aux actions permettant la mise à jour des
+  sortes coopératives permet d'éviter les comportements indésirables
+  décrits à la page \expageref{metazoan-ph-nocoop}.
+  De même, accorder aux actions de $\PHh^{(2)}$ le statut d'«~urgentes~»
+  permet de s'assurer qu'elles seront jouée avant les actions de $\PHh^{(3)}$.
+  Dans ce modèle, cela se traduit par le fait que l'activation ou la désactivation de $a$
+  est forcée lorsque $c$ et $f$ évoluent,
+  ce qui restreint la dynamique aux seuls comportements désirés.
+  En effet, la seule dynamique possible, en partant de l'état initial
+  $\etat{a_0, c_0, f_1, fc_{10}}$,
+  consiste en un comportement stationnaire oscillant,
+  où $c$ et $a$ sont alternativement activés et désactivés,
+  interrompu par la désactivation de $f$ qui entraîne irrémédiablement celle de $c$,
+  sans possibilité de le ré-activer par la suite,
+  et provoque cette fois un comportement stationnaire constant
+  (qui se traduit en Frappes de Processus par un point fixe
+  où $a$ reste indéfiniment à sa dernière valeur (actif ou non).
+  Le comportement stationnaire est donné par le scénario suivant,
+  jouable dans l'état initial $\etat{a_0, c_0, f_1, fc_{10}}$ :
+  \begin{align*}
+    \PHfrappe{fc_{10}}{a_0}{a_1} &\cons
+    \PHfrappe{f_1}{c_0}{c_1} \cons
+    \PHfrappe{c_1}{fc_{10}}{fc_{11}} \cons \\
+    &\PHfrappe{c_1}{a_1}{a_0} \cons
+    \PHfrappe{c_1}{c_1}{c_0} \cons
+    \PHfrappe{c_0}{fc_{11}}{fc_{10}}
+  \end{align*}
+  L'interruption de ce comportement stationnaire se fait grâce à l'auto-action
+  $\PHfrappe{f_1}{f_1}{f_0}$, qui est de priorité 3, et donc jouable uniquement
+  dans les deux états suivants :
+  $\etat{a_1, c_0, f_1, fc_{10}}$ et $\etat{a_0, c_1, f_1, fc_{11}}$.
+  Depuis le premier état, la désactivation est opérée par le scénario suivant :
+  \[
+    \PHfrappe{f_1}{f_1}{f_0} \cons
+    \PHfrappe{f_0}{fc_{10}}{fc_{00}}
+    \enspace,
+  \]
+  qui termine dans l'état $\etat{a_1, c_0, f_0, fc_{00}}$ et conserve donc le processus $a_1$,
+  tandis que depuis le deuxième état, la désactivation est opérée par le scénario :
+  \[
+    \PHfrappe{f_1}{f_1}{f_0} \cons
+    \PHfrappe{f_0}{fc_{11}}{fc_{01}} \cons
+    \PHfrappe{f_0}{c_1}{c_0} \cons
+    \PHfrappe{c_0}{fc_{01}}{fc_{00}}
+    \enspace,
+  \]
+  qui termine en $\etat{a_0, c_0, f_0, fc_{00}}$ et conserve cette fois le processus $a_0$.
+  
+  Pour finir, il est intéressant de noter que l'introduction de classes de priorités ne permet
+  cependant pas la représentation de phénomènes de retard, comme expliqué plus haut.
+  En effet, il n'est pas possible par exemple de n'autoriser la désactivation de $f$
+  qu'après un nombre donné d'oscillations de $a$ ou de $c$.
+  Pour représenter cela, un modélisateur pourrait être tenté d'introduire une classe de
+  priorité $4$ afin d'y intégrer l'action $\PHfrappe{f_1}{f_1}{f_0}$,
+  en effectuant un parallèle avec les paramètres stochastiques proposés \toref
+  qui permettent de ne tirer cette action qu'après un certain nombre d'oscillations.
+  Cependant, un tel choix de conception aurait uniquement pour effet de rendre ladite action
+  injouable, car sans cesse préemptée par des actions de priorité supérieure.
+  En effet, les phénomènes d'accumulation ne sont pas pris en compte,
+  ce qui signifie qu'il n'y a pas d'«~accumulation~» du temps de sensibilisation en arrière-plan
+  dans le formalisme des Frappes ce Processus avec classes de priorités.
+  \todo{À mettre plus tard ? Dans la partie Paramètres stochastiques ?}
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(1,0)}{f}{2}{l}
+    \TSort{(7,4)}{a}{2}{r}
+    
+    \TSetTick{fc}{0}{00}
+    \TSetTick{fc}{1}{01}
+    \TSetTick{fc}{2}{10}
+    \TSetTick{fc}{3}{11}
+    \TSort{(4,1)}{fc}{4}{r}
+    
+    \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
+    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
+    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
+    \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
+      {selfhit, min distance=30, bend left, out=150, in=90}{left}
+    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
+    
+    \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
+    \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+    
+    \node[labelprio1] at (2.55,3.85) {$1$}; % c => fc
+    \node[labelprio1] at (2.75,1) {$1$};    % f => fc
+    \node[labelprio2] at (5.5,3.85) {$2$};  % fc_10 -> a_0 / 1
+    \node[labelprio2] at (3.5,5.3) {$2$};   % c_1 -> a_1 / 0
+    \node[labelprio3] at (0,2.5) {$3$};     % f_1 -> c_0 / 1
+    \node[labelprio3] at (0.8,5.8) {$3$};   % c_1 -> c_1 / 0
+    \node[labelprio3] at (2.15,2.5) {$3$};  % f_0 -> c_1 / 0
+    \node[labelprio3] at (1.5,1.8) {$3$};   % f_1 -> f_1 / 0
+    
+    \TState{f_1, a_0, c_0, fc_2}
+  \end{tikzpicture}
+  \caption{\figlabel{metazoan-php}%
+    Exemple de Frappes de Processus avec 3 classes de priorités.
+    Ce modèle est issu de celui de la \figref{metazoan-ph}
+    auquel ont été rajoutées des classes de priorités.
+    Les étiquettes numérotées (de 1 à 3) placées contre les flèches représentant les actions
+    symbolisent leur appartenance à une classe de priorités donnée ;
+    ainsi, on a notamment :
+    $\PHh^{(2)} = \{ \PHfrappe{fc_{10}}{a_0}{a_1} ; \PHfrappe{c_1}{a_1}{a_0} \}$.
+  }
+  \end{center}
+  \end{figure}
+\end{example}
 
 
 

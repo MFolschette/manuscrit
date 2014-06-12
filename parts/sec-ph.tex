@@ -36,7 +36,93 @@ Pour toute action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$,
 $a_i$ est appelé le \emph{frappeur}, $b_j$ la \emph{cible} et $b_k$ le \emph{bond} de $h$,
 et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
 
-Une séquence d'actions $A$,
+\begin{example}
+\exlabel{metazoan-ph-nocoop}
+  La figure \figref{metazoan-ph-nocoop} illustre une représentation possible des
+  Frappes de Processus standards.
+  Le modèle $\PH = (\PHs, \PHl, \PHh)$ représenté comporte trois sortes :
+  $\PHs = \{ a, c, f \}$.
+  Chaque sorte comporte exactement deux processus :
+  \[\PHl_a = \{ a_0, a_1 \} \enspace;\quad
+    \PHl_b = \{ b_0, b_1 \} \enspace;\quad
+    \PHl_f = \{ f_0, f_1 \} \enspace.\]
+  On peut notamment en déduire le nombre total d'états du système :
+  $\card{\PHl} = 2^3 = 8$.
+  Enfin, ce modèle comporte 7 actions :
+  \begin{align*}
+    \PHh = \{\qquad
+      \PHfrappe{c_1}{a_1}{a_0}\quad; && \PHfrappe{c_0}{a_0}{a_1}\quad;& \\
+      \PHfrappe{c_1}{c_1}{c_0}\quad; && \PHfrappe{f_1}{c_0}{c_1}\quad;& \\
+      \PHfrappe{f_1}{a_0}{a_1}\quad; && \PHfrappe{f_0}{c_1}{c_0}\quad;& \\
+      \PHfrappe{f_1}{f_1}{f_0}\quad\; &&& 
+    \qquad\}
+  \end{align*}
+  
+  Ces Frappes de Processus représentent un modèle simplifié du mécanisme
+  de segmentation des métazoaires qui permet par exemple de décrire la production de rayures
+  chez les drosophiles.
+  Il a été originellement établi \textit{in silico} par \cite{MSB4100192}
+  à l'aide d'un formalisme à base d'équations différentielles,
+  et le modèle présenté ici est inspiré du modèle proposé par \cite{PMR10-TCSB}.
+  
+  Les trois sortes $a$, $b$ et $c$ de ce modèle représentent différents gènes du système,
+  que nous qualifierons d'\emph{actifs} dans le reste de ce document lorsqu'ils seront à l'état 1.
+  La production de pigment est déclenchée par le produit du gène $a$,
+  et une succession d'activations de celui-ci permet donc de produire des rayures.
+  Pour que celles-ci soient régulières, il est donc nécessaire que la durée d'activation
+  de $a$ soit constante, et que la durée entre deux activations le soit aussi.
+  Ce mécanisme est réglé par le gène $c$ qui inhibe à la fois le gène $a$ à intervalles réguliers,
+  et s'inhibe lui-même afin d'avoir le rôle d'une horloge.
+  Enfin, le procédé complet est dirigé par le gène $f$ qui, lorsqu'il est actif,
+  permet la progression d'un front au niveau duquel les pigments sont déposés.
+  Ce gène peut aussi s'auto-inhiber après une certaine période, faisant cesser
+  l'oscillation de l'horloge et ainsi la production de rayures.
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \scalebox{1.5}{\begin{tikzpicture}
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(1,1)}{f}{2}{l}
+    \TSort{(3,4)}{a}{2}{r}
+    
+    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=50, in=90}{left}
+    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
+    \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
+      {selfhit, min distance=30, bend left, out=150, in=90}{left}
+    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=80, in=-120}{left}
+    
+    % Fausse coopération
+    \TAction{f_1.north}{a_0.south west}{a_1.south west}{bend left=20}{left}
+    \TAction{c_0}{a_0.west}{a_1.south}{}{left}
+    
+    \TState{f_1, a_0, c_0}
+  \end{tikzpicture}}
+  \caption{\figlabel{metazoan-ph-nocoop}%
+    Un exemple de Frappes de Processus standards.
+    Les sortes sont représentées par des rectangles arrondis 
+    contenant des cercles représentant les processus.
+    Ainsi, le processus $a_1$ est représenté par le cercle marqué «~1~»
+    dans le rectangle étiqueté «~$a$~», etc.
+    Chaque action est de plus symbolisée par un couple de flèches,
+    l'une en trait plein et l'autre en pointillés ;
+    par exemple, l'action $\PHfrappe{c_1}{a_1}{a_0}$
+    est représentée par une flèche pleine entre les processus $c_1$ et $a_1$
+    suivie d'une flèche en pointillés entre $a_1$ et $a_0$.
+    Enfin, les processus grisés représentent un état possible
+    pour ces Frappes de Processus : $\etat{a_0, c_0, f_1}$, qui peut aussi faire office
+    d'état initial pour ce modèle.
+  }
+  \end{center}
+  \end{figure}
+\end{example}
+
+Les séquences d'actions ont un rôle particulier pour les Frappes de Processus.
+Elles permettent notamment d'abstraire une dynamique locale en se concentrant
+sur la conséquence plutôt que sur la cause,
+et seront notamment utiles pour la méthode d'analyse statique développée
+au \chapref{phcanonique}.
+Pour toute séquence d'actions $A$,
 on note $\sortes{A}$ l'ensemble des sortes dont au moins un processus figure dans $A$
 en tant que frappeur, cible ou bond d'une action.
 De plus, pour toute sorte $a$,
@@ -80,10 +166,10 @@ Ces notations sont formellement définies dans la \defref{premder}.
   \begin{align}
   \eqlabel{supp}
     \supp{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
-      p = \prem{\sort(p)}{\delta} \} \enspace, \\
+      p = \prem{\sort{p}}{\delta} \} \enspace, \\
   \eqlabel{fin}
     \fin{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
-      p = \fin{\sort(p)}{\delta} \} \enspace.
+      p = \der{\sort{p}}{\delta} \} \enspace.
   \end{align}
 \end{definition}
 
@@ -202,6 +288,12 @@ Enfin, on note dans la suite :
   L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
 \end{definition}
 
+\begin{example}
+  La séquence d'actions suivantes est un scénario dans l'état \TODO des Frappes de Processus
+  de la \figref{metazoan-ph-nocoop} :
+  \TODO
+\end{example}
+
 
 
 \subsection{Sortes coopératives}
@@ -210,10 +302,95 @@ Enfin, on note dans la suite :
 \TODO
 
 
+\todo{Figure d'exemple de sorte coopérative}
+
+\begin{example}
+\exlabel{metazoan-ph}
+  Le modèle de Frappes de Processus de la \figref{metazoan-ph-nocoop}
+  représentant le mécanisme de segmentation métazoaire évoqué à la page
+  \expageref{metazoan-ph-nocoop},
+  la production de pigment devrait uniquement être possible à la condition suivante :
+  «~$f$ est actif et $c$ n'est pas actif~».
+  Or dans l'état courant du modèle,
+  la désactivation du gène $f$ n'empêche pas la production de pigment,
+  car depuis tout état contenant $f_0$, il est toujours possible d'activer $a$
+  à l'aide des actions $\PHfrappe{f_0}{c_1}{c_0}$ et $\PHfrappe{c_0}{a_0}{a_1}$.
+  
+  Afin de pallier partiellement ce défaut, il est possible d'ajouter une sorte coopérative $fc$,
+  comme à la \figref{metazoan-ph},
+  afin de détecter la présence de $f_1$ et $c_0$.
+  Les deux actions $\PHfrappe{c_0}{a_0}{a_1}$ et $\PHfrappe{c_0}{a_0}{a_1}$
+  sont alors remplacées par une action $\PHfrappe{fc_{10}}{a_0}{a_1}$
+  afin d'avoir une véritable coopération entre ces deux processus pour activer $a$.
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(1,0)}{f}{2}{l}
+    \TSort{(7,4)}{a}{2}{r}
+    
+    \TSetTick{fc}{0}{00}
+    \TSetTick{fc}{1}{01}
+    \TSetTick{fc}{2}{10}
+    \TSetTick{fc}{3}{11}
+    \TSort{(4,1)}{fc}{4}{r}
+    
+    \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
+    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
+    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
+    \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
+      {selfhit, min distance=30, bend left, out=150, in=90}{left}
+    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
+    
+    \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
+    \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+    
+    \TState{f_1, a_0, c_0, fc_2}
+  \end{tikzpicture}
+  \caption{\figlabel{metazoan-ph}%
+    Amélioration du modèle de Frappes de Processus de la \figref{metazoan-ph-nocoop}
+    à l'aide de la sorte coopérative $fc$.
+    Les processus de cette sorte représentent les différents sous-états formés par les
+    deux sortes $f$ et $c$.
+    Ainsi, $fc_{00}$ représente le fait que $f_0$ et $c_0$ sont actifs, etc.
+    Les actions permettant la mise à jour de cette sorte coopérative n'ont pas
+    été représentée explicitement mais sont symbolisées par les deux flèches
+    en zigzag provenant de $f$ et $c$.
+  }
+  \end{center}
+  \end{figure}
+\end{example}
+
+\todo{Explications sur l'imperfection des sortes coopératives}
+
+\begin{example}
+  Malgré l'ajout d'une sorte coopérative $fc$ dans le modèle
+  de la \figref{metazoan-ph-nocoop},
+  il faut noter que le comportement désiré n'est pas exactement atteint.
+  En effet, l'ajout de cette sorte coopérative devait permettre d'éviter toute activation de $a$
+  lorsque $f$ devenait inactif, en permettant par exemple de jouer ce type de scénario
+  depuis l'état initial $\etat{a_0, c_0, f_1, fc_{10}}$ :
+    \[\PHfrappe{f_1}{f_1}{f_0} \cons \PHfrappe{f_0}{fc_{10}}{fc_{00}}\]
+  après lequel il n'est plus possible d'atteindre un état où $a_1$ est actif.
+  
+  Cependant, il se trouve qu'il existe encore un cas particulier où $a$ peut être activé
+  malgré la présence de $f_0$.
+  Ce cas particulier relève du comportement mis en valeur \todo{dans les paragraphes ci-dessus},
+  où une action a pour frappeur un processus de sorte coopératif qui ne devrait pas être
+  actif si celle-ci avait été mise à jour.
+  Il s'observe par exemple en jouant le scénario suivant depuis l'état initial
+  $\etat{a_0, c_0, f_1, fc_{10}}$ :
+    \[\PHfrappe{f_1}{f_1}{f_0} \cons \PHfrappe{fc_{10}}{a_0}{a_1} \enspace,\]
+  ce qui est possible parce que la sorte $fc$ n'a pas été mise à jour avant le jeu
+  de l'action $\PHfrappe{fc_{10}}{a_0}{a_1}$.
+\end{example}
+
+\begin{comment}
 \subsection{Modelling cooperation}
 \label{ssec:cooperation}
 
-\begin{comment}
 Cooperation between processes to make another process bounce can be expressed in PH by building a \emph{cooperative sort}, as described in \cite{PMR10-TCSB}.
 \pref{fig:ph-livelock} shows an example of cooperation between processes $a_1$ and $b_1$ to make $c_0$ bounce to $c_1$:
 a cooperative sort $ab$ is defined with 4 processes (one for each sub-state of the presence of processes $a_1$ and $b_1$).
