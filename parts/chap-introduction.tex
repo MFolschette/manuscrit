@@ -1,0 +1,150 @@
+% Introduction
+
+\chapter{Introduction}
+
+\section{Contexte \& Motivations}
+
+Le principal défi posé par l'étude des systèmes dynamiques réels,
+qu'ils soient biologiques ou non,
+repose dans la modélisation qui en est faite.
+Le modèle permet d'abstraire les comportements du système
+pour s'intéresser à ceux qui présentent un intérêt à l'étude,
+tout en permettant leur analyse à l'aide d'outils préalablement développés.
+
+Un modèle doit donc dans l'idéal :
+\begin{itemize}
+  \item être cohérent avec la réalité du système qu'il représente,
+  \item reproduire les comportements présentant un intérêt,
+  \item abstraire les comportements qui rendent la représentation et l'analyse inutilement
+    complexe,
+  \item faciliter la lecture pour le modélisateur,
+  \item permettre l'analyse par des outils appropriés.
+\end{itemize}
+
+Les propriétés qui peuvent être extraites d'un modèle sont de plusieurs ordres.
+Les propriétés statiques permettent de caractériser le modèle
+en fonction de sa taille,
+des liens entre les éléments qui le composent,
+ou de toute autre propriété portant sur sa structure ou ses attributs,
+qui amènent parfois à des résultats portant sur sa dynamique.
+Nous nous intéresserons davantage dans cette thèse aux propriétés dynamiques d'un modèle,
+qui permettent de déterminer certaines propriétés sur les comportements :
+\begin{itemize}
+  \item Étant donné un certain état des entrées du système, le modèle est-il capable
+    d'en reproduire ou d'en prédire les sorties ?
+  \item Quels types de comportements retrouve-t-on : oscillations, états stables ?
+  \item Les comportements recherchés sont-ils accessibles depuis tous les états ?
+    Si non, depuis lesquels ?
+  \item Quels changements peut-on apporter au modèle pour voir apparaître un comportement donné ?
+\end{itemize}
+\todo{Revoir}
+
+Nous nous intéressons dans cette thèse principalement aux modèles asynchrones,
+bien que nous proposons aussi des outils permettant d'introduire des comportements synchrones.
+
+Ainsi, l'utilisation d'un modèle pose un double défi : sa conception et son analyse.
+
+Il est nécessaire de proposer des outils permettant une modélisation cohérente.
+Ainsi, il est nécessaire de rendre les outils de modélisation suffisamment expressifs pour
+permettre une représentation efficace des systèmes étudiés.
+Des outils peuvent être proposés pour affiner la dynamique complète du modèle,
+afin d'éliminer des comportements non désirés.
+L'objectif est donc de pouvoir exprimer des contraintes supplémentaires
+qui ne l'étaient pas auparavant.
+Ainsi, il est possible par exemple
+d'élaborer un système décrivant une relation de prévalence entre les
+différentes évolutions d'un modèle.
+De cette manière, on peut parvenir à intégrer des notions temporelles dans les modèles,
+en se basant sur des données chronométriques.
+Il est aussi possible de pallier certains manques des modèles,
+par exemple en ajoutant des outils de synchronisme à des formalismes purement asynchrones.
+
+Cependant, de telles propriétés dynamiques ont un coût de calcul,
+en termes de temps d'exécution et de taille mémoire,
+qui est lié à la taille du modèle considéré (nœuds ou arcs).
+Dans les meilleurs des cas ce coût varie de façon polynomiale en fonction de la taille du modèle,
+ce qui permet d'analyser des modèles de très grande taille avec des ressources raisonnables.
+Cependant, il arrive que ces analyses soient de complexité exponentielle, voire plus,
+en fonction de la taille de modèle.
+Dans ce cas, des modèles de petite taille peuvent être analysés à condition d'avoir
+les capacités de calcul et de stockage nécessaires,
+mais la complexité croît trop vite avec la taille du modèle pour que
+des réseaux de grande taille puissent être abordés par ces méthodes.
+
+\todo{+ rapide retour sur les contributions}
+
+
+
+\section{Les réseaux de régulation biologiques}
+
+\todo{Explications à la Loïc sur :
+\begin{itemize}
+  \item la modélisation de la machine cellulaire
+  \item les modèles discrets
+  \item les modèles asynchrones
+  \item Thomas + PH
+\end{itemize}}
+
+\stodo{[Thomas'73], [Paulevé'11 et '12]}
+
+
+
+\section{Contributions}
+
+Afin de répondre à cette double problématique,
+nous proposons dans cette thèse plusieurs approches permettant de compléter l'expressivité
+des Frappes de Processus, un formalisme récemment proposé par Loïc Paulevé dans \toref.
+Les Frappes de Processus permettent de représenter la dynamique d'un ensemble de composants
+en modélisant chacun d'eux par plusieurs niveaux locaux discrets.
+De plus, les interactions entre composants sont limitées à une syntaxe précise,
+en ne permettant la modification du niveau local d'un composant que par au plus un autre composant.
+\todo{À déplacer dans la section précédente.}
+Ce formalisme purement asynchrone possède plusieurs avantages dans la
+représentation des réseaux de régulation biologiques :
+il offre une expressivité proche des réseaux booléens asynchrones ou du modèle de Thomas,
+il permet notamment de représenter une «~superposition~» des différentes portes logiques possibles
+pour un réseau,
+et offre une capacité d'analyse très efficaces à l'aide de méthodes d'approximation
+qui évitent l'explosion combinatoire habituellement inhérente à l'étude de tels réseaux.
+Cependant, son expressivité ne permet pas de représenter fidèlement les réseaux booléens,
+et ne possède aucune caractéristique véritablement synchrone,
+ce qui fait qu'en général, les modèles sont légèrement approximés.
+Nous proposons dans cette thèse plusieurs formalismes alternatifs pour les Frappes de Processus
+qui permettent de pallier ces manques d'expressivité de plusieurs manières différentes.
+Nos introduisons pour cela trois notions différentes :
+\begin{itemize}
+  \item les classes de priorités permettent de définir des règles globales de prévalence
+    entre des ensembles d'actions, afin d'affiner la dynamique et d'obtenir une expressivité
+    équivalente à celle des réseaux booléens,
+  \item les arcs neutralisants proposent de raffiner la notion précédente,
+    et offrent un point de vue plus atomique sur les définitions des prévalences,
+   \item les actions plurielles permettent enfin d'introduire des comportements synchrones
+    entre les actions, dans le but de modéliser de façon exacte certaines classes
+    de modèles construits à partir d'ensembles de réactions biochimiques instantanées.
+\end{itemize}
+
+Cependant, une plus grande puissance de formalisation ne revêt que peu d'intérêt si elle n'est
+pas accompagnée d'une plus grande puissance d'analyse.
+C'est pourquoi nous avons en parallèle développé des outils efficaces
+afin d'étudier la dynamique des modèles produits dans ces formalismes.
+Ces outils s'inspirent de l'analyse statique développée pour les Frappes de Processus
+dans \toref,
+et possèdent une complexité polynomiale dans la taille du modèles considéré.
+Ils permettent d'étudier l'activation d'un niveau local d'un composant pour un état initial donné,
+aussi appelée «~atteignabilité~» de ce niveau local,
+et répondent de façon formelle.
+Leur fonctionnement repose sur l'abstraction de la dynamique globale du système
+au profit des dynamiques locales de chaque composant.
+Cela leur permet de terminer très rapidement (au plus quelques dixièmes de secondes sur des
+modèles de plusieurs centaines de composants),
+mais au prix de ne pas toujours être en mesure de conclure après exécution.
+Malgré cela, la totalité des atteignabilités testées dans le cadre de cette thèse ont été
+conclusives, ce qui nous a permis de conclure notamment sur le bon fonctionnement
+d'un modèle tiré d'un réseau booléen de 94 composants,
+résultat à notre connaissance actuellement inégalé.
+
+
+
+\section{Organisation du manuscrit}
+
+\TODO
