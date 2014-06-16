@@ -7,75 +7,111 @@
 Le principal défi posé par l'étude des systèmes dynamiques réels,
 qu'ils soient biologiques ou non,
 repose dans la modélisation qui en est faite.
-Le modèle permet d'abstraire les comportements du système
-pour s'intéresser à ceux qui présentent un intérêt à l'étude,
+Un modèle permet d'abstraire les comportements du système
+pour s'intéresser uniquement à ceux qui présentent un intérêt à l'étude,
 tout en permettant leur analyse à l'aide d'outils préalablement développés.
 
 Un modèle doit donc dans l'idéal :
 \begin{itemize}
   \item être cohérent avec la réalité du système qu'il représente,
-  \item reproduire les comportements présentant un intérêt,
-  \item abstraire les comportements qui rendent la représentation et l'analyse inutilement
-    complexe,
+  \item reproduire les comportements présentant un intérêt
+    et abstraire ceux qui surchargent inutilement le modèle,
+%   \item abstraire les comportements qui rendent la représentation et l'analyse inutilement
+%     complexe,
   \item faciliter la lecture pour le modélisateur,
-  \item permettre l'analyse par des outils appropriés.
+  \item permettre l'analyse par des outils appropriés,
+  \item permettre la traduction vers d'autres formalismes
+    ou l'ouverture à d'autres méthodes d'analyse.
 \end{itemize}
 
-Les propriétés qui peuvent être extraites d'un modèle sont de plusieurs ordres.
-Les propriétés statiques permettent de caractériser le modèle
+Nous nous intéressons dans cette thèse aux propriétés dynamiques d'un modèle.
+Elles se distinguent des propriétés statiques qui permettent de caractériser le modèle
 en fonction de sa taille,
 des liens entre les éléments qui le composent,
 ou de toute autre propriété portant sur sa structure ou ses attributs,
-qui amènent parfois à des résultats portant sur sa dynamique.
-Nous nous intéresserons davantage dans cette thèse aux propriétés dynamiques d'un modèle,
-qui permettent de déterminer certaines propriétés sur les comportements :
+bien qu'ils apportent parfois des résultats très généraux concernant sa dynamique.
+À l'inverse, les propriétés dynamiques portent sur l'évolution et les comportements
+possibles d'un modèles, par exemple :
 \begin{itemize}
   \item Étant donné un certain état des entrées du système, le modèle est-il capable
     d'en reproduire ou d'en prédire les sorties ?
-  \item Quels types de comportements retrouve-t-on : oscillations, états stables ?
+  \item Y retrouve-t-on des comportements qui s'apparentent à des oscillations
+    ou des états stables ?
   \item Les comportements recherchés sont-ils accessibles depuis tous les états ?
     Si non, depuis lesquels ?
-  \item Quels changements peut-on apporter au modèle pour voir apparaître un comportement donné ?
+  \item Peut-on modifier le modèle pour voir apparaître un comportement donné, et comment ?
 \end{itemize}
-\todo{Revoir}
-
-Nous nous intéressons dans cette thèse principalement aux modèles asynchrones,
-bien que nous proposons aussi des outils permettant d'introduire des comportements synchrones.
+Répondre ces questions nécessite une analyse détaillée de la dynamique.
 
 Ainsi, l'utilisation d'un modèle pose un double défi : sa conception et son analyse.
 
-Il est nécessaire de proposer des outils permettant une modélisation cohérente.
-Ainsi, il est nécessaire de rendre les outils de modélisation suffisamment expressifs pour
-permettre une représentation efficace des systèmes étudiés.
-Des outils peuvent être proposés pour affiner la dynamique complète du modèle,
-afin d'éliminer des comportements non désirés.
-L'objectif est donc de pouvoir exprimer des contraintes supplémentaires
-qui ne l'étaient pas auparavant.
-Ainsi, il est possible par exemple
-d'élaborer un système décrivant une relation de prévalence entre les
-différentes évolutions d'un modèle.
-De cette manière, on peut parvenir à intégrer des notions temporelles dans les modèles,
-en se basant sur des données chronométriques.
-Il est aussi possible de pallier certains manques des modèles,
-par exemple en ajoutant des outils de synchronisme à des formalismes purement asynchrones.
+Il est nécessaire de proposer des outils permettant une modélisation cohérente et juste.
+C'est pourquoi nous proposons dans cette thèse plusieurs formalismes nouveaux permettant
+des représentations efficaces et complémentaires des systèmes dynamiques étudiés.
+L'une des pistes d'enrichissement consiste pour cela
+en l'introduction de contraintes dynamiques afin de filtrer les comportements non désirés,
+par exemple sous la forme 
+de relations de prévalence entre les différentes évolutions possibles d'un modèle.
+D'autres pistes consistent à intégrer des paramètres temporels dans les modèles
+en se basant sur des données de durée de réaction ou de sensibilisation.
+Enfin, l'ajout d'outils de synchronisation à des formalismes purement asynchrones
+permet d'enrichir leur sémantique.
 
-Cependant, de telles propriétés dynamiques ont un coût de calcul,
+% Des outils peuvent être proposés pour affiner la dynamique complète du modèle,
+% afin d'éliminer des comportements non désirés.
+% L'objectif est donc de pouvoir exprimer des contraintes supplémentaires
+% qui ne l'étaient pas auparavant.
+% Ainsi, il est possible par exemple
+% d'élaborer un système décrivant une relation de prévalence entre les
+% différentes évolutions d'un modèle.
+% De cette manière, on peut parvenir à intégrer des notions temporelles dans les modèles,
+% en se basant sur des données chronométriques.
+% Il est aussi possible de pallier certains manques des modèles,
+% par exemple en ajoutant des outils de synchronisme à des formalismes purement asynchrones.
+
+Un autre problème courant est le lien entre plusieurs formalismes.
+En effet, des formalismes différents peuvent permettre des approches variées,
+et l'application d'outils adaptés à des problèmes précis.
+Il s'avère donc nécessaire de pouvoir faire le lien entre différentes versions
+d'un formalisme, ou encore de créer des ponts vers d'autres formalismes répandus
+dans le cadre des systèmes dynamiques.
+Aussi, cette thèse offre une part importante à l'étude des relations entre différentes
+représentations complémentaires des modèles dynamiques étudiés,
+ainsi qu'avec les modèles classiques pour ce type de représentations.
+
+Cependant, vérifier de telles propriétés dynamiques possède un coût
 en termes de temps d'exécution et de taille mémoire,
-qui est lié à la taille du modèle considéré (nœuds ou arcs).
-Dans les meilleurs des cas ce coût varie de façon polynomiale en fonction de la taille du modèle,
-ce qui permet d'analyser des modèles de très grande taille avec des ressources raisonnables.
-Cependant, il arrive que ces analyses soient de complexité exponentielle, voire plus,
-en fonction de la taille de modèle.
-Dans ce cas, des modèles de petite taille peuvent être analysés à condition d'avoir
-les capacités de calcul et de stockage nécessaires,
-mais la complexité croît trop vite avec la taille du modèle pour que
-des réseaux de grande taille puissent être abordés par ces méthodes.
+lié à la taille du modèle considéré.
+Et même si, dans les meilleurs cas, ce coût varie de façon polynomiale
+en fonction de la taille du modèle,
+la plupart des méthodes formelles permettant de vérifier des propriétés dynamiques
+font face à une explosion combinatoire qui empêche l'analyse de modèles de grande taille.
+C'est pourquoi des méthodes alternatives peuvent être explorées,
+comme la vérification par interprétation abstraite,
+qui consiste à approcher la dynamique pour diminuer la complexité et simplifier les calculs,
+comme nous le verrons dans la suite de ce manuscrit.
 
-\todo{+ rapide retour sur les contributions}
+% ce qui permet d'analyser des modèles de très grande taille avec des ressources raisonnables.
+% Cependant, il arrive que ces analyses soient de complexité exponentielle, voire plus,
+% en fonction de la taille de modèle.
+% Dans ce cas, des modèles de petite taille peuvent être analysés à condition d'avoir
+% les capacités de calcul et de stockage nécessaires,
+% mais la complexité croît trop vite avec la taille du modèle pour que
+% des réseaux de grande taille puissent être abordés par ces méthodes.
+
+%\todo{+ rapide retour sur les contributions}
+
+La \secref{intro-rrb} propose une rapide vue d'ensemble des types de modèles permettant
+la représentation et l'étude des systèmes d'interactions,
+afin de mieux situer le travail proposé dans cette thèse,
+dont les principaux résultats sont présentés à la section \secref{intro-contrib}.
+La section \secref{intro-plan} présente l'organisation de ce manuscrit,
+et la section \secref{notations} introduit les différentes notations qui y sont utilisées.
 
 
 
 \section{Les réseaux de régulation biologiques}
+\seclabel{intro-rrb}
 
 \todo{Explications à la Loïc sur :
 \begin{itemize}
@@ -87,9 +123,126 @@ des réseaux de grande taille puissent être abordés par ces méthodes.
 
 \stodo{[Thomas'73], [Paulevé'11 et '12]}
 
+L'étude de la machine cellulaire nécessite de s'intéresser aux éléments interagissant
+qui la composent :
+%des interactions entre les différents composants de la machine cellulaire
+gènes, protéines, ARN messager, métabolites, etc.
+% 
+% Plusieurs approches permettent de représenter et d'analyser le fonctionnement de la machine
+% cellulaire.
+% L'une d'entre elles consiste à étudier les interactions qui y ont lieu
+% entre les différents éléments qui s'y trouvent :
+% gènes, protéines, ARN messager, métabolites, etc.
+À ce niveau, il est déjà possible d'abstraire dans une certaine mesure
+une partie de composants.
+%les différents composants peuvent être plus ou moins abstraits.
+C'est ainsi qu'un gène, la protéine qu'il code et l'ARN messager correspondant sont
+souvent tous trois modélisés par un unique élément,
+car la concentration de la protéine et de l'ARN
+dépendent directement du niveau d'activation du gène.
+Dans la suite nous nous intéresserons particulièrement à ce cas de figure,
+et nous confondrons souvent une protéine avec son gène codant.
+%bien que d'autres peuvent être représentés de la même manière.
+
+Cette simplification permet de mettre en évidence les phénomènes d'interaction entre
+les différents éléments entrant en jeu.
+En effet, la présence d'un composant (protéine, catalyseur…)
+en quantité suffisante peut déclencher
+l'activation (une hausse d'activité) ou l'inhibition (une baisse de l'activité)
+d'un ou plusieurs autres éléments, y compris l'élément déclencheur lui-même.
+C'est par ce mécanisme qu'un gène, selon son degré d'activité,
+permettra la production d'une concentration plus ou moins importante de la protéine qu'il code ;
+celle-ci aura alors éventuellement un rôle activateur ou inhibiteur sur un certain
+nombre d'autres gènes, et ainsi de suite.
+L'ensemble de ces régulations forme une cascade
+qui peut être représentée par un graphe des interactions,
+où les composants sont représentés par des nœuds et leurs interactions mutuelles par des arcs.
+
+% À ce niveau, les différents composants peuvent être plus ou moins abstraits.
+% Par exemple, un gène, la protéine qu'il code et l'ARN messager correspondant sont
+% souvent modélisés par un unique nœud,
+% car la concentration de la protéine dépend directement du niveau d'activation du gène.
+% Dans la suite nous nous intéresserons particulièrement à ce cas de figure,
+% bien que d'autres peuvent être représentés de la même manière.
+
+Afin de représenter la dynamique du modèle,
+une valeur est associée à chaque élément afin de modéliser
+son état courant
+(son niveau d'activité pour un gène,
+concentration dans le milieu pour une protéine, etc.).
+% À chacun des éléments de modèle est alors associée une valeur modélisant
+% son niveau d'activité ou
+% sa concentration dans le milieu (pour une protéine).
+Dans le cadre de formalismes utilisant des équations différentielles,
+il s'agit d'une valeur continue,
+ce qui permet par exemple de lier entre elles
+les concentrations des différentes protéines et leurs dérivées par rapport au temps
+(qui représentent leurs vitesses d'évolution). \toref
+Cependant, le manque de données expérimentales précises et fiables peut limiter de telles
+approches.
+De plus, la résolution analytique ou numérique des équations différentielles est parfois
+très complexe.
+
+Une autre approche consiste donc à symboliser l'activité d'un élément par
+une valeur discrète au sein d'un ensemble fini.
+Cette approche avait été théorisée notamment par René Thomas \stodo{Thomas'73}
+dans le cadre d'un formalisme booléen (restreint à deux niveaux discrets par composant),
+qui a plus tard été étendu à un formalisme multivalué
+(chaque élément pouvant avoir plus de deux niveaux d'expression).
+Cette approche a l'avantage d'abstraire les valeurs des seuils de concentration,
+qui sont généralement mal connues
+mais qui permettent de représenter le niveau de concentration
+à partir duquel la protéine va influencer un autre composant.
+% quel niveau de concentration chaque composant
+% possède une influence sur un autre.
+Ainsi, à chaque niveau d'expression d'un composant est associé un ensemble de régulations
+sur d'autres composants.
+
+Le dernier élément permettant de caractériser la dynamique est l'ajout d'une
+dimension temporelle.
+Dans le cadre des réseaux de régulation discrets, ce temps prend la forme d'une série
+infinie de pas de temps discrets permettant de représenter les évolutions
+successives du modèles au cours du temps, sans indication des durées réelles
+entre ces pas de temps.
+La question du synchronisme des formalismes développés se pose alors :
+en effet, s'il existe des systèmes purement synchrones, où entre chaque pas de temps,
+toutes les réactions sensibilisées ont lieu,
+l'hypothèse de René Thomas \toref
+est au contraire d'abstraire les systèmes biologiques à l'aide
+de réseaux de régulation purement asynchrones.
+En effet, en l'absence de données temporelles du système étudié
+(vitesse des réactions, durée des dégradations...)
+il est plus raisonnable de considérer que deux réactions n'auront jamais lieu simultanément.
+
+Ce sont sur les hypothèse précédentes qu'ont été formalisés
+le modèle de Thomas \toref
+et les Frappes de Processus \toref,
+qui permettent la représentation des réseaux de régulation biologiques discrets et asynchrones.
+Les deux permettent en effet de représenter les interactions entre différents composants
+sous la forme de l'évolution séquentielle de niveaux d'expression discrets.
+Cependant, ces deux formalismes se distinguent principalement au niveau de la représentation
+des coopérations entre composants.
+Ainsi, là où le modèle de Thomas fait entrer en jeu des paramètres pour représenter
+les états focaux d'un élément en fonction de l'activité de ses régulateurs, \stodo{Ref Snoussi}
+les Frappes de Processus introduisent un composant supplémentaire qui joue le rôle
+de porte logique.
+
+Cette thèse se concentrera principalement sur des formalisation alternatives des
+Frappes de Processus dans le but d'enrichir celle-ci.
+Il sera notamment question d'introduire des notions de prévalence entre les différentes
+évolutions possibles selon les états du modèle, mais aussi d'intégrer
+des comportements synchrones pour les modèles où cela s'avère nécessaire.
+Ces ajouts permettent notamment de prendre en compte des paramètres qui était
+auparavant abstraits, comme les durées relatives des réactions biochimiques,
+tout en proposant des méthodes d'analyse plus efficaces
+que les méthodes de vérification des modèles discrets ou continus.
+Enfin, l'un des objectifs de cette thèse est d'examiner
+les rapports entre cette représentation et le modèle de Thomas \TODO
+
 
 
 \section{Contributions}
+\seclabel{intro-contrib}
 
 Afin de répondre à cette double problématique,
 nous proposons dans cette thèse plusieurs approches permettant de compléter l'expressivité
@@ -146,5 +299,6 @@ résultat à notre connaissance actuellement inégalé.
 
 
 \section{Organisation du manuscrit}
+\seclabel{intro-plan}
 
 \TODO
