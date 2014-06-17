@@ -20,7 +20,7 @@ Un modèle doit donc dans l'idéal :
 %     complexe,
   \item faciliter la lecture pour le modélisateur,
   \item permettre l'analyse par des outils appropriés,
-  \item permettre la traduction vers d'autres formalismes
+  \item permettre la traduction depuis ou vers d'autres formalismes
     ou l'ouverture à d'autres méthodes d'analyse.
 \end{itemize}
 
@@ -29,7 +29,7 @@ Elles se distinguent des propriétés statiques qui permettent de caractériser 
 en fonction de sa taille,
 des liens entre les éléments qui le composent,
 ou de toute autre propriété portant sur sa structure ou ses attributs,
-bien qu'ils apportent parfois des résultats très généraux concernant sa dynamique.
+bien que celles-ci apportent parfois des résultats très généraux concernant la dynamique.
 À l'inverse, les propriétés dynamiques portent sur l'évolution et les comportements
 possibles d'un modèles, par exemple :
 \begin{itemize}
@@ -104,8 +104,8 @@ comme nous le verrons dans la suite de ce manuscrit.
 La \secref{intro-rrb} propose une rapide vue d'ensemble des types de modèles permettant
 la représentation et l'étude des systèmes d'interactions,
 afin de mieux situer le travail proposé dans cette thèse,
-dont les principaux résultats sont présentés à la section \secref{intro-contrib}.
-La section \secref{intro-plan} présente l'organisation de ce manuscrit,
+dont les principaux résultats sont ensuite présentés à la section \secref{intro-contrib}.
+La section \secref{intro-plan} présente la façon dont ce manuscrit est organisé,
 et la section \secref{notations} introduit les différentes notations qui y sont utilisées.
 
 
@@ -122,6 +122,8 @@ et la section \secref{notations} introduit les différentes notations qui y sont
 \end{itemize}}
 
 \stodo{[Thomas'73], [Paulevé'11 et '12]}
+
+\tocite[Fages \& Soliman, 2008a ?]
 
 L'étude de la machine cellulaire nécessite de s'intéresser aux éléments interagissant
 qui la composent :
@@ -150,12 +152,13 @@ En effet, la présence d'un composant (protéine, catalyseur…)
 en quantité suffisante peut déclencher
 l'activation (une hausse d'activité) ou l'inhibition (une baisse de l'activité)
 d'un ou plusieurs autres éléments, y compris l'élément déclencheur lui-même.
-C'est par ce mécanisme qu'un gène, selon son degré d'activité,
+C'est par ce mécanisme que se crée une cascade de réaction entre gènes :
+%C'est par ce mécanisme qu'un gène, selon son degré d'activité,
+en effet, l'un d'eux, selon son degré d'activité,
 permettra la production d'une concentration plus ou moins importante de la protéine qu'il code ;
 celle-ci aura alors éventuellement un rôle activateur ou inhibiteur sur un certain
 nombre d'autres gènes, et ainsi de suite.
-L'ensemble de ces régulations forme une cascade
-qui peut être représentée par un graphe des interactions,
+L'ensemble de ces régulations peut être représenté par un graphe des interactions,
 où les composants sont représentés par des nœuds et leurs interactions mutuelles par des arcs.
 
 % À ce niveau, les différents composants peuvent être plus ou moins abstraits.
@@ -168,7 +171,7 @@ où les composants sont représentés par des nœuds et leurs interactions mutue
 Afin de représenter la dynamique du modèle,
 une valeur est associée à chaque élément afin de modéliser
 son état courant
-(son niveau d'activité pour un gène,
+(niveau d'activité pour un gène,
 concentration dans le milieu pour une protéine, etc.).
 % À chacun des éléments de modèle est alors associée une valeur modélisant
 % son niveau d'activité ou
@@ -177,7 +180,7 @@ Dans le cadre de formalismes utilisant des équations différentielles,
 il s'agit d'une valeur continue,
 ce qui permet par exemple de lier entre elles
 les concentrations des différentes protéines et leurs dérivées par rapport au temps
-(qui représentent leurs vitesses d'évolution). \toref
+(qui représentent leurs vitesses d'évolution). \tocite[Tyson, J. \& Othmer, H. (1978)]
 Cependant, le manque de données expérimentales précises et fiables peut limiter de telles
 approches.
 De plus, la résolution analytique ou numérique des équations différentielles est parfois
@@ -185,10 +188,13 @@ très complexe.
 
 Une autre approche consiste donc à symboliser l'activité d'un élément par
 une valeur discrète au sein d'un ensemble fini.
-Cette approche avait été théorisée notamment par René Thomas \stodo{Thomas'73}
-dans le cadre d'un formalisme booléen (restreint à deux niveaux discrets par composant),
-qui a plus tard été étendu à un formalisme multivalué
-(chaque élément pouvant avoir plus de deux niveaux d'expression).
+Cette approche avait été théorisée notamment par René Thomas \tocite[Thomas'73, Kaufmann'69]
+dans le cadre d'un formalisme booléen,
+c'est-à-dire restreint à deux niveaux discrets par composant, généralement notés “0” et et “1”.
+Elle a cependant été plus tard étendue à un formalisme multivalué,
+où chaque élément peut posséder avoir plus de deux niveaux d'expression,
+généralement représentés par des entiers consécutifs
+\tocite[Thomas'plus tard ?].
 Cette approche a l'avantage d'abstraire les valeurs des seuils de concentration,
 qui sont généralement mal connues
 mais qui permettent de représenter le niveau de concentration
@@ -207,7 +213,7 @@ entre ces pas de temps.
 La question du synchronisme des formalismes développés se pose alors :
 en effet, s'il existe des systèmes purement synchrones, où entre chaque pas de temps,
 toutes les réactions sensibilisées ont lieu,
-l'hypothèse de René Thomas \toref
+l'hypothèse de René Thomas \tocite[Thomas'73 ?]
 est au contraire d'abstraire les systèmes biologiques à l'aide
 de réseaux de régulation purement asynchrones.
 En effet, en l'absence de données temporelles du système étudié
@@ -215,43 +221,110 @@ En effet, en l'absence de données temporelles du système étudié
 il est plus raisonnable de considérer que deux réactions n'auront jamais lieu simultanément.
 
 Ce sont sur les hypothèse précédentes qu'ont été formalisés
-le modèle de Thomas \toref
-et les Frappes de Processus \toref,
+les versions actuelles du modèle de Thomas \tocite[Bernot ?]
+ainsi que les Frappes de Processus \tocite[Loïc'10],
 qui permettent la représentation des réseaux de régulation biologiques discrets et asynchrones.
 Les deux permettent en effet de représenter les interactions entre différents composants
 sous la forme de l'évolution séquentielle de niveaux d'expression discrets.
 Cependant, ces deux formalismes se distinguent principalement au niveau de la représentation
-des coopérations entre composants.
-Ainsi, là où le modèle de Thomas fait entrer en jeu des paramètres pour représenter
-les états focaux d'un élément en fonction de l'activité de ses régulateurs, \stodo{Ref Snoussi}
-les Frappes de Processus introduisent un composant supplémentaire qui joue le rôle
-de porte logique.
-
-Cette thèse se concentrera principalement sur des formalisation alternatives des
-Frappes de Processus dans le but d'enrichir celle-ci.
-Il sera notamment question d'introduire des notions de prévalence entre les différentes
-évolutions possibles selon les états du modèle, mais aussi d'intégrer
-des comportements synchrones pour les modèles où cela s'avère nécessaire.
-Ces ajouts permettent notamment de prendre en compte des paramètres qui était
-auparavant abstraits, comme les durées relatives des réactions biochimiques,
-tout en proposant des méthodes d'analyse plus efficaces
-que les méthodes de vérification des modèles discrets ou continus.
-Enfin, l'un des objectifs de cette thèse est d'examiner
-les rapports entre cette représentation et le modèle de Thomas \TODO
+des interactions entre composants.
+En effet, le modèle de Thomas considère les interactions entre composants du point
+de vue d'«~influences~» globales, c'est-à-dire d'interactions qui vont globalement avoir
+le rôle d'activer ou inhiber les composants entre eux,
+tandis que les Frappes de Processus font usage d'«~actions~»,
+qui décrivent le saut d'un état local d'un composant à un autre.
+De plus, une restriction particulière porte sur ces actions,
+qui ne permettent la modification du niveau local d'un composant
+que par au plus un autre composant.
+Cette différence de point de vue en apporte une autre en ce qui concerne la représentation
+des coopérations entre composants :
+là où le modèle de Thomas fait usage de paramètres décrivant
+les états focaux d'un élément en fonction de l'activité de l'ensemble de ses régulateurs
+\tocite[Snoussi],
+les Frappes de Processus introduisent un composant supplémentaire propre à la modélisation
+et qui joue le rôle de porte logique.
 
 
 
 \section{Contributions}
 \seclabel{intro-contrib}
 
-Afin de répondre à cette double problématique,
-nous proposons dans cette thèse plusieurs approches permettant de compléter l'expressivité
-des Frappes de Processus, un formalisme récemment proposé par Loïc Paulevé dans \toref.
-Les Frappes de Processus permettent de représenter la dynamique d'un ensemble de composants
-en modélisant chacun d'eux par plusieurs niveaux locaux discrets.
-De plus, les interactions entre composants sont limitées à une syntaxe précise,
-en ne permettant la modification du niveau local d'un composant que par au plus un autre composant.
-\todo{À déplacer dans la section précédente.}
+Les apports de cette thèse se déclinent en trois points principaux :
+\begin{itemize}
+  \item enrichissement des Frappes de Processus par l'introduction de notions
+    de prévalence et de synchronisme entre les différentes évolutions possibles,
+  \item développement de méthodes d'analyse de la dynamique efficaces
+    et adaptées aux enrichissements précédemment mentionnés,
+  \item description des liens formels entre les différentes sémantiques de Frappes de Processus
+    proposées, ainsi qu'avec d'autres formalismes courants pour la représentation
+    des réseaux de régulation biologiques.
+\end{itemize}
+
+L'objectif principal de cette thèse est donc de répondre à la double problématique
+de la conception et de l'analyse d'un modèle,
+en nous concentrant particulièrement sur l'utilisation et l'amélioration
+des Frappes de Processus des des outils associés.
+Les trois aspects précédents sont détaillés dans la suite
+afin d'insister sur leur rôle dans cette démarche.
+
+\subsubsection{Enrichissement des Frappes de Processus}
+
+Cette thèse se concentre sur plusieurs \bemph{formalisations alternatives des
+Frappes de Processus dans le but d'enrichir celles-ci}.
+Il sera notamment question d'introduire des notions de \bemph{prévalence} entre les différentes
+évolutions possibles selon les états du modèle, mais aussi d'intégrer
+des \bemph{comportements synchrones} pour les modèles où cela s'avère nécessaire.
+Ces ajouts permettent notamment de prendre en compte des paramètres qui était
+auparavant abstraits,
+permettant par exemple \bemph{l'intégration de données temporelles}
+comme les durées relatives des réactions biochimiques.
+
+\subsubsection{Outils efficaces d'analyse de la dynamique}
+
+Nous développons par ailleurs des méthodes permettant d'analyser la dynamique
+des modélisations précédentes.
+Ces méthodes sont basées sur de l'analyse statique par interprétation abstraite,
+c'est-à-dire permettant d'approcher la dynamique afin de réduire la complexité de l'analyse.
+Elles ont l'avantage de posséder \bemph{une complexité polynomiale en la taille du modèle},
+ce qui permet de traiter efficacement de très grands modèles.
+Néanmoins, étant donné qu'elles sont basées sur une approximation de la dynamique,
+il est possible qu'elles terminent sans pouvoir conclure,
+bien que cela ne soit pas arrivé sur les exemples testés et présentés dans cette thèse.
+
+\subsubsection{Équivalences entre les Frappes de Processus}
+
+L'analyse statique mentionnée précédemment s'applique à une \bemph{classe canonique de modèles},
+qui consiste en une restriction de l'un des formalismes.
+Nous montrons par ailleurs qu'elle est \bemph{aussi expressive que tous les formalismes
+de Frappes de Processus} développés dans cette thèse,
+et nous donnons les traductions correspondantes.
+Cela assure notamment qu'il est toujours possible de naviguer entre les formalismes,
+et ainsi de pouvoir appliquer les analyse statiques mentionnées à tous les types
+de modélisation, moyennant une traduction du modèle.
+
+\subsubsection{Équivalences avec d'autres formalismes}
+
+Enfin, nous nous intéressons aux \bemph{liens formels entre les différentes Frappes de Processus
+et les autres modélisations classiques pour la représentation des réseaux de régulations
+biologiques}.
+Nous nous intéressons notamment aux liens avec le modèle de Thomas et aux réseaux booléens,
+qui sont deux formalismes proches
+développés spécifiquement pour la représentation de réseaux de régulations,
+ainsi qu'à ceux qui relient les Frappes de Processus aux réseaux de Petri,
+qui fait récemment l'objet d'un regain d'intérêt du fait de sa capacité
+d'expressivité et des capacités d'analyse puissantes qu'il offre.
+Ces liens permettent d'une part de comprendre la position des Frappes de Processus au sein
+de l'ensemble des modélisation discrètes asynchrones,
+et offrent aussi des outils de traduction depuis et vers ces autres formalismes,
+donnant la possibilité d'utiliser les outils d'analyse spécifiquement développés pour ceux-ci.
+
+
+
+
+
+
+
+
 Ce formalisme purement asynchrone possède plusieurs avantages dans la
 représentation des réseaux de régulation biologiques :
 il offre une expressivité proche des réseaux booléens asynchrones ou du modèle de Thomas,
