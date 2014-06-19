@@ -360,23 +360,26 @@ Néanmoins, étant donné qu'elles sont basées sur une approximation de la dyna
 il est possible qu'elles terminent sans pouvoir conclure,
 bien que cela ne soit jamais arrivé sur les exemples testés.
 %notamment ceux présentés dans cette thèse.
-Nous appliquons notamment ces méthodes à un réseau booléen de 94 composants
+Nous appliquons notamment ces méthodes à un réseau booléen de quatre-vingt-quatorze (94) composants
 préalablement traduit en Frappes de Processus,
 et nous montrons que cela permet de conclure
 en moins d'une seconde sur plusieurs questions dynamiques.
 
 \subsubsection*{Équivalences entre les Frappes de Processus}
 
-L'analyse statique mentionnée précédemment doit être appliquée
-aux \bemph{Frappes de Processus canoniques},
-une classe de modèles qui consiste en une restriction de l'un des formalismes.
-Nous montrons par ailleurs que cette classe est
+L'analyse statique mentionnée précédemment nécessite l'utilisation
+de \bemph{Frappes de Processus canoniques},
+une classe particulière
+consistant en une restriction de l'un des formalismes mentionnés précédemment.
+Celle classe présente d'autres intérêts :
+nous montrons notamment qu'elle est
 \bemph{aussi expressive que tous les formalismes
 de Frappes de Processus} développés dans cette thèse,
 et nous donnons les traductions correspondantes.
 Cela assure notamment qu'il est toujours possible de naviguer entre les formalismes,
-et ainsi de pouvoir appliquer les analyses statiques mentionnées à tous les types
-de modélisation, moyennant une traduction du modèle.
+afin de profiter de leurs avantages respectifs,
+et notamment de l'utilisation des analyses statiques mentionnées ci-dessus
+à tous les autres types de Frappes de Processus, moyennant une traduction du modèle.
 
 \subsubsection*{Équivalences avec d'autres formalismes}
 
@@ -390,7 +393,7 @@ développés spécifiquement pour la représentation de réseaux de régulations
 et nous montrons qu'il est possible de représenter ces deux formalismes de façon exacte
 grâce à l'ajout de priorités dans les Frappes de Processus.
 Nous abordons aussi la question de la traduction vers les \bemph{réseaux de Petri},
-un formalisme plus généraliste mais objet d'un regain d'intérêt du fait des importantes
+un formalisme plus généraliste mais objet d'un intérêt important du fait des
 capacités d'expressivité et d'analyse qu'il offre. \tocite[Heiner, Gilbert, Chaouiya]
 Ces liens permettent d'une part de comprendre la position des Frappes de Processus au sein
 de l'ensemble des modélisations discrètes asynchrones,
@@ -406,10 +409,12 @@ Le présent manuscrit est organisé de la manière suivante.
 
 Le \chapref{etatdelart} offre un état des lieux en matière de modélisation et d'analyse
 des réseaux de régulation biologiques discrets et asynchrones.
-Nous nous intéresserons notamment au modèle de Thomas et aux réseaux booléens,
-deux types de réseaux très répandus pour des raisons historiques.
+Nous nous intéresserons notamment aux réseaux booléens et au modèle de Thomas,
+deux types de réseaux très répandus pour des raisons historiques
+comme nous l'avons déjà mentionné.
 Nous définirons aussi les Frappes de Processus standard,
-c'est-à-dire telles que définies par le travail de Loïc Paulevé.
+c'est-à-dire telles que définies par le travail de \citefullname{Pauleve11}{Loïc},
+car elles constituent le point de départ de ce travail.
 
 Le \chapref{semantiques} propose plusieurs ajouts aux Frappes de Processus afin de l'enrichir
 et d'en augmenter l'expressivité.
@@ -423,7 +428,7 @@ et traitons en partie la question des équivalences et des traductions entre ces
 Le \chapref{as} se concentre sur une classe particulière de Frappes de Processus avec classes
 de priorités, dite «~canonique~».
 Cette classe sert de base au développement de méthodes d'analyse statique permettant
-de vérifier des propriétés d'atteignabilités locales dans un modèle.
+de vérifier des propriétés d'atteignabilité locales dans un modèle.
 Ces méthodes utilisent un mécanisme d'abstraction pour éviter l'explosion combinatoire
 inhérente à toute étude de la dynamique d'un modèle discret, et ainsi rester efficaces.
 Nous montrons aussi, traduction à l'appui,
