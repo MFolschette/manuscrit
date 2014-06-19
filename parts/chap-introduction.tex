@@ -254,13 +254,15 @@ C'est à partir de ces hypothèses
 ayant pour but la représentation de réseaux de régulation biologiques discrets et asynchrones
 %permettant de représenter une abstraction des composants
 %entrant en jeu à l'aide de niveau discrets
-qu'ont été formalisées
-la version actuelle du modèle de Thomas \cite{Richard06}
-et les Frappes de Processus \cite{PMR10-TCSB}.
+qu'a été formalisée
+la version actuelle du modèle de Thomas \cite{Richard06},
+et c'est en s'inspirant de celle-ci qu'ont été conçues par la suite
+les Frappes de Processus \cite{PMR10-TCSB}.
 %qui permettent toutes deux
-Les deux permettent en effet de représenter les interactions entre différents composants
+Ces deux formalismes permettent en effet
+de représenter les interactions entre différents composants
 sous la forme de l'évolution séquentielle de niveaux d'expression discrets.
-Cependant, ces deux formalismes se distinguent principalement au niveau de la représentation
+Cependant, ils se distinguent principalement au niveau de la représentation
 des interactions entre composants.
 En effet, le modèle de Thomas considère les interactions entre composants du point
 de vue d'«~influences~» globales, c'est-à-dire d'interactions qui vont globalement avoir
@@ -297,12 +299,12 @@ qui peut être traitée de façon très efficace, et donc \bemph{appliquée à d
 
 Les apports de cette thèse se déclinent en trois points principaux :
 \begin{itemize}
-  \item L'enrichissement des Frappes de Processus par l'introduction de notions
+  \item l'enrichissement des Frappes de Processus par l'introduction de notions
     de prévalence et de synchronisme entre les différentes évolutions possibles ;
-  \item Le développement de méthodes d'analyse de la dynamique efficaces
+  \item le développement de méthodes d'analyse de la dynamique efficaces
     et adaptées aux enrichissements précédemment mentionnés,
     et leur application concluante à des réseaux de régulation biologiques de grande taille ;
-  \item La description des liens formels entre les différentes sémantiques de Frappes de Processus
+  \item la description des liens formels entre les différentes sémantiques de Frappes de Processus
     proposées, ainsi qu'avec d'autres formalismes courants pour la représentation
     des réseaux de régulation biologiques.
 \end{itemize}
@@ -317,16 +319,13 @@ afin d'insister sur leur rôle dans cette démarche.
 
 Cette thèse se concentre sur plusieurs \bemph{alternatives d'extension du formalisme des
 Frappes de Processus dans le but d'enrichir celles-ci}.
-
-L'un des objectifs de cet enrichissement est la prise en compte et l'intégration
-de données temporelles dans les modèles et leur influence sur la dynamique. \TODO
-
-Ces ajouts offrent de plus la possibilité de prendre en compte des paramètres qui était
-auparavant abstraits,
-permettant par exemple \bemph{l'intégration de données temporelles}
-comme les durées relatives des réactions biochimiques. \TODO
-
-
+L'un des objectifs de cet enrichissement est \emph{la prise en compte de données temporelles},
+qui étaient généralement abstraites auparavant,
+comme des durées relatives de réactions biochimiques
+ou des notions de retard entre les évolutions de certains éléments.
+afin d'étudier leur influence sur la dynamique.
+Cependant, plutôt que d'intégrer des données continues dans le modèle,
+nous proposons de traduire ces données par des formes nouvelles de dynamique.
 Pour cela, nous proposons trois approches qui gravitent autour des notions
 de \bemph{préemption} et de \bemph{synchronisme} entre les différentes
 évolutions possibles du modèle :
@@ -340,26 +339,31 @@ de \bemph{préemption} et de \bemph{synchronisme} entre les différentes
     synchrones entre les actions, dans le but de modéliser des phénomènes simultanés
     comme la création des produits d'une réaction.
 \end{itemize}
-
-Ces ajouts offrent de plus la possibilité de prendre en compte des paramètres qui était
-auparavant abstraits,
-permettant par exemple \bemph{l'intégration de données temporelles}
-comme les durées relatives des réactions biochimiques.
+Nous montrons par ailleurs comment les différentes données temporelles peuvent être
+intégrées à l'aide de ces nouveaux outils.
 
 \subsubsection*{Outils efficaces d'analyse de la dynamique}
 
 Nous développons par ailleurs des méthodes permettant d'analyser la dynamique
-des modélisations précédentes.
-Ces méthodes sont basées sur de l'analyse statique par interprétation abstraite :
+des modélisations proposées ci-dessus.
+Ces méthodes sont basées sur de l'analyse statique par interprétation abstraite
+précédemment proposée par \citeasnoun{PMR12-MSCS} :
 %c'est-à-dire permettant d'approcher la dynamique afin de réduire la complexité de l'analyse.
 leur fonctionnement repose sur l'abstraction de la dynamique globale du système
 au profit des dynamiques locales de chaque composant.
+Nous enrichissons cette approche afin d'adapter les méthodes développées
+aux nouvelles formes de dynamique que nous proposons.
 Elles ont l'avantage de posséder \bemph{une complexité polynomiale en la taille du modèle},
 ce qui permet de \bemph{traiter efficacement de très grands modèles,
 de l'ordre de centaines de composants, en quelques dixièmes de seconde}.
 Néanmoins, étant donné qu'elles sont basées sur une approximation de la dynamique,
 il est possible qu'elles terminent sans pouvoir conclure,
-bien que cela ne soit jamais arrivé sur les exemples testés et présentés dans cette thèse.
+bien que cela ne soit jamais arrivé sur les exemples testés.
+%notamment ceux présentés dans cette thèse.
+Nous appliquons notamment ces méthodes à un réseau booléen de 94 composants
+préalablement traduit en Frappes de Processus,
+et nous montrons que cela permet de conclure
+en moins d'une seconde sur plusieurs questions dynamiques.
 
 \subsubsection*{Équivalences entre les Frappes de Processus}
 
