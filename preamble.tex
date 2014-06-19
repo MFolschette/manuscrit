@@ -15,7 +15,9 @@
 \usepackage{varioref}
 \usepackage[french]{refstyle}
 \usepackage{hyperref}
-\usepackage[agsm,dcucite]{harvard}  % Citations style Harvard
+\usepackage[agsm,dcucite,full]{harvard}  % Citations style Harvard
+\renewcommand{\harvardand}[1]{\& }
+\renewcommand{\harvardurl}[1]{\url{#1}}
 
 % Types de théorèmes
 \usepackage{amsthm}
@@ -45,6 +47,8 @@
 
 % Police
 \usepackage{cmbright}  % Police sans empattements
+%\usepackage{mathbbol}  % Majuscules doubles pour maths sans empattements
+
 %\usepackage{libertine}
 %\usepackage{charter} \usepackage[expert]{mathdesign}
 %\usepackage[bitstream-charter]{mathdesign}

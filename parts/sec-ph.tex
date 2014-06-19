@@ -1,26 +1,98 @@
 \section{Les Frappes de Processus standards}
 
+Cette section définit les Frappes de Processus standards
+telles qu'elles ont été formalisées par \citeasnoun{PMR10-TCSB}.
+Les Frappes de Processus offrent une représentation discrète, asynchrone et indéterministe
+avec une définition atomique des interactions entre les différents composants du modèle.
+Elles sont particulièrement adaptées aux représentations des réseaux de régulation biologiques
+bien qu'elles soient assez générales pour potentiellement permettre des applications plus
+larges en informatique ou dans d'autres domaines.
+
+Nous donnerons tout d'abord à la \secref{ph} une définition des Frappes de Processus standards
+%accompagnée d'une discussion,
+ainsi qu'un certain nombre de définitions formelles supplémentaires
+nécessaires pour la suite de ce manuscrit.
+Nous détaillons ensuite à la \secref{sc} le mécanisme particulier des sortes coopératives
+tel qu'il avait été formalisé dans les travaux de Loïc Paulevé,
+et nous montrerons qu'il permet de représenter l'action conjointe de plusieurs composants,
+mais avec certains défauts difficiles à corriger dans cette version du formalisme.
+Enfin, nous aborderons brièvement les travaux précédent
+concernant l'analyse statique (\secref{ph-as-pf}) qui permet d'obtenir des résultats
+sur l'ensemble des états stables ou l'atteignabilité d'un niveau local au sein d'un modèle,
+et concernant l'ajout de paramètres stochastiques (\secref{ph-stocha})
+dans le but d'introduire une composante temporelle continue dans les Frappes de Processus.
+
+
+
 \subsection{Définition}
 \seclabel{ph}
 
-Les Frappes de Processus permettent une modélisation atomique des interactions entre composants.
-\Defref{ph}
-\todo{Description}
+Les \emph{Frappes de Processus standards} telles que données à la \defref{ph},
+aussi appelées \textit{Process Hitting},
+ou plus simplement \emph{Frappes de Processus} dans ce chapitre,
+permettent une modélisation atomique et asynchrone des interactions entre composants.
+Un modèle de Frappes de Processus standards comporte un nombre fini de \emph{sortes}
+généralement notées $a$, $b$, $c$...
+Celles-ci permettent de représenter les différentes entités du modèle,
+qu'il s'agisse de composant ayant une réalité biologique (gène, protéine...)
+ou d'entités nécessaire à la modélisation (comme les sortes coopératives
+qui seront décrites à la \secref{sc}).
+Chaque sortes contient plusieurs \emph{processus},
+qui représentent les différentes
+niveaux d'expression discrets accessibles par la sorte,
+et qui sont notés $a_i$
+où $a$ est le nom de la sorte et $i$ l'indice du processus dans cette sorte.
+Un processus n'appartient qu'à une unique sorte.
+Chaque processus est dit \emph{actif} s'il représente le niveau d'expression
+dans lequel doit se trouver sa sorte à un certain moment.
+Un \emph{état} du modèle est donc décrit par l'ensemble des processus actifs à un instant donné,
+avec exactement un processus actif par sorte
+---~afin de ne pas sur-représenter ou sous-représenter le niveau d'expression courant d'une sorte.
 
-\begin{definition}[Frappes de Processus]
+La dynamique est introduite dans les Frappes de Processus par des \emph{actions}
+qui permettent de modifier le processus actif d'une sorte,
+à la condition éventuelle qu'un processus donné d'une autre sorte soit présent.
+Une action consiste donc en un triplet de processus $\PHfrappe{a_i}{b_j}{b_k}$
+qui se lit : «~$a_i$ frappe $b_j$ pour le faire bondir en $b_k$~»,
+et qui signifie que si, dans un état donné, les processus $a_i$ et $b_j$ sont
+tous les deux présents, alors il est possible d'activer $b_k$ (et de désactiver $b_j$)
+dans l'état suivant.
+Autrement dit, le processus actif de la sorte $b$ peut \emph{bondir}
+de $b_j$ à $b_k$ à condition que $a_i$ soit actif ;
+lorsque cela arrive, on dit qu'on a \emph{joué} l'action $\PHfrappe{a_i}{b_j}{b_k}$.
+Par convention, on contraint de plus que $b_j \neq b_k$ pour assurer que le jeu d'une action
+provoque bien un changement de processus actif.
+Il est aussi possible de définir une auto-action, où $a_i = b_j$ (et nécessairement $a = b$),
+qui permet de représenter le cas particulier où le processus $b_j$ peut bondir en $b_k$
+sans autre condition.
+
+Les Frappes de Processus sont conçues comme un formalisme
+à temps discret asynchrone, ce qui signifie que
+l'évolution d'un tel modèle est modélisée par une succession de pas de temps discrets
+qui représentent la succession des états du modèle,
+et exactement une action est jouée entre deux états successifs.
+Cela implique qu'un seul processus actif à la fois peut bondir entre deux
+pas de temps successifs, et donc qu'une seule sorte peut évoluer entre deux états.
+De plus, cela rend la dynamique Frappes de Processus indéterministe,
+car à tout état du modèle peuvent correspondre plusieurs états successeurs
+dans le cas où plusieurs actions peuvent y être jouées.
+Enfin, nous notons que si aucune action n'est jouable dans un état, alors celui-ci
+ne possède pas de successeurs et le modèle ne peut plus évoluer.
+
+\begin{definition}[Frappes de Processus standards]
 \deflabel{ph}
-  Les \emph{Frappes de Processus} sont définies
+  Les \emph{Frappes de Processus standards} sont définies
   par un triplet $\PH = (\PHs; \PHl; \PHh)$, où :
   \begin{itemize}
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
-    \item $\PHl \DEF \underset{a \in \PHs}{\times} \PHl_a$ est l'ensemble fini des \emph{états},
+    \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
       des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
       Chaque processus appartient à une unique sorte :
       $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
-    \item $\PHh \DEF \{\PHfrappe{a_i}{b_j}{b_l} \mid (a; b) \in \PHs \times \PHs \wedge
-      (a_i; b_j; b_l) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
-      b_j \neq b_l \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini des \emph{actions}.
+    \item $\PHh \DEF \{\PHfrappe{a_i}{b_j}{b_k} \mid (a; b) \in \PHs \times \PHs \wedge
+      (a_i; b_j; b_k) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
+      b_j \neq b_k \wedge a = b \Rightarrow a_i = b_j \}$ est l'ensemble fini des \emph{actions}.
   \end{itemize}
 \end{definition}
 %
@@ -61,9 +133,9 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
   Ces Frappes de Processus représentent un modèle simplifié du mécanisme
   de segmentation des métazoaires qui permet par exemple de décrire la production de rayures
   chez les drosophiles.
-  Il a été originellement établi \textit{in silico} par \cite{MSB4100192}
+  Il a été originellement établi \textit{in silico} par \citeasnoun{MSB4100192}
   à l'aide d'un formalisme à base d'équations différentielles,
-  et le modèle présenté ici est inspiré du modèle proposé par \cite{PMR10-TCSB}.
+  et le modèle présenté ici est inspiré du modèle proposé par \citeasnoun{PMR10-TCSB}.
   
   Les trois sortes $a$, $b$ et $c$ de ce modèle représentent différents gènes du système,
   que nous qualifierons d'\emph{actifs} dans le reste de ce document lorsqu'ils seront à l'état 1.
@@ -205,7 +277,6 @@ autrement dit, à un ensemble de processus contenant au plus un processus par so
   et
   $\PHsublset = \{ \toset{ps} \subset \Proc \mid ps \in \PHsubl \}$.
 \end{definition}
-\todo{Définir la notation $\toset{x}$}
 %
 \begin{definition}[Recouvrement ($\recouvre : \PHl \times \PHproc \rightarrow \PHl$)]
 \deflabel{statecap}
@@ -421,6 +492,7 @@ The aim of this paper is to allow the static analysis of the dynamics to be hand
 
 
 \subsection{Analyse statique}
+\seclabel{ph-as-pf}
 
 \todo{Rappels sur les résultats d'analyse statique (cf. MSCS'10)}
 
@@ -429,5 +501,6 @@ The aim of this paper is to allow the static analysis of the dynamics to be hand
 
 
 \subsection{Analyse stochastique}
+\seclabel{ph-stocha}
 
 \todo{Rappels rapides ?}

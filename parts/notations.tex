@@ -1,21 +1,51 @@
 \section{Notations}
 \seclabel{notations}
 
-On note $\sN$ l'ensemble des entiers naturels.
-Si $i, j \in \sN$, $i < j$, on note $\segm{i}{j} = \{ i, i+1, \ldots, j-1, j \}$
-l'ensemble des entiers naturels entre $i$ et $j$ compris.
-On note $\emptyseq$ la séquence vide.
-
-L'ensemble des parties d'un ensemble $A$ est noté : $\powerset(A)$.
-Si $A$ et $B$ sont deux ensembles, on note
-$A \cup B$ leur union, $A \cap B$ leur intersection et $A \times B$ leur produit cartésien.
-Si $n \in \sN$, et $(A_i)_{i \in \segm{1}{n}}$ est une séquence d'ensembles, on note
-$\bigcup_{i \in \segm{1}{n}} A_i = A_1 \cup A_2 \cup \ldots \cup A_n$ leur union,
-$\bigcap_{i \in \segm{1}{n}} A_i = A_1 \cap A_2 \cap \ldots \cap A_n$ leur intersection,
-$\bigtimes{i \in \segm{1}{n}} A_i = A_1 \times A_2 \times \ldots \times A_n$ leur produit cartésien.
-De plus, par convention :
-$\bigcup_{\emptyset} = \bigcap_{\emptyset} = \bigtimes{\emptyset} = \emptyset$.
-
-\todo{indices}
-
-\todo{$\toset{ps}$}
+\begin{description}
+  \item[Entiers naturels]
+    On note $\sN$ l'ensemble des entiers naturels.
+    Si $i, j \in \sN$, $i < j$, on note $\segm{i}{j} = \{ i, i+1, \ldots, j-1, j \}$
+    l'ensemble des entiers naturels entre $i$ et $j$ compris.
+  
+  \item[Séquences]
+    Si $n \in \sN$, on note $e_1 \cons \ldots \cons e_n$ la séquence finie formée
+    des éléments $e_1, \ldots, e_n$ si $n \geq 1$,
+    et on note $\emptyseq$ la séquence vide (si $n = 0$).
+    
+    Pour toute séquence finie $E = e_1 \cons \ldots \cons e_n$,
+    on note $\card{E} = n$ la longueur de cette séquence,
+    et $\indexes{E} = \segm{1}{\card{E}}$ l'ensemble des indices de cette séquence.
+    Pour tout $i \in \indexes{E}$, on note $A_i = e_i$ le $i$\textsuperscript{e} élément de $E$,
+    et pour tout $i,j \in \indexes{E}$, on note $E_{i..j} = e_i \cons \ldots \cons e_j$
+    la sous-séquence formée des éléments $i$ à $j$ de $E$ ;
+    naturellement, $E_{i..j} = \emptyseq$ si $i > j$.
+    
+    On note de plus : $e \in E \Leftrightarrow \exists i \in \indexes{E}, e = E_i$
+  
+  \item[Ensembles]
+    Le cardinal d'un ensemble $A$ est noté $\card{A}$
+    et son ensemble des parties est noté $\powerset(A)$.
+    
+    Si $A$ et $B$ sont deux ensembles, on note
+    $A \cup B$ leur union, $A \cap B$ leur intersection et $A \times B$ leur produit cartésien.
+    
+    Si $n \in \sN$, et $\{ A_i \}_{i \in \segm{1}{n}}$ est un ensemble d'ensembles, on note
+    $\bigcup_{i \in \segm{1}{n}} A_i = A_1 \cup A_2 \cup \ldots \cup A_n$ leur union,
+    $\bigcap_{i \in \segm{1}{n}} A_i = A_1 \cap A_2 \cap \ldots \cap A_n$ leur intersection et
+    $\bigtimes{i \in \segm{1}{n}} A_i = A_1 \times A_2 \times \ldots \times A_n$
+    leur produit cartésien.
+    Cette définition peut naturellement être étendue à une séquence d'ensembles.
+    De plus, par convention :
+    $\bigcup_{\emptyset} = \bigcap_{\emptyset} = \bigtimes{\emptyset} =
+      \bigcup_{\emptyseq} = \bigcap_{\emptyseq} = \bigtimes{\emptyseq} = \emptyset$.
+    
+    Si $E = e_1 \cons \ldots \cons e_n$ est une séquence,
+    on note $\toset{E} = \{ e_1, \ldots, e_n \}$ l'ensemble correspondant.
+  
+  \item[Fonctions et point fixe]
+    Si $A$ et $B$ sont deux ensembles,
+    $f : A \rightarrow B$ est une fonction qui associe chaque élément de $A$ à un élément de $B$.
+    
+    On note de plus $\lfp{x_0}{x}{x'}$ le plus petit point fixe plus grand que $x_0$
+    de la fonction $x \mapsto x'$, s'il existe.
+\end{description}

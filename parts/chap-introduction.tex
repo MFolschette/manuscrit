@@ -29,7 +29,7 @@ Elles se distinguent des propriétés statiques qui permettent de caractériser 
 en fonction de sa taille,
 des liens entre les éléments qui le composent,
 ou de toute autre propriété portant sur sa structure ou ses attributs,
-bien que celles-ci apportent parfois des résultats très généraux concernant la dynamique.
+bien que celles-ci apportent parfois aussi des résultats très généraux concernant la dynamique.
 À l'inverse, les propriétés dynamiques portent sur l'évolution et les comportements
 possibles d'un modèle, par exemple :
 \begin{itemize}
@@ -43,7 +43,8 @@ possibles d'un modèle, par exemple :
 \end{itemize}
 Répondre à ces questions nécessite une analyse détaillée de la dynamique.
 
-Ainsi, l'utilisation d'un modèle pose un double défi : sa conception et son analyse.
+Ainsi, l'utilisation d'un modèle pose un double défi :
+sa \bemph{conception} et son \bemph{analyse}.
 
 Il est nécessaire de proposer des outils permettant une modélisation cohérente et juste.
 C'est pourquoi nous proposons dans cette thèse plusieurs formalismes nouveaux permettant
@@ -54,7 +55,8 @@ par exemple sous la forme
 de relations de prévalence entre les différentes évolutions possibles d'un modèle.
 Cela ajoute de plus la possibilité de contraindre les comportements du modèle
 en fonction de paramètres temporels issus
-par exemple de données relatives aux durées de réaction ou de sensibilisation.
+par exemple de données relatives aux durées de réaction ou de sensibilisation,
+à des mesures de retards entre phénomènes biologiques, etc.
 Enfin, l'ajout d'outils de synchronisation à des formalismes purement asynchrones
 peut s'avérer nécessaire pour représenter certains comportements simultanés.
 
@@ -76,11 +78,13 @@ et l'application d'outils adaptés à des problèmes précis.
 Il s'avère donc nécessaire de pouvoir faire le lien entre différentes versions
 d'un formalisme, ou encore de créer des ponts vers d'autres formalismes répandus
 dans le cadre des systèmes dynamiques.
-Aussi, cette thèse offre une part importante à l'étude des relations entre différentes
-représentations complémentaires des modèles dynamiques étudiés,
+Aussi, cette thèse offre une part importante à l'\bemph{étude des relations entre différentes
+représentations} complémentaires des modèles dynamiques étudiés,
 ainsi qu'avec les modèles classiques pour ce type de représentations.
+L'intérêt d'une telle comparaison est de pouvoir mettre en valeur et d'exploiter
+les avantages de chacune de ces approches.
 
-Cependant, vérifier de telles propriétés dynamiques possède un coût
+Cependant, vérifier de telles propriétés dynamiques présente un coût
 en termes de temps d'exécution et de taille mémoire,
 lié à la taille du modèle considéré.
 Et si, dans les meilleurs cas, ce coût varie de façon polynomiale
@@ -90,8 +94,12 @@ font malheureusement face à une explosion combinatoire
 qui empêche l'analyse de modèles de grande taille.
 C'est pourquoi des méthodes alternatives peuvent être explorées,
 comme la vérification par interprétation abstraite,
-qui consiste à approcher la dynamique pour diminuer la complexité et simplifier les calculs,
-comme nous le verrons dans la suite de ce manuscrit.
+qui consiste à approcher de façon plus ou moins fine
+la dynamique pour diminuer la complexité et simplifier les calculs.
+Comme nous le verrons dans la suite de ce manuscrit,
+il s'agit d'une des facettes de notre travail,
+et nous soutenons que celle-ci constitue une contribution importante
+pour l'étude des systèmes considérés.
 
 % ce qui permet d'analyser des modèles de très grande taille avec des ressources raisonnables.
 % Cependant, il arrive que ces analyses soient de complexité exponentielle, voire plus,
@@ -125,6 +133,15 @@ et la \secref{notations} introduit les différentes notations qui y sont utilis�
   \item Exemple de dynamique
   \item ... ?
 \end{itemize}
+OU :\\
+Présenter comment le travail s'insère dans le domaine par rapport à d'autres formalismes
+concernant :
+\begin{itemize}
+  \item les aspects temporels,
+  \item l'abstraction,
+  \item les grands systèmes,
+  \item ...
+\end{itemize}
 }
 
 L'étude de la machine cellulaire nécessite de s'intéresser aux éléments interagissant
@@ -157,16 +174,16 @@ Cette simplification permet de mettre en évidence les phénomènes d'interactio
 les différents éléments entrant en jeu.
 En effet, la présence d'un composant (protéine, catalyseur…)
 en quantité suffisante peut déclencher
-l'activation (une hausse d'activité) ou l'inhibition (une baisse de l'activité)
+l'activation (une hausse de l'activité) ou l'inhibition (une baisse de l'activité)
 d'un ou plusieurs autres éléments, y compris l'élément déclencheur lui-même.
-C'est par ce mécanisme que se crée une cascade de réaction entre gènes :
+C'est par ce mécanisme que se crée une cascade de réactions entre gènes :
 %C'est par ce mécanisme qu'un gène, selon son degré d'activité,
 en effet, l'un d'eux, selon son degré d'activité,
 permettra la production d'une concentration plus ou moins importante de la protéine qu'il code ;
 celle-ci aura alors éventuellement un rôle activateur ou inhibiteur sur un certain
 nombre d'autres gènes, et ainsi de suite.
 L'ensemble de ces régulations peut être représenté par un graphe des interactions,
-où les composants sont représentés par des nœuds et leurs interactions mutuelles par des arcs.
+où les composants sont modélisés par des nœuds et leurs interactions mutuelles par des arcs.
 
 % À ce niveau, les différents composants peuvent être plus ou moins abstraits.
 % Par exemple, un gène, la protéine qu'il code et l'ARN messager correspondant sont
@@ -176,7 +193,7 @@ où les composants sont représentés par des nœuds et leurs interactions mutue
 % bien que d'autres peuvent être représentés de la même manière.
 
 Afin de représenter la dynamique du modèle,
-une valeur est associée à chaque élément afin de modéliser
+une valeur abstraite est associée à chaque élément afin de modéliser
 son état courant
 (niveau d'activité pour un gène,
 concentration dans le milieu pour une protéine, etc.).
@@ -191,16 +208,17 @@ qui représentent alors leurs vitesses d'évolution \cite{tyson1978dynamics}.
 Cependant, le manque de données expérimentales précises et fiables peut limiter de telles
 approches.
 De plus, la résolution analytique ou numérique des équations différentielles est parfois
-très complexe.
+très complexe, quand elle n'est pas impossible.
 
 Une autre approche consiste donc à symboliser l'activité d'un élément par
-une valeur discrète au sein d'un ensemble fini.
+une \bemph{valeur discrète} au sein d'un ensemble fini.
 Elle se justifie par le fait que la courbe d'évolution de la concentration
 d'une protéine forme généralement une sigmoïde lorsque sa production augmente ou diminue.
-Cela avait été théorisé notamment par Stuart A. Kauffman puis par René Thomas
-\cite{kauffman69,Thomas73}
+Cela avait été théorisé notamment par Stuart A. \citeasnoun{kauffman69}
+puis par René \citeasnoun{Thomas73}
 dans le cadre de formalismes booléens,
-c'est-à-dire restreints à deux niveaux discrets par composant, généralement notés “0” et “1”.
+c'est-à-dire restreints à deux niveaux discrets par composant, généralement notés
+«~0~» et «~1~».
 Cette approche a naturellement été étendue par la suite à des formalismes multivalués,
 où chaque élément peut posséder plus de deux niveaux d'expression,
 généralement représentés par des entiers consécutifs.
@@ -214,22 +232,22 @@ Ainsi, à chaque niveau d'expression d'un composant est associé un ensemble de 
 sur d'autres composants.
 
 Le dernier élément permettant de caractériser la dynamique est l'ajout d'une
-dimension temporelle.
+\bemph{dimension temporelle}.
 Dans le cadre des réseaux de régulation discrets, ce temps prend la forme d'une série
 infinie de pas de temps discrets permettant de représenter les évolutions
-successives du modèles au cours du temps, sans indication des durées réelles
+successives du modèle au cours du temps, sans indication des durées réelles
 entre ces pas de temps.
 La question du synchronisme des formalismes développés se pose alors :
 en effet, s'il existe des systèmes purement synchrones, où entre chaque pas de temps,
 toutes les réactions sensibilisées ont lieu,
 l'hypothèse de René Thomas \cite{Thomas73}
 est au contraire d'abstraire les systèmes biologiques à l'aide
-de réseaux de régulation purement asynchrones.
+de réseaux de régulation purement \bemph{asynchrones}.
 En effet, en l'absence de données temporelles sur le système étudié
 (vitesse des réactions, durée des dégradations...)
 il n'est pas possible d'assurer que deux protéines dont la production est activée au même moment
 seront produites en mêmes concentrations simultanément,
-ou que leurs concentrations passeront simultanément
+ou que leurs concentrations passeront en même temps
 un seuil d'expression (représenté par un niveau discret).
 
 C'est à partir de ces hypothèses
@@ -266,7 +284,7 @@ de modèles de Thomas, afin de représenter des ensembles de paramètres partiel
 De plus, un travail approfondi a permis d'élaborer de puissantes analyses statiques
 portant sur la recherche d'états stables,
 mais aussi sur des questions dynamiques comme l'atteignabilité d'un état local \cite{PMR12-MSCS}
-qui peut être traitée de façon très efficace, et donc appliquée à de très grands modèles.
+qui peut être traitée de façon très efficace, et donc \bemph{appliquée à de très grands modèles}.
 
 \todo{Mentionner et se positionner par rapport au travail de Vincent Danos ($\kappa$ calcul).}
 
@@ -295,10 +313,20 @@ des Frappes de Processus des outils associés.
 Les trois aspects précédents sont détaillés dans la suite
 afin d'insister sur leur rôle dans cette démarche.
 
-\subsubsection{Enrichissement des Frappes de Processus}
+\subsubsection*{Enrichissement des Frappes de Processus}
 
-Cette thèse se concentre sur plusieurs \bemph{formalisations alternatives des
+Cette thèse se concentre sur plusieurs \bemph{alternatives d'extension du formalisme des
 Frappes de Processus dans le but d'enrichir celles-ci}.
+
+L'un des objectifs de cet enrichissement est la prise en compte et l'intégration
+de données temporelles dans les modèles et leur influence sur la dynamique. \TODO
+
+Ces ajouts offrent de plus la possibilité de prendre en compte des paramètres qui était
+auparavant abstraits,
+permettant par exemple \bemph{l'intégration de données temporelles}
+comme les durées relatives des réactions biochimiques. \TODO
+
+
 Pour cela, nous proposons trois approches qui gravitent autour des notions
 de \bemph{préemption} et de \bemph{synchronisme} entre les différentes
 évolutions possibles du modèle :
@@ -312,12 +340,13 @@ de \bemph{préemption} et de \bemph{synchronisme} entre les différentes
     synchrones entre les actions, dans le but de modéliser des phénomènes simultanés
     comme la création des produits d'une réaction.
 \end{itemize}
+
 Ces ajouts offrent de plus la possibilité de prendre en compte des paramètres qui était
 auparavant abstraits,
 permettant par exemple \bemph{l'intégration de données temporelles}
 comme les durées relatives des réactions biochimiques.
 
-\subsubsection{Outils efficaces d'analyse de la dynamique}
+\subsubsection*{Outils efficaces d'analyse de la dynamique}
 
 Nous développons par ailleurs des méthodes permettant d'analyser la dynamique
 des modélisations précédentes.
@@ -332,7 +361,7 @@ Néanmoins, étant donné qu'elles sont basées sur une approximation de la dyna
 il est possible qu'elles terminent sans pouvoir conclure,
 bien que cela ne soit jamais arrivé sur les exemples testés et présentés dans cette thèse.
 
-\subsubsection{Équivalences entre les Frappes de Processus}
+\subsubsection*{Équivalences entre les Frappes de Processus}
 
 L'analyse statique mentionnée précédemment doit être appliquée
 aux \bemph{Frappes de Processus canoniques},
@@ -345,7 +374,7 @@ Cela assure notamment qu'il est toujours possible de naviguer entre les formalis
 et ainsi de pouvoir appliquer les analyses statiques mentionnées à tous les types
 de modélisation, moyennant une traduction du modèle.
 
-\subsubsection{Équivalences avec d'autres formalismes}
+\subsubsection*{Équivalences avec d'autres formalismes}
 
 Enfin, nous nous intéressons aux \bemph{liens formels entre les différentes
 sémantiques de Frappes de Processus
