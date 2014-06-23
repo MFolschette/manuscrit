@@ -22,6 +22,8 @@
 \renewcommand{\harvardurl}[1]{\url{#1}}
 \newcommand{\citefullname}[2]{#2 \citeasnoun{#1}}
 
+
+
 % Police
 \usepackage{cmbright}  % Police sans empattements
 %\usepackage{mathbbol}  % Majuscules doubles pour maths sans empattements
@@ -47,17 +49,17 @@
 % Types de théorèmes
 \usepackage{amsthm}
 
-\newtheorem{property}{Propriété}{}{}
-\newtheorem{theorem}{Théorème}{}{}
-\newtheorem{lemma}{Lemme}{}{}
-\newtheorem{proposition}{Proposition}{}{}
+\newtheorem{property}{Propriété}[chapter]
+\newtheorem{theorem}{Théorème}[chapter]
+\newtheorem{lemma}{Lemme}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
 
 \theoremstyle{definition}
-\newtheorem{definition}{Définition}{}{}
-\newtheorem{condition}{Condition}{}{}
+\newtheorem{definition}{Définition}[chapter]
+\newtheorem{condition}{Condition}[chapter]
 
 \theoremstyle{remark}
-\newtheorem*{example}{Exemple}{}{}
+\newtheorem*{example}{Exemple}
 
 
 

@@ -271,12 +271,43 @@ priorités, pour tout $k, n \in \sNN$.
 Nous donnons pour cela un résultat encore plus fort : tout modèle de Frappes de Processus avec $k$
 classes de priorités peut être traduit en Frappes de Processus canoniques,
 comme défini à la \secref{phcanonique-def},
-c'est-à-dire en Frappes de Processus avec 2 classes de priorités et une restriction
-dans l'utilisation des actions de forte priorité.
-À l'inverse des Frappes de Processus avec 2 classes de priorités sont \textit{a fortiori}
+qui sont des Frappes de Processus avec 2 classes de priorités
+avec une forme particulière.
+À l'inverse des Frappes de Processus avec 2 classes de priorités sont
+naturellement \textit{a fortiori}
 des Frappes de Processus avec $k$ classes de priorités, pour tout $k \in \sNN$.
 
-\todo{En faire un théorème ?}
+\begin{theorem}[Équivalences entres Frappes de Processus avec classes de priorités]
+\thmlabel{equivphpkn}
+  Pour tout $k, n \in \sNN$, les Frappes de Processus avec $k$ classes de priorités
+  sont aussi expressives que les Frappes de Processus avec $n$ classes de priorités.
+\end{theorem}
+
+\begin{proof}
+  Nous utilisons pour cette démonstration
+  l'opérateur d'aplatissement $\PHflat$ donné à la \defref[vref]{fopaplat}
+  et les résultats qui le concernent.
+  
+  Soient $k, n \in \sNN$,
+  et soient $\PH$ des Frappes de Processus avec $k$ classes de priorités.
+  D'après le \thmref{bisimulaplatissement},
+  l'aplatissement $\PHflat(\PH)$ est faiblement bisimilaire à $\PH$.
+  Posons $\PHflat(\PH) = (\PHs; \PHl; \PHh^{\angles{2}})$
+  avec $\PHh^{\angles{2}} = (\PHh^{(1)}; \PHh^{(2)})$,
+  et : $\PH' = (\PHs; \PHl; \PHh'^{\angles{n}})$
+  avec $\PHh'^{\angles{n}} = (\PHh^{(1)}; \PHh^{(2)}; \PHh'^{(3)}; \ldots; \PHh'^{(n)})$
+  où $\forall i \in \segm{3}{n}, \PHh'^{(i)} = \emptyset$.
+  Autrement dit, $\PH'$ sont les Frappes de Processus avec $n$ classes de priorités
+  identiques à $\PHflat(\PH)$, où des classes de priorités vides ont été
+  artificiellement ajoutées.
+  Cela est possible car $n \geq 2$.
+  Ainsi, $\PH'$ est possède la même dynamique que $\PHflat(\PH)$,
+  et est donc faiblement bisimilaire à $\PH$.
+  
+  Ainsi, pour tout $k, n \in \sNN$,
+  toutes Frappes de Processus avec $k$ classes de priorités peuvent être représentées
+  en Frappes de Processus avec $n$ classes de priorités.
+\end{proof}
 
 
 

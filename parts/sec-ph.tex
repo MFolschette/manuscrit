@@ -252,7 +252,7 @@ Nous notons $\PHsubl$ l'ensemble de tous les sous-états et nous constatons qu'u
 état est \textit{a fortiori} un sous-état : $\PHl \subset \PHsubl$.
 Nous notons de plus $\PHsublset$ l'ensemble des sous-états désordonnés,
 c'est-à-dire dont l'ordre entre les sortes a été oublié.
-Le recouvrement d'un état $s$ par un processus $a_i$ est formalisé à la \defref{statecap}
+Le recouvrement d'un état $s$ par un processus $a_i$ est formalisé à la \defref{recouvrement}
 par un état identique à $s$, sauf pour le processus de $a$ qui a été remplacé par $a_i$,
 ce qui permettra de définir la dynamique des Frappes de Processus %avec $k$ classes de priorités
 à la \defref{play}.
@@ -279,7 +279,7 @@ autrement dit, à un ensemble de processus contenant au plus un processus par so
 \end{definition}
 %
 \begin{definition}[Recouvrement ($\recouvre : \PHl \times \PHproc \rightarrow \PHl$)]
-\deflabel{statecap}
+\deflabel{recouvrement}
   Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
   $(s \recouvre a_i)$ est l'état défini par :
   $\PHget{(s \recouvre a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \recouvre a_i)}{b} = \PHget{s}{b}$.

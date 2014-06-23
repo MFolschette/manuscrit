@@ -83,7 +83,7 @@ La \defref{ctx} introduit la notion de \emph{contexte} qui étend celle d'état
 afin de pouvoir représenter un ensemble d'états initiaux possibles :
 plutôt que d'attribuer un seul processus actif à chaque sorte, comme pour un état,
 un contexte permet d'en attribuer plusieurs.
-La notion de recouvrement est aussi étendue aux contextes dans la \defref{ctxcap}.
+La notion de recouvrement est aussi étendue aux contextes dans la \defref{ctxrecouvrement}.
 
 \begin{definition}[Contexte ($\Ctx$)]
 \deflabel{ctx}
@@ -94,7 +94,7 @@ La notion de recouvrement est aussi étendue aux contextes dans la \defref{ctxca
 \end{definition}
 
 \begin{definition}[Recouvrement ($\recouvre : \Ctx \times \powerset(\PHproc) \rightarrow \Ctx$)]
-\label{def:ctxcap}
+\deflabel{ctxrecouvrement}
   Pour tout contexte $\ctx \in \Ctx$ et tout ensemble de processus $ps \subset \Proc$,
   le recouvrement de $\ctx$ par $ps$ est noté $\ctx \recouvre ps$ et est défini par :
     \[ \forall a \in \PHs, \PHget{(\ctx \recouvre ps)}{a} \DEF
