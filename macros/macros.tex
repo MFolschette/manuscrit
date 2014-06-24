@@ -30,6 +30,7 @@
 \newcommand{\PHhitter}{\mathsf{frappeur}}
 \newcommand{\PHtarget}{\mathsf{cible}}
 \newcommand{\PHbounce}{\mathsf{bond}}
+\newcommand{\PHinvariant}{\mathsf{invariant}}
 %\newcommand{\PHsort}{\Sigma}
 \newcommand{\PHsort}{\mathsf{sorte}}
 \newcommand{\sort}[1]{\PHsort(#1)}
@@ -44,6 +45,7 @@
 \newcommand{\frappeur}[1]{\PHhitter(#1)}
 \newcommand{\cible}[1]{\PHtarget(#1)}
 \newcommand{\bond}[1]{\PHbounce(#1)}
+\newcommand{\invariant}[1]{\PHinvariant(#1)}
 
 % Priorités
 \newcommand{\prio}{\mathsf{prio}}
@@ -140,12 +142,21 @@
 \newcommand{\PHfrappemults}[2]{\PHhitmult{\{#1\}}{\{#2\}}}
 
 % Traduction en réseau d'automates
-\newcommand{\phmtoansymbol}{\f{RA}}
+\newcommand{\phmtoansymbol}{\f{toRAS}}
 \newcommand{\phmtoan}[1][\PH]{\phmtoansymbol(#1)}
+\newcommand{\antophmsymbol}{\f{toPH}}
+\newcommand{\antophm}[1][\AN]{\antophmsymbol(#1)}
+\newcommand{\AN}{\f{RAS}}
 \newcommand{\ANs}{\PHs}
 \newcommand{\ANl}{\PHl}
 \newcommand{\ANi}{I}
 \newcommand{\ANt}{T}
+\newcommand{\precond}[1]{{}^\bullet #1}
+\newcommand{\postcond}[1]{#1 {}^\bullet}
+\newcommand{\invcond}[1]{\precond{\postcond{#1}}}
+\newcommand{\ANaction}[3]{#1 \xrightarrow{#2} #3}
+\newcommand{\ANtrans}{\trans{\AN}}
+\newcommand{\ANProc}{\mathbf{\acute{E}L}}
 
 % Traduction en PHp
 %\newcommand{\phmtophpsymbol}{\f{PHp}}

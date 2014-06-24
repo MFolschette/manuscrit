@@ -81,9 +81,21 @@ un nombre important d'actions et de sortes supplémentaires.
 
 \subsection{Définition}
 
-\todo{Gluer}
-
-\todo{$A \in \Proc$ ?}
+La \defref{phm} formalise la notion de Frappes de Processus avec actions plurielles,
+en accord avec la discussion informelle ci-dessus :
+une action plurielle est constituée de deux ensembles de processus de sortes distinctes,
+qui représentent l'ensemble des frappeurs et celui des bonds.
+Cela permet de formaliser le déclenchement d'une action par une synchronisation exacte
+entre un nombre arbitraire de frappeurs,
+et une synchronisation exacte entre plusieurs bonds lorsque l'action est jouée.
+% Nous étendons aussi la notion de recouvrement à la \defref{recouvrementps}
+% au cas du recouvrement d'un sous-état désordonné par un autre,
+% ce qui permet, conjointement à la définition de
+Nous définissons de plus l'opérateur de jouabilité
+des Frappes de Processus avec actions plurielles
+à la \defref{fopphm},
+afin de formaliser la dynamique de ce type de modèles
+à l'aide de la sémantique donnée à la \defref[vref]{play}.
 
 \begin{definition}[Frappes de Processus avec actions plurielles]
 \deflabel{phm}
@@ -93,8 +105,8 @@ un nombre important d'actions et de sortes supplémentaires.
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
     \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
-      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
-      Chaque processus appartient à une unique sorte :
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$,
+      chaque processus appartenant à une unique sorte :
       $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
     \item $\PHh \DEF \{\PHfrappemult{A}{B} \mid A, B \in \PHsublset \setminus \emptyset \wedge
       \forall q \in B, \exists p \in A, (p \neq q \wedge \PHsort(p) = \PHsort(q)) \}$
@@ -107,7 +119,8 @@ Pour toute action $h = \PHfrappemult{A}{B} \in \PHh$,
 $A$ est appelé le \emph{frappeur} et $B$ le \emph{bond} de $h$,
 et on note : $\hitter{h} = A$, $\bounce{h} = B$.
 On note de plus :
-$\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
+$\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$,
+et : $\invariant{h} = \{ p \in A \mid \sort{p} \notin \sortes{B} \}$.
 
 \begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphmsubsymbol : \PHh \rightarrow \F$)]
 \deflabel{fopphm}
@@ -120,33 +133,204 @@ $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$.
 \subsection{Équivalence avec les réseaux d'automates synchronisés}
 \seclabel{phm2an}
 
-\todo{Définition des RAS (def + dynamique)}
+\todo{À déplacer dans le chapitre 5 ?}
 
 \todo{Glu}
 
-%On note $\phmtoan$ le réseau d'automates synchronisés équivalent aux frappes de processus $\PH$,
-%défini par :
+Nous nous intéressons ici au lien entre les Frappes de Processus avec actions plurielles
+et les réseaux d'automates synchronisés.
+Nous montrons notamment que ces deux formalismes sont équivalents à l'aide de deux traductions
+appropriées d'un formalisme vers l'autre.
+Cette équivalence est intéressante car elle montre clairement le lien entre ce formalisme
+de Frappes de Processus et celui plus répandu des réseaux d'automates synchronisés.
+De plus, les traductions permettent de naviguer entre les formalismes et d'en utiliser
+les différents outils.
 
-\begin{definition}[Automate équivalent ($\phmtoansymbol$)]
-\deflabel{phm2an}
-  Le réseau d'automates équivalent aux Frappes de Processus avec actions plurielles $\PH$
-  est défini par : $\phmtoan = (\PHs, \PHl, \ANi, \ANt)$, où :
+Nous rappelons tout d'abord la définition d'un réseau d'automates synchronisés (\defref{an})
+ainsi que la relation de transition entre deux états d'un tel modèle (\defref{an-sem})
+ce qui permet d'en définir la dynamique.
+
+\begin{definition}[Réseau d'automates synchronisés]
+\deflabel{an}
+  Un \emph{réseau d'automates synchronisés} est un quadruplet $\AN = (\ANs; \ANl; \ANi; \ANt)$
+  où :
   \begin{itemize}
-    \item $\ANi = \{ \ell_h \mid h \in \PHh \}$ est l'ensemble des libellés de transitions ;
-    \item $\ANt = \{ p \xrightarrow{\ell_h} q \mid
-      h \in \PHh \wedge h = \PHfrappemult{A}{B} \wedge p \in A \wedge q \in A \recouvre B \wedge
-      \PHsort(p) = \PHsort(q) \}$ est l'ensemble des transitions locales.
+    \item $\ANs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{automates} ;
+    \item $\ANl \DEF \bigtimes{a \in \ANs} \ANl_a$ est l'ensemble fini des \emph{états},
+      où $\ANl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
+      des \emph{états locaux} de l'automate $a \in \ANs$ et $l_a \in \sN^*$,
+      chaque état local appartenant à un unique automate :
+      $\forall (a_i; b_j) \in \ANl_a \times \ANl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
+    \item $\ANi \DEF \{\ell_1, \dots, \ell_m\}$ est l'ensemble fini des
+      \emph{libellés} de transitions ;
+    \item $\ANt \DEF \{ \ANaction{a_i}{\ell}{a_j} \mid a \in \ANs \wedge a_i \in \ANl_a \wedge
+      \ell \in \ANi \}$ est l'ensemble fini des \emph{transitions} entre états locaux.
+  \end{itemize}
+  Pour tout libellé $\ell \in \ANi$, on note
+  $\precond{\ell} \DEF \{ a_i \mid \ANaction{a_i}{\ell}{a_j} \in \ANt \}$
+  et $\postcond{\ell} \DEF \{ a_j \mid \ANaction{a_i}{\ell}{a_j} \in \ANt \}$.
+%   et $\invcond{\ell} \DEF \{ a_i \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \}$.
+  L'ensemble des états locaux des automates est dénoté par
+  $\ANProc \DEF \bigcup_{a \in \ANs} \ANl_a$.
+  Enfin, étant donné un état global $s \in \ANl$, $s(a) = a_i \in \ANl_a$
+  fait référence à l'état local de l'automate $a \in \ANs$.
+\end{definition}
+
+\begin{definition}[Sémantique des réseaux d'automates ($\ANtrans$)]
+\deflabel{an-sem}
+  Étant donné un réseau d'automates synchronisés $\AN = (\ANs; \ANl; \ANi; \ANt)$,
+  un libellé $\ell$ est dit \emph{jouable} dans un état $s \in \ANl$ si et seulement si :
+  $\forall a_i \in \precond{\ell}, s(a) = a_i$.
+  Dans ce cas, on note $(s \play \ell)$ l'état résultant du jeu de toutes les transitions
+  libellées par $\ell$, défini par :
+  $s \play \ell = s \recouvre \postcond{\ell}$.
+%   $\forall a_j \in \postcond{\ell}, (s \play \ell)(a) = a_j \wedge
+%     \forall b \in \ANs, \ANl_b \cap \precond{\ell} = \emptyset \Rightarrow
+%     (s \play \ell)(b) = s(b)$.
+  De plus, on note alors : $s \ANtrans (s \play \ell)$.
+%   Étant donné un réseau d'automates synchronisés $\AN = (\ANs; \ANl; \ANi; \ANt)$,
+%   la relation de transition globale entre deux états du réseau
+%   $\ANtrans \subset \ANl \times \ANl$ est définie par :
+%   \begin{align*}
+%     s \ANtrans s' \EQDEF \exists \ell \in \ANi, &\forall a_i \in \precond{\ell}, s(a) = a_i
+%       \wedge \forall a_j \in \postcond{\ell}, s'(a) = a_j \\
+%     \wedge &\forall b \in \ANs, \ANl_b \cap \precond{\ell} = \emptyset \Rightarrow s(b) = s'(b)
+%   \end{align*}
+\end{definition}
+
+Nous définissons ensuite le réseau d'automates synchronisés représentant des
+Frappes de Processus avec actions plurielles (\defref{phm2an})
+et nous montrons qu'il est bisimilaire (\thmref{bisimulationphm2an})
+
+La \defref{phm2an} donne le réseau d'automates synchronisés $\phmtoan[\PH]$
+correspondant à toutes
+Frappes de Processus avec actions plurielles $\PH$.
+La notation $\recouvre$ qualifie le recouvrement d'un ensemble de processus de sortes distinctes
+par un autre comprenant des processus issus des mêmes sortes
+(\defref{recouvrementps})
+inspiré du recouvrement d'un état par un ensemble de processus
+donné à la \defref[vref]{recouvrement}.
+Le \thmref{bisimulationphm2an} montre que $\phmtoan[\PH]$ est bisimilaire à $\PH$.
+
+\begin{definition}[Recouvrement ($\recouvre : \PHsublset \times \PHsublset \rightarrow \PHsublset$)]
+\deflabel{recouvrementps}
+  Étant donné un sous-état désordonné $ps \in \PHsublset$ et un processus $a_i \in \Proc$,
+  tel que $a \in \sortes{ps}$, on définit :
+  $(ps \recouvre a_i) = (ps \setminus \PHl_a) \cup \{ a_i \}$.
+  On étend de plus cette définition
+  au recouvrement par un ensemble de processus de sortes distinctes
+  $ps' \in \PHsublset$ tel que $\sortes{ps'} \subset \sortes{ps}$
+  comme étant le recouvrement de $ps$ par chaque processus de $ps'$ :
+  $ps \recouvre ps' = ps \underset{a_i \in ps'}{\recouvre} a_i$.
+\end{definition}
+
+\begin{definition}[Réseau d'automates équivalent ($\phmtoansymbol$)]
+\deflabel{phm2an}
+  Le réseau d'automates synchronisé équivalent aux Frappes de Processus
+  avec actions plurielles $\PH = (\PHs; \PHl; \PHh)$
+  est défini par : $\phmtoan = (\PHs; \PHl; \ANi; \ANt)$, où :
+  \begin{itemize}
+    \item $\ANi = \{ \ell_h \mid h \in \PHh \}$ ; % est l'ensemble des libellés de transitions ;
+    \item $\ANt = \{ \ANaction{a_i}{\ell_h}{a_j} \mid
+      h \in \PHh \wedge h = \PHfrappemult{A}{B} \wedge a_i \in A \wedge a_j \in A \recouvre B \}$.
+      % est l'ensemble des transitions locales.
   \end{itemize}
 \end{definition}
 
 \begin{theorem}[$\PH \approx \phmtoan$]
-\thmlabel{phmequivan}
+\thmlabel{bisimulationphm2an}
+  Soient $\PH = (\PHs; \PHl; \PHh)$ des Frappes de Processus avec actions plurielles.
+  On a :
   \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow s \trans{\phmtoan} s' \enspace.\]
 \end{theorem}
 
-\todo{Preuve}
+\begin{proof}
+  Soient $s, s' \in \PHl$.
+  On pose : $\phmtoan = (\ANs; \ANl; \ANi; \ANt)$.
+  
+  ($\Rightarrow$) Supposons que $s \PHtrans s'$, c'est-à-dire qu'il existe une action $h \in \PHh$
+    telle que $s' = s \play h$.
+    Posons : $h = \PHfrappemult{A}{B}$.
+    D'après la \defref{phm2an},
+    l'existence de cette action dans $\PH$ implique celle d'un libellé $\ell_h$ dans $\phmtoan$
+    ainsi que de l'ensemble de transitions
+    $\ANt_h = \{ a_i \xrightarrow{\ell_h} a_j \mid a_i \in A \wedge a_j \in A \recouvre B \}$.
+    Autrement dit, $\precond{\ell_h} = A$, donc $\ell_h$ est jouable dans $s$
+    si et seulement si $A \subseteq s$.
+    De plus, $\postcond{\ell_h} = \invariant{h} \cup B$, donc
+    $(s \play \ell_h) = s \recouvre (\invariant{h} \cup B) = s \recouvre B = s'$
+    car $\invariant{h} \subseteq A \subseteq s$.
+  
+  ($\Leftarrow$) Supposons que $s \trans{\phmtoan} s'$,
+    c'est-à-dire qu'il existe un libellé $\ell \in \ANi$ et un ensemble de transitions
+    ayant ce libellé : $\ANt_\ell = \{ a_i \xrightarrow{\ell} a_j \in \ANt \}$,
+    tels que $s' = s \play \ell$.
+    D'après la \defref{phm2an}, cela signifie notamment qu'il existe une action
+    $h = \PHfrappemult{A}{B} \in \PHh$ telle que $\ell = \ell_h$, et que :
+    $\ANt_\ell = \{ a_i \xrightarrow{\ell} a_j \mid a_i \in A \wedge a_j \in A \recouvre B \}$.
+    Étant donné que $\invariant{h}$ et $\cible{h}$ forment une partition de $A$,
+    $\ANt_\ell$ peut être découpé en deux ensembles, selon les invariants et les cibles de $h$ :
+    $\ANt_\ell = \{ a_i \xrightarrow{\ell} a_i \mid a_i \in \invariant{h} \} \cup
+      \{ a_i \xrightarrow{\ell} a_j \mid a_i \in \cible{h} \wedge a_j \in B \}$.
+    Ainsi, $s' = s \recouvre (\invariant{h} \cup B) = s \recouvre B = s \play h$.
+\end{proof}
 
 \todo{Sens ($\Leftarrow$) !}
+
+\begin{definition}[Frappes de Processus d'un réseau d'automates ($\antophmsymbol$)]
+\deflabel{an2phm}
+  Les Frappes de Processus avec actions plurielles
+  équivalentes au réseau d'automates synchronisé $\AN = (\PHs, \PHl, \ANi, \ANt)$
+  sont définies par $\antophm = (\ANs, \ANl, \PHh)$, où :
+%   $\PHh = \{ \PHfrappemult{\precond{\ell}}{(\postcond{\ell} \setminus \invcond{\ell})}
+%     \mid \ell \in \ANi \}$.
+  \[\PHh = \{ \PHfrappemult{\precond{\ell}}{B} \mid \ell \in \ANi \wedge
+    B = \postcond{\ell} \setminus \{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \}
+    \}\]
+\end{definition}
+
+\begin{theorem}[$\AN \approx \antophm$]
+\thmlabel{bisimulationan2phm}
+  Soit $\AN = (\ANs; \ANl; \ANi; \ANt)$ un réseau d'automates synchronisés.
+  On a :
+  \[\forall s, s' \in \ANl, s \ANtrans s' \Longleftrightarrow s \trans{\antophm} s' \enspace.\]
+\end{theorem}
+
+\begin{proof}
+  Soient $s, s' \in \PHl$.
+  On pose : $\antophm = (\ANs; \ANl; \PHh)$.
+  
+  ($\Rightarrow$) Supposons que $s \ANtrans s'$,
+    c'est-à-dire qu'il existe un libellé $\ell \in \ANi$ et un ensemble de transitions
+    ayant ce libellé : $\ANt_\ell = \{ a_i \xrightarrow{\ell} a_j \in \ANt \}$,
+    tels que $s' = s \play \ell$.
+    D'après la traduction donnée à la \defref{an2phm}, il existe donc une action
+    $h = \PHfrappemult{A}{B} \in \PHh$ telle que $A = \precond{\ell}$ et
+    $B = \postcond{\ell} \setminus \{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \}$.
+    Or $s' = s \recouvre \postcond{\ell}
+      = s \recouvre (B \cup \{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \})
+      = s \recouvre B$
+    car $\{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \} \subseteq s$.
+    Ainsi, $h$ est jouable dans $s$ et $s' = s \play h$.
+  
+  ($\Leftarrow$) Supposons que $s \trans{\antophm} s'$,
+    c'est-à-dire qu'il existe une action $h = \PHfrappemult{A}{B} \in \PHh$
+    telle que $s' = s \play h$.
+    D'après la traduction de la \defref{an2phm},
+    cela signifie qu'il existe un libellé $\ell \in \ANi$ et un ensemble de transitions
+    ayant ce libellé : $\ANt_\ell = \{ a_i \xrightarrow{\ell} a_j \in \ANt \}$,
+    tels que : $A = \precond{\ell}$ et
+    $B = \postcond{\ell} \setminus \{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \}$.
+    Comme $h$ est jouable dans $s$, alors $A \subseteq s$, donc $\ell$ est aussi jouable dans $s$.
+    De plus, $s' = $ \TODO
+    
+    
+    
+
+
+  \TODO
+\end{proof}
+
 
 
 
@@ -174,7 +358,7 @@ et repose sur l'utilisation de deux types de sortes particulières :
   \item des \emph{sortes de réaction} permettant de modéliser le déclenchement d'une \emph{réaction},
     ou son arrêt.
 \end{itemize}
-Une réaction modélise le fait qu'un ensemble d'actions est en train
+Une réaction modélise le fait qu'un ensemble d'actions (standards) est en train
 de simuler le jeu d'une action plurielle.
 À toute action plurielle $h$ du modèle d'origine correspond une sorte coopérative $\scf{h}$
 entre les sortes des processus de $A$

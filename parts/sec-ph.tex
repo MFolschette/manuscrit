@@ -87,8 +87,8 @@ ne possède pas de successeurs et le modèle ne peut plus évoluer.
     \item $\PHs \DEF \{a, b, \dots\}$ est l'ensemble fini et dénombrable des \emph{sortes} ;
     \item $\PHl \DEF \bigtimes{a \in \PHs} \PHl_a$ est l'ensemble fini des \emph{états},
       où $\PHl_a = \{a_0, \ldots, a_{l_a}\}$ est l'ensemble fini et dénombrable
-      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$.
-      Chaque processus appartient à une unique sorte :
+      des \emph{processus} de la sorte $a \in \PHs$ et $l_a \in \sN^*$,
+      chaque processus appartenant à une unique sorte :
       $\forall (a_i; b_j) \in \PHl_a \times \PHl_b, a \neq b \Rightarrow a_i \neq b_j$ ;
     \item $\PHh \DEF \{\PHfrappe{a_i}{b_j}{b_k} \mid (a; b) \in \PHs \times \PHs \wedge
       (a_i; b_j; b_k) \in \PHl_a \times \PHl_b \times \PHl_b \wedge
@@ -282,7 +282,8 @@ autrement dit, à un ensemble de processus contenant au plus un processus par so
 \deflabel{recouvrement}
   Étant donné un état $s \in \PHl$ et un processus $a_i \in \PHproc$,
   $(s \recouvre a_i)$ est l'état défini par :
-  $\PHget{(s \recouvre a_i)}{a} = a_i \wedge \forall b \neq a, \PHget{(s \recouvre a_i)}{b} = \PHget{s}{b}$.
+  $\PHget{(s \recouvre a_i)}{a} = a_i \wedge
+    \forall b \neq a, \PHget{(s \recouvre a_i)}{b} = \PHget{s}{b}$.
   On étend de plus cette définition à un ensemble de processus
   par le recouvrement de l'état par chaque processus,
   à condition que les processus de l'ensemble soient tous de sortes différentes :
