@@ -103,7 +103,9 @@ on définit aussi l'ensemble des sortes d'un ensemble de processus par :
 $\forall A \subset \Proc, \sortes{A} = \{ \sorte{p} \mid p \in A \}$.
 Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
 par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
-Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$.
+Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$ ;
+par extension, si $ps \subset \Proc$, on écrit alors :
+$ps \subseteq s \EQDEF \forall p \in ps, p \in s$.
 Pour toute action $h = \PHfrappe{a_i}{b_j}{b_k} \in \PHh$,
 $a_i$ est appelé le \emph{frappeur}, $b_j$ la \emph{cible} et $b_k$ le \emph{bond} de $h$,
 et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
@@ -123,9 +125,9 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
   Enfin, ce modèle comporte 7 actions :
   \begin{align*}
     \PHh = \{\qquad
-      \PHfrappe{c_1}{a_1}{a_0}\quad; && \PHfrappe{c_0}{a_0}{a_1}\quad;& \\
-      \PHfrappe{c_1}{c_1}{c_0}\quad; && \PHfrappe{f_1}{c_0}{c_1}\quad;& \\
-      \PHfrappe{f_1}{a_0}{a_1}\quad; && \PHfrappe{f_0}{c_1}{c_0}\quad;& \\
+      \PHfrappe{c_1}{a_1}{a_0}\quad, && \PHfrappe{c_0}{a_0}{a_1}\quad,& \\
+      \PHfrappe{c_1}{c_1}{c_0}\quad, && \PHfrappe{f_1}{c_0}{c_1}\quad,& \\
+      \PHfrappe{f_1}{a_0}{a_1}\quad, && \PHfrappe{f_0}{c_1}{c_0}\quad,& \\
       \PHfrappe{f_1}{f_1}{f_0}\quad\; &&& 
     \qquad\}
   \end{align*}
@@ -398,26 +400,7 @@ Enfin, on note dans la suite :
   \begin{figure}[ht]
   \begin{center}
   \begin{tikzpicture}
-    \TSort{(0,4)}{c}{2}{l}
-    \TSort{(1,0)}{f}{2}{l}
-    \TSort{(7,4)}{a}{2}{r}
-    
-    \TSetTick{fc}{0}{00}
-    \TSetTick{fc}{1}{01}
-    \TSetTick{fc}{2}{10}
-    \TSetTick{fc}{3}{11}
-    \TSort{(4,1)}{fc}{4}{r}
-    
-    \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
-    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
-    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
-    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
-    \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
-      {selfhit, min distance=30, bend left, out=150, in=90}{left}
-    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
-    
-    \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
-    \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+    \exmetazoan
     
     \TState{f_1, a_0, c_0, fc_2}
   \end{tikzpicture}
@@ -505,3 +488,55 @@ The aim of this paper is to allow the static analysis of the dynamics to be hand
 \seclabel{ph-stocha}
 
 \todo{Rappels rapides ?}
+
+\newcommand{\stochainf}{{\small $\infty$}}
+\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
+\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
+\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
+
+\begin{example}
+\exlabel{metazoan-stocha-params}
+  Afin d'enrichir les Frappes de Processus standards décrites par la \vfigref{metazoan-ph},
+  nous définissons les fenêtres de tir suivantes :
+  %les paramètres stochastiques suivants :
+  \begin{itemize}
+    \item $f_1 = [0; 0]$ (\stochainf),
+    \item $f_2 = [5; 15]$ (\stochaa),
+    \item $f_3 = [20; 22]$ (\stochab),
+    \item $f_4 = [50; 60]$ (\stochac).
+  \end{itemize}
+  Ces paramètres sont représentés sur des lignes temporelles à la \figref{metazoan-stocha-params}.
+
+  \begin{figure}[ht]
+  \begin{center}
+  \scalebox{1.5}{
+  \begin{tikzpicture}[plot]
+    \node at (0,2.3) {\stochainf};
+    \draw[axe] (0,2) -- (7,2) node[right] {$t$};
+    \draw (0,1.9) -- (0,2.1);
+    \draw[interval,blue!50] (-0.1,2) -- (0.1,2);
+
+    \node at (1,1.3) {\stochaa};
+    \draw[axe] (0,1) -- (7,1) node[right] {$t$};
+    \draw (0,0.9) -- (0,1.1);
+    \draw[interval] (0.5,1) -- (1.5,1);
+
+    \node at (2.1,0.3) {\stochab};
+    \draw[axe] (0,0) -- (7,0) node[right] {$t$};
+    \draw (0,0.1) -- (0,-0.1);
+    \draw[interval,orange] (2,0) -- (2.2,0);
+
+    \node at (5.5,-0.7) {\stochac};
+    \draw[axe] (0,-1) -- (7,-1) node[right] {$t$};
+    \draw (0,0.1) -- (0,-0.1);
+    \draw[interval,brown] (5,-1) -- (6,-1);
+  \end{tikzpicture}
+  }
+  \end{center}
+  \caption{\figlabel{metazoan-stocha-params}%
+    Exemples d'intervalles de tirs correspondant aux paramètres stochastiques donnés
+    \vexpageref{metazoan-stocha-params}.
+  }
+  \end{figure}
+
+\end{example}

@@ -33,15 +33,23 @@
 %   pour définir la forme canonique des Frappes de Processus.
 }
 
-\todo{Référence à CS2Bio}
+Nous présentons dans ce chapitre les trois sémantiques de Frappes de Processus développées
+pour enrichir l'expressivité de ce formalisme.
+Nous les définissons et discutons de leurs avantages en termes de modélisation
+pour les réseaux de régulation biologiques ou les réseaux de réactions biochimiques.
+De plus, nous traçons des liens formels entre ces différents formalismes
+afin de mieux comprendre leur complémentarité
+et d'offrir une bonne souplesse de représentation et d'analyse.
 
-La sémantique standard des Frappes de Processus telle que rappelée à la \secref{ph}
-ne permet pas d'inclure de contraintes dérivées d'informations biologiques au sein
-des modèles créés,
+\myskip
+
+Nous proposons dans le présent chapitre des outils permettant
+d'enrichir un modèle de Frappes de Processus à l'aide de
+contraintes dérivées d'informations biologiques
 comme les vitesses de réaction,
 la connaissance d'inhibitions de réactions en présence de certains composants,
-ou celle des réactions précises ayant lieu au sein du système.
-Pourtant, la connaissance de telles informations peut permettre de privilégier un chemin
+ou celle des réactions précises ayant lieu au sein du système, etc.
+La connaissance de telles informations peut permettre de privilégier un chemin
 sur un autre
 à d'un moment clef de l'évolution du système, empêchant ainsi une certaine évolution du système,
 en favorisant l'apparition d'une autre.
@@ -51,10 +59,27 @@ Ces connaissances peuvent être intégrées sous la forme de préemptions (la jo
 peut empêcher la jouabilité d'une autre action) ou de simultanéité
 (plusieurs processus peuvent évoluer simultanément).
 
-De même, au niveau de la modélisation, la représentation des coopérations avec des Frappes de
+Pourtant, la sémantique standard des Frappes de Processus
+développée par \citeasnoun{PMR10-TCSB}
+et rappelée à la \vsecref{ph}
+ne permet pas de concilier l'introduction de contraintes dérivées d'informations biologiques
+et une bonne capacité d'analyse des modèles ainsi créés.
+En effet, s'il est possible d'y intégrer des informations temporelles
+sous la forme de paramètres stochastiques, tel que mentionné à la \vsecref{ph-stocha},
+en revanche les analyses puissantes de la dynamiques rappelées à la \vsecref{ph-as-pf}
+ne sont alors plus valables.
+En effet, celles-ci ne prennent pas en compte les fenêtres de tir introduites par les
+paramètres stochastiques.
+L'analyse des modèles doit alors être effectuée à l'aide d'outils de model checking
+probabilistes, qui doivent faire face à l'explosion combinatoire provoquée par l'ajout
+de la dimension temporelle continue.
+Il n'est alors généralement plus possible d'envisager d'étudier
+les modèles de plus de cinq composants avec une précision acceptable
+\cite[p.~170]{Pauleve11}.
+
+De plus, au niveau de la modélisation, la représentation des coopérations avec des Frappes de
 Processus standards souffre de certaines lacunes.
-Ces coopérations sont modélisées à l'aide de sortes coopératives telles que décrites à la
-\secref{sc},
+Ces coopérations sont modélisées à l'aide de sortes coopératives, décrites à la \secref{sc},
 %dont la dynamique n'est pas strictement équivalente à celle d'une porte logique autorisant
 %le jeu d'une action en présence de certains processus donnés.
 et souffrent d'un décalage temporel entre les sortes à représenter et
@@ -94,21 +119,23 @@ qui permet de définir des relations plus fines de préemption entre actions ind
 À l'inverse, la simultanéité entre actions permet de s'assurer qu'un ensemble de frappes est joué
 de façon simultanée, ou plus généralement qu'un ensemble de processus bondit en même temps,
 comme permettent de le représenter les Frappes de Processus avec actions plurielles (\secref{phm}).
-Nous montrons au cours de ce chapitre que ces différentes sémantiques sont deux à deux aussi
-expressives \todo{ref}.
+Nous montrons enfin au cours de ce chapitre que ces différentes sémantiques sont deux à deux aussi
+expressives.
 
 Les apports de ces formes alternatives de Frappes de Processus permettent de restreindre
 la dynamique
 d'un modèle par rapport aux Frappes de Processus standards.
 Elles se posent en alternatives à l'ajout de paramètres stochastiques dans les Frappes de Processus
-\todo{ref},
+(cf. \vsecref{ph-stocha})
 qui permettent d'ajouter une dimension probabiliste dans ce formalisme.
-Leur principal atout est la simplification de l'écriture et de la lecture des modèles.
+Leur principal atout est de renforcer la puissance d'expression des Frappes de Processus,
+ce qui a pour conséquence de simplifier l'écriture et la lecture des modèles,
+mais aussi d'offrir de nouvelles capacités de modélisation.
 %selon les informations que l'on souhaite y intégrer.
-Cependant, malgré une plus grande complexité, des méthodes d'analyse statique sont
-développées au \chapref{phcanonique} afin d'en permettre une analyse toujours efficace.
-% Leur second avantage est la possibilité d'appliquer les méthodes d'analyse statique
-% qui sont étendues et adaptées à ces formalismes au chapitre \chapref{phcanonique}.
+Par ailleurs,
+ces différents formalismes sont tous compatibles avec les méthodes d'analyse statique
+développées au \chapref{phcanonique},
+ce qui assure de pouvoir étudier efficacement la dynamique des modèles créés.
 
 Ces différentes notions font naturellement écho aux problématiques plus générales d'enrichissement
 dans les modèles discrets.
@@ -119,13 +146,12 @@ d'une place (correspondant ici à un processus ou à une sorte, selon le point d
 De même, la notion de priorités est aussi présente dans certaines sémantiques de réseaux
 de Petri \toref.
 Enfin, les actions plurielles permet de se rapprocher de la classe des modèles
-à dynamique synchrone.
+à dynamique synchrone \todo{Biocham, graphes des états...}.
 
-\todo{Insister davantage sur les résultats}
+La définition du formalisme des Frappes de Processus avec classes de priorités
+a été publiée dans \cite{FPMR13-CS2Bio}.
 
 
-
-%\section{Enrichissement par préemption des actions}
 
 % Frappes de Processus avec classes de priorités
 \input{parts/sec-php}

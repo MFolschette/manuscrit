@@ -139,12 +139,14 @@ et : $\invariant{h} = \{ p \in A \mid \sort{p} \notin \sortes{B} \}$.
 
 Nous nous intéressons ici au lien entre les Frappes de Processus avec actions plurielles
 et les réseaux d'automates synchronisés.
-Nous montrons notamment que ces deux formalismes sont équivalents à l'aide de deux traductions
-appropriées d'un formalisme vers l'autre.
+Nous montrons notamment que ces deux formalismes sont équivalents
+et nous exhibons pour cela deux traductions d'un formalisme vers l'autre
+(\defref{phm2an,an2phm}\vpageref{def:phm2an}).
+%(\defref[s]{phm2an} et \defref*[vref]{an2phm}).
 Cette équivalence est intéressante car elle montre clairement le lien entre ce formalisme
 de Frappes de Processus et celui plus répandu des réseaux d'automates synchronisés.
-De plus, les traductions permettent de naviguer entre les formalismes et d'en utiliser
-les différents outils.
+De plus, les traductions permettent de naviguer entre les deux représentations
+afin d'en utiliser les différents outils.
 
 Nous rappelons tout d'abord la définition d'un réseau d'automates synchronisés (\defref{an})
 ainsi que la relation de transition entre deux états d'un tel modèle (\defref{an-sem})
@@ -198,19 +200,34 @@ ce qui permet d'en définir la dynamique.
 %   \end{align*}
 \end{definition}
 
-Nous définissons ensuite le réseau d'automates synchronisés représentant des
-Frappes de Processus avec actions plurielles (\defref{phm2an})
-et nous montrons qu'il est bisimilaire (\thmref{bisimulationphm2an})
+\begin{remark}
+  Nous notons que les réseaux d'automates synchronisés ainsi définis sont non-déterministes,
+  tant au niveau global du modèle qu'au niveau local des automates.
+  Cette vision s'oppose à d'autres sémantiques des réseaux d'automates
+  comme celles de \citeasnoun{Richard10} ou de \citeasnoun{RRT08},
+  qui définissent la dynamique de leurs modèles à l'aide de fonctions de transition locales,
+  qui sont par définition déterministes.
+  Ces fonctions ont en effet la forme : $f_a : \ANl \rightarrow \ANl_a$
+  et associent donc à chaque état global du modèle un état local (unique) pour chaque automate.
+  La définition des réseaux d'automates synchronisés que nous proposons ici (\defref{an})
+  n'empêche en revanche pas l'existence de deux libellés $\ell_1, \ell_2 \in \ANi$
+  tels que $\precond{\ell_1} = \precond{\ell_2}$ mais $\postcond{\ell_1} \neq \postcond{\ell_2}$.
+  Cela implique notamment l'existence de deux transitions entre état locaux
+  $\ANaction{a_i}{\ell_1}{a_j}$ et $\ANaction{a_i}{\ell_2}{a_k}$
+  avec $a_j \neq a_k$, d'où un non-déterminisme au niveau des automates.
+\end{remark}
 
-La \defref{phm2an} donne le réseau d'automates synchronisés $\phmtoan[\PH]$
-correspondant à toutes
-Frappes de Processus avec actions plurielles $\PH$.
-La notation $\recouvre$ qualifie le recouvrement d'un ensemble de processus de sortes distinctes
-par un autre comprenant des processus issus des mêmes sortes
-(\defref{recouvrementps})
-inspiré du recouvrement d'un état par un ensemble de processus
-donné à la \defref[vref]{recouvrement}.
-Le \thmref{bisimulationphm2an} montre que $\phmtoan[\PH]$ est bisimilaire à $\PH$.
+Pour toutes Frappes de Processus avec actions plurielles $\PH$,
+la \defref{phm2an} propose une traduction de $\PH$
+en un réseau d'automates synchronisés $\phmtoan[\PH]$ équivalent,
+et le \thmref{bisimulationphm2an} établit la bisimilarité entre les deux modèles.
+La notation $\recouvre$ qui est utilisée dans la définition
+qualifie le recouvrement d'un ensemble de processus de sortes distinctes
+par un autre comprenant uniquement des processus issus des mêmes sortes
+(\defref{recouvrementps}).
+Cette notion de recouvrement est une extension
+du recouvrement d'un état par un ensemble de processus
+tel que précédemment donné à la \defref[vref]{recouvrement}.
 
 \begin{definition}[Recouvrement ($\recouvre : \PHsublset \times \PHsublset \rightarrow \PHsublset$)]
 \deflabel{recouvrementps}
@@ -275,9 +292,16 @@ Le \thmref{bisimulationphm2an} montre que $\phmtoan[\PH]$ est bisimilaire à $\P
     Ainsi, $s' = s \recouvre (\invariant{h} \cup B) = s \recouvre B = s \play h$.
 \end{proof}
 
-\todo{Sens ($\Leftarrow$) !}
+Pour finir, nous proposons à la \defref{an2phm} la traduction inverse
+d'un réseau d'automates synchronisé $\AN$
+en des Frappes de Processus avec actions plurielles équivalentes $\antophm$.
+Le \thmref{bisimulationan2phm} stipule que le modèle obtenu est bien bisimilaire
+au modèle d'origine.
+Enfin, le \thmref{equivphman} résume les résultats de cette section
+en statuant l'équivalence d'expressivité entre les Frappes de Processus avec
+actions plurielles et les réseaux d'automates synchronisés.
 
-\begin{definition}[Frappes de Processus d'un réseau d'automates ($\antophmsymbol$)]
+\begin{definition}[Frappes de Processus équivalentes ($\antophmsymbol$)]
 \deflabel{an2phm}
   Les Frappes de Processus avec actions plurielles
   équivalentes au réseau d'automates synchronisé $\AN = (\PHs, \PHl, \ANi, \ANt)$
@@ -322,19 +346,26 @@ Le \thmref{bisimulationphm2an} montre que $\phmtoan[\PH]$ est bisimilaire à $\P
     tels que : $A = \precond{\ell}$ et
     $B = \postcond{\ell} \setminus \{ a_i \in \ANProc \mid \ANaction{a_i}{\ell}{a_i} \in \ANt \}$.
     Comme $h$ est jouable dans $s$, alors $A \subseteq s$, donc $\ell$ est aussi jouable dans $s$.
-    De plus, $s' = $ \TODO
-    
-    
-    
+    De plus, $s' = s \play h = s \recouvre B = s \recouvre (B \cup \invariant{h})
+      = s \recouvre \postcond{\ell}$.
+\end{proof}
 
+\begin{theorem}[Équivalence entre réseaux d'automates synchronisés
+  et Frappes de Processus avec actions plurielles]
+\thmlabel{equivphman}
+  Les Frappes de Processus avec actions plurielles sont aussi expressives
+  que les réseaux d'automates synchronisés.
+\end{theorem}
 
-  \TODO
+\begin{proof}
+  D'après les \defref{phm2an,an2phm} et les \thmref{bisimulationphm2an,bisimulationan2phm}
+  associés, tout modèle de Frappes de Processus avec actions plurielles peut être représenté
+  à l'aide d'un réseau d'automates synchronisés, et inversement.
 \end{proof}
 
 
 
-
-\subsection{Équivalence avec les Frappes de Processus avec 4 classes de priorités}
+\subsection{Traduction vers les Frappes de Processus avec 4 classes de priorités}
 \seclabel{phm2php}
 
 Nous proposons dans cette section une traduction des Frappes de Processus
@@ -344,7 +375,7 @@ et nous montrons que les modèles obtenus de cette façon sont faiblement bisimi
 Nous en déduisons que ces deux formalismes ont une expressivité équivalente,
 %(\thmref{phmequivphp}).
 car les Frappes de Processus avec 4 classes de priorités peuvent à leur tour être
-traduites en Frappes de Processus canoniques (comme expliqué à la \secref{phm-aplatissement}),
+traduites en Frappes de Processus canoniques (comme expliqué à la \vsecref{phm-aplatissement}),
 celles-ci pouvant à leur tour être traduites en Frappes de Processus avec actions plurielles
 \TODO.
 
@@ -395,18 +426,21 @@ amener le système dans un état normalement inaccessible.
         \item $\forall h \in \PHh, \PHl_{\scf{h}} = \{ \scf{h}_\mysigma \mid
           \mysigma \in \PHsubl_{\sortes{\frappeur{h}}} \}$ ;
       \end{itemize}
-    \item $\PHh'^{\langle 4 \rangle} = ( \PHh'^{(1)} ; \PHh'^{(2)} ; \PHh'^{(3)} ; \PHh'^{(4)} )$, où :
+    \item $\PHh'^{\langle 4 \rangle} = ( \PHh'^{(1)} ; \PHh'^{(2)} ; \PHh'^{(3)} ; \PHh'^{(4)} )$,
+      où :
       \begin{itemize}
         \item $\PHh'^{(1)} = \{ \PHhit{a_i}{\scf{h}_\mysigma}{\scf{h}_{\mysigma'}} \mid
           h \in \PHh \wedge a \in \sortes{\frappeur{h}} \wedge a_i \in \PHl_a \wedge
           \scf{h}_\mysigma , \scf{h}_{\mysigma'} \in \PHl_{\scf{h}} \wedge
           \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \Cap a_i \}$,
         \item $\PHh'^{(2)} = \{ \PHhit{\sr{h}_1}{b_j}{b_k} \mid
-          h \in \PHh \wedge b \in \sortes{\bond{h}} \wedge b_j, b_k \in \PHl_b \wedge
-          b_j \in \frappeur{h} \wedge b_k \in \cible{h} \}$,
+          h \in \PHh \wedge b \in \sortes{\cible{h}} \wedge b_j, b_k \in \PHl_b \wedge
+          b_j \in \cible{h} \wedge b_k \in \bond{h} \}$,
         \item $\PHh'^{(3)} = \{ \PHhit{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \mid h \in \PHh \}$,
         \item $\PHh'^{(4)} = \{ \PHhit{\scf{h}_\mypi}{\sr{h}_0}{\sr{h}_1} \mid
-          h \in \PHh \wedge \Feval{\Fopphm{h}}{\mypi} \}$.
+          h \in \PHh \wedge \scf{h}_{\mypi} \in \PHl_{\scf{h}} \wedge
+%          \Feval{\Fopphm{h}}{\mypi} \}$.
+          \frappeur{h} \subseteq \mypi \}$.
       \end{itemize}
   \end{itemize}
   Pour tout état $s \in \PHl$ de $\PH$,
@@ -424,30 +458,156 @@ amener le système dans un état normalement inaccessible.
 
 \begin{theorem}[$\PH \approx \phmtophp$]
 \thmlabel{phmbisimphp}
-  \[\forall s_1, s_2 \in \PHl, s \PHtrans s' \Longleftrightarrow
-    \tophp{s_1} \trans{\phmtophp} \tophp{s_2} \enspace.\]
+  Soient $\PH = (\PHs; \PHl; \PHh)$ des Frappes de Processus avec actions plurielles,
+  et posons : $\phmtophp = (\PHs'; \PHl'; \PHh'^{\langle 4 \rangle})$.
+  On a :
+%   \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow
+%     \tophp{s} \mtrans{\phmtophp} \tophp{s'} \enspace.\]
+% 
+  \[\forall s, s' \in \PHl, \exists h \in \PHh, s' = s \play h \Longleftrightarrow
+    \exists \delta \in \Sce(\tophp{s}), \left( \tophp{s'} = \tophp{s} \play \delta
+    \wedge \card{\toset{\delta} \cap \PHh'^{(4)}} = 1 \right) \enspace.\]
 \end{theorem}
 
+\begin{proof}
+  Posons $\phmtophp = (\PHs'; \PHl'; \PHh'^{\langle 4 \rangle})$.
+  Soient $s, s' \in \PHl$.
+  
+  ($\Rightarrow$) On suppose qu'il existe une action $h \in \PHh$ telle que $s' = s \play h$.
+    D'après la \defref{phm2php},
+    cela implique notamment l'existence de sortes $\sr{h}$ et $\scf{h}$ dans $\PHs'$,
+    et des actions suivantes :
+    \begin{itemize}
+      \item $\PHh'^{(1)}_h = \{ \PHhit{a_i}{\scf{h}_\mysigma}{\scf{h}_{\mysigma'}} \mid
+        a \in \sortes{\frappeur{h}} \wedge a_i \in \PHl_a \wedge
+        \scf{h}_\mysigma , \scf{h}_{\mysigma'} \in \PHl_{\scf{h}} \wedge
+        \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \Cap a_i \} \subset \PHh'^{(1)}$,
+      \item $\PHh'^{(2)}_h = \{ \PHhit{\sr{h}_1}{b_j}{b_k} \mid
+        b \in \sortes{\bond{h}} \wedge b_j, b_k \in \PHl_b \wedge
+        b_j \in \frappeur{h} \wedge b_k \in \cible{h} \} \subset \PHh'^{(2)}$,
+      \item $h_3 = \PHhit{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \in \PHh'^{(3)}$,
+      \item $h_4 = \PHhit{\scf{h}_\mypi}{\sr{h}_0}{\sr{h}_1} \in \PHh'^{(4)}$ avec $\mypi$ tel que
+        $\Feval{\Fopphm{h}}{\mypi}$.
+    \end{itemize}
+    Comme $h$ est jouable dans $s$, alors $\frappeur{h} \subseteq s$,
+%    d'où $\frappeur{h} \subseteq \tophp{s}$.
+    d'où $\scf{h}_{\mypi} \in \tophp{s}$, avec $\toset{\mypi} = \frappeur{h}$.
+    Ainsi, $\PHhit{\scf{h}_\mypi}{\sr{h}_0}{\sr{h}_1}$ est jouable dans $\tophp{s}$.
+    Toutes les actions de $\PHh'^{(2)}_h$ sont jouables dans $\tophp{s} \play h_4$.
+    Elles peuvent être jouées successivement et alternativement avec des actions de
+    $\PHh'^{(1)}$ car celles-ci modifient uniquement l'état de sortes coopératives,
+    ce qui n'influe donc pas sur la jouabilité des actions de $\PHh'^{(2)}_h$.
+    Soit $\PHh'^{(2)}_h = \{ h_2^i \}_{i \in \segm{1}{n}}$
+    un étiquetage des actions de $\PHh'^{(2)}_h$
+    avec $n = \card{\PHh'^{(2)}_h}$.
+    On peut jouer depuis l'état $\tophp{s} \play h_4$ une séquence d'actions de la forme :
+    $\delta_h =
+      h_2^1 \cons \delta^1 \cons h_2^2 \cons \delta^2 \cons
+      \ldots \cons
+      h_2^n \cons \delta^n$
+    où toutes les séquences $\delta^i$ avec $i \in \segm{1}{n}$
+    sont des séquences d'actions de $\PHh^{(1)}$ mettant à jour des sortes coopératives.
+    Après avoir joué cette séquence, le modèle se trouve dans un état
+    $\tophp{s} \play h_4 \play \delta_h$ tel que :
+    $\forall h_i \in \PHh'^{(2)}_h, \bond{h_i} \in (\tophp{s} \play h_4 \play \delta_h)$,
+    c'est-à-dire : $\bond{h} \subseteq (\tophp{s} \play h_4 \play \delta_h)$.
+    De plus, toutes les sortes coopératives sont mises à jour, ce qui signifie qu'aucune
+    action de $\PHh'^{(1)}_h \cup \PHh'^{(2)}_h$ n'est plus jouable.
+    Il est donc possible de jouer pour finir l'auto-action $h_3$,
+    et on a :
+    $\tophp{s} \play h_4 \play \delta_h \play h_3 = \tophp{s'}$,
+    avec : $\toset{\delta} \cap \PHh'^{(4)} = \{ h_4 \}$.
+  
+  ($\Leftarrow$) On suppose qu'il existe un scénario $\delta \in \Sce(\tophp{s})$
+    tel que $\tophp{s'} = \tophp{s} \play \delta$ et $\card{\toset{\delta} \cap \PHh'^{(4)}} = 1$.
+    D'après la forme de $\phmtophp$ (\defref{phm2php}),
+    et en s'inspirant du raisonnement précédent,
+    on constate que la seule action jouable dans $\tophp{s}$ est une action de $\PHh'^{(4)}$,
+    puis que dans l'état résultat, on ne peut jouer
+    qu'une alternance entre une action de $\PHh'^{(2)}$ et des actions de $\PHh'^{(1)}$,
+    et que l'état résultant une fois toutes les actions de $\PHh'^{(1)} \cup \PHh'^{(2)}$
+    jouées ne permet que le jeu d'une action de $\PHh'^{(3)}$.
+    On en déduit que ce scénario a nécessairement la forme suivante :
+    $\delta = h_4 \cons \delta_{12} \cons h_3$,
+    avec $h_4 \in \PHh'^{(4)}$, $h_3 \in \PHh'^{(3)}$, et
+    $\delta_{12} = h_2^1 \cons \delta^1 \cons h_2^2 \cons \delta^2 \cons
+      \ldots \cons h_2^n \cons \delta^n$
+    où pour tout $i \in \segm{1}{n}$, $h_2^i \in \PHh'^{(2)}$
+    et $\delta^i \in \Sce$ est un scénario composé uniquement d'actions de $\PHh'^{(1)}$.
+    De plus, les seules actions jouables dans $\tophp{s} \play \delta$ sont à nouveau des actions
+    de $\PHh'^{(4)}$, donc $\delta$ ne peut pas être plus grand car
+    $\card{\toset{\delta} \cap \PHh'^{(4)}} = 1$.
+    Posons :
+    \begin{itemize}
+      \item $\PHh'^{(1)}_\delta = \toset{\delta} \cap \PHh'^{(1)}$,
+      \item $\PHh'^{(2)}_\delta = \toset{\delta} \cap \PHh'^{(2)}
+        = \{ h_2^i \mid i \in \segm{1}{n} \}$,
+      \item $h_3 = \PHhit{\sr{}_1}{\sr{}_1}{\sr{}_0}$ et
+      \item $h_4 = \PHhit{\scf{}_\mypi}{\sr{}_0}{\sr{}_1}$.
+    \end{itemize}
+    D'après la construction de $\phmtophp$ donné à la \defref{phm2php},
+    il existe donc nécessairement une action $h \in \PHh$
+    dont $\sr{}$ est la sorte de réaction et $\scf{}$ est la sorte coopérative correspondante.
+    De plus, toujours grâce à cette définition, on a :
+    $\mypi \in \PHsubl[\phmtophp]$ et $\frappeur{h} \subseteq \mypi$.
+    Autrement dit : $\frappeur{h} = \toset{\mypi}$,
+    donc que $h$ est jouable dans $s$, par définition de $\tophp{s}$.
+    De plus, toujours d'après la \defref{phm2php}, on a :
+    $\forall i \in \segm{1}{n}, h_2^i = \PHfrappe{\sr{}_1}{b_j^i}{b_k^i}
+      \wedge b_j^i \in \frappeur{h} \wedge b_k \in \bond{h}$.
+    Ainsi, $\bond{h} = \{ b_k = \bond{h_2^i} \mid i \in \segm{1}{n} \}$.
+    Or on constate immédiatement que toutes les sortes coopératives sont nécessairement
+    mises à jour
+    dans $s \play \delta$ car la dernière action jouée est une action de $\PHh'^{(3)}$
+    et que son jeu ne rend aucune action de $\PHh'^{(1)}$ jouable.
+    De plus, $\PHget{s \play \delta}{\sr{}} = \sr{}_0$ et
+    $\tophp{s} \play \delta = \tophp{s} \recouvre \{ \bond{h_2^i} \mid i \in \segm{1}{n} \}$.
+    Ainsi, $\tophp{s'} = \tophp{s} \play \delta = \tophp{s} \recouvre \bond{h}
+      = \tophp{s \recouvre \bond{h}} = \tophp{s \play h}$.
+\end{proof}
 
 
 
-\todo{Preuve}
+\todo{Exemple}
+
+
+
+\subsection{Équivalence avec les Frappes de Processus avec classes de priorités}
+\seclabel{equivphmphp}
 
 \todo{Formaliser l'équivalence PHplurielles / PHp de façon formelle ?}
 
-% \begin{theorem}[Équivalence]
-% \thmlabel{phmequivphp}
-%   Les Frappes de Processus avec actions plurielles
-%   et les Frappes de Processus avec $k$ classes de priorités
-%   ont une expressivité équivalente.
-% \end{theorem}
-% 
-% \begin{proof}
-%   D'après \thmref{phmbisimphp} d'une part,
-%   et d'après \todo{ref trad PHcanonique} d'autre part,
-%   la traduction de \todo{PHcanonique} vers les Frappes de Processus avec actions plurielles
-%   étant triviale.
-% \end{proof}
+Cette section permet de formaliser l'équivalence d'expressivité entre les Frappes de Processus
+avec actions plurielles d'une part, et les Frappes de Processus avec $k$ classes de priorités
+d'autres part, si $k \in \sNN$.
+Le \thmref{phmequivphp} formalise cette conclusion,
+bien que sa démonstration s'appuie sur des résultats qui seront
+présentés aux \vsecref{phm-aplatissement,phcanonique2phm} \storef.
+En effet, elle s'appuie sur plusieurs résultats plus forts qui stipulent que des
+Frappes de Processus avec actions plurielles
+et les Frappes de Processus avec $k$ classes de priorités
+peuvent toujours être représentées
+par une classe particulière de Frappes de Processus avec 2 classes de priorités,
+qui elle-même peut aussi être représentée par des
+Frappes de Processus avec actions plurielles.
+
+\begin{theorem}[Équivalence]
+\thmlabel{phmequivphp}
+  Pour tout $k \in \sNN$,
+  les Frappes de Processus avec actions plurielles
+  et les Frappes de Processus avec $k$ classes de priorités
+  ont une expressivité équivalente.
+\end{theorem}
+
+\begin{proof}
+  Soit $k \in \sNN$.
+  D'après \storef, il est toujours possible de traduire des Frappes de Processus avec actions
+  plurielles en Frappes de Processus canoniques, qui sont \textit{a fortiori}
+  des Frappes de Processus avec $k$ classes de priorités.
+  Inversement, toutes Frappes de Processus avec $k$ classes de priorités
+  peuvent être aplaties en Frappes de Processus canoniques \storef,
+  qui elles-mêmes peuvent être traduites en Frappes de Processus avec action plurielles \storef.
+\end{proof}
 
 
 

@@ -1,8 +1,6 @@
 \section{Frappes de Processus avec classes de priorités}
 \seclabel{php}
 
-\todo{Mise en perspective}
-
 Pour tout entier naturel $k$ non nul,
 les \emph{Frappes de Processus avec $k$ classes de priorités}
 %(aussi appelées «~Frappes de Processus~» dans la suite, lorsque ce n'est pas ambigu),
@@ -18,6 +16,8 @@ autrement dit, la classe de priorités 1 contient les actions les plus prioritai
 ne pouvant jamais être préemptées,
 tandis que la jouabilité d'une action de la classe de priorité $k$ ne peut pas empêcher le jeu
 d'une autre action.
+Un exemple de ce type de modèle est donné par la \figref{metazoan-php},
+où les différentes priorités sont signifiées par des étiquettes numérotées sur les actions.
 
 Cette modélisation permet notamment de distinguer les actions en fonction 
 de différents critères comme
@@ -34,11 +34,12 @@ De même, ces classes de priorités permettent de prendre en compte des comporte
 inhérents à la modélisation.
 Il est par exemple possible de donner une priorité différente aux
 actions qui n'ont pas de sens biologique propre
---- mais dont ce sens émerge uniquement dans leur relation avec d'autres actions.
+---~mais dont ce sens émerge uniquement dans leur relation avec d'autres actions.
 L'application la plus immédiate de ce cas est celle des actions de mise à jour
-des sortes coopérative \todo{ref PH canonique},
+des sortes coopérative, comme cela est développé au \chapref{phcanonique},
 où une classe de priorités supérieure offre l'avantage de supprimer les effets d'entrelacement,
-et ainsi de simuler le comportement d'une véritable porte logique sans décalage temporel \todo{ref}.
+et ainsi de simuler le comportement d'une véritable porte logique
+sans le problème de décalage temporel soulevé à la \secref{sc}.
 
 Cette représentation basée sur des classes de priorités permet de modéliser un système
 dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
@@ -57,8 +58,6 @@ Enfin, elles peuvent ne pas permettre la précision nécessaire à une représen
 certains modèles, notamment lorsqu'il est nécessaire de définir des préemptions ponctuelles
 comme le permettent les Frappes de Processus avec arcs neutralisants
 présentées à la \secref{phan}.
-
-\pref{fig:metazoan-php}
 
 
 
@@ -152,7 +151,7 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
   sortes coopératives permet d'éviter les comportements indésirables
   décrits à la page \expageref{metazoan-ph-nocoop}.
   De même, accorder aux actions de $\PHh^{(2)}$ le statut d'«~urgentes~»
-  permet de s'assurer qu'elles seront jouée avant les actions de $\PHh^{(3)}$.
+  permet de s'assurer qu'elles seront jouées avant les actions de $\PHh^{(3)}$.
   Dans ce modèle, cela se traduit par le fait que l'activation ou la désactivation de $a$
   est forcée lorsque $c$ et $f$ évoluent,
   ce qui restreint la dynamique aux seuls comportements désirés.
@@ -196,44 +195,10 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
   \]
   qui termine en $\etat{a_0, c_0, f_0, fc_{00}}$ et conserve cette fois le processus $a_0$.
   
-  Pour finir, il est intéressant de noter que l'introduction de classes de priorités ne permet
-  cependant pas la représentation de phénomènes de retard, comme expliqué plus haut.
-  En effet, il n'est pas possible par exemple de n'autoriser la désactivation de $f$
-  qu'après un nombre donné d'oscillations de $a$ ou de $c$.
-  Pour représenter cela, un modélisateur pourrait être tenté d'introduire une classe de
-  priorité $4$ afin d'y intégrer l'action $\PHfrappe{f_1}{f_1}{f_0}$,
-  en effectuant un parallèle avec les paramètres stochastiques proposés \toref
-  qui permettent de ne tirer cette action qu'après un certain nombre d'oscillations.
-  Cependant, un tel choix de conception aurait uniquement pour effet de rendre ladite action
-  injouable, car sans cesse préemptée par des actions de priorité supérieure.
-  En effet, les phénomènes d'accumulation ne sont pas pris en compte,
-  ce qui signifie qu'il n'y a pas d'«~accumulation~» du temps de sensibilisation en arrière-plan
-  dans le formalisme des Frappes ce Processus avec classes de priorités.
-  \todo{À mettre plus tard ? Dans la partie Paramètres stochastiques ?}
-  
   \begin{figure}[ht]
   \begin{center}
   \begin{tikzpicture}
-    \TSort{(0,4)}{c}{2}{l}
-    \TSort{(1,0)}{f}{2}{l}
-    \TSort{(7,4)}{a}{2}{r}
-    
-    \TSetTick{fc}{0}{00}
-    \TSetTick{fc}{1}{01}
-    \TSetTick{fc}{2}{10}
-    \TSetTick{fc}{3}{11}
-    \TSort{(4,1)}{fc}{4}{r}
-    
-    \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
-    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
-    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
-    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
-    \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
-      {selfhit, min distance=30, bend left, out=150, in=90}{left}
-    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
-    
-    \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
-    \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+    \exmetazoan
     
     \node[labelprio1] at (2.55,3.85) {$1$}; % c => fc
     \node[labelprio1] at (2.75,1) {$1$};    % f => fc
@@ -262,8 +227,6 @@ Nous obtenons alors l'opérateur de jouabilité donné à la \defref{fopphp}.
 
 
 \subsection{Équivalences entres Frappes de Processus avec $k$ classes de priorités}
-
-\todo{À garder ?}
 
 Nous montrons à la \secref{aplatissement} que les Frappes de Processus avec $k$ classes
 de priorités sont aussi expressives que les Frappes de Processus avec $n$ classes de
@@ -318,20 +281,31 @@ des Frappes de Processus avec $k$ classes de priorités, pour tout $k \in \sNN$.
 
 \todo{Faudrait-il fusionner cette section avec ses semblables des \secref{phan} et \secref{phm} ?}
 
+Nous discutons dans cette section de la transposition des différents outils et
+résultats concernant les Frappes de Processus standards
+aux Frappes de Processus avec classes de priorités.
+Nous aborderons la question de la recherche des points fixes d'un modèle (\secref{php-outils-pf}),
+de l'analyse statique des modèles (\secref{php-outils-as})
+et des possibles (ré)utilisations des paramètres stochastiques (\secref{php-outils-stocha}).
+
 \subsubsection{Points fixes}
 \seclabel{php-outils-pf}
 
-\stodo{Ref points fixes chapitre 2}
+Nous montrons dans cette sous-section que les points fixes des Frappes de Processus
+avec classes de priorités peuvent être obtenus de façon similaire à ceux
+des Frappes de Processus standards.
 
-Si l'ensemble de toutes les actions reste le même,
+\myskip
+
+Pour un modèle donné, si l'ensemble de toutes les actions reste le même,
 ajouter (ou retirer) des classes de priorités à des Frappes de Processus ne change pas
 l'ensemble de ses points fixes.
 En effet, le \thmref{php-pf} stipule que
 l'ensemble des points fixes des Frappes de Processus avec $k$
 classes de priorités $\PH$ est identique à l'ensemble des points fixes de
 sa \emph{fusion} $\PHmerge(\PH)$,
-c'est-à-dire le même modèle dont les classes de priorités ont été fusionnées,
-tel que formalisé à la \defref{fusion}.
+c'est-à-dire le même modèle dont les classes de priorités ont été fusionnées
+(\defref{fusion}).
 Cela se démontre simplement en constatant qu'il existe une action jouable dans un état donné du
 modèle $\PH$ si et seulement si il en existe une dans le même état du modèle fusionné.
 En effet, si une action est jouable dans un état donné de $\PHmerge(\PH)$,
@@ -340,10 +314,13 @@ soit elle ne l'est pas car elle est préemptée par une autre action qui, elle, 
 L'autre sens de la démonstration est immédiat car l'ajout de priorités restreint la dynamique
 et n'ajoute aucun comportement supplémentaire possible.
 Ce résultat permet d'appliquer aux Frappes de Processus avec $k$ classes de priorités
-la méthode de recherche de points fixes développée pour les Frappes de Processus standards.
-Cette méthode repose sur la recherche de $n$\nbd cliques,
-ce qui est un problème classique jouissant aujourd'hui de méthodes de résolutions performantes.
-\todo{Parler de la résolution par SAT ou ASP ?}
+les méthodes de recherche de points fixes développée pour les Frappes de Processus standards.
+L'une d'entre elles repose sur la recherche de $n$\nbd cliques (\vsecref{ph-as-pf})
+et sa résolution jouit aujourd'hui de méthodes de résolutions performantes.
+D'autres méthodes de recherche peuvent être envisagées,
+par exemple par l'utilisation de programmation logique.
+En effet, la formalisation du problème de recherche de points fixes est très simple,
+et sa résolution est donc traitée efficacement par des méthodes SAT ou par ASP.
 Enfin, ce résultat permet aussi de conclure quant aux ensembles de points fixes de deux Frappes
 de Processus avec un nombre de classes de priorités différent, à condition que
 leurs modèles fusionnés soient identiques.
@@ -383,16 +360,16 @@ leurs modèles fusionnés soient identiques.
         elle est alors jouable et $r \trans{\PH} (r \play g)$ ;
       \item Si cette action est préemptée par une autre action $g'$ dans $\PH$,
         cela signifie que cette action $g'$ est jouable, et $r \trans{\PH} (r \play g')$.
+        \qedhere
     \end{itemize}
 \end{proof}
 
 \subsubsection{Analyse statique}
 \seclabel{php-outils-as}
 
-\stodo{Ref analyse statique chapitre 2}
-
 Afin de permettre une étude efficace des Frappes de Processus standards de grande taille,
-une analyse statique par interprétation abstraite avait été développée \stodo{ref thèse Loïc}.
+une analyse statique par interprétation abstraite avait été développée
+par \citeasnoun{PMR12-MSCS} et dont le principe est rappelé à la \vsecref{ph-as-pf}.
 L'ajout de classes de priorités au formalisme a pour conséquence d'en restreindre la dynamique,
 mais n'ajoute aucun comportement supplémentaire.
 Ainsi, pour tout modèle de Frappes de Processus avec $k$ classes de priorités,
@@ -418,64 +395,165 @@ en Frappes de Processus canoniques, et nous donnons une telle traduction à la
 \subsubsection{Paramètres stochastiques}
 \seclabel{php-outils-stocha}
 
-\stodo{Ref stochasticité chapitre 2}
-
-Il est théoriquement toujours possible d'utiliser des paramètres stochastiques
-\stodo{ref thèse Loïc}
+Il est théoriquement toujours possible d'utiliser,
 dans des Frappes de Processus avec $k$ classes de priorités,
-en empêchant simplement la sensibilisation de toute action préemptée par une action
+des paramètres stochastiques tels que ceux
+développés par \citeasnoun{PMR10-TCSB} et mentionnés à la \vsecref{ph-stocha}.
+Il suffirait pour cela d'empêcher la sensibilisation de toute action préemptée par une action
 de priorité plus importante.
 Cependant, un autre parallèle intéressant peut être tracé entre l'approche
 par définition de classes de priorités
 et l'approche par introduction de paramètres stochastiques.
 
+\myskip
+
 L'ajout de paramètres stochastiques a pour but d'assigner un intervalle de tir temporel à
 chaque action, afin de s'assurer (avec un certain niveau de confiance) que l'action sera
 nécessairement tirée dans cet intervalle à partir du moment où elle est devenue jouable.
-La simulation stochastique développée dans \stodo{ref thèse Loïc}
+La simulation stochastique développée par \citeasnoun{PMR10-TCSB}
 ne permet actuellement pas de prendre en compte des classes de priorités entre actions.
 Il faudrait en effet pour cela raffiner la machine stochastique afin d'y intégrer des contraintes
 supplémentaires concernant la jouabilité et la sensibilisation de chaque action.
-Cependant, l'aplatissement proposé plus loin à la \defref{aplatissement}
-devrait théoriquement permettre d'obtenir un modèle équivalent,
-utilisable avec la simulation stochastique, à condition
-d'attribuer à chaque action secondaire (\cad de priorité 2)
+Cependant, l'aplatissement proposé à la \vdefref{aplatissement}
+permet théoriquement d'obtenir un modèle équivalent,
+utilisable avec la simulation stochastique.
+Nous détaillons ici le principe de ce procédé sans toutefois donner de preuve de sa fidélité.
+
+L'aplatissement mentionné ci-dessus permet en effet d'obtenir un modèle de Frappes de Processus
+avec 2 classes de priorités ayant une certaine forme qui permet de distinguer
+les actions instantanées (de priorité 1) propres à la modélisation
+des actions possédant une durée (de priorité 2) et permettant de représenter des processus
+biologiques.
+On peut ainsi, dans le modèle obtenu, attribuer à chaque action secondaire (\cad de priorité 2)
 des paramètres stochastiques identiques à ceux de l'action originelle dont elle est issue,
 et à chaque action primaire (\cad de priorité 1) une absorption de stochasticité infinie.
+Le modèle résultant devrait alors posséder une dynamique identique à un potentiel modèle hybride
+mêlant classes de priorités et paramètres stochastiques.
 
-Par ailleurs, sous certaines conditions détaillées plus bas,
-stipulant notamment qu'on puisse distinguer les intervalles de tir en différentes classes
-qui ne se recouvrent pas,
+\myskip
+
+
+Plutôt que d'intégrer des données stochastiques connues dans un modèles,
+il est aussi possible de s'en servir pour l'obtention d'un modèle discret.
+En effet, pour créer un modèle de Frappes de Processus avec classes de priorités,
+il est nécessaire de connaître certaines relations entre les phénomènes modélisés
+afin de répartir correctement les actions entre les différentes classes de priorités.
+Il peut s'agit de données de préemption (un phénomène en bloque un autre),
+de durée (un phénomène est beaucoup plus rapide qu'un autre),
+de vitesse de déclenchement (un phénomène se déclenche toujours avant un autre), etc.
+La piste que nous présentons dans la suite est l'utilisation d'un modèle de Frappes de Processus
+standards enrichi à l'aide de paramètres stochastiques.
+En effet, de tels paramètres stochastiques définis pour chaque action correspondent
+à une fenêtre de tir avec un intervalle de confiance donné (généralement 95~\%),
+qu'il est possible d'approximer \cite[p.~72]{Pauleve11},
+et donc d'utiliser de façon interchangeable.
+Ces paramètres stochastiques permettent donc au modélisateur de rendre une action
+d'autant plus «~urgente~» que sa fenêtre de tir est proche de sont instant
+de sensibilisation.
+
+Ainsi, sous la condition que l'on peut distinguer les intervalles de tir en différentes classes
+entre lesquelles les intervalles ne se recouvrent pas,
 il est possible d'approximer la modélisation avec des paramètres stochastiques à
 l'aide de classes de priorités.
-Ainsi, en associant une classe de priorités à chaque ensemble d'intervalles de tir,
-la priorité la plus haute étant associée à la classe dont les intervalles sont les plus proches
-de zéro,
+En associant une classe de priorités à chaque ensemble d'intervalles de tir
+---~la priorité la plus haute étant naturellement associée à la classe dont les intervalles
+sont les plus proches de zéro,~---
 on retrouve alors un modèle dont les caractéristiques dynamiques sont proches
 du modèle initial.
 En effet, le système de classes de priorités permet d'approcher une dynamique où
 chaque intervalle est joué en priorité avant tous les suivants.
 
-Cependant, il n'est évidemment pas possible d'atteindre le même niveau de précision avec un nombre
-discret de classes de priorités qu'avec des intervalles de tir définis sur une ligne temporelle
-continue.
-Ainsi, il n'est pas possible de représenter fidèlement le recouvrement de deux intervalles de tir,
-qui aurait pour conséquence de favoriser le tir d'une première action sans pour autant annuler
-totalement la probabilité de tirer la seconde action.
+\begin{example}
+\exlabel{paramsstocha-php}
+  Le modèle de Frappes de Processus standard de la \vfigref{metazoan-ph}
+  peut être enrichi à l'aide des paramètres proposés \vexpageref{metazoan-stocha-params},
+  permettant ainsi
+  de contraindre (à l'intervalle de confiance près) le jeu des actions entre elles,
+  et favorisant le jeu des actions «~urgentes~».
+  Cela permet notamment de rendre «~instantanées~»
+  les actions de mise à jour des sortes coopératives,
+  mais aussi de rendre «~urgentes~» les actions faisant bondir $a$,
+  et de réguler l'évolution de $c$ afin de lui donner un rôle d'horloge.
+  
+  Si on observe les fenêtres de tir définies pour ce modèle, on constate qu'elles
+  ne se recouvrent pas ; autrement dit, on peut clairement distinguer des classes
+  d'actions qui seront tirées en priorité par rapport à d'autres classes.
+  Nous proposons donc de traduire ces classes de fenêtres de tir en classes de priorités
+  qui auront le même rôle : empêcher le jeu d'une action tant que d'autres actions
+  plus «~urgentes~» sont jouables.
+  Nous décidons de distinguer pour cet exemple trois classes de priorités :
+  \begin{itemize}
+    \item les actions instantanées car de taux infini (\stochainf) feront partie de la classe de
+      plus forte priorité,
+    \item les actions qui influencent $a$ (\stochaa) peuvent être considérés comme «~urgentes~»,
+      et formeront la classe de priorité intermédiaire,
+    \item les autres actions (\stochab{} et \stochac) seront regroupées dans la classe de priorité faible,
+      car considérées comme «~peu urgentes~».
+  \end{itemize}
+  Nous obtenons ainsi le modèle donné à la \figref{metazoan-php},
+  dont la dynamique a été précédemment discutée \vexpageref{metazoan-php}.
+  Nous constatons que la dynamique du modèle en Frappes de Processus avec classes de priorités
+  est «~strict~» : il n'y a pas d'intervalle de confiance et plus aucune notion de probabilités.
+\end{example}
+
+Cependant, il n'est évidemment pas possible d'atteindre
+avec cette méthode le même niveau de précision, en utilisant un nombre
+discret de classes de priorités,
+qu'avec des intervalles de tir définis sur une ligne temporelle continue.
+Il n'est par exemple
+pas possible de représenter fidèlement le recouvrement de deux intervalles de tir,
+qui aurait pour conséquence de favoriser le tir d'une première action sans totalement
+préempter la seconde action,
+autrement qu'en mettant ces deux actions au même niveau de priorité.
 À l'inverse, deux intervalles de tir qui ne se recouvrent pas devraient être associés à la même
 classe de priorités s'ils sont tous deux recouverts par un troisième intervalle,
 ce qui aura pour conséquence de mettre les trois actions sur un pied d'égalité, alors que les
-paramètres stochastiques ne le permettent initialement pas.
+paramètres stochastiques représentent une situation différente.
 
-Enfin, les phénomènes d'accumulation ou de retard ne sont pas pris en compte dans la modélisation
+\begin{example}
+  \todo{Exemple de trois intervalles qui se recouvrent et impossibles à traduire fidèlement en PHp ?}
+\end{example}
+
+Enfin, il faut noter que
+les phénomènes d'accumulation ou de retard ne sont pas pris en compte dans la modélisation
 par classes de priorités.
 En effet, si deux actions n'ont pas de sorte en commun, elles devraient dans l'idéal pouvoir
-évoluer de façon indépendante, ce qui est notamment permis par la simulation stochastique
-proposée dans \stodo{ref thèse loïc}.
+évoluer de façon indépendante, ce qui est notamment permis par la simulation stochastique.
 En revanche, dans un formalisme avec classes de priorités, si l'une des actions est plus
 prioritaire que l'autre, elle exercera tout de même sa préemption sur l'autre.
 L'une des façons de pallier ce défaut est l'utilisation d'arcs neutralisants,
 comme développé à la \secref{phan}.
 
-\todo{Exemple ?}
+\begin{example}
+  L'exemple de la \vfigref{metazoan-php}
+  peut être obtenu à l'aide de paramètres stochastiques,
+  comme expliqué \vexpageref{paramsstocha-php}.
+  Cependant, cette approche possède certaines limites ;
+  il n'est pas possible par exemple de n'autoriser la désactivation de $f$
+  qu'après un nombre donné d'oscillations de $a$ ou de $c$.
+  Pour représenter cela, un modélisateur pourrait être tenté d'introduire une classe de
+  priorité $4$ afin d'y intégrer l'action $\PHfrappe{f_1}{f_1}{f_0}$,
+  en effectuant un parallèle avec les paramètres stochastiques proposés
+  \vexpageref{metazoan-stocha-params}
+  qui permettent de ne tirer cette action qu'après un certain nombre d'oscillations ;
+  ou encore en constatant que les paramètres de cette action devraient permettre
+  la création d'une telle classe de priorités, car son intervalle de tir n'en recouvre
+  aucun autre.
+  Cependant, un tel choix de conception aurait uniquement pour effet de rendre ladite action
+  injouable, car sans cesse préemptée par des actions de priorité supérieure.
+  En effet, une telle modélisation en Frappes de Processus avec $4$ classes de priorités
+  fait abstraction du temps continu,
+  ce qui signifie qu'il n'y a plus de notion d'«~accumulation~» du temps de sensibilisation,
+  sur laquelle reposait le fait de pouvoir jouer l'action en question après une certaine
+  durée de sensibilisation.
+\end{example}
 
+Nous avons ici montré l'une des limites de la modélisation par
+Frappes de Processus avec classes de priorités, qui fait abstraction du temps
+continu sur lequel se basent les paramètres stochastiques proposés par \cite{PMR10-TCSB}.
+Le modélisateur doit effectivement être prudent pour ne pas rendre impossibles des
+comportements qui sont seulement retardés par des modélisations chronométriques.
+Cependant, à condition d'éviter ces écueils, nous avons montré qu'il est possible
+de représenter un modèle avec des données temporelles à l'aide de ce formalisme,
+et donc d'en étudier efficacement la dynamique à l'aide
+de la traduction et des méthodes d'analyse statique proposés au \chapref{as}.

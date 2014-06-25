@@ -19,6 +19,7 @@ Une action est \emph{jouable} pour les Frappes de Processus avec arcs neutralisa
 si et seulement si elle est activée,
 et que pour tout arc neutralisant la bloquant, son action bloquante n'est pas activée.
 Une action activée mais qui n'est pas jouable est dite \emph{neutralisée}.
+La \figref{metazoan-phan} propose un exemple de Frappes de Processus avec deux arcs neutralisants.
 
 Il est à noter que la neutralisation d'une action par une autre ne dépend donc pas de la jouabilité
 de l'action bloquante, mais uniquement de son activation.
@@ -52,8 +53,6 @@ réseaux de Petri ---~l'un pour le frappeur et l'autre pour la cible.
 permettant ainsi de bloquer une autre action $g$
 en fonction de la présence du processus $\frappeur{h}$
 à l'aide d'un deuxième arc neutralisant $\PHan{h}{g}$.
-
-\todo{Schéma exemple}
 
 \subsection{Définition}
 \seclabel{phan-def}
@@ -95,6 +94,72 @@ En ce sens, il est semblable à celui des Frappes de Processus avec $k$ classes 
     \left( \bigwedge_{\substack{g \in \PHh\\\PHan{g}{h} \in \PHn}}
     \neg \left( \hitter{g} \wedge \target{g} \right) \right)\]
 \end{definition}
+
+
+
+\begin{example}
+  La figure \figref{metazoan-phan} présente un exemple de Frappes de Processus
+  avec arcs neutralisants.
+  Il s'agit du modèle de segmentation métazoaire précédemment proposé à la \vfigref{metazoan-ph}
+  enrichi à l'aide de l'ensemble d'arcs neutralisants suivant :
+  \[\PHn = \{ \qquad \PHan{\PHfrappe{c_1}{a_1}{a_0}}{\PHfrappe{c_1}{c_1}{c_0}}\quad,\qquad
+    \PHan{\PHfrappe{fc_{10}}{a_0}{a_1}}{\PHfrappe{f_1}{c_0}{c_1}}\qquad\}\]
+  Ces arcs neutralisants permettent de s'assurer que l'évolution de la sorte $a$
+  (son activation ou sa désactivation) primera toujours sur celle de la sorte $c$.
+  Cela permet de se rapprocher du comportement observé biologiquement :
+  $c$ possède un rôle d'horloge, et la modification de son processus actif doit
+  être suivi de la modification du processus actif de $a$.
+  L'ajout de ces deux arcs neutralisants permet d'introduire des contraintes locales dans
+  le modèle.
+  Ces contraintes sont plus fines que celles offertes par les Frappes de Processus avec
+  classes de priorités, car la préemption d'une action n'empêche notamment pas le parallélisme
+  à d'autres endroits du modèles, comme cela pourrait être le cas avec des classes de priorités.
+  
+  \todo{exemple de dynamique}
+
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \exmetazoan
+
+    \node (nea1) at (3.5,5) {};
+    \node[andot] (nea2) at (0.6,5.9) {};
+    \draw[anligne] (nea1) to[out=120, in=20] (nea2);
+
+    \node (neb1) at (5.8,3.7) {};
+    \node[andot] (neb2) at (-0.6,2.5) {};
+    \draw[anligne] (neb1) to[out=-70, in=250, min distance=160] (neb2);
+  \end{tikzpicture}
+  \end{center}
+  \caption{\figlabel{metazoan-phan}
+    Exemple de Frappes de Processus avec arcs neutralisants.
+    Les arcs neutralisants sont représentés par un trait gras entre deux actions
+    terminant par un point du côté de l'action bloquée.}
+  \end{figure}
+
+\end{example}
+
+On constate que les arcs neutralisants introduits dans le modèle de la \figref{metazoan-phan}
+ne suffisent pas à forcer la mise à jour de la sorte coopératives.
+De façon générale, la seule possibilité s'offrant au modélisateur pour assurer cette mise à jour
+avec des arcs neutralisants est d'en ajouter pour chaque couple d'actions $\PHan{h_1}{h_2}$
+où $h_1$ est une action de mise à jour d'une sorte coopérative,
+et $h_2$ est une action standard (qui ne met pas à jour de sorte coopérative).
+Cette solution rend cependant le modèle anormalement complexe,
+car elle nécessite un grand nombre d'arcs neutralisants.
+Une solution alternative consiste à étendre les Frappes de Processus avec arcs neutralisants
+afin d'y inclure des classes de priorités telles que vues à la \secref{php}.
+Ainsi, il est possible d'assigner une priorité forte aux actions mettant à jour
+les sortes coopératives et une priorité faible actions standards,
+tout en définissant des préemptions fines à l'aide d'arcs neutralisants entre
+les actions standards.
+Cette approche a l'avantage de tirer le meilleur parti des deux types de modélisations :
+les classes de priorités sont utilisées pour définir des relations de préemptions
+globales entre des ensemble (potentiellement larges) d'actions,
+alors que les arcs neutralisants permettent de définir des préemptions individuelles,
+utiles pour rendre compte de contraintes locales connues.
+
+\todo{Exemple de dynamique « parfaite »}
 
 
 

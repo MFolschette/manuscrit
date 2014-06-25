@@ -1,0 +1,22 @@
+\def\exmetazoan{
+  \TSort{(0,4)}{c}{2}{l}
+  \TSort{(1,0)}{f}{2}{l}
+  \TSort{(7,4)}{a}{2}{r}
+  
+  \TSetTick{fc}{0}{00}
+  \TSetTick{fc}{1}{01}
+  \TSetTick{fc}{2}{10}
+  \TSetTick{fc}{3}{11}
+  \TSort{(4,1)}{fc}{4}{r}
+  
+  \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
+  \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+  \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
+  \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
+  \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
+    {selfhit, min distance=30, bend left, out=150, in=90}{left}
+  \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
+  
+  \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
+  \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+}

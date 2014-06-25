@@ -16,7 +16,14 @@
 % Références internes et externes
 \usepackage{varioref}
 \usepackage[french]{refstyle}
+\newcommand{\vdefref}[2][]{\defref[vref,#1]{#2}}
+\newcommand{\vthmref}[2][]{\thmref[vref,#1]{#2}}
+\newcommand{\vsecref}[2][]{\secref[vref,#1]{#2}}
+\newcommand{\vfigref}[2][]{\figref[vref,#1]{#2}}
+\newcommand{\vexpageref}[2][]{\expageref[vref,#1]{#2}}
+
 \usepackage{hyperref}
+
 \usepackage[agsm,dcucite,full]{harvard}  % Citations style Harvard
 \renewcommand{\harvardand}[1]{\& }
 \renewcommand{\harvardurl}[1]{\url{#1}}
@@ -60,6 +67,7 @@
 
 \theoremstyle{remark}
 \newtheorem*{example}{Exemple}
+\newtheorem*{remark}{Remarque}
 
 
 
@@ -68,6 +76,7 @@
 \input{macros/macros-ph}
 \input{macros/macros-abstr}
 \input{macros/tikzstyles}
+\input{macros/ex}
 
 
 
@@ -81,6 +90,7 @@
 
 % Styles supplémentaires
 \newcommand{\bemph}[1]{\textbf{#1}}
+\newcommand{\myskip}{\medskip}
 
 % Césures
 \hyphenation{jou-a-bi-li-té}
@@ -104,6 +114,7 @@
 \newcommand{\TODO}{\todo{TODO}}
 \newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
 \newcommand{\toref}{\stodo{ref}}
+\newcommand{\storef}{\toref}
 \newcommand{\tocite}[1][citation]{\stodo{#1}}
 %\newcommand{\idea}[1]{\textcolor{darkgreen}{[#1]}}
 %\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
