@@ -26,8 +26,9 @@ ou tout autre paramètre permettant de déterminer l'existence de la préemption
 en fonction de la possibilité d'en jouer une autre.
 L'application la plus poussée de cette utilisation consisterait à
 classer les actions d'un modèle en fonction d'un tel critère,
-et à attribuer à chaque classe de priorité une action unique en fonction de ce classement,
-afin de créer un ordre total entre toutes les actions défini par leurs priorités.
+et à attribuer à chaque classe de priorité une action unique en fonction de ce classement.
+De cette manière,
+les actions seraient arrangées selon un ordre total défini par leurs priorités.
 %afin de rendre compte de la priorité de chaque action en fonction de chaque autre.
 
 De même, ces classes de priorités permettent de prendre en compte des comportements non biologiques
@@ -44,8 +45,8 @@ sans le problème de décalage temporel soulevé à la \secref{sc}.
 Cette représentation basée sur des classes de priorités permet de modéliser un système
 dont les actions peuvent être distinguées en plusieurs classes en fonction de leur importance,
 de leur vitesse d'exécution, ou encore d'autres facteurs leur donnant prévalence sur d'autres.
-Chaque action peut donc en préempter un ensemble d'autres en fonction de sa classe de priorités.
-Cela permet une représentation compacte, des rapports de priorités entre actions
+Chaque action peut donc en préempter un ensemble d'autres en fonction de sa classe de priorité.
+Cela permet une représentation compacte des rapports de priorités entre actions
 ou, autrement dit, de leur ordonnancement,
 qui présente néanmoins quelques lacunes.
 Les phénomènes d'accumulation, notamment, n'y sont pas représentés ;
@@ -97,7 +98,7 @@ l'extraction de la sorte d'un processus.
 
 À l'instar de la \secref{ph}, il faut définir un opérateur de jouabilité
 pour déterminer la dynamique des Frappes de Processus avec $k$ classes de priorités.
-Cependant, à l'inverse de celui des Frappes de Processus standard (\defref{fopph})
+Cependant, à l'inverse de celui des Frappes de Processus standards (\defref{fopph})
 il faut ici prendre en compte la possible présence d'actions jouables appartenant à des
 classes de priorités supérieures.
 Pour cela, il est suffisant de vérifier que le frappeur et la cible de toute action
@@ -236,9 +237,15 @@ classes de priorités peut être traduit en Frappes de Processus canoniques,
 comme défini à la \secref{phcanonique-def},
 qui sont des Frappes de Processus avec 2 classes de priorités
 avec une forme particulière.
-À l'inverse des Frappes de Processus avec 2 classes de priorités sont
+À l'inverse, les Frappes de Processus avec 2 classes de priorités sont
 naturellement \textit{a fortiori}
 des Frappes de Processus avec $k$ classes de priorités, pour tout $k \in \sNN$.
+
+Nous notons cependant que ce résultat n'inclut pas les Frappes de Processus
+avec 1 classe de priorité (c'est-à-dire les Frappes de Processus standard).
+En effet, il est intuité que leur expressivité est strictement moindre
+que les Frappes de Processus possédant plusieurs classes de priorités,
+mais nous ne démontrons pas ce résultat ici.
 
 \begin{theorem}[Équivalences entres Frappes de Processus avec classes de priorités]
 \thmlabel{equivphpkn}
@@ -294,18 +301,28 @@ et des possibles (ré)utilisations des paramètres stochastiques (\secref{php-ou
 Nous montrons dans cette sous-section que les points fixes des Frappes de Processus
 avec classes de priorités peuvent être obtenus de façon similaire à ceux
 des Frappes de Processus standards.
+Pour cela, nous définissons la notion de \emph{fusion} d'un modèle de Frappes de Processus
+%avec classes de priorités,
+qui consiste à fusionner les classes de priorités en une seule,
+afin de retrouver un modèle de Frappes de Processus standards.
 
 \myskip
 
-Pour un modèle donné, si l'ensemble de toutes les actions reste le même,
+Pour tout modèle de Frappes de Processus avec $k$ classes de priorités, pour $k \in \sN^*$,
+nous notons dans la suite $\PHmerge(\PH)$
+la \emph{fusion} de $\PH$,
+c'est-à-dire le même modèle dont les classes de priorités ont été fusionnées
+(\defref{fusion}).
+En d'autres termes, il s'agit d'un modèle de Frappes de Processus standards dont
+l'ensemble des actions est l'union de toutes les classes de priorités de $\PH$.
+
+On peut constater que pour un modèle donné, si l'ensemble de toutes les actions reste le même,
 ajouter (ou retirer) des classes de priorités à des Frappes de Processus ne change pas
 l'ensemble de ses points fixes.
 En effet, le \thmref{php-pf} stipule que
 l'ensemble des points fixes des Frappes de Processus avec $k$
 classes de priorités $\PH$ est identique à l'ensemble des points fixes de
-sa \emph{fusion} $\PHmerge(\PH)$,
-c'est-à-dire le même modèle dont les classes de priorités ont été fusionnées
-(\defref{fusion}).
+sa fusion $\PHmerge(\PH)$.
 Cela se démontre simplement en constatant qu'il existe une action jouable dans un état donné du
 modèle $\PH$ si et seulement si il en existe une dans le même état du modèle fusionné.
 En effet, si une action est jouable dans un état donné de $\PHmerge(\PH)$,
@@ -369,7 +386,8 @@ leurs modèles fusionnés soient identiques.
 
 Afin de permettre une étude efficace des Frappes de Processus standards de grande taille,
 une analyse statique par interprétation abstraite avait été développée
-par \citeasnoun{PMR12-MSCS} et dont le principe est rappelé à la \vsecref{ph-as-pf}.
+par \citeasnoun{PMR12-MSCS}.
+Son principe est rappelé à la \vsecref{ph-as-pf}.
 L'ajout de classes de priorités au formalisme a pour conséquence d'en restreindre la dynamique,
 mais n'ajoute aucun comportement supplémentaire.
 Ainsi, pour tout modèle de Frappes de Processus avec $k$ classes de priorités,
@@ -387,10 +405,13 @@ sur une classe particulière de Frappes de Processus avec 2 classes de priorité
 Frappes de Processus canoniques.
 Cette classe particulière n'autorise les actions avec une forte priorité que pour la mise à jour
 des sortes coopératives.
-Cependant, nous montrons aussi au \thmref{bisimulaplatissement}
-que toutes Frappes de Processus avec un nombre quelconque de classes de priorités peut être traduit
-en Frappes de Processus canoniques, et nous donnons une telle traduction à la
-\defref{aplatissement}.
+Cependant, nous montrons aussi à la \vsecref{phcanonique-equiv}
+que toutes Frappes de Processus avec un nombre quelconque de classes de priorités
+peuvent être traduites en Frappes de Processus canoniques équivalentes,
+étendant ainsi l'analyse statique mentionnée aux modèles de Frappes de Processus
+avec $k$ classes de priorités.
+%, et nous donnons une telle traduction à la
+%\defref{aplatissement}.
 
 \subsubsection{Paramètres stochastiques}
 \seclabel{php-outils-stocha}
@@ -496,6 +517,8 @@ chaque intervalle est joué en priorité avant tous les suivants.
   est «~strict~» : il n'y a pas d'intervalle de confiance et plus aucune notion de probabilités.
 \end{example}
 
+\myskip
+
 Cependant, il n'est évidemment pas possible d'atteindre
 avec cette méthode le même niveau de précision, en utilisant un nombre
 discret de classes de priorités,
@@ -522,7 +545,7 @@ En effet, si deux actions n'ont pas de sorte en commun, elles devraient dans l'i
 En revanche, dans un formalisme avec classes de priorités, si l'une des actions est plus
 prioritaire que l'autre, elle exercera tout de même sa préemption sur l'autre.
 L'une des façons de pallier ce défaut est l'utilisation d'arcs neutralisants,
-comme développé à la \secref{phan}.
+comme développé à la \v secref{phan}.
 
 \begin{example}
 \exlabel{paramsstocha-php-accumulation}

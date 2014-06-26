@@ -4,14 +4,18 @@
 
 Il peut être intéressant de vouloir représenter un système au niveau de ses réactions biochimiques,
 c'est-à-dire des réactions entre les différents composants présents.
-De telles réactions peuvent avoir différentes formes (transformation, complexation, dissociation...),
+De telles réactions peuvent avoir différentes formes
+(transformation, complexation, dissociation...),
 et il est fréquent qu'elles fassent intervenir plusieurs réactifs et plusieurs produits.
-Biocham \todo{ref} propose par exemple de modéliser un tel système de réactions biochimiques à l'aide
+Biocham \cite{fages2004modelling}
+propose par exemple de modéliser un tel système de réactions biochimiques à l'aide
 d'un ensemble de règles de réaction de la forme :
 $X \xrightarrow{Y} Z$,
 ou encore :
 $X + Y \rightarrow Y + Z$,
 où $X$ est un ensemble de réactifs, $Y$ un ensemble de catalyseurs et $Z$ un ensemble de produits.
+
+\myskip
 
 Les \emph{Frappes de Processus avec actions plurielles} permettent de représenter de telles réactions
 mettant en jeu un nombre arbitraire de réactifs, de produits et de catalyseurs.
@@ -31,16 +35,20 @@ sorte dans $A$.
 Les Frappes de Processus avec actions plurielles permettent donc de représenter
 un nombre arbitraire de bonds simultanés
 ---~autrement dit, de changements simultanés de processus actifs~---
-déclenchés par un nombre arbitraire de requis
----~sous la forme de processus actifs .
+déclenchés par un nombre arbitraire de prérequis
+---~sous la forme de processus actifs dans l'état courant.
+Les figref{metazoan-phm,simple-phm},
+plus loin dans cette section,
+représentent des exemples de Frappes de Processus avec actions plurielles.
 
 Un parallèle peut être tracé d'une part entre $A$ et l'ensemble des réactifs et catalyseurs,
 et d'autre part entre $B$ et l'ensemble des produits.
 Cependant, la modélisation par Frappes de Processus avec actions plurielles
-nécessite aussi de donner explicitement les composants sont absents.
+nécessite aussi de donner explicitement les composants qui sont absents.
 Par exemple, une réaction de complexation du type : $x + y \rightarrow c$ %x\!\!-\!\!y$
-sera représentée en Frappes de Processus avec actions plurielles par trois sortes de deux processus
-$x$, $y$ et $c$ représentant respectivement les deux réactifs et le complexe produit,
+sera représentée en Frappes de Processus avec actions plurielles
+à l'aide de trois sortes $x$, $y$ et $c$ contenant chacune deux processus et
+représentant respectivement les deux réactifs et le complexe produit,
 et par l'action $\PHfrappemults{x_1, y_1, c_0}{x_0, y_0, c_1}$.
 %si on ne prend pas en compte la disparition des réactifs.
 Autrement dit, il est nécessaire de décomposer chaque élément en fonction de sa présence
@@ -49,8 +57,12 @@ ou de son absence ($c_0$) au début comme à la fin de la réaction,
 et pas uniquement d'indiquer les composants présents en tant que réactifs ou produits.
 
 On note ainsi qu'une réaction de la forme $\PHfrappemult{\{ a_0, b_0, c_0 \}}{\{ a_1, b_1 \}}$
-ne peut être jouée si l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
-même si l'autre est au niveau $0$.
+ne peut pas être jouée
+si $a$ ou $b$ est déjà au niveau $1$,
+comme c'est le cas par exemple dans l'état $\etat{a_1, b_0, c_0}$.
+%si $a_1$ et $b_0$ sont actifs.
+% l'une des deux sortes entrant en jeu, $a$ et $b$, est déjà au niveau $1$,
+% même si l'autre est au niveau $0$.
 Un tel comportement a du sens lorsque les différents processus d'une sorte
 ($a_0$ et $a_1$, par exemple)
 représentent différents états d'une même molécule :
@@ -65,17 +77,24 @@ $\PHfrappemult{\{ a_0, b_1, c_0 \}}{\{ a_1, b_1 \}}$,
 ou encore en séparant la production de $a_1$ et de $b_1$ en deux actions (ou ensemble d'actions)
 distinctes.
 
+\myskip
+
 Cette forme des Frappes de Processus peut être aisément représentée à l'aide d'un réseau
-d'automates synchronisés, chaque sorte ayant le rôle d'un automate et chaque action celui d'un
-ensemble de transitions étiquetées avec le même libellé partant chacune d'un processus dans $A$ et
-arrivant dans le processus de la même sorte dans $A \recouvre B$,
+d'automates synchronisés, car chaque sorte possède un rôle similaire à celui d'un automate
+et chaque action pouvant être remplacée par un ensemble de transitions étiquetées
+avec le même libellé.
+En effet, chaque action plurielle $\PHfrappemult{A}{B}$
+possède la même dynamique qu'un ensemble des transitions synchronisées
+partant chacune d'un processus de l'ensemble $A$ et
+arrivant dans le processus de la même sorte de l'ensemble $A \recouvre B$%
+\footnote{La notation $A \recouvre B$, formalisée à la \vdefref{recouvrementps}, représente
+l'ensemble où chaque processus de $A$ a été remplacé par
+le processus de $B$ de la même sorte, s'il existe.},
 comme décrit à la \secref{phm2an}.
 On peut aussi la représenter à l'aide de Frappes de Processus avec 4 classes de priorités,
 comme détaillé à la \secref{phm2php} ;
 cependant, cette représentation a l'inconvénient d'être moins claire car faisant intervenir
 un nombre important d'actions et de sortes supplémentaires.
-
-\todo{Schéma exemple}
 
 
 
@@ -133,15 +152,22 @@ et $\invariant{h} = \{ p \in A \mid \sort{p} \notin \sortes{B} \}$.
   \[\forall h \in \PHh, \Fopphm{h} \equiv \bigwedge_{p \in \hitter{h}} p \enspace.\]
 \end{definition}
 
-\myskip
+%\myskip
+
+\subsubsection*{Modélisation des coopérations}
 
 Nous notons que les Frappes de Processus avec actions plurielles proposent une alternative
 très efficace à la représentation des coopérations entre actions.
-Une telle coopération est représentée par une sorte coopérative en Frappes de Processus
-standards, comme expliqué à la \vsecref{sc}.
-Or une telle sorte coopérative présente un défaut de modélisation qui provoque des décalages
-temporels, voire l'apparition de «~faux états~», par un mécanisme développé
-\vexpageref{metazoan-ph-decalagetemporel}.
+Une coopération est représentée par une sorte coopérative en Frappes de Processus
+standards,
+qui peut présenter un défaut de modélisation provoquant des décalages
+temporels, voire l'apparition de «~faux états~»,
+comme expliqué à la \vsecref{sc}.
+% par un mécanisme développé
+% comme expliqué à la \vsecref{sc}.
+% Or une telle sorte coopérative présente un défaut de modélisation qui provoque des décalages
+% temporels, voire l'apparition de «~faux états~», par un mécanisme développé
+% \vexpageref{metazoan-ph-decalagetemporel}.
 De plus, cela nécessite l'utilisation d'un grand nombre d'actions pour assurer la mise à jour
 du processus actif de la sorte coopérative.
 
@@ -470,7 +496,7 @@ Les \figref{simple-phm,simple-php-trad} illustrent cette traduction.
 
 La traduction proposée permet d'obtenir un modèle de
 Frappes de Processus pseudo-canoniques avec 4 classes de priorités,
-telles que définies plus tard, à la \secref{phcanonique}.
+telles que définies à la \vsecref{phcanonique}.
 De façon informelle, ce modèle comporte 4 classes de priorités
 et repose sur l'utilisation de deux types de sortes particulières :
 \begin{itemize}
@@ -495,7 +521,7 @@ ce qui permet d'effectuer tous les bonds nécessaires à l'activation des proces
 Enfin, les sortes coopératives sont toutes mises à jour par des actions de priorité 1,
 afin d'éviter les problèmes d'entrelacement
 et de correspondre à la définition de Frappes de Processus pseudo-canoniques
-(\defref{phpseudocanonique})
+telle que donnée par la \vdefref{phpseudocanonique}.
 L'agencement de ces classes de priorités permet ainsi de simuler des actions plurielles
 tout en empêchant l'entrelacement entre réactions
 ---~car deux réactions ayant lieu en même temps pourraient potentiellement
@@ -810,7 +836,7 @@ générique efficace permettant de déduire les points fixes de Frappes de Proce
 actions plurielles.
 Cependant, à l'instar des Frappes de Processus avec arcs neutralisants
 (\secref{phan-outils-pf})
-il est possible d'obtenir ces points fixes les cherchant sur
+il est possible d'obtenir ces points fixes en les cherchant sur
 le modèle aplati (tel que défini à la \secref{phm-aplatissement}).
 En effet, sa dynamique étant équivalente, aux sortes coopératives près, le résultat
 peut être transposé au modèle d'origine.

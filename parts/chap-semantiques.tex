@@ -7,7 +7,7 @@
   La sémantique standard des Frappes de Processus de la \secref{ph} peut s'avérer insuffisante pour
   prendre en compte certaines informations connues sur le système étudié, comme des informations
   en terme de vitesse de réaction.
-  De plus, certains comportement non désirés apparaissent dans les Frappes de Processus standards
+  De plus, certains comportements non désirés apparaissent dans les Frappes de Processus standards
   dès que l'on cherche à synchroniser plusieurs processus.
   Ce chapitre propose d'étendre sa sémantique afin de pallier ces problèmes
   en enrichissant les modèles sur deux axes :
@@ -22,10 +22,10 @@
   Du premier axe découlent deux extensions aux Frappes de Processus
   prenant la forme d'arcs neutralisants, qui modélisent la préemption d'une action par une autre,
   et de classes de priorités, qui modélisent la préemption d'un ensemble d'actions par un autre.
-  Le second axe apporte à une troisième extension, reposant sur la notion d'actions plurielles.
+  Le second axe conduit à une troisième extension, reposant sur la notion d'actions plurielles.
 %   Les trois extensions aux Frappes de Processus proposées dans ce chapitre prennent la forme
 %   de classes de priorités, d'arcs neutralisants et d'actions plurielles.
-  Après les avoir définis définies dans ce chapitre,
+  Après les avoir définies dans ce chapitre,
   nous montrons que ces trois modélisations sont (faiblement) bisimilaires.
   De plus, il est à noter que l'analyse statique développée au \chapref{phcanonique}
   peut s'appliquer à toutes ces extensions, moyennant une traduction.
@@ -51,7 +51,7 @@ la connaissance d'inhibitions de réactions en présence de certains composants,
 ou celle des réactions précises ayant lieu au sein du système, etc.
 La connaissance de telles informations peut permettre de privilégier un chemin
 sur un autre
-à d'un moment clef de l'évolution du système, empêchant ainsi une certaine évolution du système,
+à un moment clef de l'évolution du système, empêchant ainsi une certaine évolution du système,
 en favorisant l'apparition d'une autre.
 Leur intégration permet donc d'affiner le modèle en réduisant les comportements possibles
 afin d'obtenir un modèle plus proche du système étudié.
@@ -83,7 +83,7 @@ Ces coopérations sont modélisées à l'aide de sortes coopératives, décrites
 %dont la dynamique n'est pas strictement équivalente à celle d'une porte logique autorisant
 %le jeu d'une action en présence de certains processus donnés.
 et souffrent d'un décalage temporel entre les sortes à représenter et
-la mise à jour du processus actif de la sortie coopérative,
+la mise à jour du processus actif de la sorte coopérative,
 qui peut entraîner l'existence de «~faux états~» pour la sorte coopérative.
 %Ce décalage temporel implique que ce processus actif représente toujours
 %une combinaison d'états passés des sortes en amont.
@@ -145,7 +145,7 @@ Ainsi, on peut par exemple rapprocher la notion d'arc neutralisant des Frappes d
 d'une place (correspondant ici à un processus ou à une sorte, selon le point de vue).
 De même, la notion de priorités a déjà été introduite dans certaines sémantiques de réseaux
 de Petri \cite{Marsan87} et de $\pi$\nbd calcul \cite{jlnu2010}.
-Enfin, les actions plurielles permet de se rapprocher de la classe des modèles
+Enfin, les actions plurielles permettent de se rapprocher de la classe des modèles
 à dynamique synchrone \todo{Biocham, graphes des états...}.
 
 La définition du formalisme des Frappes de Processus avec classes de priorités
