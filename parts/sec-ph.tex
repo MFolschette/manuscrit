@@ -2,9 +2,11 @@
 
 Cette section définit les Frappes de Processus standards
 telles qu'elles ont été formalisées par \citeasnoun{PMR10-TCSB}.
-Les Frappes de Processus offrent une représentation discrète, asynchrone et indéterministe
+En tant que restrictions du $pi$\nbd calcul (\citeasnoun{Brand83}),
+les Frappes de Processus offrent une représentation discrète, asynchrone et indéterministe
 avec une définition atomique des interactions entre les différents composants du modèle.
-Elles sont particulièrement adaptées aux représentations des réseaux de régulation biologiques
+En cela,
+elles sont particulièrement adaptées aux représentations des réseaux de régulation biologiques
 bien qu'elles soient assez générales pour potentiellement permettre des applications plus
 larges en informatique ou dans d'autres domaines.
 
@@ -16,10 +18,11 @@ Nous détaillons ensuite à la \secref{sc} le mécanisme particulier des sortes 
 tel qu'il avait été formalisé dans les travaux de Loïc Paulevé,
 et nous montrerons qu'il permet de représenter l'action conjointe de plusieurs composants,
 mais avec certains défauts difficiles à corriger dans cette version du formalisme.
-Enfin, nous aborderons brièvement les travaux précédent
-concernant l'analyse statique (\secref{ph-as-pf}) qui permet d'obtenir des résultats
-sur l'ensemble des états stables ou l'atteignabilité d'un niveau local au sein d'un modèle,
-et concernant l'ajout de paramètres stochastiques (\secref{ph-stocha})
+Enfin, nous aborderons brièvement les travaux précédents
+concernant l'analyse statique qui permet d'obtenir des résultats
+sur l'ensemble des états stables (\secref{ph-pf})
+et sur l'atteignabilité d'un niveau local au sein d'un modèle (\secref{ph-as}),
+et nous évoquerons les possibilités d'ajout de paramètres stochastiques (\secref{ph-stocha})
 dans le but d'introduire une composante temporelle continue dans les Frappes de Processus.
 
 
@@ -552,7 +555,7 @@ Ce mécanisme sera détaillé notamment au \chapref{phcanonique}.
   
   Cependant, il se trouve qu'il existe encore un cas particulier où $a$ peut être activé
   malgré la présence de $f_0$.
-  Ce cas particulier relève du comportement mis en valeur \todo{dans les paragraphes ci-dessus},
+  Ce cas particulier relève du comportement mis en valeur ci-dessus,
   où une action a pour frappeur un processus de sorte coopératif qui ne devrait pas être
   actif si celle-ci avait été mise à jour.
   Il s'observe par exemple en jouant le scénario suivant depuis l'état initial
@@ -590,12 +593,166 @@ $4 \cdot (\card{A} - 1)$.
 
 
 
-\subsection{Analyse statique}
-\seclabel{ph-as-pf}
+\subsection{Recherche de points fixes}
+\seclabel{ph-pf}
+
+Les Frappes de Processus standards bénéficient d'outils puissants permettant la recherche
+de points fixes, c'est-à-dire d'états dans lesquels le modèle ne peut plus évoluer
+car aucune action n'est jouable.
+Nous rappelons ici les méthodes de recherche de points fixes développées par
+\citeasnoun{PMR10-TCSB} et qui reposent sur la recherche de $n$\nbd cliques.
+
+\myskip
+
+La recherche de points fixes peut apporter des informations fondamentales
+dans l'étude des réseaux de régulation biologiques.
+Un point fixe représente généralement un état stable pour le système
+---~tout du moins du point de vue du modèle.
+La détection de plusieurs points fixes, par exemple,
+met en valeur l'existence d'un embranchement dans la dynamique du système,
+et le point fixe atteint dépendra du chemin suivi dans le graphe des états.
+
+La recherche de points fixes dans des Frappes de Processus standards $\PH = (\PHs; \PHl; \PHh)$
+peut se ramener à une recherche de $\card{\PHs}$\nbd cliques
+dans un graphe particulier construit à partir de $\PH$ et appelé \emph{graphe sans-frappe}.
+L'idée principale de cette recherche repose sur la causalité restreinte des actions,
+qui implique que si les processus frappeur et cible d'une action sont tous deux actifs
+dans un état, alors cette action est jouable.
+Ainsi, les points fixes sont les actions dans lesquels il n'existe pas de tel couple de processus
+actifs, et donc pas d'action jouable.
+La construction du graphe sans-frappe repose sur cette constatation :
+ses nœuds sont les processus du modèle $\PH$ d'origine
+qui ne sont pas frappés par une auto-action,
+et deux nœuds ne sont reliés par une arête (non orientée) que si les deux processus
+correspondants ne sont \emph{pas} reliés par une action (\defref{hitlessgraph}).
+La division du graphe en sortes en fait un graphe $n$\nbd parti (\defref{nparti})
+avec $n \leq \card{\PHs}$ le nombre de sortes ayant au moins un processus
+non frappé par une auto-action.
+Le \thmref{pf} stipule alors que les points fixes de $\PH$ sont exactement
+les $\card{\PHs}$\nbd cliques de son graphe sans-frappe,
+c'est-à-dire les ensemble de nœuds tous connectés entre eux,
+avec exactement un nœud par partie (\defref{clique}).
+
+\begin{definition}
+\deflabel{hitlessgraph}
+  Soient $\PH = (\PHs, \PHl, \PHh)$ des Frappes de Processus standards.
+  Le \emph{graphe sans-frappe} de $\PH$ est le graphe non orienté $(V, E)$ où :
+  \begin{align*}
+    V &\DEF \bigcup_{a \in \PHs} \{ a_i \in \PHl_a \mid
+      \forall a_k \in \PHl_a, \nexists \PHfrappe{a_i}{a_i}{a_k} \in \PHh \} \\
+    E &\DEF \{ \{a_i, b_j\} \in V \times V \mid
+      a \neq b, \forall b_k \in \PHl_b, \nexists \PHfrappe{a_i}{b_j}{b_k} \in \PHh \\
+    & \qquad\qquad\qquad\qquad\qquad
+      \wedge \forall a_l \in \PHl_a, \nexists \PHfrappe{b_j}{a_i}{a_l} \in \PHh \}
+  \end{align*}
+\end{definition}
+
+\begin{definition}
+\deflabel{nparti}
+  Si $n \in \sN$, un graphe $(V, E)$ est \emph{$n$\nbd parti} si et seulement si :
+  \begin{itemize}
+    \item $V = \bigcup_{k \in \segm{1}{n}} V_k$,
+    \item $\forall k, k' \in \segm{1}{n}, k \neq k' \Rightarrow V_k \cap V_{k'} = \emptyset$,
+    \item $\forall \{a_i, b_j\} \in E, \exists k, k' \in \segm{1}{n}, k \neq k' \wedge a_i \in V_k \wedge b_j \in V_{k'}$.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+\deflabel{clique}
+  Soit $(V, E)$ un graphe non orienté.
+  Un sous-ensemble $C \subseteq V$ de ses nœuds est une $|C|$\nbd clique si et seulement si :
+  $\forall (a_i, b_j) \in C \times C, \{a_i, b_j\} \in E$.
+\end{definition}
+
+\begin{theorem}
+\thmlabel{pf}
+  Les points fixes des Frappes de Processus standards $\PH = (\PHs, \PHl, \PHh)$
+  sont exactement les $|\PHs|$\nbd cliques de son graphe sans-frappe.
+\end{theorem}
+
+\begin{example}
+  Les Frappes de Processus standards de la \figref{metazoan-ph-nocoop}
+  contiennent uniquement le point fixe suivant :
+  $\{ a_1, c_0, f_0 \}$,
+  tandis que le modèle de la \figref{metazoan-ph}
+  contiennent les deux points fixes suivants :
+  $\{ a_0, c_0, f_0, fc_{00} \}$ et $\{ a_1, c_0, f_0, fc_{00} \}$.
+\end{example}
+
+\todoplustard{Exemple de graphe sans-frappe}
+
+
+
+\subsection{Analyse statique d'atteignabilité}
+\seclabel{ph-as}
 
 \todo{Rappels sur les résultats d'analyse statique (cf. MSCS'10)}
 
 \todo{+ Points fixes}
+
+Nous présentons brièvement et informellement dans cette section
+l'analyse statique par interprétation abstraite
+développée par \citeasnoun{PMR12-MSCS}.
+Celle-ci permet de répondre à des questions d'atteignabilité,
+c'est-à-dire déterminer s'il est possible d'activer un processus depuis un état initial donné.
+Sa complexité polynomiale dans la taille du modèle
+permet une analyse très efficace de réseaux de régulation de très grande taille
+modélisés en Frappes de Processus.
+
+\myskip
+
+L'étude de la dynamique des réseaux de régulation biologiques se heurte généralement
+à la taille des modèles, et à la complexité qu'elle engendre.
+Les \textit{model checkers} traditionnels doivent en effet généralement calculer
+l'intégralité des comportements possibles de réseau,
+généralement sous la forme d'un graphe des états,
+afin de pouvoir produire des conclusions sur la dynamique \cite{Richard06}.
+Si une telle approche a le mérite de l'exhaustivité,
+elle n'est cependant pas applicable à des modèles dépassant quelques dizaines de composants,
+et donc totalement exclue pour tout modèle de plus d'une centaine de composants.
+
+La forme particulière des actions des Frappes de Processus standards
+permet cependant de contourner en partie ces problèmes de complexité en approchant
+la dynamique des modèles.
+L'analyse statique développée par \citeasnoun{PMR12-MSCS} utilise en effet
+cette propriété pour résoudre efficacement des problèmes d'atteignabilité,
+c'est-à-dire des problèmes qui s'énoncent de la forme suivante :
+«~Est-il possible d'activer un processus depuis un état donné en jouant
+un certain nombre d'actions ?~»
+Ou, autrement dit :
+«~Étant donnés un état $s$ et un processus $a_i$,
+existe-t-il un scénario $\delta \in \Sce(s)$ dans cet état
+tel que $a_i \in s \play \delta$ ?~»
+
+La méthode développée pour répondre à ce type de question
+se base sur deux constatations :
+\begin{itemize}
+  \item on peut vérifier localement que le processus actif d'une sorte peut
+    bondir d'un niveau vers un autre en n'observant que les actions frappant cette sorte ;
+  \item le jeu d'une action est conditionnée par au plus un processus d'une autre sorte
+    que la cible de cette action.
+\end{itemize}
+De la première constatation découle le fait que l'atteignabilité d'un processus
+peut être résolue localement, en observant les actions frappant une sorte donnée,
+ce qui simplifie la recherche.
+Une fois ce problème résolu localement pour une sorte, 
+la deuxième constatation permet de déplacer ce problème
+à d'autres sortes afin de faire en sorte d'activer les processus requis
+pour jouer chaque action nécessaire (c'est-à-dire les frappeurs de ces actions).
+
+
+
+
+\TODO
+
+
+
+
+Une partie de cette analyse statique a par la suite été
+%étendue aux réseaux d'automates asynchrones, et
+exploitée dans le but d'approximer efficacement des ensembles de coupes,
+c'est-à-dire des ensembles de processus nécessaires à une certaine atteignabilité
+\cite{PAK13-CAV}.
 
 
 
@@ -605,9 +762,12 @@ $4 \cdot (\card{A} - 1)$.
 \todo{Rappels rapides ?}
 
 \newcommand{\stochainf}{{\small $\infty$}}
-\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
-\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
-\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
+%\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
+%\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
+%\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
+\newcommand{\stochaa}{$\mathbf{a}$}
+\newcommand{\stochab}{$\mathbf{b}$}
+\newcommand{\stochac}{$\mathbf{c}$}
 
 \begin{example}
 \exlabel{metazoan-stocha-params}
