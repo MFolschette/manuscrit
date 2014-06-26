@@ -373,26 +373,125 @@ Enfin, on note dans la suite :
 \subsection{Sortes coopératives}
 \seclabel{sc}
 
-\TODO
-
-
-\todo{Figure d'exemple de sorte coopérative}
+L'une des questions qui se posent face à un formalisme totalement asynchrone comme
+les Frappes de Processus standards est la représentation des coopérations entre les différents
+composants.
+En effet, le bond d'un processus dans un modèle de Frappes de Processus standards
+ne peut se faire que par le jeu d'une action,
+elle-même déclenchée par la présence d'au plus deux processus :
+le frappeur et la cible (c'est-à-dire le processus qui va bondir).
+Il n'est donc pas possible de conditionner le bond d'un processus par la présence
+de plusieurs processus de sortes différentes de celle de la cible.
+En effet,
+si on souhaite par exemple représenter l'activation d'un processus $c_1$ (d'une sorte $c$)
+uniquement lorsque deux autres processus $a_1$ et $b_1$ (de deux autres sortes $a$ et $b$)
+sont actifs, il n'est pas suffisant d'ajouter deux actions
+$\PHfrappe{a_1}{c_0}{c_1}$ et $\PHfrappe{b_1}{c_0}{c_1}$,
+car celles-ci permettent d'activer $c_1$ à la condition que $a_1$ ou $b_1$
+soit présent : il s'agit bien de deux interactions distinctes et non d'une coopération.
 
 \begin{example}
-\exlabel{metazoan-ph}
+\exlabel{metazoan-ph-nocoop-explications}
   Le modèle de Frappes de Processus de la \figref{metazoan-ph-nocoop}
-  représentant le mécanisme de segmentation métazoaire évoqué à la page
-  \expageref{metazoan-ph-nocoop},
-  la production de pigment devrait uniquement être possible à la condition suivante :
-  «~$f$ est actif et $c$ n'est pas actif~».
+  représente le mécanisme de segmentation métazoaire évoqué à la page
+  \expageref{metazoan-ph-nocoop}.
+  Dans ce modèle, la production de pigment devrait uniquement être possible
+  à la condition suivante : «~$f$ est actif et $c$ n'est pas actif~».
   Or dans l'état courant du modèle,
   la désactivation du gène $f$ n'empêche pas la production de pigment,
   car depuis tout état contenant $f_0$, il est toujours possible d'activer $a$
   à l'aide des actions $\PHfrappe{f_0}{c_1}{c_0}$ et $\PHfrappe{c_0}{a_0}{a_1}$.
+\end{example}
+
+Afin de représenter la coopération entre composants,
+et donc le raffinement de la dynamique des modèles,
+\citeasnoun{PMR10-TCSB} ont proposé d'ajouter des sortes particulières appelées
+\emph{sortes coopératives}, qui servent exclusivement à la modélisation.
+Une sorte coopérative permet de représenter l'état conjoint de plusieurs sortes dans le modèle.
+Pour cela, à chaque processus de la sorte coopérative correspond un sous-état des sortes
+qu'elle \emph{représente}.
+Ainsi, il est possible de représenter les différents états combinés d'un ensemble de sortes,
+afin de ne jouer une action que dans une configuration particulière.
+Ces sortes ont de plus l'avantage d'être des sortes standards,
+et donc de ne pas nécessiter d'enrichissement particulier de la sémantique.
+
+\begin{example}
+  Les Frappes de Processus standards de la \figref{excoop-ph}
+  comprennent quatre sortes ($a$, $b$, $c$ et $ab$) dont une sorte coopérative ($ab$)
+  permettant de détecter la présence simultanée de $a_1$ et $b_1$.
+  Les processus de $ab$ décrivent les combinaisons possibles des états de $a$ et de $b$ :
+  $ab_{00}$ correspond à $a_0$ et $b_0$, $ab_{01}$ correspond à $a_0$ et $b_1$, etc.
+  Les actions en amont de cette sorte coopérative permettent la mettre à jour,
+  c'est-à-dire de changer son processus actif en fonction des évolutions
+  du processus actif de $a$ et $b$.
+  Par exemple, si $a_1$ est actif, les deux actions
+  $\PHfrappe{a_1}{ab_{00}}{ab_{10}}$ et $\PHfrappe{a_1}{ab_{01}}{ab_{11}}$
+  effectuent cette mise à jour en faisant bondir le processus actif de $ab$ depuis
+  un processus représentant la présence de $a_0$ ($ab_{00}$ ou $ab_{01}$)
+  vers le processus correspondant représentant la présence de $a_1$
+  (respectivement $ab_{10}$ ou $ab_{11}$).
+  Son action en aval, $\PHfrappe{ab_{11}}{c_0}{c_1}$
+  joue alors le rôle d'une coopération entre $a_1$ et $b_1$
+  pour frapper $c_0$ et le faire bondir en $c_1$.
   
-  Afin de pallier partiellement ce défaut, il est possible d'ajouter une sorte coopérative $fc$,
-  comme à la \figref{metazoan-ph},
-  afin de détecter la présence de $f_1$ et $c_0$.
+  \begin{figure}[tb]
+  \begin{center}\scalebox{1.2}{
+  \begin{tikzpicture}
+    \TSort{(0,0)}{a}{2}{l}
+    \TSort{(0,4)}{b}{2}{l}
+    \TSort{(7,2)}{c}{2}{r}
+
+    \TSetTick{ab}{0}{00}
+    \TSetTick{ab}{1}{01}
+    \TSetTick{ab}{2}{10}
+    \TSetTick{ab}{3}{11}
+    \TSort{(4,1)}{ab}{4}{r}
+
+    \THit{a_0}{}{ab_3}{.west}{ab_1}
+    \THit{a_0}{}{ab_2}{.south west}{ab_0}
+    \THit{a_1}{}{ab_1}{.west}{ab_3}
+    \THit{a_1}{}{ab_0}{.south west}{ab_2}
+
+    \THit{b_0}{}{ab_3}{.north west}{ab_2}
+    \THit{b_0}{}{ab_1}{.north west}{ab_0}
+    \THit{b_1}{}{ab_2}{.west}{ab_3}
+    \THit{b_1}{}{ab_0}{.west}{ab_1}
+
+    \THit{ab_3}{}{c_0}{.west}{c_1}
+
+    \path[bounce, bend right = 70]
+      \TBounce{ab_3}{}{ab_1}{.north}
+      \TBounce{ab_2}{}{ab_0}{.north west}
+      \TBounce{ab_3}{}{ab_2}{.north west}
+      \TBounce{ab_1}{}{ab_0}{.north}
+    ;
+    \path[bounce, bend left = 70]
+      \TBounce{ab_1}{}{ab_3}{.south}
+      \TBounce{ab_0}{}{ab_2}{.south}
+      \TBounce{ab_2}{}{ab_3}{.south west}
+      \TBounce{ab_0}{}{ab_1}{.south west}
+    ;
+    \path[bounce, bend left]
+      \TBounce{c_0}{}{c_1}{.south west}
+    ;
+    %\TState{a_0, b_0, ab_0, c_0}
+  \end{tikzpicture}
+  }\end{center}
+  \caption{\figlabel{excoop-ph}%
+    Un exemple de Frappes de Processus standards
+    avec une sorte coopérative $ab$.
+    L'action $\PHfrappe{ab_{11}}{a_1}{b_1}$ modélise
+    une coopération entre $a_1$ et $b_1$ pour faire bondir le processus actif de $c$.}
+  \end{figure}
+\end{example}
+
+\begin{example}
+\exlabel{metazoan-ph}
+  Afin de pallier partiellement l'absence de coopération entre les sortes $f$ et $c$
+  dans le modèle de la \figref{metazoan-ph-nocoop},
+  il est possible d'ajouter une sorte coopérative.
+  La \figref{metazoan-ph} propose un modèle corrigé de cette manière,
+  avec une sorte coopérative $fc$ permettant de détecter la présence de $f_1$ et $c_0$.
   Les deux actions $\PHfrappe{c_0}{a_0}{a_1}$ et $\PHfrappe{c_0}{a_0}{a_1}$
   sont alors remplacées par une action $\PHfrappe{fc_{10}}{a_0}{a_1}$
   afin d'avoir une véritable coopération entre ces deux processus pour activer $a$.
@@ -418,7 +517,27 @@ Enfin, on note dans la suite :
   \end{figure}
 \end{example}
 
-\todo{Explications sur l'imperfection des sortes coopératives}
+\myskip
+
+Le sortes coopératives possèdent cependant un défaut, qui est lié au fait que les actions
+sont totalement indépendantes, car
+le formalisme des Frappes de Processus standards est totalement asynchrone et indéterministe.
+En effet, les sortes coopératives ne sont pas nécessairement mises à jour immédiatement
+après un bond du processus actif d'une des sortes qu'elles représentent.
+Il peut ainsi exister un «~décalage temporel~» entre le changement de processus actif
+d'une sorte et la mise à jour des sortes coopératives.
+%Ce décalage temporel introduit des comportements indésirables sur deux niveaux.
+Ce décalage temporel permet alors de jouer des actions modélisant des coopérations dans des états
+où la coopération n'est plus possible,
+car même si l'un des processus modélisant la coopération a bondi,
+la sorte coopérative peut ne pas en avoir fait de même.
+Mais ce décalage peut aussi aboutir à des comportements indésirables.
+En effet, le processus actif d'une sorte coopérative ne correspond de fait pas à l'état courant
+des sortes représentée, mais uniquement à une combinaison d'état passés.
+Il est alors possible d'activer un processus de la sorte coopérative correspondant à
+un sous-état artificiel,
+c'est -à-dire non accessible aux sortes représentées.
+Ce mécanisme sera détaillé notamment au \chapref{phcanonique}.
 
 \begin{example}
 \exlabel{metazoan-ph-decalagetemporel}
@@ -443,36 +562,31 @@ Enfin, on note dans la suite :
   de l'action $\PHfrappe{fc_{10}}{a_0}{a_1}$.
 \end{example}
 
-\begin{comment}
-\subsection{Modelling cooperation}
-\label{ssec:cooperation}
+\myskip
 
-Cooperation between processes to make another process bounce can be expressed in PH by building a \emph{cooperative sort}, as described in \cite{PMR10-TCSB}.
-\pref{fig:ph-livelock} shows an example of cooperation between processes $a_1$ and $b_1$ to make $c_0$ bounce to $c_1$:
-a cooperative sort $ab$ is defined with 4 processes (one for each sub-state of the presence of processes $a_1$ and $b_1$).
-For the sake of clarity, the processes of $ab$ are indexed using the sub-state they represent.
-Hence, $ab_{10}$ represents the sub-state $\PHstate{a_1,b_0}$, and so on.
-Each process of sort $a$ and $b$ hit $ab$ to make it bounce to the process reflecting the status of the sorts $a$ and $b$
-(\eg $\PHfrappe{a_1}{ab_{00}}{ab_{10}}$ and $\PHfrappe{a_1}{ab_{01}}{ab_{11}}$).
-Then, to represent the cooperation between $a_1$ and $b_1$, the process $ab_{11}$ hits $c_0$ to make it bounce to $c_1$ instead of independent hits from $a_1$ and $b_1$.
+Nous notons pour terminer qu'il existe deux manières de diminuer le nombre
+de processus dans une sorte coopérative.
 
-We note that cooperative sorts are standard PH sorts and do not involve any
-special treatment regarding the semantics of related actions.
-Furthermore, it is possible to “factorise” cooperative sorts in order to decrease the number of processes created within each cooperative sort.
-For example, if three processes $x_1$, $y_1$ and $z_1$ cooperate,
-it is preferable to create a cooperative sort $xy$ with 4 processes to state the presence of $x_1$ and $y_1$
-and a second cooperative sort $xyz$ with 4 processes to state the presence of $xy_{11}$ and $z_1$,
-rather than a unique cooperative sort with 8 processes stating the presence of $x_1$, $y_1$ and $z_1$.
-This “factorisation” allows to prevent the combinatorial explosion of the number of processes in cooperative sorts,
-especially for cooperations between more than three processes.
-It may have computational consequences as the static analysis method developed in~\pref{sec:sa} does not suffer from the number of sorts but from the number of processes in each sort.
+On peut tout d'abord se limiter à deux états par sorte représentée :
+un état «~bon~» et un état «~mauvais~»,
+même si les sortes représentées possèdent plus de deux processus.
+Cela permet de limiter le nombre de processus de la sorte coopérative à
+$2^\card{A}$, où $A$ est l'ensemble des sortes à représenter,
+bien que le nombre de processus dépende toujours exponentiellement de la taille de $A$.
 
-The construction of cooperation in PH allows to encode any Boolean function between cooperating processes \cite{PMR10-TCSB}.
-Due to the introduction of priorities into the PH framework,
-it is possible to build cooperations with no temporal shift by defining actions updating the cooperative sorts with the highest class of priority.
-This allows to gain the same expressivity in PH than in Boolean networks, as stated in \pref{sec:dn}.
-The aim of this paper is to allow the static analysis of the dynamics to be handled on PH models involving such prioritised actions updating cooperative sorts.
-\end{comment}
+Il est aussi possible de factoriser les sortes coopératives
+qui représentent trois sortes ou plus.
+Pour cela, il suffit par exemple de créer une sorte coopérative intermédiaire entre deux des
+sortes représentées, puis une deuxième sorte coopérative entre
+la troisième sorte représentée et cette nouvelle sorte.
+Ainsi, trois sortes $a$, $b$ et $c$ peuvent être représentées soit par une unique
+sorte coopérative $abc$, soit par deux sortes coopératives
+$ab$ et $abc$, la seconde représentant en fait les sortes $ab$ et $c$
+(et non $a$, $b$ et $c$ directement).
+Le nombre de processus requis devient alors polynomial dans la taille de l'ensemble
+des sortes à représenter.
+En conjonction avec la méthode précédente, le nombre de processus requis devient effectivement
+$4 \cdot (\card{A} - 1)$.
 
 
 
