@@ -114,7 +114,7 @@
   \renewcommand{#1}{#2}
 }
 \newcommand{\THit}[5]{
-  \path[hit] (#1) edge[#2] (#3#4);
+  \path[hit] (#1) edge[#2] node[pos=.5,apdotsimple] {} (#3#4);
   \expandafter\repcommand\expandafter{\csname TBounce@#3@#5\endcsname}{#4}
 }
 \newcommand{\TBounce}[4]{
@@ -132,7 +132,34 @@
 %   \path[bounce, bend #7=50] \TBounce{#2}{}{#3}{.#6};
 % }
 
+% ex : \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+% #1 = frappeur
+% #2 = cible
+% #3 = bond
+% #4 = style frappe
+% #5 = style bond
 \newcommand{\TAction}[5]{
   \THit{#1}{#4}{#2}{}{#3}
   \path[bounce, bend #5=50] \TBounce{#2}{}{#3}{};
+}
+
+\newcommand{\TCoopHit}[6]{
+  \node[#2, apdot] at (#3) {};
+  \foreach \proc in {#1} {
+    \draw[#2,-] (#3) edge (\proc);
+  }
+  \path[hit] (#3) edge[#2] (#4#5);
+  \expandafter\repcommand\expandafter{\csname TBounce@#4@#6\endcsname}{#5}
+}
+
+% ex : ...
+% #1 = frappeur
+% #2 = cible
+% #3 = bond
+% #4 = style frappe
+% #5 = coordonnées point central
+% #6 = direction bond
+\newcommand{\TActionPlur}[6]{
+  \TCoopHit{#1}{#4}{#5}{#2}{}{#3}
+  \path[bounce, bend #6=50] \TBounce{#2}{}{#3}{};
 }

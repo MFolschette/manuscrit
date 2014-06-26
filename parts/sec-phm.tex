@@ -118,15 +118,111 @@ afin de formaliser la dynamique de ce type de modèles
 Pour toute action $h = \PHfrappemult{A}{B} \in \PHh$,
 $A$ est appelé le \emph{frappeur} et $B$ le \emph{bond} de $h$,
 et on note : $\hitter{h} = A$, $\bounce{h} = B$.
-On note de plus :
+On appelle par ailleurs \emph{frappeurs invariants} les processus de $A$
+qui ne sont pas désactivés par l'action plurielle
+(autrement dit, tels qu'il n'existe pas d'autre processus de la même sorte dans $B$)
+et on appelle \emph{cibles} les autres processus de $A$
+(pour lesquels il existe un autre processus de la même sorte dans $B$).
+On note en conséquence :
 $\target{h} = \{ p \in A \mid \exists q \in B, \PHsort(p) = \PHsort(q) \}$,
-et : $\invariant{h} = \{ p \in A \mid \sort{p} \notin \sortes{B} \}$.
+et $\invariant{h} = \{ p \in A \mid \sort{p} \notin \sortes{B} \}$.
 
 \begin{definition}[Opérateur de jouabilité ($\Fopsymbol_\Fopphmsubsymbol : \PHh \rightarrow \F$)]
 \deflabel{fopphm}
   L'opérateur de jouabilité des Frappes de Processus avec actions plurielles est défini par :
   \[\forall h \in \PHh, \Fopphm{h} \equiv \bigwedge_{p \in \hitter{h}} p \enspace.\]
 \end{definition}
+
+\myskip
+
+Nous notons que les Frappes de Processus avec actions plurielles proposent une alternative
+très efficace à la représentation des coopérations entre actions.
+Une telle coopération est représentée par une sorte coopérative en Frappes de Processus
+standards, comme expliqué à la \vsecref{sc}.
+Or une telle sorte coopérative présente un défaut de modélisation qui provoque des décalages
+temporels, voire l'apparition de «~faux états~», par un mécanisme développé
+\vexpageref{metazoan-ph-decalagetemporel}.
+De plus, cela nécessite l'utilisation d'un grand nombre d'actions pour assurer la mise à jour
+du processus actif de la sorte coopérative.
+
+\label{ph2phm}
+Les Frappes de Processus avec classes de priorités permettent de pallier ce défaut,
+comme cela sera expliqué à la \vsecref{phcanonique}.
+Cependant, cette solution ne règle pas le problème du grand nombre d'actions
+utilisée pour la mise à jour de la sorte coopérative,
+qui peuvent nuire à la lecture du modèle.
+Les Frappes de Processus avec actions plurielles peuvent alors se révéler utiles
+pour la représentation des processus de coopération.
+En effet, il suffit d'une action plurielle pour définir une coopération entre processus,
+à condition de lui attribuer les frappeurs adéquats.
+Ainsi, on peut obtenir une coopération depuis un modèle de Frappes de Processus standards
+en remplaçant :
+\begin{itemize}
+  \item toute action de la forme $\PHfrappe{a_i}{b_j}{b_k}$,
+    où $a$ n'est pas une sorte coopérative, par
+    une action plurielle $\PHfrappemults{a_i, b_j}{b_k}$ ;
+  \item toute action de la forme $\PHfrappe{f_{\mysigma}}{b_j}{b_k}$,
+    où $f$ est une sorte coopérative, par
+    une action plurielle $\PHfrappemult{(\toset{\mysigma} \cup \{ b_j \})}{b_k}$.
+\end{itemize}
+Le modèle obtenu corrige ainsi le problème de décalage temporel propre aux sortes
+coopératives, tout en permettant une meilleur lisibilité
+car chaque chaque sorte coopérative et toutes ses actions sont remplacées par
+une seule action plurielle.
+
+\begin{example}
+  On peut prendre en exemple 
+  la sorte coopérative $fc$ des Frappes de Processus standard de la \figref{metazoan-ph}.
+  Le modèle corrigé en Frappes de Processus avec actions plurielles
+  est donné à la \figref{metazoan-phm},
+  et contient notamment l'ensemble d'actions plurielles suivant :
+  \begin{align*}
+    \PHh = \{\qquad
+      \PHfrappemults{c_1, a_1}{a_0}\quad, && \PHfrappemults{c_0, f_1, a_0}{a_1}\quad,& \\
+      \PHfrappemults{c_1}{c_0}\quad, && \PHfrappemults{f_1, c_0}{c_1}\quad,& \\
+      \PHfrappemults{f_0, c_1}{c_0}\quad,&& \PHfrappemults{f_1}{f_0}\quad\; &
+    \qquad\}
+  \end{align*}
+  Il a été obtenu en reprenant toutes les actions dont le frappeur et la cible
+  n'étaient pas des processus de sortes coopératives,
+  et en remplaçant la sorte coopérative $fc$ et ses actions par l'action plurielle :
+  $\PHfrappemults{c_0, f_1, a_0}{a_1}$,
+  selon le procédé décrit \vpageref{ph2phm}.
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}[apdotsimple/.style={apdot}]
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(1,0)}{f}{2}{l}
+    \TSort{(7,4)}{a}{2}{r}
+    
+    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
+    \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
+    
+    \TActionPlur{}{c_1.west}{c_0.north west}{}{-1,5.5}{right}
+    \TActionPlur{}{f_1.south west}{f_0.north west}{}{0,0.5}{right}
+    \TActionPlur{f_1, c_0}{a_0.west}{a_1.south west}{}{3.5,2.5}{left}
+    
+    \TState{f_1, a_0, c_0}
+  \end{tikzpicture}
+  \caption{\figlabel{metazoan-phm}%
+    Exemple de Frappes de Processus avec actions plurielles.
+    Chaque action plurielle est représentée par plusieurs arcs et plusieurs couples de flèches,
+    partant tous d'un même point.
+    Les arcs indiquent les frappeurs invariants
+    tandis que les flèches pleines indiquent les cibles,
+    et sont suivies par une flèche en pointillés pour indiquer le bond correspondant.
+    Par exemple, l'action plurielle $\PHfrappemults{c_1, a_1}{a_0}$
+    est représentée par un point d'où partent un arc vers $c_1$
+    et un couple de flèches vers $a_1$ puis vers $a_0$.
+    De même, l'action plurielle $\PHfrappemults{c_1}{c_0}$
+    n'est représentée que par un couple de flèches vers $c_1$ puis vers $c_0$,
+    car elle ne possède pas de frappeur invariant.
+  }
+  \end{center}
+  \end{figure}
+\end{example}
 
 
 
@@ -370,12 +466,7 @@ Nous proposons dans cette section une traduction des Frappes de Processus
 avec actions plurielles en Frappes de Processus avec 4 classes de priorités (\defref{phm2php})
 et nous montrons que les modèles obtenus de cette façon sont faiblement bisimilaires
 (\thmref{phmbisimphp}).
-Nous en déduisons que ces deux formalismes ont une expressivité équivalente,
-%(\thmref{phmequivphp}).
-car les Frappes de Processus avec 4 classes de priorités peuvent à leur tour être
-traduites en Frappes de Processus canoniques (comme expliqué à la \vsecref{phm-aplatissement}),
-celles-ci pouvant à leur tour être traduites en Frappes de Processus avec actions plurielles
-\stodo{comme détaillé à la section xxx}.
+Les \figref{simple-phm,simple-php-trad} illustrent cette traduction.
 
 La traduction proposée permet d'obtenir un modèle de
 Frappes de Processus pseudo-canoniques avec 4 classes de priorités,
@@ -566,7 +657,104 @@ amener le système dans un état normalement inaccessible.
 
 
 
-\todo{Exemple}
+\begin{example}
+  Afin d'illustrer la traduction définie dans cette section,
+  nous nous intéressons aux Frappes de Processus avec actions plurielles
+  $\PH = (\PHs; \PHl; \PHh)$ suivantes,
+  représentées à la \figref{simple-phm} :
+  \begin{align*}
+    \PHs &= {a, b, c} & \PHl_a &= \{ a_0, a_0\} \\
+    \PHl_b &= \{ b_0, b_0 \} & \PHl_c &= \{ c_0, c_0\} \\
+    \PHh = \{ \PHfrappemults{a_1, b_1, c_1}{b_0, c_0} \}
+  \end{align*}
+  On appelle $h = \PHfrappemults{a_1, b_1, c_1}{b_0, c_0}$
+  l'unique action que comporte ce modèle.
+  Celle-ci représente un cas intéressant d'action plurielle,
+  car elle comporte plusieurs cibles (et donc plusieurs bonds).
+  En effet : $\cible{h} = \{ b_1, c_1 \}$ ;
+  par ailleurs : $\invariant{h} = \{ a_1 \}$.
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \TSort{(1,3)}{a}{2}{t}
+    \TSort{(0,0)}{b}{2}{l}
+    \TSort{(3,0)}{c}{2}{r}
+    
+    \node[apdot] (dot) at (1.5,0.7) {};
+    \draw (a_1) edge (dot);
+    \TAction{dot}{b_1.east}{b_0.north east}{}{left}
+    \TAction{dot}{c_1.west}{c_0.north west}{}{right}
+    
+    \TState{a_1, b_1, c_1}
+  \end{tikzpicture}
+  \caption{\figlabel{simple-phm}%
+    Exemple de Frappes de Processus avec actions plurielles.
+    L'unique action de ce modèle est $\PHfrappemults{a_1, b_1, c_1}{b_0, c_0}$
+    et comporte plusieurs cibles ($a_1$ et $b_1$).
+  }
+  \end{center}
+  \end{figure}
+  
+  La \defref{phm2php} nous permet de traduire ces Frappes de Processus avec actions plurielles
+  en un modèle de Frappes de Processus avec 4 classes de priorités
+  $\phmtophp = (\PHs'; \PHl'; \PHh'^{\langle 4 \rangle})$
+  qui est présenté à la \figref{simple-php-trad}.
+  Ce modèles comporte cinq sortes :
+  $\PHs' = \{ a, b, c, \sr{h}, \scf{h} \}$,
+  et notamment les classes d'actions suivantes :
+  \begin{align*}
+    \PHh'^{(2)} &= \{\quad \PHfrappe{\sr{h}_1}{b_1}{b_0} \quad,
+      \qquad \PHfrappe{\sr{h}_1}{c_1}{c_0} \quad\} \\
+    \PHh'^{(3)} &= \{\quad \PHfrappe{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \quad\} \qquad\quad
+      \PHh'^{(4)} = \{\quad \PHfrappe{\scf{h}_7}{\sr{h}_0}{\sr{h}_1} \quad\}
+  \end{align*}
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \TSort{(0,-3)}{a}{2}{l}
+    \TSort{(0,0)}{b}{2}{l}
+    \TSort{(0,3)}{c}{2}{l}
+    \TSort{(4,3)}{\sr{h}}{2}{r}
+    
+    \TSetTick{\scf{h}}{0}{000}
+    \TSetTick{\scf{h}}{1}{001}
+    \TSetTick{\scf{h}}{2}{010}
+    \TSetTick{\scf{h}}{3}{011}
+    \TSetTick{\scf{h}}{4}{100}
+    \TSetTick{\scf{h}}{5}{101}
+    \TSetTick{\scf{h}}{6}{110}
+    \TSetTick{\scf{h}}{7}{111}
+    \TSort{(7,-3.5)}{\scf{h}}{8}{r}
+    
+    \TAction{\scf{h}_7}{\sr{h}_0.east}{\sr{h}_1.south}{bend right = 10}{right}
+    \TAction{\sr{h}_1.north east}{\sr{h}_1.south east}{\sr{h}_0.north east}
+      {selfhit, min distance=30, bend left, out=110, in=70}{left}
+    \TAction{\sr{h}_1}{c_1.east}{c_0.north east}{}{left}
+    \TAction{\sr{h}_1}{b_1.east}{b_0.north east}{}{left}
+    
+    \path (0.8, 3.5) edge[coopupdate] (6, 0.5);  % c
+    \path (0.8, 0.5) edge[coopupdate] (6, 0);  % b
+    \path (0.8, -2.5) edge[coopupdate] (6, -0.5);  % a
+    
+    \node[labelprio1] at (5,1.5) {$1$}; % c => f
+    \node[labelprio1] at (4,0.6) {$1$}; % b => f
+    \node[labelprio1] at (4.5,-1.5) {$1$}; % a => f
+    \node[labelprio2] at (2,4.3) {$2$}; % r_1 -> c_1 / 0
+    \node[labelprio2] at (2.9,3.5) {$2$}; % r_1 -> b_1 / 0
+    \node[labelprio3] at (5,4.5) {$3$}; % r_1 -> r_1 / 0
+    \node[labelprio4] at (5.9,3.75) {$4$}; % f_011 -> r_0 / 1
+    
+    \TState{a_1, b_1, c_1, \sr{h}_0, \scf{h}_7}
+  \end{tikzpicture}
+  \caption{\figlabel{simple-php-trad}%
+    La traduction des Frappes de Processus avec actions plurielles
+    de la \figref{simple-phm} en Frappes de Processus avec 4 classes de priorités.
+  }
+  \end{center}
+  \end{figure}
+\end{example}
 
 
 
