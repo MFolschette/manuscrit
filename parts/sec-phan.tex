@@ -36,7 +36,7 @@ même si elle-même est neutralisée.
 Nous ne nous avancerons cependant pas sur la signification biologique de ce fait.
 
 Enfin, il semble nécessaire de faire un parallèle entre les arcs inhibiteurs développés ici
-et les arcs du même nom utilisés dans les réseaux de Petri \toref.
+et les arcs inhibiteurs utilisés dans les réseaux de Petri \cite{Busi02}.
 Leur rôle est effectivement proche, leur but étant la préemption d'une action en fonction
 d'une condition extérieure à son déclenchement.
 Malgré tout, les arcs inhibiteurs des réseaux de Petri se différencient car ils
@@ -47,7 +47,7 @@ là où les arcs inhibiteurs des Frappes de Processus ne permettent l'inhibition
 qu'en fonction de l'activité d'une autre action.
 Cependant, un tel choix de conception peut aisément se pallier dans un sens comme dans l'autre.
 En effet, représenter l'activité d'une action revient à créer deux arcs inhibiteurs en
-réseaux de Petri ---~l'un pour le frappeur et l'autre pour la cible.
+réseaux de Petri : l'un pour le frappeur et l'autre pour la cible.
 À l'inverse, il est possible qu'une action $h$ se bloque elle-même, à l'aide d'un 
 «~auto-arc neutralisant~» $\PHan{h}{h}$,
 permettant ainsi de bloquer une autre action $g$
@@ -100,23 +100,39 @@ En ce sens, il est semblable à celui des Frappes de Processus avec $k$ classes 
 \begin{example}
   La figure \figref{metazoan-phan} présente un exemple de Frappes de Processus
   avec arcs neutralisants.
-  Il s'agit du modèle de segmentation métazoaire précédemment proposé à la \vfigref{metazoan-ph}
-  enrichi à l'aide de l'ensemble d'arcs neutralisants suivant :
+  Il s'agit du modèle de segmentation métazoaire $\PH = (\PHs; \PHl; \PHh; \PHn)$
+  précédemment proposé à la \vfigref{metazoan-ph}
+  et enrichi à l'aide de l'ensemble d'arcs neutralisants suivant :
   \[\PHn = \{ \qquad \PHan{\PHfrappe{c_1}{a_1}{a_0}}{\PHfrappe{c_1}{c_1}{c_0}}\quad,\qquad
     \PHan{\PHfrappe{fc_{10}}{a_0}{a_1}}{\PHfrappe{f_1}{c_0}{c_1}}\qquad\}\]
-  Ces arcs neutralisants permettent de s'assurer que l'évolution de la sorte $a$
+  Ces arcs neutralisants permettent de se rapprocher du comportement observé biologiquement :
+  ils assurent que l'évolution de la sorte $a$
   (son activation ou sa désactivation) primera toujours sur celle de la sorte $c$.
-  Cela permet de se rapprocher du comportement observé biologiquement :
-  $c$ possède un rôle d'horloge, et la modification de son processus actif doit
-  être suivi de la modification du processus actif de $a$.
-  L'ajout de ces deux arcs neutralisants permet d'introduire des contraintes locales dans
-  le modèle.
+  Ainsi, $c$ possède bien un rôle d'horloge, et son rôle inhibiteur envers $a$
+  doit toujours aboutir avant son prochain cycle d'horloge.
+  Le bon scénario suivant est alors jouable dans le modèle $\PH$ depuis l'état
+  $\etat{a_0, c_0, f_1, fc_{10}}$ :
+  \begin{align*}
+    \PHfrappe{fc_{10}}{a_0}{a_1} &\cons
+    \PHfrappe{f_1}{c_0}{c_1} \cons
+    \PHfrappe{c_1}{fc_{10}}{fc_{11}} \cons \\
+    &\PHfrappe{c_1}{a_1}{a_0} \cons
+    \PHfrappe{c_1}{c_1}{c_0} \cons
+    \PHfrappe{c_0}{fc_{11}}{fc_{10}}
+  \end{align*}
+  En revanche, il est impossible de jouer l'action $\PHfrappe{f_1}{c_0}{c_1}$ depuis ce même état
+  car celle-ci est neutralisée.
+  Cela permet d'assurer que $a$ sera activé avant le prochain cycle de l'horloge
+  modélisée par $c$.
+  L'ajout de ces deux arcs neutralisants permet en effet
+  d'introduire des contraintes locales de ce type dans le modèle.
   Ces contraintes sont plus fines que celles offertes par les Frappes de Processus avec
   classes de priorités, car la préemption d'une action n'empêche notamment pas le parallélisme
-  à d'autres endroits du modèles, comme cela pourrait être le cas avec des classes de priorités.
+  à d'autres endroits du modèles,
+  comme par exemple l'auto-désactivation de $f$.
+  Cette finesse fait parfois défaut aux Frappes de Processus avec classes de priorités,
+  comme cela avait été discuté \vexpageref{paramsstocha-php-accumulation}.
   
-  \todo{exemple de dynamique}
-
   \begin{figure}[ht]
   \begin{center}
   \begin{tikzpicture}
@@ -136,7 +152,6 @@ En ce sens, il est semblable à celui des Frappes de Processus avec $k$ classes 
     Les arcs neutralisants sont représentés par un trait gras entre deux actions
     terminant par un point du côté de l'action bloquée.}
   \end{figure}
-
 \end{example}
 
 On constate que les arcs neutralisants introduits dans le modèle de la \figref{metazoan-phan}
@@ -159,7 +174,25 @@ globales entre des ensemble (potentiellement larges) d'actions,
 alors que les arcs neutralisants permettent de définir des préemptions individuelles,
 utiles pour rendre compte de contraintes locales connues.
 
-\todo{Exemple de dynamique « parfaite »}
+\begin{example}
+  On note que le scénario suivant est jouable dans le modèle de la \figref{metazoan-phan}
+  depuis l'état $\etat{a_0, c_0, f_1, fc_{10}}$ :
+  \[\PHfrappe{fc_{10}}{a_0}{a_1} \cons
+    \PHfrappe{f_1}{c_0}{c_1} \cons
+    \PHfrappe{c_1}{a_1}{a_0} \cons
+    \PHfrappe{fc_{10}}{a_0}{a_1}\]
+  Ce comportement n'est pourtant pas désirable car il «~court-circuite~»
+  l'état de $c$ qui a été modifié, et permet donc d'activer $a$ à tout moment.
+  Il est dû au fait que la sorte coopérative $fc$ n'est pas mise à jour,
+  permettant donc de jouer l'action $\PHfrappe{fc_{10}}{a_0}{a_1}$ même lorsque $c_1$ est actif.
+  
+  Pour pallier cela, il est possible, comme expliqué ci-dessus, d'utiliser un modèle hybride
+  mêlant deux classes de priorités (pour prioriser les actions de mise à jour des sortes
+  coopératives) à des arcs neutralisants (pour définir des préemptions locales entre les
+  autres actions).
+  Ainsi, en assignant une priorité haute aux actions mettant la sorte $fc$ à jour,
+  il est possible de retrouver un bon comportement comme celui décrit \vexpageref{metazoan-php}.
+\end{example}
 
 
 
@@ -214,10 +247,6 @@ dont les arcs neutralisants ont été ignorés (\defref{phan-fusion}).
 Cette définition nous permet d'avancer le résultat suivant :
 les points fixes de $\PHmergean(\PH)$ sont des points fixes de $\PH$,
 d'après la contraposée du \thmref{php-pf}.
-Il n'est en effet pas possible d'avancer de résultat plus précis de façon immédiate,
-car les arcs neutralisants peuvent former des boucles d'actions qui se neutralisent entre elles,
-rajoutant ainsi des points fixes supplémentaires par rapport au modèle fusionné.
-Ce cas ne se présente pas pour les Frappes de Processus avec $k$ classes de priorités.
 
 \begin{definition}[Fusion ($\PHmergean$)]
 \deflabel{phan-fusion}
@@ -241,15 +270,26 @@ Ce cas ne se présente pas pour les Frappes de Processus avec $k$ classes de pri
   Cette condition est suffisante pour que cette même action soit jouable dans $\PHmergean(\PH)$.
 \end{proof}
 
-\todo{Les cycles d'actions sont-ils suffisants pour trouver tous les points fixes ?}
+Pour obtenir l'ensemble exact des points fixes d'un modèle de Frappes de Processus
+avec arcs neutralisants, il est nécessaire de prendre en compte les cycles d'actions
+qui se neutralisent entre elles, car ces cas de figure rajoutent des points fixes.
+En effet, si plusieurs actions sont actives mais se neutralisent de façon circulaire
+(par exemple, $\PHan{h_1}{h_2}$, $\PHan{h_2}{h_3}$ et $\PHan{h_3}{h_1}$)
+alors aucune des trois ne sera jouable dans le modèle avec arcs neutralisants,
+mais elles le seront dans le modèle fusionné.
+Il est à noter que
+ce cas ne se présente pas pour les Frappes de Processus avec classes de priorités.
 
-Pour finir, il est toujours envisageable d'aplatir des Frappes de Processus avec
-arcs neutralisants en Frappes de Processus canoniques,
+Cependant, pour obtenir l'ensemble des points fixes d'un modèle de Frappes de Processus
+avec arcs neutralisants, il est possible d'aplatir celui-ci
 comme décrit à la \secref{phan-aplatissement},
-afin d'effectuer une recherche de points fixes à l'aide de la méthode
-proposée à la \secref{php-outils-pf}.
-Comme le modèle aplati de Frappes de Processus avec arcs neutralisants possède la même dynamique,
-il est possible de retrouver les points fixes du modèle original de cette façon,
+afin de produire un modèle équivalent de Frappes de Processus avec 2 classes de priorités.
+%en Frappes de Processus canoniques,
+La recherche de points fixes est alors rendu possible à l'aide de la méthode
+proposée à la \secref{php-outils-pf},
+et le résultat est transposable au modèle original.
+En effet, le modèle aplati possédant la même dynamique,
+il est possible de retrouver les points fixes du modèle d'origine
 en supprimant simplement les sortes coopératives des résultats.
 
 \subsubsection{Analyse statique}
