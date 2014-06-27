@@ -1,0 +1,176 @@
+\documentclass[a4paper,french]{report}
+
+% Langue et encodage d'entrée
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% Maths
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+
+
+% Références internes et externes
+\usepackage{varioref}
+\usepackage[french]{refstyle}
+\newcommand{\vdefref}[2][]{\defref[vref,#1]{#2}}
+\newcommand{\vthmref}[2][]{\thmref[vref,#1]{#2}}
+\newcommand{\vsecref}[2][]{\secref[vref,#1]{#2}}
+\newcommand{\vfigref}[2][]{\figref[vref,#1]{#2}}
+\newcommand{\vexpageref}[2][]{\expageref[vref,#1]{#2}}
+
+\usepackage{hyperref}
+
+\usepackage[agsm,dcucite,full]{harvard}  % Citations style Harvard
+\renewcommand{\harvardand}[1]{\& }
+\renewcommand{\harvardurl}[1]{\url{#1}}
+\newcommand{\citefullname}[2]{#2 \citeasnoun{#1}}
+
+
+
+% Police
+\usepackage{cmbright}  % Police sans empattements
+%\usepackage{mathbbol}  % Majuscules doubles pour maths sans empattements
+
+%\usepackage{libertine}
+%\usepackage{charter} \usepackage[expert]{mathdesign}
+%\usepackage[bitstream-charter]{mathdesign}
+%\usepackage{lmodern}
+%\usepackage[sc]{mathpazo} \linespread{1.05}
+
+% Mise en page
+\usepackage[a4paper]{geometry}
+
+% Divers
+\usepackage{color}   % Couleurs du texte
+\usepackage{url}     % Mise en forme + liens pour URLs
+\usepackage{array}   % Tableaux évolués
+\usepackage{comment} % Blocs de commentaires
+\usepackage{enumerate} % Personnalisation de la numérotation des listes
+
+
+
+% Types de théorèmes
+\usepackage{amsthm}
+
+\newtheorem{property}{Propriété}[chapter]
+\newtheorem{theorem}{Théorème}[chapter]
+\newtheorem{lemma}{Lemme}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}[chapter]
+\newtheorem{condition}{Condition}[chapter]
+
+\theoremstyle{remark}
+\newtheorem*{example}{Exemple}
+\newtheorem*{remark}{Remarque}
+
+
+
+% Macros et styles
+\input{macros/macros}
+\input{macros/macros-ph}
+\input{macros/macros-abstr}
+\input{macros/tikzstyles}
+\input{macros/ex}
+
+
+
+% Raccourcis typographiques
+\newcommand{\nbd}{\nobreakdash-}
+%\newcommand{\cad}{c.\nbd à\nbd d.\ }
+\newcommand{\cad}{c'est-à-dire\ }
+\newcommand{\resp}{resp.\ }
+\newcommand{\cf}{cf.~}
+%\newcommand{\ie}{\cad}
+
+% Styles supplémentaires
+\newcommand{\bemph}[1]{\textbf{#1}}
+\newcommand{\myskip}{\medskip}
+
+% Césures
+\hyphenation{jou-a-bi-li-té}
+\hyphenation{jou-a-bi-li-tés}
+\hyphenation{at-tei-gna-bi-li-té}
+\hyphenation{at-tei-gna-bi-li-tés}
+
+% Raccourcis
+\newcommand{\allcr}{\crref{tf,part}}
+
+
+
+% Paquets temporaires
+%\usepackage[notref,notcite]{showkeys}
+
+% Commandes À FAIRE
+%\definecolor{darkgreen}{rgb}{0,0.5,0}
+%\definecolor{darkblue}{rgb}{0,0,0.5}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
+\newcommand{\TODO}{\todo{TODO}}
+\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\toref}{\stodo{ref}}
+\newcommand{\storef}{\toref}
+\newcommand{\tocite}[1][citation]{\stodo{#1}}
+%\newcommand{\idea}[1]{\textcolor{darkgreen}{[#1]}}
+%\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
+%\newcommand{\mq}[1]{\textcolor{darkblue}{[MQ : #1]}}
+\newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
+\newcommand{\chapeau}[1]{\noindent\colorbox{lightgray}{\begin{minipage}{\textwidth}#1%
+\end{minipage}}\vspace{1em}}
+\renewcommand{\restriction}{\todo{\textbackslash{}reduction}}
+
+
+
+\begin{document}
+
+
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\tableofcontents
+
+
+% Introduction
+\input{parts/chap-introduction}
+
+\input{parts/notations}
+
+\chapter{État de l'art de la modélisation}
+\chaplabel{etatdelart}
+  \section{Modèle de Thomas}
+  % Les Frappes de Processus
+  \input{parts/sec-ph}
+
+% Enrichissement des Frappes de Processus
+\input{parts/chap-semantiques}
+
+% Représentation canonique et analyse du PH
+\input{parts/chap-phcanonique}
+
+\chapter{Expressivité du PH et positionnement par rapport à d'autres formalismes}
+\chaplabel{expressivite}
+  \section{Modèle de Thomas}
+  \section{Réseaux de Petri}
+    \subsection{Réseaux de Petri saufs (une place par processus)}
+    \subsection{Réseaux de Petri bornés (une place par sorte)}
+  \section{$\pi$-calcul ?}
+  \section{Automates finis communicants ?}
+  \section{Biocham ?}
+
+\chapter{Applications}
+\chaplabel{applications}
+  \section{Gros exemple analyse statique}
+  \section{Gros exemples ph2thomas}
+
+\input{parts/chap-conclusion}
+  
+%\chapter*{Références}
+%\bibliographystyle{alpha}
+\bibliography{biblio}
+
+\end{document}

@@ -229,7 +229,7 @@ Ces notations sont formellement définies dans la \defref{premder}.
   \eqlabel{der}
     \der{a}{A} &=
       \begin{cases}
-        \varnothing & \text{si } a \notin \sorts(A), \\
+        \varnothing & \text{si } a \notin \sortes{A}, \\
         \bounce{A_m} & \text{si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
           \wedge \sorte{\bounce{A_m}} = a, \\
         \hitter{A_m} & \text{sinon si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
@@ -765,13 +765,13 @@ c'est-à-dire des ensembles de processus nécessaires à une certaine atteignabi
 
 \todo{Rappels rapides ?}
 
-\newcommand{\stochainf}{{\small $\infty$}}
-%\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
-%\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
-%\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
-\newcommand{\stochaa}{$\mathbf{a}$}
-\newcommand{\stochab}{$\mathbf{b}$}
-\newcommand{\stochac}{$\mathbf{c}$}
+% \newcommand{\stochainf}{{\small $\infty$}}
+% %\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
+% %\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
+% %\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
+% \newcommand{\stochaa}{$\mathbf{a}$}
+% \newcommand{\stochab}{$\mathbf{b}$}
+% \newcommand{\stochac}{$\mathbf{c}$}
 
 \begin{example}
 \exlabel{metazoan-stocha-params}

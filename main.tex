@@ -1,20 +1,30 @@
-\documentclass[a4paper,french]{report}
+\documentclass[12pt, french]{these-LUNAM}  %, fancyChapter, fancyPart
 
-% Langue et encodage d'entrée
+
+% - En plus de "babel", "geometry" et "times", d'autres paquets ont déjà été pré-chargés
+%   par la classe et
+%   ne nécessitent donc pas d'être redéclarés ici :
+%    - amsmath, xcolor, graphicx, ifthen, et setspace.
+
+% Encodage d'entrée
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
-
-% Maths
-\usepackage{amsmath}
+\usepackage{textcomp}  % Meilleur rendu de certains caractères
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{stmaryrd}
 
+% Mise en page
+\geometry{inner=2.5cm, outer=2.5cm, top=2.5cm, bottom=2cm} % Format A4
+\geometry{inner=1.5cm, outer=1.5cm, top=2cm, bottom=2cm}
 
+% Police
+%\usepackage{times} % times, palatino, charter, lmodern, etc.
+\usepackage{cmbright}  % Police sans empattements
+%\onehalfspacing    % augmenter l'interligne
 
 % Références internes et externes
-\usepackage{varioref}
+\usepackage{varioref}   % Références enrichies
 \usepackage[french]{refstyle}
 \newcommand{\vdefref}[2][]{\defref[vref,#1]{#2}}
 \newcommand{\vthmref}[2][]{\thmref[vref,#1]{#2}}
@@ -22,31 +32,19 @@
 \newcommand{\vfigref}[2][]{\figref[vref,#1]{#2}}
 \newcommand{\vexpageref}[2][]{\expageref[vref,#1]{#2}}
 
-\usepackage{hyperref}
-
 \usepackage[agsm,dcucite,full]{harvard}  % Citations style Harvard
 \renewcommand{\harvardand}[1]{\& }
 \renewcommand{\harvardurl}[1]{\url{#1}}
 \newcommand{\citefullname}[2]{#2 \citeasnoun{#1}}
 
+\usepackage{url}     % Mise en forme + liens pour URLs
 
-
-% Police
-\usepackage{cmbright}  % Police sans empattements
-%\usepackage{mathbbol}  % Majuscules doubles pour maths sans empattements
-
-%\usepackage{libertine}
-%\usepackage{charter} \usepackage[expert]{mathdesign}
-%\usepackage[bitstream-charter]{mathdesign}
-%\usepackage{lmodern}
-%\usepackage[sc]{mathpazo} \linespread{1.05}
-
-% Mise en page
-\usepackage[a4paper]{geometry}
+% \RequirePackage[bookmarks, colorlinks, urlcolor=blue, citecolor=blue, linkcolor=blue,
+%   hyperfigures, pagebackref, pdfcreator=LaTeX, breaklinks=true, pdfpagelayout=SinglePage,
+%   bookmarksopen=true, bookmarksopenlevel=2]{hyperref}   % Références cliquables
 
 % Divers
-\usepackage{color}   % Couleurs du texte
-\usepackage{url}     % Mise en forme + liens pour URLs
+%\usepackage{color}   % Couleurs du texte
 \usepackage{array}   % Tableaux évolués
 \usepackage{comment} % Blocs de commentaires
 \usepackage{enumerate} % Personnalisation de la numérotation des listes
@@ -98,12 +96,21 @@
 \hyphenation{at-tei-gna-bi-li-té}
 \hyphenation{at-tei-gna-bi-li-tés}
 
-% Raccourcis
+% Raccourcis propres à ce document
 \newcommand{\allcr}{\crref{tf,part}}
+
+\newcommand{\stochainf}{{\small $\infty$}}
+%\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
+%\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
+%\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
+\newcommand{\stochaa}{$\mathbf{a}$}
+\newcommand{\stochab}{$\mathbf{b}$}
+\newcommand{\stochac}{$\mathbf{c}$}
 
 
 
 % Paquets temporaires
+\usepackage{lipsum}
 %\usepackage[notref,notcite]{showkeys}
 
 % Commandes À FAIRE
@@ -126,13 +133,97 @@
 
 
 
+\titre{Modélisation algébrique de l'évolution et de la dynamique multi-échelles
+  des réseaux de régulation biologique}
+\soustitre{\TODO}
+
+\title{Algebraic Modeling of the Evolution and Dynamics of Multi-scale
+  Biological Regulatory Networks}
+\subtitle{\TODO}
+
+\author{M.}{Maxime}{Folschette}
+\discipline{Informatique et applications}
+\sectionCNU{27}
+\specialty{Bioinformatique \todo{?}}
+
+\institution{ECN}
+\doctoralschool{Sciences et technologies de l'information, et mathématiques}
+\laboratory{Institut de Recherche en Communications et Cybernétique de Nantes (IRCCyN)
+  UMR CNRS 6597}
+%\thesisnumber{}
+\date{8 octobre 2014}
+
+
+
+% Étoiler les \reviewer, \supervisor et \cosupervisor absents
+\reviewer{M.}{Jean-Paul}{Comet}{Professeur des universités}%
+  {Ecole Polytechnique de l'Université de Nice Sophia Antipolis}
+
+\reviewer{Mme}{Anne}{siegel}{Directrice de recherche \todo{INRIA ? CNRS ?}}%
+  {IRISA (CNRS \& Université Rennes 1), Inria Rennes}
+
+\examiner{Mme}{Mireille}{Régnier}{\TODO}%
+  {École Polytechnique \& Université Paris-Sud 11}
+
+\examiner{M.}{Denis}{Thieffry}{\TODO}%
+  {École normale supérieure}
+
+%\president{Mme}{Prénom}{Nom}{Titre}{Établissement}
+%\guest{Mme}{Prénom}{Nom}{Titre}{Établissement}
+
+\supervisor{M.}{Olivier}{Roux}{Professeur des universités}%
+  {École centrale de Nantes}
+
+\cosupervisor{M.}{Morgan}{Magnin}{Enseignant-chercheur}%
+  {École Centrale de Nantes}
+
+
+  
 \begin{document}
 
+\begin{resume}
+  \TODO
+   % - Le résumé doit être suffisamment court pour tenir en dernière page, sur une seul (demi-)colonne,
+   %   avec les mots-clés correspondants.
+   %   En cas de nécessité, il est possible de réduire la taille des caractères
+   %   avec les commandes \footnotesize, voire \scriptsize (la taille par défaut est \small).
+   %   Mais, il ne doit pas dépasser 1 700 caractères, espaces comprises.
+   %   Noter que le résumé est aligné à gauche, non pas justifié.
+   %   En effet, dans le cas de colonnes étroites cela permet d'éviter que certaines lignes de
+   %   contiennent des espacements visuellement désagréables.
+   % - The abstract must be short enough in order to fit on the last page of the cover,
+   %   on a single (half) column, along with the keywords.
+   %   It is possible to reduce the size of the font in case of overflow
+   %   thanks to the \footnotesize, or even \scriptsize, commands (\small is the default).
+   %   However, it cannot be longer than 1,700 characters, including spaces.
+   %   Notice that inside the abstracts, the text is only aligned on the left, it is not justified.
+   %   Effectively, with thin columns, it is better to avoid justification that can lead
+   %   to large spacing between words on some lines.
+   %\footnotesize
+   %\scriptsize
+\end{resume}
 
+\begin{motscles}
+   \TODO ---, ---, ---, ---.
+\end{motscles}
+
+\begin{abstract}
+  \TODO
+   %\footnotesize
+   %\scriptsize
+   \lipsum[1-1]
+\end{abstract}
+
+\begin{keywords}
+   \TODO ---, ---, ---, ---.
+\end{keywords}
+
+\maketitle
 
 \setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{3}
 \tableofcontents
+
 
 
 % Introduction
@@ -172,5 +263,7 @@
 %\chapter*{Références}
 %\bibliographystyle{alpha}
 \bibliography{biblio}
+
+
 
 \end{document}
