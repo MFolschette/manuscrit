@@ -2,7 +2,7 @@
 
 Cette section définit les Frappes de Processus standards
 telles qu'elles ont été formalisées par \citeasnoun{PMR10-TCSB}.
-En tant que restrictions du $pi$\nbd calcul (\citeasnoun{Brand83}),
+En tant que restrictions du $\pi$\nbd calcul \cite{Brand83,Milner89},
 les Frappes de Processus offrent une représentation discrète, asynchrone et indéterministe
 avec une définition atomique des interactions entre les différents composants du modèle.
 En cela,
@@ -742,80 +742,189 @@ pour jouer chaque action nécessaire (c'est-à-dire les frappeurs de ces actions
 
 Il existe donc un lien de causalité récursif entre l'activation locale d'un processus,
 les actions requises pour le faire, et de nouveau l'activation des processus
-nécessaires pour jouer ces actions...
-Ce lien de causalité est représenté à l'aide de \emph{graphes de causalité locale}.
-Deux graphes de ce type 
+nécessaires pour jouer ces actions, etc.
+Afin de réduire la complexité de la méthode,
+une approximation de la dynamique est effectuée à chaque étape :
+pour chaque résolution atteignabilité locale au sein d'une sorte,
+un ensemble de processus requis appartenant à d'autres sortes est produit,
+mais l'ordre dans lequel ces processus sont nécessaires est abstrait.
+Cela permet donc de déplacer l'atteignabilité locale d'un processus
+à plusieurs atteignabilités indépendantes dans d'autres sortes.
 
+Cette approche permet de décliner une sur-approximation et une sous-approximation de la dynamique.
+La sur-approximation consiste à ne pas s'intéresser à l'ordre dans lequel les processus requis
+sont activables ---~et donc à l'ordre dans lequel les actions résolvant l'atteignabilité
+locale sont jouables.
+Cela autorise effectivement davantage de comportements, car en pratique un processus
+peut ne pas être activable après certaines actions.
+La sous-approximation, à l'inverse, stipule que tous les processus requis doivent
+être activables dans tous les ordres possibles,
+bien qu'en pratique, tous les ordres ne soient pas intéressants pour la résolution.
 
-\TODO
+Chacune de ces approximations est représentée à l'aide d'un \emph{graphe de causalité locale},
+qui est unique à chaque problème d'atteignabilité,
+et qui formalise les liens de causalité évoqués précédemment.
+Enfin, \citeasnoun{PMR12-MSCS} donnent une propriété qui, sous certaines conditions dépendant du
+graphe de causalité locale correspondant à la sous-approximation,
+stipule que le processus donné est atteignable depuis l'état donné ;
+de même, une propriété complémentaire est donnée pour le graphe de causalité locale
+correspondant à la sur-approximation, qui permet d'obtenir la conclusion inverse.
+Si aucune des deux propriétés n'est vraie, la méthode est dite non conclusive,
+et il est nécessaire de raffiner le problème ou le modèle.
 
-
-
+Le calcul des deux graphes de causalité locales est polynomial dans la taille
+des Frappes de Processus standards sur lesquelles la méthode est appliquée,
+et la vérification des deux propriétés l'est dans la taille des graphes obtenus.
+Ainsi, cette méthode est plus efficace que les approches par force brute
+car elle évite l'explosion combinatoire propre à l'analyse de la dynamique.
+Son implémentation produit des résultats en quelques dixièmes de seconde sur des modèles
+de centaines de composants, et s'avère toujours conclusive sur les exemples présentés.
 
 Une partie de cette analyse statique a par la suite été
 %étendue aux réseaux d'automates asynchrones, et
 exploitée dans le but d'approximer efficacement des ensembles de coupes,
 c'est-à-dire des ensembles de processus nécessaires à une certaine atteignabilité
 \cite{PAK13-CAV}.
+Son utilisation dans ce cadre s'est avérée efficace sur des modèles de plusieurs milliers
+de composants.
 
 
 
 \subsection{Analyse stochastique}
 \seclabel{ph-stocha}
 
-\todo{Rappels rapides ?}
+\cite{PMR10-TCSB} ont aussi proposé un enrichissement des Frappes de Processus standards
+à l'aide de paramètres stochastiques,
+l'objectif étant d'intégrer des données temporelles continues dans les modèles.
+Cet enrichissement est directement inspiré du $pi$\nbd calcul stochastique
+\cite{Priami95}.
+Cependant, la loi exponentielle utilisée pour la loi stochastique étant jugée trop grossière,
+l'approche a été raffinée par l'introduction d'un paramètre supplémentaire permettant
+de réduire l'intervalle de tir \cite{PMR10-TSE}.
 
-% \newcommand{\stochainf}{{\small $\infty$}}
-% %\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
-% %\newcommand{\stochab}{{\footnotesize $\clubsuit$}}
-% %\newcommand{\stochac}{{\footnotesize $\blacktriangledown$}}
-% \newcommand{\stochaa}{$\mathbf{a}$}
-% \newcommand{\stochab}{$\mathbf{b}$}
-% \newcommand{\stochac}{$\mathbf{c}$}
+\myskip
+
+L'introduction de données dans les Frappes de Processus standards
+consiste à affecter un couple de paramètres stochastiques $\couple{r}{sa} \in \sN \times \sR$
+à chaque action.
+La probabilité de tirer une action à un instant donné (sur un axe de temps continu)
+suit alors une loi d'Erlang en fonction de ces deux paramètres,
+c'est-à-dire une somme de lois exponentielles.
+Le premier paramètre, appelé \emph{taux}, indique le nombre de fois qu'une action
+peut être tirée dans une unité de temps.
+Le second paramètres est l'\emph{absorption de stochasticité},
+qui détermine le nombre de lois exponentielles sommées pour obtenir la distribution finale.
+
+Tout couple de paramètres stochastiques $\couple{r}{sa}$
+correspond à un intervalle de tir $\interv{d}{D}$, où $d, D \in \sR$,
+pour un niveau de confiance $\alpha \in \interv{0}{1}$ donné,
+et inversement, qui peut être approximé \cite[p.~72]{Pauleve11}.
+Cette conversion permet de raisonner sur des intervalles de tirs
+plutôt qu'en termes de loi d'Erlang,
+ce qui permet notamment de définir des fenêtres de tir pour chaque action
+---~une action devant être tirée dans sa fenêtre avec un niveau de confiance de $\alpha$.
+Au niveau de l'intervalle de tir, les deux paramètres stochastiques ont un rôle particulier :
+\begin{itemize}
+  \item Le taux détermine la distance de l'intervalle de tir par rapport à l'origine
+    de l'axe du temps ; autrement dit, une action avec un taux élevé sera tirée
+    plus rapidement après sensibilisation.
+  \item Le facteur d'absorption de stochasticité détermine la taille de l'intervalle de tir.
+    Ainsi, augmenter ce facteur réduit la quantité $D - d$.
+\end{itemize}
+
+Enfin, il est aussi possible d'assigner un taux \emph{infini} à une action ($r = \infty$),
+ce qui a pour conséquence de rendre le tir de l'action instantané :
+l'action doit être jouée dès sa sensibilisation.
+Si plusieurs actions de taux infini sont sensibilisées en même temps,
+le non-déterminisme est la règle et elles peuvent donc être jouées dans n'importe quel ordre.
+Une action de taux infini ne possède pas de facteur d'absorption de stochasticité,
+car ce deuxième paramètre ne changerait rien à sa condition de tir.
 
 \begin{example}
 \exlabel{metazoan-stocha-params}
-  Afin d'enrichir les Frappes de Processus standards décrites par la \vfigref{metazoan-ph},
-  nous définissons les fenêtres de tir suivantes :
-  %les paramètres stochastiques suivants :
-  \begin{itemize}
-    \item $f_1 = [0; 0]$ (\stochainf),
-    \item $f_2 = [5; 15]$ (\stochaa),
-    \item $f_3 = [20; 22]$ (\stochab),
-    \item $f_4 = [50; 60]$ (\stochac).
-  \end{itemize}
-  Ces paramètres sont représentés sur des lignes temporelles à la \figref{metazoan-stocha-params}.
-
-  \begin{figure}[ht]
+  Définissons les fenêtres de tir donnés à la \figref{metazoan-stocha-params},
+  inspirées de \cite{PMR10-TCSB}.
+  Nous pouvons enrichir les Frappes de Processus standards décrites par la \vfigref{metazoan-ph}
+  à l'aide de ces paramètres, de la façon donnée à la \figref{metazoan-ph-stocha}.
+  Cette affectation nous permet notamment d'obtenir un comportement oscillant
+  pour les sortes $a$ et $c$, et une auto-désactivation de $f$ après plusieurs oscillations.
+  Les paramètres du couple \stochac{} ont en effet été conçus de façon à ce que
+  l'arrêt de l'horloge, provoqué par la désactivation de $f$,
+  survienne après la formation de 7 rayures.
+  
+  \begin{figure}[p]
+  \vspace*{.5cm}
   \begin{center}
-  \scalebox{1.5}{
+  {\ZifferAn\begin{tabular}{c||c|c|c|c|}
+    & \stochainf   & \stochaa        & \stochab       & \stochac       \\ \hline\hline
+      $\interv{d}{D}$  & $\interv{0}{0}$ & $\interv{0,742}{1,29}$ & $\interv{1,48}{2,59}$ &
+        $\interv{23,9}{35,4}$ \\ \hline
+      $\couple{r}{sa}$ & $r = \infty$ & $\couple{1}{50}$ & $\couple{0,5}{50}$ &
+        $\couple{0,034}{100}$ \\ \hline
+%   $[0; 0]$   & $[5; 15]$ & $[20; 22]$ & $[50; 60]$ \\ \hline
+  \end{tabular}\ZifferAus}
+  \bigskip\medskip
+  
   \begin{tikzpicture}[plot]
-    \node at (0,2.3) {\stochainf};
-    \draw[axe] (0,2) -- (7,2) node[right] {$t$};
-    \draw (0,1.9) -- (0,2.1);
-    \draw[interval,blue!50] (-0.1,2) -- (0.1,2);
+    \draw[axe] (0,0) -- (16,0) node[right] {$t$};
+    \draw (0,-.1) -- (0,.1);
+    \draw[interval,blue!50] (-0.1,0) -- (0.1,0) node[above, pos=.5, black] {\stochainf};
+    \draw[interval] (0.742,0) -- (1.29,0) node[above, pos=.5, black] {\stochaa};
+    \draw[interval,orange] (1.48,0) -- (2.59,0) node[above, pos=.5, black] {\stochab};
+    \draw[interval,brown] (3.9,0) -- (15.5,0) node[above, pos=.5, black] {\stochac};
+%    \draw[double distance = 3pt] (3.25,-.2) -- (3.4,.2);
+    \draw[line width=.2cm, white] (3.25,-.2) -- (3.4,.2);
+    \draw[] (3.15,-.2) -- (3.3,.2);
+    \draw[] (3.35,-.2) -- (3.5,.2);
 
-    \node at (1,1.3) {\stochaa};
-    \draw[axe] (0,1) -- (7,1) node[right] {$t$};
-    \draw (0,0.9) -- (0,1.1);
-    \draw[interval] (0.5,1) -- (1.5,1);
-
-    \node at (2.1,0.3) {\stochab};
-    \draw[axe] (0,0) -- (7,0) node[right] {$t$};
-    \draw (0,0.1) -- (0,-0.1);
-    \draw[interval,orange] (2,0) -- (2.2,0);
-
-    \node at (5.5,-0.7) {\stochac};
-    \draw[axe] (0,-1) -- (7,-1) node[right] {$t$};
-    \draw (0,0.1) -- (0,-0.1);
-    \draw[interval,brown] (5,-1) -- (6,-1);
+%     \draw[axe] (0,2) -- (16,2) node[right] {$t$};
+%     \draw (0,1.9) -- (0,2.1);
+%     \draw[interval,blue!50] (-0.1,2) -- (0.1,2) node[above, pos=.5, black] {\stochainf};
+% 
+%     \draw[axe] (0,1) -- (16,1) node[right] {$t$};
+%     \draw (0,0.9) -- (0,1.1);
+%     \draw[interval] (0.742,1) -- (1.29,1) node[above, pos=.5, black] {\stochaa};
+%     
+%     \draw[axe] (0,0) -- (16,0) node[right] {$t$};
+%     \draw (0,0.1) -- (0,-0.1);
+%     \draw[interval,orange] (1.48,0) -- (2.59,0) node[above, pos=.5, black] {\stochab};
+%     
+%     \draw[axe] (0,-1) -- (16,-1) node[right] {$t$};
+%     \draw (0,-0.9) -- (0,-1.1);
+%     \draw[interval,brown] (3.9,-1) -- (15.5,-1) node[above, pos=.5, black] {\stochac};
+%     \draw[double distance = 1.5pt] (3.25,-1.2) -- (3.45,-0.8);
   \end{tikzpicture}
-  }
   \end{center}
   \caption{\figlabel{metazoan-stocha-params}%
-    Exemples d'intervalles de tirs correspondant aux paramètres stochastiques donnés
-    \vexpageref{metazoan-stocha-params}.
+    Exemples d'intervalles de tir et de paramètres stochastiques.
   }
   \end{figure}
-
+  
+  \begin{figure}[p]
+  \begin{center}
+  \begin{tikzpicture}
+    \exmetazoan
+    
+    \node[labelprio1] at (2.55,3.85) {\small\stochainf}; % c => fc
+    \node[labelprio1] at (2.75,1) {\small\stochainf};    % f => fc
+    \node[labelprio2] at (5.5,3.85) {\stochaa};  % fc_10 -> a_0 / 1
+    \node[labelprio2] at (3.5,5.3) {\stochaa};   % c_1 -> a_1 / 0
+    \node[labelprio3] at (0,2.5) {\stochab};     % f_1 -> c_0 / 1
+    \node[labelprio3] at (0.8,5.8) {\stochab};   % c_1 -> c_1 / 0
+    \node[labelprio3] at (2.15,2.5) {\stochab};  % f_0 -> c_1 / 0
+    \node[labelprio4] at (1.5,1.8) {\stochac};   % f_1 -> f_1 / 0
+    
+    \TState{f_1, a_0, c_0, fc_2}
+  \end{tikzpicture}
+  \caption{\figlabel{metazoan-ph-stocha}%
+    Enrichissement des Frappes de Processus standards de la \figref{metazoan-ph}
+    à l'aide des paramètres stochastiques proposés à la \figref{metazoan-stocha-params}.
+    Chaque action est affectée à un couple de paramètres stochastiques repéré
+    par une étiquette (\stochainf, \stochaa, \stochab, \stochac) placée contre l'action.
+    Les ensembles d'actions mettant à jour la sorte coopérative $fc$,
+    représentées par des flèches en zigzag, sont toutes affectées,
+    possèdent toutes un taux infini ($r = \infty$).
+  }
+  \end{center}
+  \end{figure}
 \end{example}

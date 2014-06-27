@@ -7,9 +7,16 @@
 \def\EQDEF{\stackrel{def}\Leftrightarrow}
 
 % Macros générales
+\newcommand{\sR}{\mathbb{R}}
 \newcommand{\sN}{\mathbb{N}}
 \newcommand{\sNN}{\mathbb{N}^\bullet}
-\newcommand{\segm}[2]{\llbracket #1; #2 \rrbracket}
+%\newcommand{\segm}[2]{\llbracket #1; #2 \rrbracket}
+%\newcommand{\couplegenerique}[5]{\mathopen{#1}#2\mathclose{}\mathpunct{}#3#4\mathclose{#5}}
+\newcommand{\couplegenerique}[5]{\mathopen{#1}#2\mathclose{}#3#4\mathclose{#5}}
+\newcommand{\segm}[2]{\couplegenerique{\llbracket}{#1}{;}{#2}{\rrbracket}}
+\newcommand{\interv}[2]{\couplegenerique{[}{#1}{;}{#2}{]}}
+\newcommand{\couple}[2]{\couplegenerique{(}{#1}{;}{#2}{)}}
+
 \def\indexes#1{\mathbb{I}^{#1}}
 \def\f#1{\mathsf{#1}}
 
