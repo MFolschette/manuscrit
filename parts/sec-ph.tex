@@ -928,3 +928,17 @@ car ce deuxième paramètre ne changerait rien à sa condition de tir.
   \end{center}
   \end{figure}
 \end{example}
+
+Les modèles de Frappes de Processus standards comportant des paramètres stochastiques
+peuvent être simulés afin d'observer un exemple d'exécution du modèle étudié.
+Du fait de la nature indéterministe et probabiliste du modèle, plusieurs dynamiques
+sont possibles, et chaque simulation donne des résultats différents en termes
+de chemin d'exécution ---~ou, pour un même chemin d'exécution,
+en termes de temps de tir des actions.
+Il est donc possible d'effectuer un grand nombre de simulations pour obtenir des
+statistiques sur le comportement d'un modèle.
+Il est aussi possible de faire recours à un \textit{model checker} probabiliste
+comme PRISM, qui fournit des résultats formels sur la dynamique d'un modèle,
+et des probabilités d'atteignabilité.
+Cependant, une telle approche est très coûteuse en termes de temps de calcul
+et d'espace mémoire, ce qui empêche l'analyse de réseaux de grande taille.

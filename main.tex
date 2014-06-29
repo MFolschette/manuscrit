@@ -37,6 +37,7 @@
 \newcommand{\citefullname}[2]{#2 \citeasnoun{#1}}
 
 \usepackage{url}     % Mise en forme + liens pour URLs
+\usepackage{hyperref}
 
 % Divers
 %\usepackage{color}   % Couleurs du texte
@@ -281,14 +282,10 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 % Introduction
 \input{parts/chap-introduction}
-
 \input{parts/notations}
 
-\chapter{État de l'art de la modélisation}
-\chaplabel{etatdelart}
-  \section{Modèle de Thomas}
-  % Les Frappes de Processus
-  \input{parts/sec-ph}
+% État de l'art de la modélisation}
+\input{parts/chap-etatdelart}
 
 % Enrichissement des Frappes de Processus
 \input{parts/chap-semantiques}

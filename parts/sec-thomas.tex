@@ -1,5 +1,417 @@
 % Le modèle de Thomas
 
+\section{Modèle de Thomas}
+\seclabel{thomas}
+
+\TODO
+
+Nous présentons dans cette section le \emph{modèle de Thomas} (\secref{thomas-def}),
+historiquement très utilisé dans la représentation des réseaux de régulation biologiques.
+Il s'agit d'un modèle asynchrone basé sur un \emph{graphe des interactions} et
+une carte de \emph{paramètres} discrets.
+Nous proposons aussi un tour d'horizon de différentes méthodes utilisées
+pour l'analyse des modèles de Thomas.
+
+\todoplustard{Présenter aussi les réseaux asynchrones ?}
+
+\subsection{Définition du modèle de Thomas}
+\seclabel{thomas-def}
+
+Le modèle dit \emph{de Thomas} a été théorisé et proposé pour la première
+fois par \citefullname{Thomas73}{René} dans le but d'abstraire les systèmes
+d'équations différentielles permettant la représentation de réseaux de régulation biologiques.
+Son intuition était de proposer une simplification discrète cohérente de ces systèmes
+afin de permettre des analyses plus efficaces.
+Nous proposons ici une définition inspirée de divers travaux plus récents,
+comportant notamment des paramètres discrets \cite{Snoussi89}
+%des composants multivalués \cite{Richard06,BernotSemBRN}
+et des arcs non-signés \cite{FPIMR12-CMSB}.
+
+\myskip
+
+% Paramètres de Snoussi : \cite{Snoussi89}
+% SMBionet : \cite{Richard06}
+% Hypothèses d'activité et monotonicité : \cite{BernotSemBRN}
+
+Un modèle de Thomas représente un ensemble fini de composant se régulant entre eux.
+Ces composants sont décrits par un niveau d'expression discret qui
+caractérise leur état (taux d'activité pour un gène, concentration pour une protéine, etc.).
+Afin de représenter la structure d'un tel système,
+on utilise généralement un \emph{graphe des interactions} (\defref{thomas-gi})
+dont les nœuds représentent un ensemble de composants
+et les arcs (orientés) leurs influences mutuelles.
+Les nœuds sont étiquetés par un nom (celui du composant : $a$, $b$, $c$, etc.)
+et un plafond (son niveau d'expression maximum : $l_a$, $l_b$, $l_c$, etc.).
+Les arcs sont de la forme : $\arc{a}{s}{t}{b}$,
+c'est-à-dire étiquetés par un signe $s$ qui représente le type de régulation
+($+$ pour une activation, $-$ pour une inhibition
+et $\uns$ pour une régulation plus complexe)
+et un entier $t$ qui représente le seuil de déclenchement de la réaction
+(c'est-à-dire le niveau d'expression du composant régulateur à partir duquel celui-ci
+a effectivement une influence sur le composant régulé).
+Bien que plusieurs variantes aient été proposées,
+nous nous intéressons ici à une définition où
+chaque arc est unique, c'est-à-dire qu'il ne peut pas exister deux arcs
+$\arc{a}{s}{t}{b}$ et $\arc{a}{s'}{t'}{b}$ étiquetés différemment dans le graphe.
+L'utilité des arcs non-signés ($\uns$) est discutée à la fin de cette section.
+
+\begin{definition}[Graphe des interactions]
+\deflabel{thomas-gi}
+  Un \emph{graphe des interactions} est un couple $\GI = (\Gamma; E)$ où
+  $\Gamma$ est l'ensemble fini des \emph{composants},
+  étiquetés par un nom et un \emph{plafond},
+  et $E$ est l'ensemble fini des \emph{régulation} entre deux nœuds,
+  étiquetées par un \emph{signe} et un \emph{seuil} :
+    \[E \DEF \{ \arc{a}{s}{t}{b}, \ldots \mid
+      a, b \in \Gamma \wedge s \in \{ +, -, \uns \} \wedge t \in \segm{1}{l_a}\}\]
+  tel que chaque régulation de $a$ vers $b$ soit unique :
+    \[\forall \arc{a}{s}{t}{b} \in E,
+      \forall \arc{a}{s'}{t'}{b} \in E, s = s' \wedge t = t' \enspace.\]
+\end{definition}
+%
+Étant donnée cette définition, on note
+$E_s \DEF \{ \arc{a}{s}{t}{b} \in E \}$ pour $s \in \{ +, -, \uns \}$.
+De plus, pour tout composant $b \in \Gamma$, on note $\RRBreg{b}$ l'ensemble de ses
+\emph{régulateurs} :
+    \[\RRBreg{b} \DEF \{ a \in \Gamma \mid \exists \arc{a}{s}{t}{b} \in E \}\]
+
+\begin{example}
+  \figref{thomas}(gauche) représente un graphe des interactions $(\Gamma; E)$ où
+  $\Gamma = \{a, b, c\}$, avec $l_a = 2$ et $l_b = l_c = 1$, et :
+  \begin{align*}
+    E_+ &= \{\arc{b}{+}{1}{a}, \arc{c}{+}{1}{a}\} &
+    E_\uns &= \emptyset \\
+    E_- &= \{\arc{a}{-}{2}{b}\}
+  \end{align*}
+  Ainsi :
+  \begin{align*}
+    \RRBreg{a} &= \{ b, c \} &
+    \RRBreg{b} &= \{ a \} \\
+    \RRBreg{c} &= \emptyset
+  \end{align*}
+\end{example}
+
+Pour tout composant $a$ régulant $b$, c'est-à-dire tel que $\arc{a}{s}{t}{b} \in E$,
+on note $\levels{a}{b}$ (\resp $\ulevels{a}{b}$) l'ensemble des niveaux d'expression
+de $a$ qui sont au-dessus (\resp en-dessous) du seuil $t$ (\defref{levels}).
+Au niveau de la dynamique,
+pour tout niveau d'expression de $a$ appartenant à $\levels{a}{b}$, $a$ est censé avoir
+une influence correspondant au signe $s$ sur $b$,
+c'est-à-dire être activateur si $s = +$, inhibiteur si $s = -$,
+ou avoir une influence indéterminée ou multiple si $s = \uns$ ;
+en revanche, pour tout niveau d'expression de $a$ appartenant à $\ulevels{a}{b}$,
+l'influence opposée devrait être observée.
+Cette hypothèse permet de modéliser la dégradation de $b$ en l'absence de l'activation de $a$
+si $s = +$, ou l'activation de $b$ en l'absence de l'inhibition de $a$ si $s = -$.
+
+\begin{definition}[Niveaux effectifs ($\levelssymbol$)]
+\deflabel{levels}
+  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+  Si $\arc{a}{s}{t}{b} \in E$, on définit :
+    \[\levels{a}{b} \DEF \segm{t}{l_a} \quad \text{et} \quad
+      \ulevels{a}{b} \DEF \segm{0}{t-1}\]
+\end{definition}
+
+\begin{example}
+  Sur le graphe des interactions de la \figref{thomas}(gauche)
+  on a notamment :
+  \begin{align*}
+    \levels{a}{b} &= \segm{2}{2} & \ulevels{a}{b} &= \segm{0}{1}
+  \end{align*}
+\end{example}
+
+\begin{figure}[ht]
+  \begin{minipage}{0.5\textwidth}
+  \centering
+  \scalebox{1.2}{
+  \begin{tikzpicture}[grn]
+    \path[use as bounding box] (-0.3,-0.75) rectangle (4,.75);
+    \node[inner sep=0] (a) at (2,0) {a};
+    \node[inner sep=0] (b) at (0,0) {b};
+    \node[inner sep=0] (c) at (3.8,0) {c};
+    
+    \node[elabel, below=-.8em of a] {$0..2$};
+    \node[elabel, below=-.8em of b] {$0..1$};
+    \node[elabel, below=-.8em of c] {$0..1$};
+    
+    \path[->]
+      (b) edge[bend right] node[elabel, below=-5pt] {$+1$} (a)
+      (c) edge node[elabel, above=-5pt] {$+1$} (a)
+      (a) edge[bend right] node[elabel, above=-5pt] {$-2$} (b);
+  \end{tikzpicture}
+  }
+  \end{minipage}
+  \begin{minipage}{0.5\textwidth}
+  \centering
+  \begin{align*}
+    K_{a,\emptyset} &= \segm{0}{0} & K_{b,\emptyset} &= \segm{0}{1} \\
+    K_{a,\{b\}} &= \segm{1}{1} & K_{b,\{a\}} &= \segm{0}{0} \\
+    K_{a,\{c\}} &= \segm{1}{1} &&\\
+    K_{a,\{b,c\}} &= \segm{2}{2} & K_{c,\emptyset} &= \segm{0}{1}
+  \end{align*}
+  \end{minipage}
+  \caption{\figlabel{thomas}%
+    (gauche)
+      Un exemple de graphe des interactions.
+      Les composants sont représentés par les nœuds, comportant un nom et un
+      ensemble de niveaux d'expression,
+      tandis que les régulations sont représentées par des arcs
+      étiquetés par un signe et un seuil.
+      Par exemple, l'arc de $b$ vers $a$ étiqueté $+1$ représente la régulation $\arc{b}{+}{1}{a}$.
+      En d'autres termes, $b$ se comporte comme un activateur de $a$ si son niveau d'expression
+      est égal à $1$, et se comporte comme un inhibiteur sinon (c'est-à-dire si son niveau
+      d'expression est égal à $0$).
+    (droite)
+      Un exemple de paramétrisation du graphe des interactions de gauche.
+  }
+\end{figure}
+
+\myskip
+
+Un \emph{état} d'un graphe des interactions $(\Gamma; E)$ est un élément de l'ensemble
+$\RRBstates \DEF \prod_{a \in \Gamma} \segm{0}{l_a}$.
+$\RRBget{s}{a}$ rapport au niveau d'expression du composant $a$ dans $s$.
+Pour tout état, l'ensemble des \emph{ressources} d'un composant donné est
+l'ensemble de ses régulateurs dont le niveau d'expression est supérieur ou égal au seul
+de la régulation (\defref{ressources}).
+En d'autres termes, pour chaque état $s$, tout régulateur $b$ d'un composant $a$
+est une ressource si et seulement si $\RRBget{s}{b} \in \levels{b}{a}$
+(et, inversement, n'en est pas une si $\RRBget{s}{b} \in \ulevels{b}{a}$).
+Cependant, la dynamique manque de précision dans toute situation où un
+composant est à la fois activé et inhibé par deux composants différents.
+C'est pour supprimer ce flou que \citeasnoun{Snoussi89} propose l'ajout d'une
+\emph{paramétrisation},
+c'est-à-dire un ensemble de \emph{paramètres} discrets
+qui tiennent lieu de points focaux :
+à chaque configuration de ressources d'un composant est associé un paramètre
+qui détermine le niveau vers lequel le composant va évoluer.
+Nous proposons à la \defref{thomas-param} une extension de cette notion de paramètre
+à un intervalle d'entiers afin de gagner en expressivité
+\cite{FPIMR12-CMSB}.
+L'intérêt des paramètres sous forme d'intervalles est discuté à la fin de cette section.
+
+\begin{definition}[Ressources ($\RRBressymbol$)]
+\deflabel{ressources}
+Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+Pour tout composant $a \in \Gamma$ et tout état $s \in \RRBstates$,
+on appelle \emph{ressources de $a$ dans $s$} et on note $\RRBres{a}{s}$
+l'ensemble des régulateurs de $a$ dont le niveau dans $s$ est supérieur au seuil
+de la régulation qui les relie à $a$ :
+  \[\RRBres{a}{s} \DEF \{ b \in \RRBreg{a} \mid \RRBget{s}{b} \in \levels{b}{a} \}\]
+\end{definition}
+
+\begin{definition}[Paramètre $K_{a, \omega}$ et paramétrisation $K$]
+\deflabel{thomas-param}
+Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+Pour un composant $a \in \Gamma$ donné
+et $\omega \subset \RRBreg{a}$ un sous-ensemble de ses régulateurs,
+le \emph{paramètre} $K_{a,\omega} = \segm{i}{j}$ est un intervalle non-vide tel que
+$0 \leq i \leq j \leq l_a$.
+La carte complète $K$ des paramètres sur un graphe des interactions $\GI$
+est appelée \emph{paramétrisation de $\GI$}.
+\end{definition}
+
+Un graphe des interactions et une paramétrisation permettent de représenter
+un réseau de régulation biologique complet grâce à sa structure et son évolution.
+En effet, un paramètre $K_{a,\omega}$ représente un ensemble de valeurs vers lesquels
+le composant $a$ évolue dans tout état où l'ensemble de ses ressources est égal à $\omega$.
+Plus précisément, $a$ va évoluer vers la valeur de $K_{a,\omega}$ qui est la plus proche de
+son niveau d'expression courant.
+On appellera dans la suite \emph{modèle de Thomas} tout couple $(\GI; K)$
+formé d'un graphe des interactions et d'une paramétrisation.
+
+Pour finir, René Thomas a formulé deux hypothèses concernant la dynamique de ses modèles.
+Tout d'abord, elle doit être asynchrone, c'est-à-dire qu'un seul composant peut évoluer
+entre chaque état.
+Cette hypothèse rend compte du fait qu'il est très peu probable que deux composants passent
+en même temps un seul d'expression discret.
+Il a de plus proposé de la rendre unitaire ;
+autrement dit, chaque composant ne peut évoluer que d'un niveau d'expression discret à la fois.
+Ces deux hypothèses permettent de conserver un certain nombre de propriétés propres aux
+systèmes d'équations différentielles dans lesquels l'évolution de chaque composant est continue.
+Nous définissons donc la dynamique d'un modèle de Thomas avec paramètres discrets comme suit :
+il existe une transition d'un état $s$ vers un autre état $s'$ si et seulement si
+il existe un unique un composant $a$ qui évolue entre ces deux états,
+d'exactement un niveau d'expression et vers le paramètre $K_{a,\RRBres{a}{s}}$
+(\defref{thomas-dynamique}).
+Il est à noter cependant que $a$ ne peut pas évoluer si son niveau d'expression dans l'état $s$
+appartient déjà à l'intervalle du paramètre $K_{a,\RRBres{a}{s}}$.
+
+\begin{definition}[Dynamique d'un modèle de Thomas ($\RRBtrans{}{}$)]
+\deflabel{thomas-dynamique}
+  Pour tout modèle de Thomas $\RRB = (\GI; K)$,
+  La dynamique de $\RRB$ est donnée par la relation de transition
+  $\RRBtrans{}{}\ \in \RRBstates \times \RRBstates$ définie par :
+  \begin{align*}
+    \forall s, s' \in \RRBstates, \RRBtrans{s}{s'}
+      &\Longleftrightarrow \exists a \in \Gamma,
+    \RRBget{s}{a} \notin K_{a, \RRBres{a}{s}} \wedge
+      \RRBget{s'}{a} = \RRBget{s}{a} + \delta^a(s) \\
+      &\qquad\quad \wedge \forall b \in \Gamma, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
+  \end{align*}
+  avec : $\delta^a(s) = 
+    \begin{cases}
+      +1 & \text{if } \RRBget{s}{a} < K_{a, \RRBres{a}{s}} \\
+      -1 & \text{if } \RRBget{s}{a} > K_{a, \RRBres{a}{s}} \\
+    \end{cases}$
+\end{definition}
+Les symboles «~$<$~» et «~$>$~» de cette définition permettant de comparer un entier à
+un intervalle sont définis à la \secref{notations}.
+
+
+
+\begin{example}
+  La \figref{thomas}(droite) donne un exemple de paramétrisation
+  du graphe des interactions de la \figref{thomas}(gauche),
+  ce qui en fait un modèle de Thomas complet,
+  dont la \figref{thomas-dynamique} donne l'espace des états.
+%   Les états y sont représentés par des triplets $\RRBetat{a_i, b_j, c_k}$
+%   où $i$, $j$ et $k$ représentent respectivement le niveau d'expression de $a$, $b$ et $c$.
+%   Dans ce modèle de Thomas, les transitions suivantes sont possibles d'après la
+%   \defref{thomas-dynamique} :
+%     \[\RRBetat{a_0, b_1, c_1} \rightarrow \RRBetat{a_1, b_1, c_1} \rightarrow
+%       \RRBetat{a_2, b_1, c_1} \rightarrow
+%       \RRBetat{a_2, b_0, c_1} \rightarrow \RRBetat{a_1, b_0, c_1}\]
+%   où $a_i$ représente le composant $a$ au niveau d'expression discret $i$.
+  On note notamment la présence de trois état stables pour ce modèle,
+  c'est-à-dire trois états depuis lesquels plus aucune évolution n'est possible :
+  $\RRBetat{a_0, b_0, c_0}$, $\RRBetat{a_1, b_1, c_0}$ et $\RRBetat{a_1, b_0, c_1}$,
+  où $x_i$ représente le niveau d'expression $i$ pour le composant $x$.
+%   Cette séquence d'états termine dans un état stable : plus aucune évolution n'est possible
+%   depuis l'état $\RRBetat{a_1, b_0, c_1}$.
+  
+  On peut observer l'aspect unitaire de la dynamique d'un modèle de Thomas sur ce graphe.
+  En effet, malgré le paramètre $K_{a,\{b,c\}} = \segm{2}{2}$, le composant $a$ ne peut
+  pas directement passer de l'état $a_0$ à l'état $a_2$ en «~sautant~» l'état $a_1$.
+  C'est pourquoi on observe les transitions
+  $\RRBtrans{\RRBetat{a_0,b_1,c_1}}{\RRBetat{a_1,b_1,c_1}}$ et
+  $\RRBtrans{\RRBetat{a_1,b_1,c_1}}{\RRBetat{a_2,b_1,c_1}}$.
+  
+  Nous notons enfin que les paramètres sous forme d'intervalles permettent notamment
+  de rendre un composant immobile.
+  C'est par exemple le cas du paramètre $K_{b,\emptyset} = \segm{0}{1}$,
+  qui est pris en compte lorsque $a$ n'est pas au niveau $2$.
+  Dans une sémantique ne permettant que des paramètres unitaires, une auto-régulation de $b$
+  serait nécessaire.
+  
+  \begin{figure}[ht]
+    \begin{center}
+    \begin{tikzpicture}
+      \matrix [column sep=0.7cm, row sep=1cm]{
+        \node (s200) {$\RRBetat{a_2,b_0,c_0}$}; &
+        \node (s210) {$\RRBetat{a_2,b_1,c_0}$}; &
+        \node (s201) {$\RRBetat{a_2,b_0,c_1}$}; &
+        \node (s211) {$\RRBetat{a_2,b_1,c_1}$}; \\
+        \node (s100) {$\RRBetat{a_1,b_0,c_0}$}; &
+        \node (s110) {$\RRBetat{a_1,b_1,c_0}$}; &
+        \node (s101) {$\RRBetat{a_1,b_0,c_1}$}; &
+        \node (s111) {$\RRBetat{a_1,b_1,c_1}$}; \\
+        \node (s000) {$\RRBetat{a_0,b_0,c_0}$}; &
+        \node (s010) {$\RRBetat{a_0,b_1,c_0}$}; &
+        \node (s001) {$\RRBetat{a_0,b_0,c_1}$}; &
+        \node (s011) {$\RRBetat{a_0,b_1,c_1}$}; \\
+      };
+      \path[->]
+        (s010) edge (s110)
+        (s100) edge (s000)
+        (s200) edge (s100)
+        (s210) edge (s110) edge (s200)
+        (s001) edge (s101)
+        (s011) edge (s111)
+        (s111) edge (s211)
+        (s201) edge (s101)
+        (s211) edge (s201)
+      ;
+    \end{tikzpicture}
+    \end{center}
+    \caption{\figlabel{thomas-dynamique}%
+      Représentation de la dynamique du modèle de Thomas donné à la \figref{thomas}.
+      Chaque état est représenté par un triplets $\RRBetat{a_i, b_j, c_k}$
+      où $i$, $j$ et $k$ représentent respectivement le niveau d'expression de $a$, $b$ et $c$,
+      et une transition entre deux états est représentée par une flèche.
+    }
+  \end{figure}
+\end{example}
+
+
+
+\subsubsection*{Graphe des interactions minimal}
+Il est possible d'inférer le graphe des interactions \emph{minimal} d'un modèle de Thomas,
+en ne conservant que les arcs fonctionnels pour la dynamique.
+Définissons $f^a(s) = \RRBget{s}{a}$ si $s[a]\in K_{a, \RRBres{a}{s}}$,
+et $f^a(s) = \RRBget{s}{a} + \delta^a(s)$ sinon.
+Une régulation positive (\resp négative) de $b$ sur $a$ n'est inférée que s'il existe
+un état $s$ tel que l'augmentation du niveau de $b$ aurait pour conséquence
+une augmentation (\resp diminution) de la valeur de $f^a$ ;
+ou, en d'autres termes, s'il existe un état $s$ tel que :
+$f^a(s \recouvre b_i) < \text{(\resp $>$) } f^a(s \recouvre b_{i+1})$, 
+où $i < l_b$ et $s \recouvre b_i$ est l'état identique à $s$
+sauf pour la composante de $b$ qui a été remplacée par $b_i$.
+Un tel graphe des interactions peut être utilisé pour inférer des propriétés globales sur
+la dynamique \citeaffixed{Richard10,PR11-SASB}{cf. par exemple}.
+
+\subsubsection*{Discussion sur la valeur du plafond}
+Le plafond $l_a$ d'un composant $a$, qui est le niveau d'expression maximum de $a$,
+est généralement choisi comme égal au nombre $\card{\Gamma^+(a)}$
+de régulations sortant du nœud $a$ dans le graphe des interactions,
+c'est-à-dire le nombre de composants qu'il régule.
+En effet, chaque niveau discret dans $\segm{0}{l_a}$ représente un ensemble arbitraire de valeurs
+pour une donnée réelle et généralement continue de $a$ (niveau d'activité, concentration, etc.),
+et pour laquelle $a$ possède une certaine influence sur plusieurs autres composants qu'il régule.
+Ainsi, autoriser des valeurs de $l_a$ plus grandes que $\card{\Gamma^+(a)}$
+n'augmente pas l'expressivité du modèle
+car plusieurs niveaux d'expression de $a$ auront alors le même rôle au niveau des régulations.
+À l'inverse, réduire ce plafond à des valeurs plus petites que $\card{\Gamma^+(a)}$
+sous-entendrait que plusieurs seuils de régulations sortant de $a$ sont identiques,
+ce qui est biologiquement peu plausible.
+Cependant, ces considérations peuvent être ignorées pour des raisons diverses de modélisation,
+et nous avons choisi de ne pas contraindre le plafond d'un composant dans ce document
+pour des raisons de simplicité.
+Ainsi, dans l'exemple de modèle de Thomas de la \figref{thomas},
+il serait suffisant d'avoir $l_a = 1$ (et $\arc{a}{-}{1}{b} \in E$)
+étant donné que $a$ ne possède qu'une régulation sortante.
+La valeur $l_a = 2$ permet cependant de rendre l'exemple plus intéressant
+en montrant notamment l'aspect unitaire de la dynamique du modèle de Thomas
+(et $\arc{a}{-}{2}{b} \in E$ peut être choisi arbitrairement).
+
+\subsubsection{Discussion sur les signes}
+L'ajout d'arcs non-signés ($\uns$) permet de modéliser des régulations dont la tendance générale
+est plus complexe qu'une simple activation ou inhibition.
+Il est à noter qu'utiliser $\uns$ comme signe pour étiqueter les régulations en plus
+des deux signes habituels $+$ et $-$ n'augmente pas l'expressivité du formalisme.
+En effet, les signes n'ont pas d'impact sur la paramétrisation (\defref{thomas-param})
+ou sur la dynamique (\defref{thomas-dynamique}).
+Ils cependant un but informatif, car ils résument les différentes régulations du modèle.
+Ils seront d'ailleurs utilisés au \chapref{expressivite}
+comme base pour énumérer des paramétrisation incomplètes.
+Les arcs non-signés sont de plus notamment utiles pour modéliser un graphe des interactions
+avec une connaissance partielle de certaines régulations.
+
+\subsubsection*{Discussion sur les intervalles de paramètres}
+Tandis que la littérature utilise principalement des paramètres entiers
+(c'est-à-dire comportant une unique valeur, par exemple : $K_{a,\omega} = i$)
+nous proposons ici d'utiliser des intervalles comme valeurs des paramètres
+(par exemple : $K_{a,\omega} = \segm{i}{j}$).
+Ces intervalles permettent notamment de faciliter la représentation,
+bien qu'il soit intéressant de noter qu'ils augmentent l'expressivité du modèle de Thomas.
+En effet, considérons un cas fictif où $K_{a,\omega} = \segm{i}{i+2}$
+(c'est-à-dire un intervalle contenant trois valeurs) et $s$ un état tel que
+$\RRBres{a}{s} = \omega$.
+D'après la \defref{thomas-dynamique}, si $\RRBget{s}{a} \in K_{a,\omega}$, alors $a$
+de peut pas évoluer dans $s$ ; ainsi, $a$ possède trois états locaux stables :
+$a_i$, $a_{i+1}$ et $a_{i+2}$.
+Ce comportement ne peut pas être retrouvé à l'aide de paramètres entiers,
+car il n'est pas possible de distinguer les trois configurations de ressources
+correspondant aux trois états locaux.
+Au plus deux états stables locaux peuvent être créés à l'aide d'une auto-régulation positive
+sur $a$ pour distinguer deux configurations différentes
+($\RRBget{s}{a} < t$ et $\RRBget{s}{a} \geq t$)
+ce qui n'est cependant pas suffisant pour obtenir trois états stables.
+
+
+
+\subsection{Analyse formelle du modèle de Thomas}
+
 \begin{comment}
 The expression of fixed points in a given regulatory network is potentially one of the most crucial behaviors to include in a model and is often the 
 aspect of greatest interest for a biologist. For this reason, a great amount of research has gone toward the topic of fixed point analysis. We have 

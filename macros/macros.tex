@@ -245,3 +245,28 @@
 \newcommand{\reduction}[1][\PH]{\reductionsymbol{#1}}
 \newcommand{\reductionsce}[1][\Sce]{\reductionsymbol{#1}}
 \newcommand{\tempop}{\mathsf{P}}
+
+% Modèle de Thomas
+\newcommand{\RRB}{\mathsf{Th}}
+\newcommand{\GI}{\mathcal{G}}
+\newcommand{\RRBreg}[1]{\Gamma^{-1}(#1)}
+\newcommand{\RRBressymbol}{\mathsf{Res}}
+\newcommand{\RRBres}[2]{\RRBressymbol_{#1}(#2)}
+\newcommand{\RRBallres}[1]{\textcolor{red}{\mathsf{Res}_{#1}}}
+\newcommand{\RRBget}[2]{\PHget{#1}{#2}}
+\newcommand{\RRBetat}[1]{\etat{#1}}
+\newcommand{\RRBstate}[1]{\RRBetat{#1}}
+\newcommand{\RRBstates}{\mathcal{S}}
+\newcommand{\RRBedgef}[4]{#1 \xrightarrow{#2 #3} #4}
+\newcommand{\arc}[4]{\RRBedgef{#1}{#2,}{#3}{#4}}
+%\newcommand{\RRBtrans}[2]{#1 \trans{\RRB} #2}
+\newcommand{\RRBtrans}[2]{#1 \trans{} #2}
+%\newcommand{\uns}{\pm}
+\newcommand{\uns}{\circ}
+
+\newcommand{\levelssymbol}{\mathsf{niveaux}}
+\newcommand{\levels}[2]{\levelssymbol(#1\rightarrow #2)}
+\newcommand{\ulevels}[2]{\overline{\levelssymbol}(#1\rightarrow #2)}
+
+\newcommand{\leqsegm}{\leq_{\llbracket\rrbracket}}
+\newcommand{\ltsegm}{<_{\llbracket\rrbracket}}

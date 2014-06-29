@@ -15,6 +15,15 @@
     supérieurs ou égaux à $2$.
     Si $i, j \in \sN$, $i < j$, on note $\segm{i}{j} = \{ i, i+1, \ldots, j-1, j \}$
     l'ensemble des entiers naturels entre $i$ et $j$ compris.
+    
+    Pour tous entiers $i, j, k \in \sN$, on note :
+    $k < \segm{i}{j} \EQDEF k < i$ et $k > \segm{i}{j} \EQDEF k > j$.
+    De plus, si $i_1, i_2, j_1, j_2 \in \sN$, on note :
+    \begin{align*}
+      \segm{i_1}{j_1} \leqsegm \segm{i_2}{j_2} &\EQDEF (i_1 \leq i_2 \wedge j_1 \leq j_2) \\
+      \text{et :} \qquad \segm{i_1}{j_1} \ltsegm \segm{i_2}{j_2} &\EQDEF (i_1<i_2 \wedge j_1\leq j_2) \vee (i_1\leq i_2\wedge j_1 < j_2)
+    \end{align*}
+
   
   \item[Séquences]
     Si $n \in \sN$, on note $e_1 \cons \ldots \cons e_n$ la séquence finie formée
