@@ -192,23 +192,23 @@ L'intérêt des paramètres sous forme d'intervalles est discuté à la fin de c
 
 \begin{definition}[Ressources ($\RRBressymbol$)]
 \deflabel{ressources}
-Soit $\GI = (\Gamma; E)$ un graphe des interactions.
-Pour tout composant $a \in \Gamma$ et tout état $s \in \RRBstates$,
-on appelle \emph{ressources de $a$ dans $s$} et on note $\RRBres{a}{s}$
-l'ensemble des régulateurs de $a$ dont le niveau dans $s$ est supérieur au seuil
-de la régulation qui les relie à $a$ :
-  \[\RRBres{a}{s} \DEF \{ b \in \RRBreg{a} \mid \RRBget{s}{b} \in \levels{b}{a} \}\]
+  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+  Pour tout composant $a \in \Gamma$ et tout état $s \in \RRBstates$,
+  on appelle \emph{ressources de $a$ dans $s$} et on note $\RRBres{a}{s}$
+  l'ensemble des régulateurs de $a$ dont le niveau dans $s$ est supérieur au seuil
+  de la régulation qui les relie à $a$ :
+    \[\RRBres{a}{s} \DEF \{ b \in \RRBreg{a} \mid \RRBget{s}{b} \in \levels{b}{a} \}\]
 \end{definition}
 
 \begin{definition}[Paramètre $K_{a, \omega}$ et paramétrisation $K$]
 \deflabel{thomas-param}
-Soit $\GI = (\Gamma; E)$ un graphe des interactions.
-Pour un composant $a \in \Gamma$ donné
-et $\omega \subset \RRBreg{a}$ un sous-ensemble de ses régulateurs,
-le \emph{paramètre} $K_{a,\omega} = \segm{i}{j}$ est un intervalle non-vide tel que
-$0 \leq i \leq j \leq l_a$.
-La carte complète $K$ des paramètres sur un graphe des interactions $\GI$
-est appelée \emph{paramétrisation de $\GI$}.
+  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+  Pour un composant $a \in \Gamma$ donné
+  et $\omega \subset \RRBreg{a}$ un sous-ensemble de ses régulateurs,
+  le \emph{paramètre} $K_{a,\omega} = \segm{i}{j}$ est un intervalle non-vide tel que
+  $0 \leq i \leq j \leq l_a$.
+  La carte complète $K$ des paramètres sur un graphe des interactions $\GI$
+  est appelée \emph{paramétrisation de $\GI$}.
 \end{definition}
 
 Un graphe des interactions et une paramétrisation permettent de représenter
@@ -237,7 +237,7 @@ d'exactement un niveau d'expression et vers le paramètre $K_{a,\RRBres{a}{s}}$
 Il est à noter cependant que $a$ ne peut pas évoluer si son niveau d'expression dans l'état $s$
 appartient déjà à l'intervalle du paramètre $K_{a,\RRBres{a}{s}}$.
 
-\begin{definition}[Dynamique d'un modèle de Thomas ($\RRBtrans{}{}$)]
+\begin{definition}[Dynamique unitaire d'un modèle de Thomas ($\RRBtrans{}{}$)]
 \deflabel{thomas-dynamique}
   Pour tout modèle de Thomas $\RRB = (\GI; K)$,
   La dynamique de $\RRB$ est donnée par la relation de transition
@@ -251,8 +251,8 @@ appartient déjà à l'intervalle du paramètre $K_{a,\RRBres{a}{s}}$.
   \end{align*}
   avec : $\delta^a(s) = 
     \begin{cases}
-      +1 & \text{if } \RRBget{s}{a} < K_{a, \RRBres{a}{s}} \\
-      -1 & \text{if } \RRBget{s}{a} > K_{a, \RRBres{a}{s}} \\
+      +1 & \text{si } \RRBget{s}{a} < K_{a, \RRBres{a}{s}} \\
+      -1 & \text{si } \RRBget{s}{a} > K_{a, \RRBres{a}{s}} \\
     \end{cases}$
 \end{definition}
 Les symboles «~$<$~» et «~$>$~» de cette définition permettant de comparer un entier à
@@ -374,7 +374,7 @@ La valeur $l_a = 2$ permet cependant de rendre l'exemple plus intéressant
 en montrant notamment l'aspect unitaire de la dynamique du modèle de Thomas
 (et $\arc{a}{-}{2}{b} \in E$ peut être choisi arbitrairement).
 
-\subsubsection{Discussion sur les signes}
+\subsubsection*{Discussion sur les signes}
 L'ajout d'arcs non-signés ($\uns$) permet de modéliser des régulations dont la tendance générale
 est plus complexe qu'une simple activation ou inhibition.
 Il est à noter qu'utiliser $\uns$ comme signe pour étiqueter les régulations en plus
@@ -386,6 +386,9 @@ Ils seront d'ailleurs utilisés au \chapref{expressivite}
 comme base pour énumérer des paramétrisation incomplètes.
 Les arcs non-signés sont de plus notamment utiles pour modéliser un graphe des interactions
 avec une connaissance partielle de certaines régulations.
+Cependant, comme ils ne sont pas courants dans la littérature,
+l'état de l'art de la section suivante portera principalement
+sur les modèles de Thomas sans arcs non-signés ($E_\uns = \emptyset$).
 
 \subsubsection*{Discussion sur les intervalles de paramètres}
 Tandis que la littérature utilise principalement des paramètres entiers
@@ -410,15 +413,202 @@ ce qui n'est cependant pas suffisant pour obtenir trois états stables.
 
 
 
-\subsection{Analyse formelle du modèle de Thomas}
+\subsection{Définition des réseaux discrets asynchrones}
+\seclabel{rda-def}
 
-\begin{comment}
-The expression of fixed points in a given regulatory network is potentially one of the most crucial behaviors to include in a model and is often the 
-aspect of greatest interest for a biologist. For this reason, a great amount of research has gone toward the topic of fixed point analysis. We have 
-already mentioned that a positive circuit is a proven necessary condition for multiple fixed points, as shown in~\cite{Richard2010378}, but this does 
-not speak to the exact number of fixed points present in the system. In the field of Boolean networks, analysis of the interaction graph can give an 
-upper bound of the possible number of fixed points~\cite{aracena2008maximum} and the topological fixed points independent of logical 
-functions~\cite{PR10-CRAS}, but these still do not give a complete enumeration.
-In \cite{Naldi07}, the authors propose an efficient method for enumerating all the fixed point by relying on the
-encoding of logical functions using decision diagrams.
-\end{comment}
+Certaines contraintes propres aux modèles de Thomas peuvent être relâchées pour permettre
+des comportements supplémentaires.
+Ainsi, il est courant de représenter des réseaux de régulation biologiques
+sous la forme de \emph{réseaux discrets asynchrones}.
+Ces réseaux sont aussi fondés sur un graphe des interactions,
+mais il utilisent des fonctions d'évolution (\defref{rda-def}) en lieu et place de paramètres
+pour plus de permissivité.
+Par ailleurs, l'hypothèse d'asynchronisme est conservée car un seul composant peut évoluer
+depuis chaque état,
+mais leur dynamique n'est pas nécessairement unitaire 
+car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
+(\defref{rda-dynamique}).
+
+\begin{definition}[Réseau discret asynchrone ($\RDA$)]
+\deflabel{rda-def}
+  Si $\GI = (\Gamma; E)$ est un graphe des interactions,
+  un \emph{réseau discret asynchrone} est un couple $\RDA = (\GI; F)$
+  avec $F = (f_x)_{x \in \Gamma}$, tels que
+  $\forall x \in \Gamma, f_x : \RRBstates \rightarrow \segm{0}{l_x}$.
+\end{definition}
+
+\begin{definition}[Dynamique d'un réseau discret asynchrone ($\RRBtransrda{}{}$)]
+\deflabel{rda-dynamique}
+  Pour tout réseau discret asynchrone $\RDA = (\GI; F)$,
+  La dynamique non-unitaire de $\RDA$ est donnée par la relation de transition
+  $\RRBtransrda{}{}\ \in \RRBstates \times \RRBstates$ définie par :
+  \begin{align*}
+    \forall s, s' \in \RRBstates, \RRBtransrda{s}{s'}
+      &\Longleftrightarrow \exists a \in \Gamma,
+    \RRBget{s}{a} \neq f_a(s) \wedge
+      \RRBget{s'}{a} = f_a(s) \\
+      &\qquad\quad \wedge \forall b \in \Gamma, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
+  \end{align*}
+\end{definition}
+
+
+
+\subsection{Analyses formelles du modèle de Thomas}
+
+Nous proposons dans cette section un tour d'horizon rapide des différentes méthodes
+d'analyse de la dynamique des modèles de Thomas.
+Nous nous concentrons principalement sur les méthodes d'analyse statique,
+c'est-à-dire permettant d'obtenir des résultats sur la dynamique d'un modèle
+sans nécessiter d'en calculer la dynamique de façon complète et explicite.
+Ces approches ont l'avantage de jouir d'une faible complexité, même si les résultats formels
+qu'elles fournissent sont généralement moins précis ou approximés.
+L'analyse du graphe des interactions seul peut ainsi permettre d'obtenir certains
+résultats sur sa dynamique,
+et la prise en compte de la paramétrisation permet d'affiner cette approche.
+Cependant, ces résultats sont insuffisants dans beaucoup de cas,
+nécessitant des approches plus exhaustives.
+L'analyse complète de la dynamique d'un modèle de Thomas
+est généralement invoquée en dernier recours, car elle peut être coûteuse en temps
+et en espace mémoire du fait de l'explosion combinatoire inhérente au calcul
+de l'espace des états.
+
+\subsubsection*{Analyse du graphe des interactions}
+Plusieurs travaux se sont intéressés aux conclusions qui pouvaient être
+tirées du seul graphe des interactions.
+La recherche d'\emph{états stables}, aussi appelés \emph{points fixes},
+présente un intérêt particulier dans l'étude des réseaux de régulation biologiques
+et a été de fait très étudiée.
+Les conjectures de \citefullname{Thomas81}{René}
+tracent notamment un lien entre la présence de circuits dans les régulations et celle
+d'oscillations ou d'états stables.
+Elles se formulent comme suit :
+\begin{itemize}
+  \item un circuit positif (c.-à-d.~comportant un nombre pair de régulations négatives)
+    est une condition nécessaire à la présence de plusieurs points fixes,
+  \item un circuit négatif (c.-à-d.~comportant un nombre impair de régulations négatives)
+    est une condition nécessaire à la présence d'oscillations dans la dynamique.
+\end{itemize}
+Ces conjectures ont par la suite été démontrées
+dans le cas booléen, c'est-à-dire lorsque $\forall x \in \Gamma, l_x = 1$
+\cite{RRT08,Richard06thesis}
+ainsi que dans le cas multivalué \cite{RiCo07,Richard10}.
+
+Plusieurs résultats viennent de surcroît enrichir ce résultat concernant
+l'existence de points fixes.
+Des travaux ont par exemple
+permis d'obtenir une valeur maximale du nombre de points fixes possibles
+dans un modèle de Thomas tant booléen \cite{aracena2008maximum} que multivalué \cite{Richard09}.
+Cette valeur dépend du nombre de composants à supprimer pour éliminer
+tout circuit positif dans le modèle.
+\citeasnoun{PR10-CRAS} ont quant à eux proposé une valeur minimale du nombre de
+\emph{points fixes topologiques} d'un modèle booléen.
+Ces points fixes ont la particularité de ne pas dépendre de la paramétrisation,
+ce qui permet de généraliser un tel résultat à un ensemble de modèles de Thomas.
+
+% 
+% Comme il s'agit  de conditions nécessaires, la présence d'un cycle positif ou négatif
+% ne produit pas nécessairement les comportements décrits,
+% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
+% \cite{Comet13}.
+% De façon générale, elles permettent donc d'obtenir un résultat qualitatif,
+% %notamment en l'absence des cycles décrits,
+% mais pas de résultat quantitatif sur le nombre de points fixes,
+% le nombre ou la taille des oscillations, etc.
+
+\subsubsection*{Analyse de la paramétrisation}
+Les conditions données précédemment sont \emph{nécessaires} mais non \emph{suffisantes}
+pour observer l'apparition des comportements décrits (oscillations et multistationnarité).
+Plusieurs travaux permettent d'analyser la fonctionnalité des circuits,
+c'est-à-dire leur capacité à effectivement «~générer~» ces comportements,
+et donc de rendre ces conditions susnommées nécessaires.
+Partant d'un modèle de Thomas donné,
+\citeasnoun{Naldi07} proposent de représenter sa paramétrisation
+à l'aide de diagrammes de décision binaires ou multivalués \cite{Bryant86,Srinivasan90}.
+Cette représentation alternative permet de déduire efficacement
+l'ensemble des états stables mais aussi d'analyser la fonctionnalité des circuits
+en effectuant des produits de diagrammes de décision.
+Par la suite, \cite{Comet13} ont aussi étudié les différentes façons
+dont les oscillations et la multistationnarité sont «~générées~»,
+permettant de préciser ces conditions.
+
+
+% Comme il s'agit de conditions nécessaires, la présence d'un circuit positif ou négatif
+% ne produit pas nécessairement les comportements décrits,
+% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
+% \cite{Comet13}.
+% 
+% 
+% Partant d'un modèle de Thomas donné,
+% \citeasnoun{Naldi07} proposent de représenter sa paramétrisation
+% à l'aide de diagrammes de décision binaires ou multivalués \cite{Bryant86,Srinivasan90}.
+% Cette représentation alternative permet de déduire efficacement
+% l'ensemble des états stables mais aussi d'analyser la fonctionnalité des circuits.
+% 
+% Compression de modèles discrets : \cite{Naldi07}
+%   qui utilisent des BDD : \cite{Bryant86,Srinivasan90}
+% Optimisation de l'analyse mais dépend de paramètres liés à la modélisation
+% 
+% De plus, l'analyse de la paramétrisation permet
+% 
+% Comme il s'agit  de conditions nécessaires, la présence d'un circuit positif ou négatif
+% ne produit pas nécessairement les comportements décrits,
+% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
+% \cite{Comet13}.
+% De façon générale, elles permettent donc d'obtenir un résultat qualitatif,
+% mais pas de résultat quantitatif sur le nombre de points fixes,
+% le nombre ou la taille des oscillations, etc.
+
+% \subsubsection*{Caractérisation et recherche des points fixes}
+% 
+% \todo{dispatcher}
+% 
+% La recherche d'\emph{états stables}, aussi appelés \emph{points fixes},
+% présente un intérêt particulier dans l'étude des réseaux de régulation biologiques.
+% Les conjectures de \citefullname{Thomas81}{René},
+% qui ont par la suite été démontrées \cite{RiCo07}
+% portent notamment sur ces questions
+% en formulant une condition nécessaire à l'existence de plusieurs points fixes.
+% Cette condition n'est cependant pas suffisante
+% et ne renseigne pas sur le nombre de points fixes.
+% %Dans le cadre d'un modèle booléen (tel que $\forall x \in \Gamma, l_x = 1$)
+% L'analyse des interactions seules permet de donner une limite supérieure au nombre
+% de points fixes \cite{aracena2008maximum,Richard09}
+% ainsi que du nombre de points fixes topologiques,
+% (c'est-à-dire ne dépendant pas des paramètres) dans le cas booléen
+% \cite{PR10-CRAS},
+% sans pour autant proposer une énumération exhaustive.
+% \citeasnoun{Naldi07} ont proposé une méthode efficace
+% basée sur l'utilisation de diagrammes de décision binaires
+% pour l'énumération des points fixes.
+
+\subsubsection*{Analyse de la dynamique}
+Afin d'obtenir des résultats plus précis sur le comportement d'un modèle
+que les méthodes décrites précédemment ne permettent pas d'obtenir,
+il peut devenir nécessaire de faire appel à des techniques
+de \textit{model checking} plus poussées.
+Ces méthodes permettent généralement une analyse exhaustive de la dynamique,
+tout en devant faire face à l'explosion combinatoire typique de ce type d'analyse,
+qui limite grandement la taille des modèles étudiés.
+C'est le cas par exemple de SMBioNet \cite{Richard06} qui permet de vérifier sur un modèle
+des propriétés exprimées en logique temporelle CTL \cite{Clarke82}.
+Cette analyse possède l'avantage d'être très complète
+car la dynamique est entièrement explorée et l'expressivité de CTL permet
+d'exprimer beaucoup de propriétés intéressantes,
+mais au prix d'une complexité très importante.
+Afin de réduire cette complexité,
+\citeasnoun{Naldi09} proposent d'effectuer de la réduction de modèles
+en éliminant certaine nœuds qui ont un rôle secondaire.
+Le modèle obtenu possède une taille inférieure et certaines bonnes propriétés sont conservées,
+comme l'ensemble des points fixes et des attracteurs,
+au prix d'une dynamique parfois sous-approximée par rapport au modèle d'origine.
+
+
+% 
+% Enfin, certaines analyses peuvent être effectuées non pas sur la dynamique
+% 
+% 
+% 
+% Compression de modèles discrets : \cite{Naldi07}
+%   qui utilisent des BDD : \cite{Bryant86,Srinivasan90}
+% Optimisation de l'analyse mais dépend de paramètres liés à la modélisation
+% 
