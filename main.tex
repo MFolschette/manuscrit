@@ -16,6 +16,15 @@
 \geometry{inner=2.5cm, outer=2.5cm, top=2.5cm, bottom=2cm} % Format A4
 \geometry{inner=1.5cm, outer=1.5cm, top=2cm, bottom=2cm}
 
+% Chapeau
+\definecolor{couleurchapeau}{rgb}{0.9,0.9,0.9}
+\newcommand{\chapeau}[1]{\medskip\noindent\begin{center}\colorbox{couleurchapeau}{%
+  \begin{minipage}{.95\textwidth}%
+  \vspace*{2pt}\hrule\vspace*{1em}%
+  \hfill\begin{minipage}{.95\textwidth}#1\end{minipage}\hfill%
+  \vspace*{1em}\hrule\vspace*{2pt}%
+  \end{minipage}}\end{center}\vspace*{3em}}
+
 % Police
 %\usepackage{times} % times, palatino, charter, lmodern, etc.
 \usepackage{cmbright}  % Police sans empattements
@@ -142,8 +151,6 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 %\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
 %\newcommand{\mq}[1]{\textcolor{darkblue}{[MQ : #1]}}
 \newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
-\newcommand{\chapeau}[1]{\noindent\colorbox{lightgray}{\begin{minipage}{\textwidth}#1%
-\end{minipage}}\vspace{1em}}
 \renewcommand{\restriction}{\todo{\textbackslash{}reduction}}
 
 

@@ -3,7 +3,71 @@
 \chapter{État de l'art de la modélisation}
 \chaplabel{etatdelart}
 
-\TODO
+\chapeau{%
+  Nous proposons dans ce chapitre un état de l'art des formalisations discrètes
+  et asynchrones des réseaux de régulation biologiques utilisées dans cette thèse.
+  Nous y rappelons le principe et la définition du \emph{modèle de Thomas}
+  et nous nous étendons brièvement sur les méthodes d'analyse qui existent sur ce modèle.
+  Nous rappelons aussi le formalisme des \emph{Frappes de Processus standards},
+  qui seront la base des travaux présentés dans cette thèse,
+  et nous faisons une rapide revue des principaux travaux qui ont concerné ce formalisme.
+}
+
+Les outils de modélisation des réseaux de régulation biologiques se déclinent en de nombreuses
+formes permettant de représenter différents comportement des systèmes étudiés.
+Au cours de cette thèse, nous nous intéressons tout particulièrement aux modèles discrets
+et asynchrones.
+
+Les modèles discrets permettent de représenter des systèmes plus complexes,
+comme des systèmes d'équations différentielles,
+en abstrayant une partie de la dynamique.
+Cette abstraction permet de simplifier le modèle pour en faciliter l'analyse,
+à condition de rester cohérente avec la représentation initiale.
+Le caractère asynchrone des formalismes vient quant à lui de la constatation suivante :
+il est biologiquement très improbable que plusieurs entités d'un système
+évoluent de manière exactement simultanée.
+Le parallèle avec les systèmes d'équations différentielles est le suivant :
+il est rare d'observer plusieurs composants passer un seuil simultanément
+au cours d'une évolution continue de leur état.
+Ces hypothèses ont notamment été théorisées par \citefullname{Thomas73}{René},
+qui en a dérivé le modèle qui porte son nom,
+plus tard enrichi par plusieurs travaux successifs
+comme l'ajout de paramètres discrets par \citefullname{Snoussi89}{El Houssine}
+pour représenter les «~états focaux~» des différents
+composants en fonction de l'état du modèle.
+
+Dans ce chapitre, nous rappellerons tout d'abord la définition du modèle de Thomas
+à la \secref{thomas}.
+Nous dresserons par ailleurs un rapide état de l'art des méthodes d'analyse
+de la dynamique de ce modèle qui, bien que facilitées par
+l'abstraction discrète et asynchrone qui en est inhérente,
+restent l'objet d'une explosion combinatoire non négligeable.
+Plusieurs travaux apportent des résultats qui s'appuient uniquement sur les données
+du modèles et non sur le calcul de sa dynamique,
+ce qui évite de calculer celle-ci explicitement.
+Cependant, ces résultats sont très généraux et il est rare de pouvoir totalement faire l'impasse
+sur une analyse plus détaillée de la dynamique,
+qui nécessite cependant de calculer l'espace des états du modèle,
+ou une version compressée de celui-ci.
+
+Nous définirons ensuite le formalisme des Frappes de Processus
+à la \secref{ph}, tel qu'il a été proposé par \citeasnoun{PMR10-TCSB}.
+Il se présente comme une alternative au modèle de Thomas,
+basé sur les mêmes hypothèses d'états discrets et d'asynchronisme,
+mais plus atomique dans sa représentation.
+Il permet notamment de modéliser tout modèle de Thomas,
+avec cependant une légère sur-approximation de la dynamique.
+Des outils ont de surcroît été développés afin de calculer les points fixes d'un modèle de
+Frappes de Processus ou encore d'y intégrer des paramètres continus
+sous forme de probabilités.
+Cependant, l'atout principal des Frappes de Processus réside dans les puissantes
+méthodes d'analyse statique par interprétation abstraite dont il est pourvu,
+qui permettent d'effectuer des calculs d'atteignabilité locale
+avec une complexité polynomiale dans la taille du modèle considéré.
+Cela permet notamment d'étudier la dynamique de grands modèles
+---~jusqu'à plusieurs centaines de composants, voire au-delà.
+
+
 
 % Le modèle de Thomas
 \input{parts/sec-thomas}

@@ -1,4 +1,5 @@
 \section{Les Frappes de Processus standards}
+\seclabel{ph}
 
 Cette section définit les Frappes de Processus standards
 telles qu'elles ont été formalisées par \citeasnoun{PMR10-TCSB}.
@@ -27,8 +28,8 @@ dans le but d'introduire une composante temporelle continue dans les Frappes de 
 
 
 
-\subsection{Définition}
-\seclabel{ph}
+\subsection{Définition des Frappes de Processus standards}
+\seclabel{ph-def}
 
 Les \emph{Frappes de Processus standards} telles que données à la \defref{ph},
 aussi appelées \textit{Process Hitting},
@@ -295,16 +296,25 @@ autrement dit, à un ensemble de processus contenant au plus un processus par so
   $\forall ps \in \PHsublset, s \recouvre ps = s \underset{a_i \in ps}{\recouvre} a_i$.
 \end{definition}
 
-Une propriété de jouabilité telle que décrite à la \defref{ppl}
-est équivalente à une formule booléenne dont les atomes sont des processus dans $\Proc$.
+Nous définissons dans la suite les outils nécessaires à la dynamique des Frappes de Processus.
+Pour cela, nous introduisons la notion de propriété de jouabilité à la \defref{ppl},
+qui est semblable à une formule booléenne dont les atomes sont des processus dans $\Proc$.
 Le langage des propriétés de jouabilité permet de décrire la présence d'une configuration
-de processus actifs dans un état donné.
-Il permet notamment de décrire en termes formels la jouabilité d'une action,
-ce qui est immédiatement mis en pratique dans la \defref{fopph}.
+de processus actifs dans un état donné, ce qui
+permet donc notamment de décrire en termes formels la jouabilité d'une action.
+Cela est mis en pratique pour les Frappes de Processus standards à la \defref{fopph}
+où nous définissons l'\emph{opérateur de jouabilité} de ce formalisme,
+qui est une formule associant à chaque action sa propriété de jouabilité propre.
+Pour finir, la dynamique des Frappes de Processus est donnée à la \defref{play}
+à partir de celle d'opérateur de jouabilité.
+Les définitions de propriété de jouabilité (\defref{ppl}) et de dynamique des Frappes de Processus
+(\defref{play}) sont volontairement assez générales pour pouvoir être réutilisées au
+\chapref{sem} pour définir la sémantique d'autres formalismes de Frappes de Processus.
 
 \begin{definition}[Propriété de jouabilité ($\F$)]
   \label{def:ppl}
-  Une \emph{propriété de jouabilité} est un élément du langage $\F$ défini \todo{inductivement ?} par :
+  Une \emph{propriété de jouabilité} est un élément du langage $\F$ défini inductivement
+  \todo{OU : par récurrence ?} par :
   \begin{itemize}
     \item $\top$ et $\bot$ appartiennent à $\F$ ;
     \item si $a \in \PHs$ et $a_i \in \PHl_a$, alors $a_i$ appartient à $\F$
@@ -342,7 +352,11 @@ cela signifie alors qu'un autre processus de la même sorte l'est :
 Enfin, on note dans la suite :
 \[\forall A \in \PHsublset, \Fconj{A} \equiv \bigwedge_{p \in A} p \enspace.\]
 
-\todo{Gluer}
+L'opérateur de jouabilité $\Fopsymbol$ donné à la \defref{fopph} est propre aux
+Frappes de Processus standards.
+En revanche, la dynamique donnée à la \defref{play} est générale à toutes les
+Frappes de Processus, et peut donc à fortiori être utilisée avec l'opérateur $\Fopsymbol$
+des Frappes de Processus standards.
 
 \begin{definition}[Opérateur de jouabilité ($\Fopsymbol : \PHh \rightarrow \F$)]
 \deflabel{fopph}
@@ -366,14 +380,55 @@ Enfin, on note dans la suite :
 \end{definition}
 
 \begin{example}
-  La séquence d'actions suivantes est un scénario dans l'état \TODO des Frappes de Processus
-  de la \figref{metazoan-ph-nocoop} :
-  \TODO
+  La dynamique des Frappes de Processus standards de la \figref{metazoan-ph-nocoop}
+  est représentée à la \figref{metazoan-nocoop-dynamique}.
+  On peut notamment y observer le comportement stationnaire normal du modèle
+  qui consiste en une oscillation alternée des processus actifs des sortes $a$ et $c$ :
+%  où on a représenté en gras le processus modifié par rapport à l'état précédent :
+  \[\etat{a_0,c_0,f_1} \PHtrans \etat{a_1,c_0,f_1}
+    \PHtrans \etat{a_1,c_1,f_1} \PHtrans \etat{a_0,c_1,f_1}
+    \PHtrans \etat{a_0,c_0,f_1} \PHtrans \ldots\]
+  
+  \begin{figure}[ht]
+    \begin{center}
+    \begin{tikzpicture}[node distance=3cm]
+      \node (s001) {$\etat{a_0,c_0,f_1}$};
+      \node[below of=s001] (s011) {$\etat{a_0,c_1,f_1}$};
+      \node[right of=s001, node distance=5cm] (s101) {$\etat{a_1,c_0,f_1}$};
+      \node[below of=s101] (s111) {$\etat{a_1,c_1,f_1}$};
+      \node[below right of=s001, node distance=2cm, xshift=1cm] (s000) {$\etat{a_0,c_0,f_0}$};
+      \node[below of=s000] (s010) {$\etat{a_0,c_1,f_0}$};
+      \node[right of=s000, node distance=5cm] (s100) {$\etat{a_1,c_0,f_0}$};
+      \node[below of=s100] (s110) {$\etat{a_1,c_1,f_0}$};
+      
+      \path[->]
+        (s001) edge (s000) edge (s101)
+        (s011) edge (s010)
+        %
+        (s001) edge (s011)
+        (s011) edge (s001)
+        %
+        (s101) edge (s100) edge (s111)
+        (s111) edge (s101) edge (s110) edge (s011)
+        (s000) edge (s100)
+        (s010) edge (s000)
+        (s110) edge (s100) edge (s010)
+      ;
+    \end{tikzpicture}
+    \end{center}
+    \caption{\figlabel{metazoan-nocoop-dynamique}%
+      Représentation de la dynamique du modèle de Frappes de Processus standards
+      de la \figref{metazoan-ph-nocoop}.
+      Chaque état est représenté par un triplet $\etat{a_i, c_j, f_k}$
+      où $i$, $j$ et $k$ représentent respectivement le niveau d'expression de $a$, $c$ et $f$.
+      Une transition entre deux états est représentée par une flèche.
+    }
+  \end{figure}
 \end{example}
 
 
 
-\subsection{Sortes coopératives}
+\subsection{Utilisation des sortes coopératives}
 \seclabel{sc}
 
 L'une des questions qui se posent face à un formalisme totalement asynchrone comme
@@ -679,16 +734,12 @@ avec exactement un nœud par partie (\defref{clique}).
   $\{ a_0, c_0, f_0, fc_{00} \}$ et $\{ a_1, c_0, f_0, fc_{00} \}$.
 \end{example}
 
-\todoplustard{Exemple de graphe sans-frappe}
+\todoplustard{Exemple de graphe sans-frappe ?}
 
 
 
-\subsection{Analyse statique d'atteignabilité}
+\subsection{Analyse statique pour le calcul d'atteignabilité}
 \seclabel{ph-as}
-
-\todo{Rappels sur les résultats d'analyse statique (cf. MSCS'10)}
-
-\todo{+ Points fixes}
 
 Nous présentons brièvement et informellement dans cette section
 l'analyse statique par interprétation abstraite
@@ -790,7 +841,7 @@ de composants.
 
 
 
-\subsection{Analyse stochastique}
+\subsection{Paramètres et analyse stochastiques}
 \seclabel{ph-stocha}
 
 \cite{PMR10-TCSB} ont aussi proposé un enrichissement des Frappes de Processus standards

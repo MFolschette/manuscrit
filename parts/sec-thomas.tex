@@ -1,18 +1,16 @@
 % Le modèle de Thomas
 
-\section{Modèle de Thomas}
+\section{Le Modèle de Thomas}
 \seclabel{thomas}
-
-\TODO
 
 Nous présentons dans cette section le \emph{modèle de Thomas} (\secref{thomas-def}),
 historiquement très utilisé dans la représentation des réseaux de régulation biologiques.
 Il s'agit d'un modèle asynchrone basé sur un \emph{graphe des interactions} et
 une carte de \emph{paramètres} discrets.
-Nous proposons aussi un tour d'horizon de différentes méthodes utilisées
-pour l'analyse des modèles de Thomas.
-
-\todoplustard{Présenter aussi les réseaux asynchrones ?}
+Les \emph{réseaux discrets asynchrones} sont aussi définis (\secref{rda-def})
+du fait de leurs similitudes avec le modèle de Thomas.
+Nous proposons enfin un rapide tour d'horizon des différentes méthodes utilisées
+pour analyser la dynamique de ces modèles (\secref{thomas-analyse}).
 
 \subsection{Définition du modèle de Thomas}
 \seclabel{thomas-def}
@@ -326,7 +324,7 @@ un intervalle sont définis à la \secref{notations}.
     \end{center}
     \caption{\figlabel{thomas-dynamique}%
       Représentation de la dynamique du modèle de Thomas donné à la \figref{thomas}.
-      Chaque état est représenté par un triplets $\RRBetat{a_i, b_j, c_k}$
+      Chaque état est représenté par un triplet $\RRBetat{a_i, b_j, c_k}$
       où $i$, $j$ et $k$ représentent respectivement le niveau d'expression de $a$, $b$ et $c$,
       et une transition entre deux états est représentée par une flèche.
     }
@@ -454,6 +452,7 @@ car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
 
 
 \subsection{Analyses formelles du modèle de Thomas}
+\seclabel{thomas-analyse}
 
 Nous proposons dans cette section un tour d'horizon rapide des différentes méthodes
 d'analyse de la dynamique des modèles de Thomas.
@@ -505,16 +504,6 @@ tout circuit positif dans le modèle.
 Ces points fixes ont la particularité de ne pas dépendre de la paramétrisation,
 ce qui permet de généraliser un tel résultat à un ensemble de modèles de Thomas.
 
-% 
-% Comme il s'agit  de conditions nécessaires, la présence d'un cycle positif ou négatif
-% ne produit pas nécessairement les comportements décrits,
-% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
-% \cite{Comet13}.
-% De façon générale, elles permettent donc d'obtenir un résultat qualitatif,
-% %notamment en l'absence des cycles décrits,
-% mais pas de résultat quantitatif sur le nombre de points fixes,
-% le nombre ou la taille des oscillations, etc.
-
 \subsubsection*{Analyse de la paramétrisation}
 Les conditions données précédemment sont \emph{nécessaires} mais non \emph{suffisantes}
 pour observer l'apparition des comportements décrits (oscillations et multistationnarité).
@@ -531,32 +520,9 @@ Par la suite, \cite{Comet13} ont aussi étudié les différentes façons
 dont les oscillations et la multistationnarité sont «~générées~»,
 permettant de préciser ces conditions.
 
-
-% Comme il s'agit de conditions nécessaires, la présence d'un circuit positif ou négatif
-% ne produit pas nécessairement les comportements décrits,
-% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
-% \cite{Comet13}.
-% 
-% 
-% Partant d'un modèle de Thomas donné,
-% \citeasnoun{Naldi07} proposent de représenter sa paramétrisation
-% à l'aide de diagrammes de décision binaires ou multivalués \cite{Bryant86,Srinivasan90}.
-% Cette représentation alternative permet de déduire efficacement
-% l'ensemble des états stables mais aussi d'analyser la fonctionnalité des circuits.
-% 
-% Compression de modèles discrets : \cite{Naldi07}
+% Compression des paramètres : \cite{Naldi07}
 %   qui utilisent des BDD : \cite{Bryant86,Srinivasan90}
-% Optimisation de l'analyse mais dépend de paramètres liés à la modélisation
-% 
-% De plus, l'analyse de la paramétrisation permet
-% 
-% Comme il s'agit  de conditions nécessaires, la présence d'un circuit positif ou négatif
-% ne produit pas nécessairement les comportements décrits,
-% mais des travaux ont permis de décrire des situations où ces conditions deviennent suffisantes
-% \cite{Comet13}.
-% De façon générale, elles permettent donc d'obtenir un résultat qualitatif,
-% mais pas de résultat quantitatif sur le nombre de points fixes,
-% le nombre ou la taille des oscillations, etc.
+% Permet certaines analyses efficaces : points fixes et fonctionnalité des circuits
 
 % \subsubsection*{Caractérisation et recherche des points fixes}
 % 
@@ -601,14 +567,3 @@ en éliminant certaine nœuds qui ont un rôle secondaire.
 Le modèle obtenu possède une taille inférieure et certaines bonnes propriétés sont conservées,
 comme l'ensemble des points fixes et des attracteurs,
 au prix d'une dynamique parfois sous-approximée par rapport au modèle d'origine.
-
-
-% 
-% Enfin, certaines analyses peuvent être effectuées non pas sur la dynamique
-% 
-% 
-% 
-% Compression de modèles discrets : \cite{Naldi07}
-%   qui utilisent des BDD : \cite{Bryant86,Srinivasan90}
-% Optimisation de l'analyse mais dépend de paramètres liés à la modélisation
-% 
