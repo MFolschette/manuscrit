@@ -1,0 +1,101 @@
+% Applications
+
+\chapter{Applications}
+\chaplabel{applications}
+
+\chapeau{
+  Nous proposons dans ce chapitre d'appliquer les différents résultats
+  vus au cours de cette thèse
+  %présentées aux \chapref{as} et \chapref{expressivite}
+  à des modèles de grande taille.
+  Les deux principales applications sont le suivantes :
+  \begin{itemize}
+    \item la dynamique d'un modèle de récepteur de lymphocytes T de 94 composants
+      est étudiée à l'aide des méthodes d'analyse statique développées
+      au \chapref{as},
+    \item la traduction en modèle de Thomas
+      d'un modèle de récepteur des cellules de croissance épithéliale de 104 composants 
+      représenté en Frappes de Processus canoniques
+      à l'aide de la traduction adéquate définie au \chapref{expressivite}.
+  \end{itemize}
+}
+
+\todo{Présenter Pint}
+
+\section{Gros exemple analyse statique}
+\seclabel{appli-as-tcell}
+
+Nous souhaitons démontrer dans cette section la puissance et l'adaptabilité
+de l'analyse statique par sous-approximation développée à la \secref{as}.
+Nous l'appliquons pour cela à un réseau booléen asynchrone
+comportant 94 composants, ce qui peut être considéré comme un grand modèle,
+et modélisant le récepteur de lymphocyte~T (\textit{T-cell receptor}).
+Ce modèle est traduit en Frappes de Processus standards
+et nous montrons que notre méthode reste efficace malgré la taille du modèle
+et nous observons de plus que toutes les analyses effectuées sont conclusives.
+
+\myskip
+
+Nous nous intéressons au modèle de récepteur de lymphocyte~T
+proposé par \citeasnoun{tcrsig94},
+qui se présente sous la forme d'un réseau booléen asynchrone comportant 94 composants.
+On y distingue notamment des composants d'entrée, c'est-à-dire qui ne sont régulés
+par aucun autre composant, et dont la valeur de départ est donc fixe,
+et des composants de sortie qui à l'inverse ne régulent aucun autre composant.
+Dans l'état initial, les composants d'entrée sont généralement
+indépendamment choisis actifs ou inactifs selon ce qu'on souhaite observer,
+et tous les autres composants sont inactifs.
+Cela permet d'observer la propagation du signal d'entrée caractérisée par une (dés)activation
+successive des autres composants du modèle,
+et notamment d'observer si les composants de sortie peuvent être activés
+en fonction de la configuration initiale des composants d'entrée.
+
+\TODO
+
+Ce modèle a été traduit automatiquement en Frappes de Processus canoniques
+à l'aide d'un programme basé sur \TODO
+
+
+
+
+
+
+
+
+
+\begin{comment}
+In order to support the scalability and applicability of our under-approximation of reachability, we
+apply our new approach for the analysis of large-scale model of the T-cell receptor (TCR)
+signalling pathway \cite{tcrsig94}.
+This model gathers 94 interacting components and is specified as a Boolean network.
+The under-approximation presented in this paper has been implemented in the existing Pint
+software\footnote{Pint is freely available at \url{http://loicpauleve.name/pint}.}.
+
+The Boolean model has been automatically encoded into a Process Hitting with 2 classes of priority%
+\footnote{Files are available at
+\url{http://maxime.folschette.name/underapprox-tcrsig94.zip}.}.
+Then, we verified the reachability for the independent activation of 4 outputs of the signalling
+cascade (SRE, AP1, NFkB, NFAT) from all possible input combinations (CD45, CD28, TCRlib) using our
+new reachability under-approximation (answering either \emph{yes} or \emph{inconclusive}) and a 
+previously defined reachability over-approximation \cite{PMR12-MSCS} (answering either \emph{no} or
+\emph{inconclusive}).
+All result in conclusive decisions, and the under-approximation has been satisfied in 12 cases (over
+32) proving the satisfiability of the concerned reachability property in the encoded Boolean network
+(and non-satisfiability in the other cases).
+
+Computations times are in the order of a few hundredths of a second on a 2.4GHz processor with 2GB
+of RAM.
+To give a comparison, we did the same experiments with a standard symbolic model-checker, libDDD
+\cite{libddd}, known for its good performances, the input model being the Boolean network expressed
+as a Petri net.
+However, due to the large scale of the model, the program runs out of memory for all the experiments.
+
+While ensuring a low complexity for the analysis of reachability in Boolean and discrete networks, our
+under-approximation method reveals to be conclusive in numerous cases when applied to real
+large-scale biological models, which were not tractable with exact model-checking.
+\end{comment}
+
+
+
+\section{Gros exemples ph2thomas}
+\seclabel{appli-thomas-egfr}
