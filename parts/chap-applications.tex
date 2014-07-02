@@ -1,6 +1,6 @@
 % Applications
 
-\chapter{Applications}
+\chapter{Applications sur des exemples de grande taille}
 \chaplabel{applications}
 
 \chapeau{
@@ -20,9 +20,13 @@
   \end{itemize}
 }
 
+
+
 \todo{Présenter Pint}
 
-\section{Gros exemple analyse statique}
+
+
+\section{Analyse statique du récepteur de lymphocyte~T}
 \seclabel{appli-as-tcell}
 
 Nous souhaitons démontrer dans cette section la puissance et l'adaptabilité
@@ -44,58 +48,267 @@ par aucun autre composant, et dont la valeur de départ est donc fixe,
 et des composants de sortie qui à l'inverse ne régulent aucun autre composant.
 Dans l'état initial, les composants d'entrée sont généralement
 indépendamment choisis actifs ou inactifs selon ce qu'on souhaite observer,
-et tous les autres composants sont inactifs.
+et tous les autres composants le sont en fonction des conditions initiales habituelles
+observées expérimentalement ---~la majorité étant inactifs.
 Cela permet d'observer la propagation du signal d'entrée caractérisée par une (dés)activation
-successive des autres composants du modèle,
-et notamment d'observer si les composants de sortie peuvent être activés
-en fonction de la configuration initiale des composants d'entrée.
+successive des autres composants du modèle.
+
+Le but de cette étude est de tester la possibilité d'activer chaque composant de sortie
+en fonction de l'état initial (activé ou non) de chaque composant d'entrée.
+Cela permet notamment de vérifier que le modèle est fonctionnel,
+autrement dit de vérifier que
+tous les composants de sortie peuvent être activés si toutes les entrées le sont
+---~et qu'elles ne peuvent pas l'être si aucune entrée c'est active.
+De plus, tous les autres comportements intermédiaires peuvent être analysés
+afin de prévoir le comportement du système réel dans ces situations.
+
+Le modèle comporte trois composants d'entrée (appelés CD4, CD28 et TCRlig)
+et quatre composants de sortie (SRE, AP1, NFkB et NFAT).
+Il a été traduit automatiquement en Frappes de Processus canoniques%
+\footnote{tous les fichiers sont disponibles à
+\url{http://maxime.folschette.name/underapprox-tcrsig94.zip}.}
+à l'aide d'un programme basé sur \storef.
+Les états initiaux sont construits en définissant tous les composants
+comme étant inactifs sauf CD45, CARD11, Bcl10, Malt1, Rac1r, Lckr, cCblr
+et les composants d'entrée sélectionnés.
+Pour chacun des états 8 initiaux ainsi obtenus,
+nous testons l'atteignabilité des processus $x_1$ de chaque composant $x$ de sortie
+indépendamment à l'aide des deux analyses statiques suivantes :
+\begin{itemize}
+  \item La sous-approximation développée à la \vsecref{as},
+    et notamment le \thmref{approxinf},
+    qui permet de répondre «~Oui~» ou «~Non-conclusif~» ;
+  \item La sur-approximation proposée par \citeasnoun{PMR12-MSCS},
+    appliquée au modèle fusionné d'après la \vdefref{fusion},
+    qui permet de répondre «~Non~» ou «~Non-conclusif~».
+\end{itemize}
+L'utilisation de ces deux approches conjointement permet d'obtenir un résultat dans un
+plus grand nombre de cas,
+l'analyse par sous-approximation présentée à la \vsecref{as} de cette thèse
+ne permettant pas de répondre «~Non~».
+
+Il s'avère finalement que cette méthode est conclusive pour tous les cas testés ;
+autrement dit, les deux méthodes ne répondent jamais «~Non-conclusif~»
+pour une même question d'atteignabilité.
+Sur les 32 cas de figure testés,
+nous avons notamment pu répondre «~Oui~» dans 12 cas
+grâce au \vthmref{approxinf}.
+% Lorsque tous les composants d'entrée sont inactifs, aucun composant de sortie ne peut
+% être activé ;
+% à l'inverse, lorsque tous les composants d'entrée sont actifs,
+% SRE, AP1 et NFAT peuvent être activés mais pas NFkB.
+Les temps de calcul sont de l'ordre de quelques centièmes de seconde sur un ordinateur
+de bureau classique\footnote{Testé sur une machine comportant
+un processeur de 2.4~Ghz avec 2~Gio de mémoire vivre.},
+ce qui permet d'effectuer un grand nombre de tests sur un même modèle.
+À titre de comparaison, les mêmes analyses ont été effectuées 
+sur une traduction en réseau de Petri du modèle étudié,
+à l'aide du \textit{model checker} symbolique libDDD \cite{Kordon09libddd},
+connu pour ses bonnes performances.
+Cependant, du fait de la taille du modèle, le programme effectue un dépassement de mémoire
+pour chacun des cas testés.
+
+\myskip
+
+Nous avons démontré avec cet exemple la puissance de l'analyse statique que nous proposons
+à la \vsecref{as}, applicable aux réseaux booléens asynchrones.
+Bien que la dynamique soit approximée, tous les cas étudiés dans cet exemple restent conclusifs,
+ce qui permet d'étudier la dynamique d'un grand modèle de 94 composants,
+chose impossible avec les outils de \textit{model checking} classiques.
+
+
+
+\section{Traduction vers le modèle de Thomas}
+\seclabel{appli-thomas}
+
+
+\section{Application au récepteur de facteur de croissance épidermique}
+\seclabel{appli-thomas-egfr}
+
+Nous nous intéressons ici à l'étude d'un modèle de récepteur de facteur de croissant épidermique
+\cite{Sahin09}.
+Ce modèle est représenté par un graphe des interactions contenant 20 composants et 52 arcs.
+Une protéine appelée EGF peut être considérée comme un composant d'entrée
+car elle ne comporte aucun régulateur,
+et une chaîne e réactions permet l'activation de la protéine pRB qui est responsable
+de la régulation de la division cellulaire.
+Celle-ci est donc essentielle pour la prévention du développement de cancers.
+
+Trois modèles de Frappes de Processus canoniques
+sont créés à partir du graphe des interactions original, avec différents niveaux
+de précision dans la modélisation des coopérations entre composants.
+\todo{traduits comment ?}
+\begin{itemize}
+  \item Le modèle (1) représente la dynamique généralisée du graphe des interactions,
+    telle que théorisée par \citeasnoun{PMR10-TCSB},
+    c'est-à-dire sans aucune information concernant les règles booléennes des coopérations,
+    et ne contient donc aucune sorte coopérative (ni aucune action primaire) ;
+  \item Le modèle (2) est partiellement raffiné : il intègre quelques-unes des règles
+    booléennes en question en tant que sortes coopératives,
+    choisies d'après des expériences de \textit{knockdown} menées sur le système ;
+  \item Le modèle (3) est le modèle totalement raffiné contenant toutes les coopérations.
+\end{itemize}
+Les modèles (2) et (3) consistent donc en des raffinements successifs du modèle (1)
+qui est le plus général au niveau de la dynamique.
+La constitution de chaque modèle est détaillée dans la suite,
+et les résultats de l'inférence du graphe des interactions et de l'inférence des paramètres
+sur ces trois modèles sont donnés dans la \tabref{appli-thomas-egfr}
+et discutés plus bas.
+
+\begin{table}[ht]
+  \ZifferAn
+  \begin{center}
+  \begin{tabular}{r|l|l|l|l|l} %m{2cm}|m{2.5cm}|m{1.5cm}}
+    \textbf{Modèle} & $\mathbf{|E|}$ & $\mathbf{|K|}$ & \textbf{Paramètres inférés} &
+      \textbf{Modèles possibles} & \textbf{Points fixes}
+  \\\hline\hline
+    (1) & $52$ & $196$ & $20$ & $2^{176}\simeq 9,6\cdot10^{52}$ & $0$   % v1_0.ph
+  \\\hline
+    (2) & $51$ & $192$ & $98$ & $2^{94}\simeq 2,0\cdot10^{28}$ & $0$    % v2_1.ph
+  \\\hline
+    (3) & $51$ & $192$ & $192$ & $1$ & $3$                              % ori.ph
+  \\\hline
+  \end{tabular}
+  \end{center}
+  \caption{\tablabel{appli-thomas-egfr}%
+    Résultats de l'inférence du graphe des interactions et des paramètres
+    sur les trois modèles dérivés du récepteur EGF %\cite{Sahin09}
+    avec différentes précisions dans la définition des coopérations.
+    Le modèle (1) ne contient aucune coopération entre les composants.
+    Certaines coopérations ont été incluses dans le modèle (2) sous la forme de 14
+    sortes coopératives et le modèle (3) contient toutes les coopérations entre composants
+    sous la forme de 22 sortes coopératives.
+    La deuxième colonne donne le nombre d'arcs dans le graphe des interactions inféré
+    à l'aide de \storef (le nombre de nœuds étant toujours celui du modèle, c'est-à-dire 20).
+    La troisième colonne donne le nombre total de paramètres à définir
+    (calculé à partir du graphe des interactions),
+    la quatrième colonne donne le nombre de paramètres qui ont pu être inférés
+    en utilisant \storef,
+    et la cinquième colonne donne le nombre de modèles compatibles avec le modèle
+    de Frappes de Processus canoniques étudié,
+    qui dépend de façon exponentielle du nombre de paramètres n'ayant pu être inférés.
+    Finalement, la dernière colonne donne le nombre de points fixes du modèle,
+    calculé à l'aide du \vthmref{php-pf}.
+  }
+  \ZifferAus
+\end{table}
+
+\todoplustard{GI visuel ?}
+
+Le modèle (1) comprend uniquement des interactions individuelles entre composants,
+c'est-à-dire des activations ou inhibitions indépendantes d'un composant à l'autre,
+obtenues d'après les régulations contenues dans le graphe des interactions.
+Ainsi, le graphe des interactions inféré d'après le modèle (1) est exactement identique
+au graphe des interactions utilisé pour créer ce modèle,
+à l'exception d'une auto-activation sur l'entrée EGF,
+qui est due à son absence de régulateurs.
+\stodo{Préciser}
+Les seuls paramètres ayant pu être inférés sont ceux qui concernent les configurations extrêmes
+des ressources de chaque régulation,
+à savoir dans le cas où tous les activateurs sont présents et tous les inhibiteurs absents,
+et dans le cas inverse.
+Ce premier modèle abstrait donc un grand nombre de modèle de Thomas
+(de l'ordre de $9\cdot10^{52}$)
+étant donné que la quasi-totalité des paramètres restent indéterminés.
+
+Afin de construire le modèle (2), 14 sortes coopératives ont été ajoutées dans le but de
+modéliser les fonctions booléennes de plusieurs composants (consistant en des portes ET et OU).
+Pour ce faire, les composants suivants ont été retenus du fait de leur importance dans la
+chaîne de réactions : CDK4, CDK6, CycD1, ER\nbd \textalpha{} and c\nbd MYC.
+En effet, d'après les expériences par \textit{knockdown} menées par \citeasnoun{Sahin09}
+empêcher ces composants de s'exprimer menait à une réduction significative de la production
+de pRB.
+On peut en conclure que ces composants sont impliqués dans les fonctions booléennes
+d'autres composants d'une façon à ce que le \textit{knockdown} des premiers
+empêche la production des seconds (ce qui est typique des portes de type ET).
+Afin de reproduire ces requis, les fonctions booléennes des successeurs de ces composants
+ont été modélisées sous la forme de sortes coopératives le cas échéant, c'est-à-dire celles de
+CDK4, CDK6, prB, p21, p27, IGF1R, MYC, CycD1 et CycE1.
+En théorie, 9 sortes coopératives auraient suffi, mais la factorisation des sortes coopératives
+décrite à \storef a été utilisée afin de réduire la taille ---~en nombre de processus~---
+de celles-ci lorsque c'était possible.
 
 \TODO
 
-Ce modèle a été traduit automatiquement en Frappes de Processus canoniques
-à l'aide d'un programme basé sur \TODO
-
-
-
-
-
-
-
-
-
 \begin{comment}
-In order to support the scalability and applicability of our under-approximation of reachability, we
-apply our new approach for the analysis of large-scale model of the T-cell receptor (TCR)
-signalling pathway \cite{tcrsig94}.
-This model gathers 94 interacting components and is specified as a Boolean network.
-The under-approximation presented in this paper has been implemented in the existing Pint
-software\footnote{Pint is freely available at \url{http://loicpauleve.name/pint}.}.
 
-The Boolean model has been automatically encoded into a Process Hitting with 2 classes of priority%
-\footnote{Files are available at
-\url{http://maxime.folschette.name/underapprox-tcrsig94.zip}.}.
-Then, we verified the reachability for the independent activation of 4 outputs of the signalling
-cascade (SRE, AP1, NFkB, NFAT) from all possible input combinations (CD45, CD28, TCRlib) using our
-new reachability under-approximation (answering either \emph{yes} or \emph{inconclusive}) and a 
-previously defined reachability over-approximation \cite{PMR12-MSCS} (answering either \emph{no} or
-\emph{inconclusive}).
-All result in conclusive decisions, and the under-approximation has been satisfied in 12 cases (over
-32) proving the satisfiability of the concerned reachability property in the encoded Boolean network
-(and non-satisfiability in the other cases).
+In order to build model (2), 14 cooperative sorts were added in order to model the Boolean functions of several components
+(consisting of AND and OR operands).
+To do so, the following components were noticed due to their importance in the chain of reactions:
+CDK4, CDK6, CycD1, ER$\alpha$ and c-MYC.
+Indeed, knockdown experiments have been conducted in~\cite{Sahin09}
+and the results showed that knocking down these components lead to an important decrease in the production of pRB.
+We therefore concluded that these components were involved in other components' Boolean functions
+in a way that the knockdown of the former was sufficient to prevent the production of the latter (which is typical of AND operands).
+In order to reproduce such requirements, the Boolean functions of their successors,
+that is CDK4, CDK6, prB, p21, p27, IGF1R, MYC, CycD1 and CycE1,
+were modeled as cooperative sorts, if needed.
+In theory, 9 cooperative sorts would have sufficed, but the chaining of cooperative sorts described
+in \pref{ssec:PH} was used to reduce the number of processes in each cooperative sort.
+As a result, the added cooperations allowed to infer about half the parameters;
+however, the number of possible Thomas models that can be inferred from this PH is still significant
+because of the numerous remaining unknown parameters.
+Furthermore, we note that the inferred IG contains one edge less than the original IG. This is due to the fact that
+one of the Boolean functions could in fact be simplified in a way that a component did not appear anymore in it.
+No edge have therefore been inferred by our method in this case.
 
-Computations times are in the order of a few hundredths of a second on a 2.4GHz processor with 2GB
-of RAM.
-To give a comparison, we did the same experiments with a standard symbolic model-checker, libDDD
-\cite{libddd}, known for its good performances, the input model being the Boolean network expressed
-as a Petri net.
-However, due to the large scale of the model, the program runs out of memory for all the experiments.
+Finally, model (3) was build using all the Boolean functions provided in~\cite{Sahin09}.
+These functions take the form of 22 cooperative sorts into the model in order to match the desired behavior of the system.
+As all cooperations are fully defined in this model, all the parameters are inferred and only one Thomas model can be derived.
+We note also that this PH model is the only one containing at least one fixed point.
+In fact, the three found steady states include the two states that correspond to a complete propagation of the input signal,
+that is, in the case where EGF is active and in the case where it is not.
+The two other models contain no fixed point because some cooperations are not fully defined,
+leading to oscillations that are a consequence of the nondeterministic behavior.
 
-While ensuring a low complexity for the analysis of reachability in Boolean and discrete networks, our
-under-approximation method reveals to be conclusive in numerous cases when applied to real
-large-scale biological models, which were not tractable with exact model-checking.
+
+
+\subsection{Computation times on several large models}\label{ssec:cpu}
+
+The current implementation can successfully handle large PH models of BRNs found in the literature such as:
+\begin{itemize}
+  \item the EGF receptor model from~\cite{Sahin09} with 20 components presented in the last
+    subsection\footnote{All models mentioned in this section are available as examples distributed with \textsc{Pint}.},
+  \item a T cell receptor model described as an IG in~\cite{Klamt06}, which contains 40 components and 14 cooperative sorts.
+\end{itemize}
+For each model, IG and parameters inferences are performed together in less than a second
+on a standard desktop computer.
+
+Bigger models related to the aforementioned systems were also tested with our implementation:
+\begin{itemize}
+  \item a model of the T cell receptor with 94 components, described in~\cite{SaezRodriguez2007},
+  \item a model of the EGF receptor with 104 components, described in~\cite{Samaga2009}.
+\end{itemize}
+These two models were obtained in a previous work by an automatic translation from the CellNetAnalyzer~\cite{klamt2007structural} formalism.
+
+The composition of all models and the results of the inferences are summarized in \pref{tb:computation}.
+We note that due to a very high number of parameters, no parameters inference could be performed on the $94$ and $104$ component models.
+These models would therefore be more efficiently studied as PH than as BRNs.
+Finally, we note that the complexity of the method is exponential in the number of regulators of one
+component and linear in the number of components.
+
+\begin{table}[ht]
+\begin{center}
+  \begin{tabular}{r|c|c|c|c|c}
+    \textbf{Model} & $\mathbf{|\Gamma|}$ & $\mathbf{|\PHs \setminus \Gamma|}$ & \textbf{$\Delta t$ IG} & \textbf{$\Delta t$ K} & $\mathbf{|K|}$
+\\\hline\hline
+    EGF receptor \cite{Sahin09} & $20$ & $22$ & <1s & <1s & 192
+\\\hline
+    T cell receptor \cite{Klamt06} & $40$ & $14$ & <1s & <1s & 143
+\\\hline
+    T cell receptor \cite{SaezRodriguez2007} & $94$ & $39$ & 10s & --- & $2.1\cdot10^{9}$
+\\\hline
+    EGF receptor \cite{Samaga2009} & $104$ & $89$ & 3min 20s & --- & $4.2\cdot10^{6}$
+  \end{tabular}
+\end{center}
+\caption{%
+  Computation times and several pieces of information related to the IG and parametrization inferences of four biological models.
+  The second column gives the number of components of each model and
+  the third column gives the number of cooperative sorts used to model joint actions.
+  The fourth (resp.~fifth) column gives the computation times of the IG inference (resp.~the parametrization inference).
+  The last column gives the number of parameters in each model.
+  Due to the too high number of parameters, parametrization inference could not be performed on the $94$ and $104$ component models.
+  }
+\label{tb:computation}
+\end{table}
 \end{comment}
-
-
-
-\section{Gros exemples ph2thomas}
-\seclabel{appli-thomas-egfr}
