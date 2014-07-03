@@ -62,7 +62,7 @@
 \newcommand{\vdefpageref}[2][]{\defpageref[vref,#1]{#2}}
 \newcommand{\vexpageref}[2][]{\expageref[vref,#1]{#2}}
 
-\usepackage[agsm,dcucite,full]{harvard}  % Citations style Harvard
+\usepackage[agsm,dcucite]{harvard}  % Citations style Harvard
 \renewcommand{\harvardand}[1]{\& }
 \renewcommand{\harvardurl}[1]{\url{#1}}
 \newcommand{\citefullname}[2]{#2 \citeasnoun{#1}}
@@ -135,6 +135,9 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 % Styles supplémentaires
 \newcommand{\bemph}[1]{\textbf{#1}}
 \newcommand{\myskip}{\medskip}
+\newcommand{\clspace}{\hspace*{2em}}
+\newcommand{\cl}[1]{\\\texttt{\clspace#1}\\}
+\newcommand{\tool}[1]{{\rmfamily #1}}
 
 % Césures
 \hyphenation{jou-a-bi-li-té}
@@ -144,6 +147,7 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 % Raccourcis propres à ce document
 \newcommand{\allcr}{\crref{tf,part}}
+\newcommand{\Pint}{\tool{Pint}}
 
 %\newcommand{\stochainf}{{\small $\infty$}}
 %\newcommand{\stochaa}{{\footnotesize $\spadesuit$}}
@@ -202,7 +206,7 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 % Étoiler les \reviewer, \supervisor et \cosupervisor absents
 \reviewer{M.}{Jean-Paul}{Comet}{Professeur des universités}%
-  {Ecole Polytechnique de l'Université de Nice Sophia Antipolis}
+  {École Polytechnique de l'Université de Nice Sophia Antipolis}
 
 \reviewer{Mme}{Anne}{siegel}{Directrice de recherche \todo{INRIA ? CNRS ?}}%
   {IRISA (CNRS \& Université Rennes 1), Inria Rennes}
@@ -325,15 +329,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 % Représentation canonique et analyse du PH
 \input{parts/chap-phcanonique}
 
-\chapter{Expressivité du PH et positionnement par rapport à d'autres formalismes}
-\chaplabel{expressivite}
-  \section{Modèle de Thomas}
-  \section{Réseaux de Petri}
-    \subsection{Réseaux de Petri saufs (une place par processus)}
-    \subsection{Réseaux de Petri bornés (une place par sorte)}
-  \section{$\pi$-calcul ?}
-  \section{Automates finis communicants ?}
-  \section{Biocham ?}
+% Expressivité du PH et positionnement par rapport à d'autres formalismes
+\input{parts/chap-expressivite}
 
 % Applications
 \input{parts/chap-applications}
@@ -343,6 +340,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
   
 %\chapter*{Références}
 %\bibliographystyle{alpha}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Bibliographie}
 \bibliography{biblio}
 
 

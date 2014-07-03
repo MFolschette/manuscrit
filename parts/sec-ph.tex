@@ -629,9 +629,10 @@ On peut tout d'abord se limiter à deux états par sorte représentée :
 un état «~bon~» et un état «~mauvais~»,
 même si les sortes représentées possèdent plus de deux processus.
 Cela permet de limiter le nombre de processus de la sorte coopérative à
-$2^\card{A}$, où $A$ est l'ensemble des sortes à représenter,
+$2^{\card{A}}$, où $A$ est l'ensemble des sortes à représenter,
 bien que le nombre de processus dépende toujours exponentiellement de la taille de $A$.
 
+\label{factorisation-coop}
 Il est aussi possible de factoriser les sortes coopératives
 qui représentent trois sortes ou plus.
 Pour cela, il suffit par exemple de créer une sorte coopérative intermédiaire entre deux des
