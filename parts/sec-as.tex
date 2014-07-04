@@ -365,9 +365,11 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 
 
+\todo{Diluer cet exemple (cf. exemple à la fin de PHcanonique)}
+
 \begin{example}
   Comparons les Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)}; \PHa^{(2)}))$
-  définies à la \figref{ph-livelock} avec 
+  définies à la \figref{livelock} avec 
   les Frappes de Processus standards $\PH' = (\PHs; \PHl; \PHh')$
   telles que $\PHh' = \PHh^{(1)} \cup \PHh^{(2)}$.
   En d'autres termes, $\PH'$ est la version sans priorités de $\PH$,
@@ -408,7 +410,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   de la dynamique.
   Les Frappes de Processus canoniques permettent alors de modéliser un comportement (faiblement)
   bisimilaire au comportement voulu \stodo{ref?}, les actions primaires permettant la mise à jour
-  sans délai des sortes coopératives, comme pour le modèle $\PH$ de la \figref{ph-livelock}.
+  sans délai des sortes coopératives, comme pour le modèle $\PH$ de la \figref{livelock}.
   En effet, le processus $ab_{11}$ est impossible à activer si $a_1$ et $b_1$ ne sont
   pas simultanément actifs, et ce cas ne peut se présenter que dans l'état initial.
   Il s'agit d'un jardin d'Eden dans le sens développé dans \stodo{la thèse de Loïc}.
@@ -436,80 +438,79 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   En effet, dans ce cas les processus $a_0$ et $b_0$ du graphe de la \figref{glc-livelock}
   sont permutés, ce qui tous les arcs cohérents.
 
-\begin{figure}[tp]
-  \centering
-  \begin{tikzpicture}[aS]
-    \node[Aproc] (c1) {$c_1$};
-    \node[Aobj,below of=c1] (c01) {$\PHobj{c_0}{c_1}$};
-    \node[Asol,below of=c01] (c01s) {};
+  \begin{figure}[tp]
+    \centering
+    \begin{tikzpicture}[aS]
+      \node[Aproc] (c1) {$c_1$};
+      \node[Aobj,below of=c1] (c01) {$\PHobj{c_0}{c_1}$};
+      \node[Asol,below of=c01] (c01s) {};
 
-    \node[AprocPrio,below of=c01s] (ab11) {$ab_{11}$};
-    \node[AsolPrio,below of=ab11] (ab11s) {};
+      \node[AprocPrio,below of=c01s] (ab11) {$ab_{11}$};
+      \node[AsolPrio,below of=ab11] (ab11s) {};
 
-    \node[Aproc,below left of=ab11s] (a1) {$a_1$};
-    \node[Aobj,below of=a1] (a11) {$\PHobj{a_1}{a_1}$};
-    \node[Asol,below of=a11] (a11s) {};
-    \node[Aobj,below left of=a1] (a01) {$\PHobj{a_0}{a_1}$};
-    \node[Asol,below of=a01] (a01s) {};
-    \node[Aproc,below of=a01s] (b0) {$b_0$};
-    \node[Aobj,below of=b0] (b00) {$\PHobj{b_0}{b_0}$};
-    \node[Asol,below of=b00] (b00s) {};
-    \node[Aobj,below left of=b0] (b10) {$\PHobj{b_1}{b_0}$};
-    \node[Asol,below of=b10] (b10s) {};
+      \node[Aproc,below left of=ab11s] (a1) {$a_1$};
+      \node[Aobj,below of=a1] (a11) {$\PHobj{a_1}{a_1}$};
+      \node[Asol,below of=a11] (a11s) {};
+      \node[Aobj,below left of=a1] (a01) {$\PHobj{a_0}{a_1}$};
+      \node[Asol,below of=a01] (a01s) {};
+      \node[Aproc,below of=a01s] (b0) {$b_0$};
+      \node[Aobj,below of=b0] (b00) {$\PHobj{b_0}{b_0}$};
+      \node[Asol,below of=b00] (b00s) {};
+      \node[Aobj,below left of=b0] (b10) {$\PHobj{b_1}{b_0}$};
+      \node[Asol,below of=b10] (b10s) {};
 
-    \node[Aproc,below right of=ab11s] (b1) {$b_1$};
-    \node[Aobj,below of=b1] (b11) {$\PHobj{b_1}{b_1}$};
-    \node[Asol,below of=b11] (b11s) {};
-    \node[Aobj,below right of=b1] (b01) {$\PHobj{b_0}{b_1}$};
-    \node[Asol,below of=b01] (b01s) {};
-    \node[Aproc,below of=b01s] (a0) {$a_0$};
-    \node[Aobj,below of=a0] (a00) {$\PHobj{a_0}{a_0}$};
-    \node[Asol,below of=a00] (a00s) {};
-    \node[Aobj,below right of=a0] (a10) {$\PHobj{a_1}{a_0}$};
-    \node[Asol,below of=a10] (a10s) {};
+      \node[Aproc,below right of=ab11s] (b1) {$b_1$};
+      \node[Aobj,below of=b1] (b11) {$\PHobj{b_1}{b_1}$};
+      \node[Asol,below of=b11] (b11s) {};
+      \node[Aobj,below right of=b1] (b01) {$\PHobj{b_0}{b_1}$};
+      \node[Asol,below of=b01] (b01s) {};
+      \node[Aproc,below of=b01s] (a0) {$a_0$};
+      \node[Aobj,below of=a0] (a00) {$\PHobj{a_0}{a_0}$};
+      \node[Asol,below of=a00] (a00s) {};
+      \node[Aobj,below right of=a0] (a10) {$\PHobj{a_1}{a_0}$};
+      \node[Asol,below of=a10] (a10s) {};
 
-    \path
-    (c1) edge (c01)
-    (c01) edge (c01s)
-    (c01s) edge (ab11)
-    (ab11) edge[aSPrio] (ab11s)
-    (ab11s) edge (a1) edge (b1)
+      \path
+      (c1) edge (c01)
+      (c01) edge (c01s)
+      (c01s) edge (ab11)
+      (ab11) edge[aSPrio] (ab11s)
+      (ab11s) edge (a1) edge (b1)
 
-    (a1) edge (a01) edge (a11)
-    (a01) edge (a01s)
-    (a01s) edge (b0)
-    (a11) edge (a11s)
-    (a0) edge (a10) edge (a00)
-    (a10) edge (a10s)
-    (a00) edge (a00s)
+      (a1) edge (a01) edge (a11)
+      (a01) edge (a01s)
+      (a01s) edge (b0)
+      (a11) edge (a11s)
+      (a0) edge (a10) edge (a00)
+      (a10) edge (a10s)
+      (a00) edge (a00s)
 
-    (b0) edge (b10) edge (b00)
-    (b10) edge (b10s)
-    (b00) edge (b00s)
-    (b1) edge (b01) edge (b11)
-    (b01) edge (b01s)
-    (b01s) edge (a0)
-    (b11) edge (b11s)
-    ;
-    \end{tikzpicture}
-  \caption{
-  \figlabel{glc-livelock}
-    Le graphe de causalité locale des Frappes de Processus de la \figref{ph-livelock}
-    pour l'objectif $\w = \PHobj{c_0}{c_1}$
-    et le contexte initial $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
-    Les nœuds rectangulaires représentent les éléments de $\Proc$,
-    les nœuds sans bordure sont les éléments de $\Obj$
-    et les cercles sont les éléments de $\Sol$.
-    Le processus $ab_{11}$, ainsi que son unique solution et l'arc qui les relie,
-    sont mis en valeur avec des traits doubles car il s'agit du principal ajout de la méthode
-    présentée à la \secref{ua}.
-    Il est à noter que l'arc dessiné avec un trait double n'est pas cohérent
-    au sens de la \defref{coherent}
-    En effet, sa cible est la solution $\{ a_1, b_1 \}$,
-    or l'un de ses successeurs indirects est $a_0$, qui est un autre processus de la même sorte
-    que $a_1$ (et le même raisonnement fonctionne pour $b_0$).
-  }
-\end{figure}
+      (b0) edge (b10) edge (b00)
+      (b10) edge (b10s)
+      (b00) edge (b00s)
+      (b1) edge (b01) edge (b11)
+      (b01) edge (b01s)
+      (b01s) edge (a0)
+      (b11) edge (b11s)
+      ;
+      \end{tikzpicture}
+    \caption{\figlabel{glc-livelock}%
+      Le graphe de causalité locale des Frappes de Processus de la \figref{livelock}
+      pour l'objectif $\w = \PHobj{c_0}{c_1}$
+      et le contexte initial $\ctx = \PHstate{a_1, b_0, c_0, ab_{10}}$.
+      Les nœuds rectangulaires représentent les éléments de $\Proc$,
+      les nœuds sans bordure sont les éléments de $\Obj$
+      et les cercles sont les éléments de $\Sol$.
+      Le processus $ab_{11}$, ainsi que son unique solution et l'arc qui les relie,
+      sont mis en valeur avec des traits doubles car il s'agit du principal ajout de la méthode
+      présentée à la \secref{ua}.
+      Il est à noter que l'arc dessiné avec un trait double n'est pas cohérent
+      au sens de la \defref{coherent}
+      En effet, sa cible est la solution $\{ a_1, b_1 \}$,
+      or l'un de ses successeurs indirects est $a_0$, qui est un autre processus de la même sorte
+      que $a_1$ (et le même raisonnement fonctionne pour $b_0$).
+    }
+  \end{figure}
 \end{example}
 
 \todo{Mentionner les limites de l'analyse :
@@ -568,6 +569,8 @@ croît exponentiellement avec le nombre de sortes dans $S$, ce qui peut fortemen
 la vitesse de résolution de l'analyse statique.
 Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative comme expliqué
 à la section \toref.
+
+\todo{Exemple sur l'exemple}
 
 
 

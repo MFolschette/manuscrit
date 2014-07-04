@@ -9,17 +9,17 @@ Un modèle de Frappes de Processus est dit \emph{canonique} s'il comporte 2 clas
 et qu'il respecte un certain nombre de critères concernant l'utilisation des actions prioritaires.
 Il faut notamment que celles-ci soient uniquement utilisées pour la mise à jour des sortes
 coopératives, et que cette mise à jour soit correctement formée,
-c'est-à-dire ne comportant pas d'actions en trop ou manquantes.
+c'est-à-dire qu'elle ne comporte pas d'actions en trop ou manquantes.
 Un certain nombre de résultats peuvent être déduits de la forme particulière de ces
 Frappes de Processus (\secref{phcanonique-resultats}).
+La \vfigref{livelock} propose un exemple simple de Frappes de Processus canoniques.
 
-Cette forme particulière des Frappes de Processus assure un certain nombre de bonnes propriétés
-qui seront explicitées par la suite et qui permettent l'utilisation des méthodes d'analyse statique
-développées à la \secref{as}.
-Il est à noter de plus que les autres sémantiques de Frappes de Processus
-présentées au \chapref{sem}
-peuvent être traduites en Frappes de Priorités canoniques.
-(\secref{phcanonique-equiv})
+% Cette forme particulière des Frappes de Processus assure un certain nombre de bonnes propriétés
+% qui seront explicitées par la suite et qui permettent l'utilisation des méthodes d'analyse statique
+% développées à la \secref{as}.
+% Il est à noter de plus que les autres sémantiques de Frappes de Processus
+% présentées au \chapref{sem}
+% peuvent être traduites en Frappes de Priorités canoniques (\secref{phcanonique-equiv}).
 
 
 
@@ -31,10 +31,12 @@ les Frappes de Processus canoniques (\defref{phcanonique}).
 Cependant, afin de proposer un cadre assez général et permettre une réutilisation des éléments
 de cette section,
 nous considérerons dans un premier temps le cas de Frappes de Processus avec $k$
-classes de priorités dans les définitions et critères qui suivent, pour $k \in \sN^*$.
+classes de priorités dans les définitions et critères qui suivent, pour $k \in \sNN$.
 Cela permettra aussi de définir les Frappes de Processus pseudo-canoniques
 (\defref{phpseudocanonique}),
 qui forment un ensemble plus général ayant des propriétés proches.
+
+\myskip
 
 Nous définissons pour commencer la \emph{réduction} d'un modèle donné de Frappes de Processus
 comme le modèle équivalent dont on a retiré toutes les actions qui ne sont pas de priorité 1
@@ -52,94 +54,6 @@ d'un modèle afin d'en contraindre la forme.
   Si $s \in \PHl$, on note de plus : $\reduction[\Sce](s)$ l'ensemble des scénarios
   depuis l'état $s$ dans les Frappes de Processus $\reduction$.
 \end{definition}
-
-\todo{Déplacer cet exemple}
-
-\begin{example}
-  La \figref{ph-livelock} donne un exemple de Frappes de Processus avec 2 classes de priorités avec :
-  \begin{align*}
-    \PHs &= \{ a, b, c, ab \} \enspace, \\
-    \PHl_a &= \{ a_0, a_1 \} \enspace, & \PHl_b &= \{ b_0, b_1 \} \enspace, \\
-    \PHl_c &= \{ c_0, c_1 \} \enspace, & \PHl_{ab} &= \{ ab_{00}, ab_{01}, ab_{10}, ab_{11} \}
-    \enspace.
-  \end{align*}
-  On note que :
-  $\{ \PHhit{ab_{11}}{c_0}{c_1}, \PHhit{a_1}{a_1}{a_0}, \PHhit{a_0}{b_0}{b_1} \} \subseteq \PHh^{(2)}$.
-
-\begin{figure}[tb]
-  \centering
-  \scalebox{1.2}{
-  \begin{tikzpicture}
-    \TSort{(0,0)}{a}{2}{l}
-    \TSort{(0,4)}{b}{2}{l}
-    \TSort{(7,2.5)}{c}{2}{r}
-
-    \TSetTick{ab}{0}{00}
-    \TSetTick{ab}{1}{01}
-    \TSetTick{ab}{2}{10}
-    \TSetTick{ab}{3}{11}
-    \TSort{(2,2.5)}{ab}{4}{t}
-
-    \THit{a_0}{prio}{ab_3}{.south}{ab_1}
-    \THit{a_0}{prio}{ab_2}{.south}{ab_0}
-    \THit{a_1}{prio}{ab_1}{.south}{ab_3}
-    \THit{a_1}{prio}{ab_0}{.south}{ab_2}
-
-    \THit{b_0}{prio}{ab_3}{.north}{ab_2}
-    \THit{b_0}{prio}{ab_1}{.north}{ab_0}
-    \THit{b_1}{prio}{ab_2}{.north}{ab_3}
-    \THit{b_1}{prio}{ab_0}{.north}{ab_1}
-    
-    \THit{a_1}{selfhit}{a_1}{.west}{a_0}
-    \THit{b_1}{selfhit}{b_1}{.west}{b_0}
-    \THit{a_0.north}{bend left}{b_0}{.west}{b_1}
-    \THit{b_0.south}{bend right=60}{a_0}{.west}{a_1}
-
-    \THit{ab_3}{}{c_0}{.west}{c_1}
-
-  \path[bounce, bend right=55]
-      \TBounce{ab_0}{}{ab_2}{.west}
-      \TBounce{ab_1}{}{ab_3}{.west}
-  ;
-  \path[bounce, bend left=20]
-      \TBounce{ab_3}{}{ab_1}{.south east}
-      \TBounce{ab_2}{}{ab_0}{.south east}
-  ;
-    \path[bounce, bend right=20]
-      \TBounce{ab_3}{}{ab_2}{.north east}
-      \TBounce{ab_1}{}{ab_0}{.north east}
-    ;
-    \path[bounce, bend left=30]
-      \TBounce{ab_2}{}{ab_3}{.west}
-      \TBounce{ab_0}{}{ab_1}{.west}
-    ;
-    \path[bounce, bend right]
-      \TBounce{a_1}{}{a_0}{.north west}
-      \TBounce{b_1}{}{b_0}{.north west}
-    ;
-    \path[bounce, bend left]
-      \TBounce{a_0}{}{a_1}{.south west}
-      \TBounce{b_0}{}{b_1}{.south west}
-    ;
-    \path[bounce, bend left]
-      \TBounce{c_0}{}{c_1}{.south west}
-    ;
-    \TState{a_1, b_0, ab_2, c_0}
-  \end{tikzpicture}
-  }
-  \caption{
-  \figlabel{ph-livelock}
-    Un exemple de Frappes de Processus canonique.
-    Les actions de priorité 1 sont dessinées en traits doubles tandis que les actions
-    de priorité 2 sont représentées avec des traits simples.
-    Les processus grisés présentent un exemple d'état de départ :
-    $\PHstate{a_1, b_0, c_0, ab_{10}}$.
-  }
-\end{figure}
-
-\end{example}
-
-
 
 %\subsection{Restrictions}
 %\seclabel{restrictions}
@@ -263,9 +177,11 @@ Dans la suite, on écrira simplement «~composant~» (\resp «~sorte coopérativ
 en lieu et place de «~composant bien formé~» (\resp «~sorte coopérative bien formée~»).
 
 \begin{example}
-  Les Frappes de Processus de la \figref{ph-livelock} comprennent trois composants ($a$, $b$ et $c$)
-  et une sorte coopérative ($ab$).
-  La sorte coopérative $ab$ modélise la coopération entre $a$ et $b$ car $\compin(ab) = \{ a, b \}$.
+  Les Frappes de Processus de la \figref{livelock} comprennent
+  trois composants ($\components = \{ a, b, c \}$)
+  et une sorte coopérative ($\cs = \{ ab \}$).
+  La sorte coopérative $ab$ modélise la coopération entre $a$ et $b$ car
+  $\compin(ab) = \{ a, b \}$.
 \end{example}
 
 Enfin, la \defref{phcanonique} définit la notion de \emph{Frappes de Processus canoniques}.
@@ -292,6 +208,94 @@ Cette définition étendue sera notamment utile pour des questions de traduction
   sont les Frappes de Processus pseudo-canoniques avec 2 classes de priorités
   (c'est-à-dire respectant les \allcr).
 \end{definition}
+
+
+
+\begin{example}
+  Les Frappes de Processus de la \figref{livelock}
+  sont des Frappes de Processus canoniques.
+  Les actions primaires permettent en effet uniquement de mettre à jour la sorte coopérative $ab$,
+  tandis que les actions secondaires frappent les autres composants.
+  On constate notamment que lorsque $a$ est peu active (c'est-à-dire lorsque $a_0$ est actif),
+  l'action $\PHfrappe{a_0}{b_0}{b_1}$ permet d'activer $b$, et vice-versa.
+  De même, $a$ et $b$ s'auto-inhibent grâce aux actions
+  $\PHfrappe{a_1}{a_1}{a_0}$ et $\PHfrappe{b_1}{b_1}{b_0}$.
+  Enfin, l'action $\PHfrappe{ab_{11}}{c_0}{c_1}$
+  permet de représenter fidèlement la coopération entre $a_1$ et $b_1$ pour
+  frapper $c_0$ et le faire bondir en $c_1$.
+  
+  Nous notons qu'à partir de l'état initial représenté $\etat{a_0, b_0, c_0, ab_{00}}$,
+  il est impossible d'atteindre le processus $c_1$.
+  En effet, comme la sorte coopérative $ab$ est mise à jour de façon prioritaire,
+  cela nécessiterait la présence simultanée de $a_1$ et $b_1$.
+  Nous notons cependant que $c_1$ est atteignable dans la version fusionnée
+  de ces Frappes de Processus
+  (c'est-à-dire sans notion de priorité entre les actions, cf. \vdefref{fusion}).
+  En effet, il est possible d'atteindre $a_1$ et $b_1$ successivement
+  (et non simultanément)
+  ce qui permet d'atteindre le processus $ab_{11}$ si on omet l'une des mises à jour de $ab$.
+  
+  \begin{figure}[ht]
+    \centering
+    \scalebox{1.2}{
+    \begin{tikzpicture}
+      \TSort{(0,0)}{a}{2}{l}
+      \TSort{(0,4)}{b}{2}{l}
+      \TSort{(7,2)}{c}{2}{r}
+
+      \TSetTick{ab}{0}{00}
+      \TSetTick{ab}{1}{01}
+      \TSetTick{ab}{2}{10}
+      \TSetTick{ab}{3}{11}
+      \TSort{(4,1)}{ab}{4}{r}
+
+      \THit{a_0}{prio}{ab_3}{.west}{ab_1}
+      \THit{a_0}{prio}{ab_2}{.south west}{ab_0}
+      \THit{a_1}{prio}{ab_1}{.west}{ab_3}
+      \THit{a_1}{prio}{ab_0}{.south west}{ab_2}
+
+      \THit{b_0}{prio}{ab_3}{.north west}{ab_2}
+      \THit{b_0}{prio}{ab_1}{.north west}{ab_0}
+      \THit{b_1}{prio}{ab_2}{.west}{ab_3}
+      \THit{b_1}{prio}{ab_0}{.west}{ab_1}
+      
+      \THit{ab_3}{}{c_0}{.west}{c_1}
+      
+      \path[bounce, bend right = 70]
+        \TBounce{ab_3}{}{ab_1}{.north}
+        \TBounce{ab_2}{}{ab_0}{.north west}
+        \TBounce{ab_3}{}{ab_2}{.north west}
+        \TBounce{ab_1}{}{ab_0}{.north}
+      ;
+      \path[bounce, bend left = 70]
+        \TBounce{ab_1}{}{ab_3}{.south}
+        \TBounce{ab_0}{}{ab_2}{.south}
+        \TBounce{ab_2}{}{ab_3}{.south west}
+        \TBounce{ab_0}{}{ab_1}{.south west}
+      ;
+      \path[bounce, bend left]
+        \TBounce{c_0}{}{c_1}{.south west}
+      ;
+      
+      \TAction{a_1}{a_1.west}{a_0.north west}{selfhit}{right}
+      \TAction{b_1}{b_1.west}{b_0.north west}{selfhit}{right}
+      \TAction{a_0.south west}{b_0.west}{b_1.south west}{bend left=90}{left}
+      \TAction{b_0}{a_0.west}{a_1.south west}{bend right=50}{left}
+      
+      \TState{a_0, b_0, ab_0, c_0}
+    \end{tikzpicture}
+    }
+    \caption{\figlabel{livelock}%
+      Un exemple de Frappes de Processus canoniques.
+      Les actions de priorité 1 sont dessinées en traits doubles tandis que les actions
+      de priorité 2 sont représentées avec des traits simples.
+      Les processus grisés présentent un exemple d'état de départ :
+      $\PHstate{a_0, b_0, c_0, ab_{00}}$.
+    }
+  \end{figure}
+\end{example}
+
+\todoplustard{Dynamique explicite ?}
 
 
 
