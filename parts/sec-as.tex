@@ -307,7 +307,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
       On suppose qu'il existe $\delta_n$ tel que décrit ci-dessus.
       Posons $q = \PHget{(s \PHplay \delta_n)}{\PHsort(p_{n+1})}$.
       Par hypothèse, $(a_i, ps)$ est cohérent (\defref{coherent}) et tous les processus
-      de $ps$ sont des processus de composants \todo{???} ;
+      de $ps$ sont des processus de composants ;
       cela signifie qu'aucun des processus requis pour résoudre $p_{n+1}$ n'est un autre processus
       de la même sorte qu'un processus de $ps$.
       Par conséquent, il existe un scénario
@@ -365,68 +365,31 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 
 
-\todo{Diluer cet exemple (cf. exemple à la fin de PHcanonique)}
+\begin{remark}
+  Il est intéressant de noter que la sur-approximation de \citeasnoun{PMR12-MSCS}
+  est toujours valable sur les Frappes de Processus canoniques à condition de l'appliquer
+  sur la version fusionnée du modèle considéré.
+  Cela permet d'obtenir un résultat supplémentaire et de conclure
+  dans certains cas quant à l'impossibilité d'atteindre un processus donné.
+\end{remark}
+
+
 
 \begin{example}
-  Comparons les Frappes de Processus canoniques $\PH = (\PHs; \PHl; (\PHa^{(1)}; \PHa^{(2)}))$
-  définies à la \figref{livelock} avec 
-  les Frappes de Processus standards $\PH' = (\PHs; \PHl; \PHh')$
-  telles que $\PHh' = \PHh^{(1)} \cup \PHh^{(2)}$.
-  En d'autres termes, $\PH'$ est la version sans priorités de $\PH$,
-  c'est-à-dire où toutes les actions sont présentes mais où la notion de classes de priorités
-  a été supprimée.
-  
-  Intéressons-nous à la dynamique de $\PH'$.
-  Comme expliqué au \stodo{\S{} sur la modélisation des coopérations},
-  ce modèle comporte une sorte coopérative $ab$ qui est définie de la façon
-  dont le sont toutes les sortes coopératives en
-  en Frappes de Processus standards, faute de priorités.
-  Cette version sans priorités introduit des comportements supplémentaires qui ne sont pas
-  désirables pour représenter une porte logique exacte.
-  En effet, on pourrait s'attendre à ce que $ab_{11}$ représente la présence simultanée
-  de $a$ et $b$ dans un état passé, c'est-à-dire :
-  ou, en d'autres termes, que seule la présence simultanée de $a_1$ et $b_1$ pourrait
-  permettre l'activation de $ab_{11}$.
-  Or on constate que ce n'est pas le cas, car le scénario suivant permet par exemple d'activer
-  ce processus, sans pour autant que $a_1$ et $b_1$ ne soient simultanément présents,
-  et bien que le processus initial de $ab$ soit cohérent avec ceux de $a$ et $b$ :
-  $\PHstate{a_1, b_0, c_0, ab_{10}} \PHtrans[\PH']
-  \PHstate{a_0, b_0, c_0, ab_{10}} \PHtrans[\PH']
-  \PHstate{a_0, b_1, c_0, ab_{10}} \PHtrans[\PH']
-  \PHstate{a_0, b_1, c_0, ab_{11}}$.
-  En effet, il se trouve que l'activation de $ab_{11}$ ne représente pas la présence simultanée
-  de $a_1$ et $b_1$ dans un même état, mais leur présence consécutive dans
-  différents états.
-  En d'autres termes, la présence de $ab_{11}$ dans un état n'implique pas
-  $a_1 \wedge b_1$ dans le même état, ni même
-  $\tempop(a_1 \wedge b_1)$, mais plutôt : $\tempop(a_1) \wedge \tempop(b_1)$
-  où $\tempop$ signifie : «~précédemment~».
-  On constate d'ailleurs que l'analyse statique développée dans~\cite{PMR12-MSCS}
-  répond positivement quand à l'accessibilité de $c_1$ depuis l'état
-  $\PHstate{a_1, b_0, c_0, ab_{10}}$.
-  
-  Un tel comportement est indésirable si on souhaite utiliser les sortes coopératives en tant
-  que portes logiques exactes, c'est-à-dire sans ce décalage temporel menant à une sur-approximation
-  de la dynamique.
-  Les Frappes de Processus canoniques permettent alors de modéliser un comportement (faiblement)
-  bisimilaire au comportement voulu \stodo{ref?}, les actions primaires permettant la mise à jour
-  sans délai des sortes coopératives, comme pour le modèle $\PH$ de la \figref{livelock}.
-  En effet, le processus $ab_{11}$ est impossible à activer si $a_1$ et $b_1$ ne sont
-  pas simultanément actifs, et ce cas ne peut se présenter que dans l'état initial.
-  Il s'agit d'un jardin d'Eden dans le sens développé dans \stodo{la thèse de Loïc}.
+\exlabel{livelock-as}
   La sous-approximation développée dans cette section au \thmref{approxinf}
-  ne conclut d'ailleurs pas quant à l'accessibilité de $c_1$ depuis l'état
+  ne conclut pas quant à l'accessibilité de $c_1$ depuis l'état
   $\PHstate{a_1, b_0, c_0, ab_{10}}$.
   En effet, comme le montre la \figref{glc-livelock},
   l'arc représenté en double trait liant le nœud processus $ab_{11}$ à son unique solution
   n'est pas cohérent selon la
   \defref{coherent}, ce qui empêche l'application du théorème.
-  Cependant, il faut noter que la sur-approximation de \citeasnoun{PMR12-MSCS}
-  est toujours valable sur les Frappes de Processus canoniques à condition de l'appliquer
-  sur une version sans priorités (\cad dans le cas présent, l'appliquer sur $\PH'$
-  pour obtenir un résultat quant à $\PH$).
-  Ainsi, cette sur-approximation renvoie un résultat lui aussi non-conclusif,
-  ce qui fait que la méthode d'analyse statique ne répond globalement pas sur cet exemple,
+  
+  De même, la sur-approximation de \citeasnoun{PMR12-MSCS} (appliquée à $\PH'$)
+  renvoie aussi un résultat non-conclusif,
+  du fait que les deux approches ne peuvent pas être conclusives en même temps
+  pour des raisons de cohérence mathématique.
+  La méthode d'analyse statique ne répond donc globalement pas sur cet exemple,
   et de façon plus générale sur tous les exemples dont l'atteignabilité recherchée
   est rendue impossible par simple ajout de classes de priorités.
   
@@ -436,8 +399,8 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   \[\PHa'^{(2)} = (\PHa^{(2)} \setminus \{ \PHhit{a_0}{b_0}{b_1}, \PHhit{b_0}{a_0}{a_1} \})
     \cup \{ \PHhit{a_0}{a_0}{a_1}, \PHhit{b_0}{b_0}{b_1} \} \enspace.\]
   En effet, dans ce cas les processus $a_0$ et $b_0$ du graphe de la \figref{glc-livelock}
-  sont permutés, ce qui tous les arcs cohérents.
-
+  sont permutés, ce qui rend tous les arcs cohérents.
+  
   \begin{figure}[tp]
     \centering
     \begin{tikzpicture}[aS]
@@ -513,15 +476,31 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   \end{figure}
 \end{example}
 
-\todo{Mentionner les limites de l'analyse :
-\begin{itemize}
-  \item sur quels modèles l'analyse peut échouer ?
-  \item Quels motifs ?
-\end{itemize}}
+
+
+comme nous l'avons vu, l'analyse statique développée dans cette section est une approximation,
+et peut retourner un résultat non-conclusif ;
+Le modèle de la \figref{livelock} traité \vpageref{livelock-as} en est un exemple.
+Une partie de ces cas non-conclusifs apparaissent notamment pour un motif particulier,
+mis en valeur par la notion de cohérence de la \defref{coherent}.
+Cela est dû notamment au fait que la méthode de sur-approximation n'a pas été raffinée
+dans le présent travail, ce qui mène à des cas non-conclusifs lorsque l'ajout de priorités
+empêche certains comportements.
+
+D'autres situations peuvent aussi empêcher de conclure : c'est notamment le cas des
+atteignabilités nécessitant des «~allers-retours~»,
+c'est-à-dire l'activation d'un processus $p$ plusieurs fois pendant la résolution.
+Si d'autres requis sont intercalés entre les différentes occurrences de $p$,
+le graphe de causalité locale va alors présenter un cycle, ce qui empêche l'utilisation
+du \thmref{approxinf}.
+L'une des alternatives est alors de détecter et d'expliciter cette séquentialité,
+ce qui permet par exemple d'utiliser le résultat qui sera présenté à la
+\vsecref{approxinf-ordonnee}.
 
 
 
 \subsection{Atteignabilité d'un état}
+\seclabel{as-etat}
 
 \newcommand{\uastotal}{\tau}
 \newcommand{\uasreach}{\rho}
@@ -544,10 +523,11 @@ les Frappes de Processus canoniques telles que :
   \item $\PHl' = \PHl \times \PHl_\uastotal \times \PHl_\uasreach$, où
     $\PHl_\uastotal = \PHsubl_S$ et $\PHl_\uasreach = \{ \uasreach_0, \uasreach_1 \}$,
   \item $\PHh'^{(1)} = \PHh^{(1)} \cup
-      \{ \PHfrappe{a_i}{\uastotal_\mysigma}{\uastotal_{\mysigma'}} \mid
-      a \in S, \mysigma, \mysigma' \in \PHl_\uastotal,
-      \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \recouvre a_i \}$,
-  \item $\PHh'^{(2)} = \PHh^{(2)} \cup \{ \PHfrappe{\uastotal_\uasps}{\uasreach_0}{\uasreach_1} \}$.
+    \{ \PHfrappe{a_i}{\uastotal_\mysigma}{\uastotal_{\mysigma'}} \mid
+    a \in S, \mysigma, \mysigma' \in \PHl_\uastotal,
+    \PHget{\mysigma}{a} \neq a_i \wedge \mysigma' = \mysigma \recouvre a_i \}$,
+  \item $\PHh'^{(2)} = \PHh^{(2)} \cup
+    \{ \PHfrappe{\uastotal_\uasps}{\uasreach_0}{\uasreach_1} \}$.
 \end{itemize}
 Cette transformation consiste donc à ajouter au modèle
 une sorte coopérative $\uastotal$ sur toutes les sortes de $S$,
@@ -568,13 +548,11 @@ Il est à noter cependant que le nombre de processus de la sorte coopérative $\
 croît exponentiellement avec le nombre de sortes dans $S$, ce qui peut fortement impacter
 la vitesse de résolution de l'analyse statique.
 Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative comme expliqué
-à la section \toref.
-
-\todo{Exemple sur l'exemple}
+\vpageref{factorisation-coop}.
 
 
 
-\subsection{Raffinement de la Sous-approximation séquentielle}
+\subsection{Raffinement de la sous-approximation séquentielle}
 \seclabel{approxinf-ordonnee}
 
 Dans cette section, nous donnons une alternative à la condition suffisante du \thmref{approxinf}

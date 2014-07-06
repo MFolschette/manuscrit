@@ -103,8 +103,9 @@ Il a été traduit automatiquement en Frappes de Processus canoniques%
 depuis le format CellNetAnalyzer \cite{klamt2007structural}.
 %à l'aide d'un programme basé sur \storef.
 Les états initiaux sont construits en définissant tous les composants
-comme étant inactifs sauf CD45, CARD11, Bcl10, Malt1, Rac1r, Lckr, cCblr
-et les composants d'entrée sélectionnés.
+comme étant inactifs sauf pour certains d'entre eux
+(à savoir : CD45, CARD11, Bcl10, Malt1, Rac1r, Lckr, cCblr et IkB)
+et pour les composants d'entrée choisis comme initialement actifs.
 Pour chacun des états 8 initiaux ainsi obtenus,
 nous testons l'atteignabilité des processus $x_1$ de chaque composant $x$ de sortie
 indépendamment à l'aide des deux analyses statiques suivantes :
@@ -127,11 +128,13 @@ pour une même question d'atteignabilité.
 Sur les 32 cas de figure testés,
 nous avons notamment pu répondre «~Oui~» dans 12 cas
 grâce au \vthmref{approxinf}.
-% Lorsque tous les composants d'entrée sont inactifs, aucun composant de sortie ne peut
-% être activé ;
-% à l'inverse, lorsque tous les composants d'entrée sont actifs,
-% SRE, AP1 et NFAT peuvent être activés mais pas NFkB.
-Les temps de calcul sont de l'ordre de quelques centièmes de seconde sur un ordinateur
+Lorsque tous les composants d'entrée sont inactifs, aucun composant de sortie ne peut
+être activé ;
+à l'inverse, lorsque tous les composants d'entrée sont actifs,
+SRE, AP1 et NFAT peuvent être activés mais pas NFkB,
+ce qui permet de corriger le modèle de façon à la rendre actif en ajoutant une action manquante.
+Les temps de calcul sont de l'ordre de la seconde sur un ordinateur
+% quelques centièmes de seconde
 de bureau classique\footnote{Testé sur une machine comportant
 un processeur de 2,4~Ghz avec 2~Go de mémoire vivre.},
 ce qui permet d'effectuer un grand nombre de tests sur un même modèle.
@@ -141,6 +144,41 @@ sur une traduction en réseau de Petri du modèle étudié,
 connu pour ses bonnes performances.
 Cependant, du fait de la taille du modèle, le programme effectue un dépassement de mémoire
 pour chacun des cas testés.
+
+\myskip
+
+Pour terminer, nous testons en complément l'atteignabilité simultanée
+de l'activation des quatre composants de sortie (SRE, AP1, NFkB et NFAT).
+Ce résultat est utile car les propriétés précédemment étudiées consistaient uniquement
+en des atteignabilités indépendantes, et il demeure toujours la possibilité
+que l'une des atteignabilité n'en entrave une autre.
+Pour ce résultat supplémentaire, nous modifions le modèle comme expliqué à la
+\vsecref{as-etat}, qui consiste à ajouter les éléments suivants :
+\begin{itemize}
+  \item une sorte coopérative $\uastotal$ entre les quatre composants considérés,
+  \item toutes les actions primaires nécessaires à la mise à jour de $\uastotal$,
+  \item une sorte $\uasreach$ comprenant deux processus ($\uasreach_0$ et $\uasreach_1$),
+  \item une action $\PHfrappe{\uastotal_{1111}}{\uasreach_0}{\uasreach_1}$ de priorité basse.
+\end{itemize}
+Nous pouvons alors calculer l'atteignabilité de $\uasreach_1$, qui permettra de déterminer
+si les quatre composants peuvent être simultanément actifs depuis l'état initial.
+
+L'implémentation répond alors «~Oui~», ce qui permet d'affirmer que les quatre composants
+peuvent être activés simultanément,
+ce qui permet de conclure définitivement que le modèle est fonctionnel.
+La réponse a été obtenue en \todo{48 secondes}.
+Cet écart de temps part rapport aux résultats de la section précédente est causé
+par deux facteurs :
+\begin{itemize}
+  \item L'intégralité du modèle doit être représenté par le graphe de causalité locale,
+    contrairement aux atteignabilités précédentes qui n'en représentaient qu'une portion ;
+  \item L'implémentation cherche à appliquer le \thmref{approxinf} de sous-approximation sur
+    différents sous-ensembles de solutions du graphe, or l'énumération de ces sous-ensembles
+    est exponentielle dans le nombre de solutions du graphe de causalité locale.
+\end{itemize}
+Malgré cela, notre méthode reste conclusive en un temps inférieur à la minute,
+là où des implémentations jugées efficaces mais nécessitant le calcul
+exhaustif de la dynamique ne terminent pas, comme nous l'avons montré plus haut.
 
 \myskip
 
@@ -259,8 +297,8 @@ obtenues d'après les régulations contenues dans le graphe des interactions.
 Ainsi, le graphe des interactions inféré d'après le modèle (1) est exactement identique
 au graphe des interactions utilisé pour créer ce modèle,
 à l'exception d'une auto-activation sur l'entrée EGF,
-qui est due à son absence de régulateurs.
-\stodo{Préciser}
+qui est due à son absence de régulateurs,
+comme expliqué à la \vsecref{trad-thomas}.
 Les seuls paramètres ayant pu être inférés sont ceux qui concernent les configurations extrêmes
 des ressources de chaque régulation,
 à savoir dans le cas où tous les activateurs sont présents et tous les inhibiteurs absents,
