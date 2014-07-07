@@ -189,7 +189,8 @@ respecte les \allcr.
 \end{theorem}
 
 \begin{proof}
-  (\ref{php2ph}) Soit $\os = \flats{s}$.
+  (\ref{php2ph}) Soient $s, s' \in \PHl$ tels que $s \trans{\PH} s'$.
+    Posons $\os = \flats{s}$.
     D'après la dynamique des Frappes de Processus (\defref{play}),
     si $s \trans{\PH} s'$, alors il existe une action $h \in \PHh$ jouable dans $s$,
     telle que $s' = s \PHplay h$.
@@ -212,7 +213,8 @@ respecte les \allcr.
     permettant donc d'accéder à l'état $\flats{s'}$ en un nombre fini d'actions.
     Ainsi, $\flats{s} \mtrans{\oPH} \flats{s'}$.
   
-  (\ref{ph2php}) Soit $s = \unflats{\os}$.
+  (\ref{ph2php}) soient $\os, \os' \in \ov{\PHl}$ tels que $\os \trans{\oPH} \os'$.
+    Posons $s = \unflats{\os}$.
     D'après la dynamique des Frappes de Processus (\defref{play}),
     si $\os \trans{\PH} \os'$, alors il existe une action $g \in \ov{\PHh}$ jouable dans $\os$,
     telle que $\os' = \os \PHplay h$.
@@ -325,16 +327,38 @@ actions de priorités différentes, qui doivent par la suite être aplaties.
 \subsection{Représentation en Frappes de Processus avec actions plurielles}
 \seclabel{phcanonique2phm}
 
-\TODO
+Les Frappes de Processus canoniques permettent notamment de représenter des coopérations
+entre processus.
+Il peut être intéressant d'observer ces coopérations du point de vue des
+Frappes de Processus avec actions plurielles, dont le formalisme est particulièrement
+adapté à la représentation des coopérations.
+Pour toutes Frappes de Processus canoniques $\PH$, nous proposons à la \defref{phcanonique2phm}
+une représentation alternative $\PHmult(\PH)$ de ce modèle en Frappes de Processus avec
+actions plurielles, et nous montrons au \thmref{bisimulphm} que $\PHmult(\PH)$
+possède bien la même dynamique que $\PH$, aux mises à jour de sortes coopératives près.
+Cette traduction se base sur l'interprétation de chaque action de priorité 2 du modèle $\PH$ :
+\begin{itemize}
+  \item Si le frappeur de l'action est un processus de composant ($\components$),
+    la traduction est alors triviale ;
+  \item Si à l'inverse, le frappeur est un processus de sorte coopérative ($\cs$),
+    alors la sorte coopérative est étudiée et il y a autant d'actions multiples
+    créées qu'il y a de configurations représentées par ce frappeur.
+\end{itemize}
+Autrement dit, les actions plurielles permettent d'avantageusement représenter
+les sortes coopératives en représentant les ensembles de processus requis pour activer
+un processus donné d'une sorte coopérative.
+La \figref{livelock-phm} est la traduction en Frappes de Processus avec actions plurielles
+du modèle simple de Frappes de Processus canoniques de la \figref{livelock}.
 
 \begin{definition}
+\deflabel{phcanonique2phm}
   Soient $\PH = (\PHs; \PHl; (\PHh^{(1)}; \PHh^{(2)}))$ des Frappes de Processus canoniques.
-  On pose : $\oPH = (\PHs'; \PHl'; \PHh')$ les Frappes de Processus avec actions plurielles
-  telles que :
+  On pose : $\PHmult(\PH) = (\ov{\PHs}; \ov{\PHl}; \ov{\PHh})$ les Frappes de Processus
+  avec actions plurielles telles que :
   \begin{itemize}
-    \item $\PHs' = \components$ ;
-    \item $\PHl' = \bigtimes{a \in \PHs'} \PHl_a$ ;
-    \item $\PHh' = \{ \PHfrappemult{\big( ps \cup \{ \target{h} \} \big)}{\bounce{h}}
+    \item $\ov{\PHs} = \components$ ;
+    \item $\ov{\PHl} = \bigtimes{a \in \PHs'} \PHl_a$ ;
+    \item $\ov{\PHh} = \{ \PHfrappemult{\big( ps \cup \{ \target{h} \} \big)}{\bounce{h}}
       \mid h \in \PHh^{(2)} \wedge ps \in \virtualhitters(h) \}$
     avec, si on note $\hitter{h} = a_i$ :
     \[\virtualhitters(h) =
@@ -343,6 +367,101 @@ actions de priorités différentes, qui doivent par la suite être aplaties.
         \csState(a_i) & \text{si } a \in \cs
       \end{cases}\]
   \end{itemize}
+  De plus, pour tout état $s \in \PHl$,
+  $\flats{s} = \os$ est l'état correspondant dans $\ov{\PHl}$ :
+  $\forall a \in \ov{\PHs}, \PHget{\os}{a} = \PHget{s}{a}$.
+  À l'inverse, étant donné un état $\os \in \ov{\PHl}$,
+  on note $\unflats{\os} = s$ l'état correspondant dans $\PHl$ :
+  $\forall a \in \components, \PHget{s}{a} = \PHget{\os}{a}$
+  et $\forall f \in \cs, \PHget{s}{f} = f_\mysigma$
+  avec $f_\mysigma \in \PHl_f$
+  et $\forall b \in \compin(b), \PHget{\mysigma}{b} = \PHget{s}{b}$.
 \end{definition}
 
-\todo{Preuve}
+\begin{theorem}[$\PH \approx \PHmult(\PH)$]
+\thmlabel{bisimulphm}
+  Soient $\PH = (\PHs; \PHl; (\PHh^{(1)}; \PHh^{(2)}))$ des Frappes de Processus canoniques,
+  et $\PHmult(\PH) = (\ov{\PHs}; \ov{\PHl}; \ov{\PHh})$.
+  \begin{enumerate}
+    \item \label{bisimulph2phm} $\forall s, s' \in \PHl$,
+      $s \trans{\PH} s' \Longrightarrow
+      \flats{s} = \flats{s'} \vee \flats{s} \trans{\PHmult(\PH)} \flats{s'}$,
+    \item \label{bisimulphm2ph} $\forall \os, \os' \in \ov{\PHl}$,
+      $\os \trans{\PHmult(\PH)} \os' \Longrightarrow
+      \unflats{\os} \mtrans{\PH} \unflats{\os'}$,
+      où $\mtrans{\PH}$ est une séquence finie de transitions $\trans{\PH}$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  (\ref{bisimulph2phm}) Soient $s, s' \in \PHl$ tels que $s \trans{\PH} s'$.
+    Il existe donc une action $h \in \PHh$ telle que $s' = s \play h$.
+    \begin{itemize}
+      \item Si $h \in \PHh^{(1)}$, alors $\flats{s} = \flats{s'}$.
+      \item Sinon, $h \in \PHh^{(2)}$ ; cela signifie qu'aucune action de priorité 1 n'est
+        jouable, et qu'il existe $ps \in \virtualhitters(h)$ tel que
+        $ps \cup \{ \target{h} \} \subseteq s$.
+        D'après la \vdefref{phcanonique2phm}, il existe une action $g \in \ov{\PHh}$
+        telle que $g = \PHfrappemult{ps \cup \{ \target{h} \}}{\bounce{h}}$.
+        Ainsi, $g$ est jouable dans $\flats{s}$ et :
+        $\flats{s} \play g = \flats{s} \recouvre \frappeur{h} = \flats{s'}$.
+        Donc $\flats{s} \trans{\PHmult(\PH)} \flats{s'}$.
+    \end{itemize}
+    
+  (\ref{bisimulphm2ph}) Soient $\os, \os' \in \ov{\PHl}$ tels que $\os \trans{\PHmult(\PH)} \os'$.
+    Il existe donc une action $g \in \ov{\PHh}$ telle que $\os' = \os \play g$.
+    De plus, cela signifie que $\frappeur{g} \subseteq \os$,
+    donc $\frappeur{g} \subseteq \unflats{\os}$.
+    Par construction de $\PHmult(\PH)$, il existe une action $h \in \PHh^{(2)}$
+    telle que $\frappeur{g} = ps \cup \{ \cible{h} \}$ et $\bond{h} = \bond{g}$,
+    avec $ps \in \virtualhitters(h)$.
+    Par définition de $\unflats{\os}$, toutes les sortes coopératives sont mises à jour
+    dans $\unflats{\os}$, ce qui fait que $h$ est jouable dans $\unflats{\os}$.
+    Par ailleurs, d'après le \vlemref{update},
+    il existe un scénario $\delta \in \Sce(\unflats{\os} \play h)$
+    tel que $\unflats{\os} \play h \play \delta = \update(\unflats{\os} \play h)$.
+    Enfin, par définition de $\update$ (\vdefref{update})
+    on a : $\unflats{\os} \play h \play \delta = \unflats{\os'}$.
+    Ainsi : $\unflats{\os} \mtrans{\PH} \unflats{\os'}$.
+\end{proof}
+
+\begin{figure}
+  \centering
+  \scalebox{1.2}{
+  \begin{tikzpicture}[apdotsimple/.style={apdot}]
+    \TSort{(0,0)}{a}{2}{l}
+    \TSort{(0,3)}{b}{2}{l}
+    \TSort{(4,2)}{c}{2}{r}
+    
+%     \THit{ab_3}{}{c_0}{.west}{c_1}
+    
+    \TActionPlur{a_1, b_1}{c_0.west}{c_1.south west}{}{2,2}{left}
+    
+%     \path[bounce, bend left]
+%       \TBounce{c_0}{}{c_1}{.south west}
+%     ;
+    
+    \TAction{a_1}{a_1.west}{a_0.north west}{selfhit}{right}
+    \TAction{b_1}{b_1.west}{b_0.north west}{selfhit}{right}
+    \TAction{a_0.south west}{b_0.west}{b_1.south west}{bend left=90}{left}
+    \TAction{b_0}{a_0.west}{a_1.south west}{bend right=50}{left}
+    
+    \TState{a_0, b_0, c_0}
+  \end{tikzpicture}
+  }
+  \caption{\figlabel{livelock-phm}%
+    Frappes de Processus avec actions plurielles $\PHmult(\PH)$ issues de la traduction
+    des Frappes de Processus canoniques $\PH$ de la \vfigref{livelock}
+    d'après la \defref{phcanonique2phm}.
+    Chaque action plurielle est représentée par un point relié aux frappeurs invariants
+    par des arcs (sans flèche) et aux cibles et bonds par un couple de flèches
+    (respectivement en trait plein puis en trait pointillé).
+    Ici, l'action plurielle $\PHfrappemults{a_1, b_1, c_0}{c_1}$
+    remplace la sorte coopérative $ab$
+    et l'action $\PHfrappe{ab_{11}}{c_0}{c_1}$ de la \figref{livelock},
+    qui permettaient de modéliser la coopération.
+    Les processus grisés présentent un exemple d'état de départ :
+    $\PHstate{a_0, b_0, c_0}$.
+  }
+\end{figure}
+
