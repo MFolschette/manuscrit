@@ -68,10 +68,22 @@ ou «~instantanées~»,
 car elles sont présentes principalement pour des raisons de modélisation.
 À l'inverse, les actions de l'ensemble $\PHh \setminus \PHh^{(1)}$, qui ne sont pas de priorité 1,
 seront appelées \emph{actions secondaires}.
-Comme elles permettent de représenter les différentes réactions et régulations intervenant au sein du
+Comme elles permettent de représenter les différentes réactions et régulations intervenan
+au sein du
 système, elles peuvent par conséquent être qualifiées d'actions «~biologiques~» ou «~lentes~».
 
-La définition de la forme canonique des Frappes de Processus début avec la
+\begin{example}
+  Nous prendrons comme exemple, tout au long de cette section,
+  les Frappes de Processus avec 2 classes de priorités représentées à la \figref{livelock},
+  qui sera étudié plus en détail \vexpageref{livelock-merge}
+  mais permettra entre-temps d'illustrer certaines définitions.
+  Nous constatons de prime abord que les actions primaires de ce modèle
+  permettent uniquement de mettre à jour la sorte coopérative $ab$,
+  tandis que les actions secondaires frappent les autres composants.
+\end{example}
+
+
+La définition de la forme canonique des Frappes de Processus débute avec le
 \crref{tf} qui stipule que la dynamique ne doit pas contenir de séquence infinie
 d'actions primaires.
 En effet, pour que ces actions effectuent une mise à jour des sortes coopératives sans perturber
@@ -83,17 +95,17 @@ bloquer l'évolution du système.
 Il est donc nécessaire de postuler que tous les scénarios d'actions primaires sont finis,
 ce qui a par ailleurs pour conséquence que $\reductionsce$ est un ensemble fini.
 
-\begin{condition}[Terminaison finie]
+\begin{critere}[Terminaison finie]
 \crlabel{tf}
   La dynamique de $\reduction$ ne contient aucun cycle :
   $\exists N \in \sN, \forall s \in \PHl, \forall \delta \in \reductionsce(s),
     |\delta| \leq N$.
-\end{condition}
+\end{critere}
 
 Étant donnée une sorte $a \in \PHs$ et un état $s \in \PHl$,
 on note $\pfp_s(a)$ (\defref{pfp}) l'ensemble des processus de la sorte $a$ qui peuvent être présents
 après avoir joué tous les scénarios d'actions de priorité 1 depuis l'état $s$.
-Cet ensemble est toujours défini du fait de la \crref{tf}.
+Cet ensemble est toujours défini du fait du \crref{tf}.
 
 \begin{definition}[$\pfp : \PHl \times \PHs \rightarrow \powerset(\PHproc)$]
 \deflabel{pfp}
@@ -111,7 +123,7 @@ car il ne subit que des influences «~biologiques~».
 Une sorte coopérative bien formée n'est frappée que par des actions primaires «~non biologiques~»
 qui convergent toujours vers le même processus en fonction de l'état des sortes qui l'influencent
 (\defref{comp}), afin qu'elle représente chaque configuration de ces sortes par un unique processus.
-La \crref{part} stipule alors que l'ensemble des sortes des Frappes de Processus canoniques
+Le \crref{part} stipule alors que l'ensemble des sortes des Frappes de Processus canoniques
 ($\PHs$) est une partition entre un ensemble de composants bien formés (noté $\components$)
 et un ensemble de sortes coopératives bien formées (noté $\cs$).
 
@@ -119,6 +131,7 @@ et un ensemble de sortes coopératives bien formées (noté $\cs$).
 \deflabel{component}
   Une sorte $a \in \PHs$ est un \emph{composant bien formé} si et seulement si :
     \[\forall h \in \PHh, \PHsort(\target{h}) = a \Rightarrow \prio(h) \geq 2 \enspace.\]
+  On note $\components$ l'ensemble des composants bien formés du modèle.
 \end{definition}
 
 \begin{definition}[Influence ($\compin : \PHs \to \powerset(\components)$)]
@@ -142,12 +155,34 @@ et un ensemble de sortes coopératives bien formées (noté $\cs$).
     \item $\forall \mysigma \in \PHsubl[\PHl]_{\compin(a)}, \forall s, s' \in \PHl,
         (\mysigma \subseteq s \wedge \mysigma \subseteq s') \Rightarrow \pfp_s(a) = \pfp_{s'}(a)$.
   \end{enumerate}
+  On note $\cs$ l'ensemble des sortes coopératives bien formées du modèle.
 \end{definition}
 
-\begin{condition}[Partition des composants et des sortes coopératives]
+\begin{example}
+  Le modèle de Frappes de Processus avec 2 classes de priorités de la \figref{livelock}
+  possède trois composants bien formés : $\components = \{ a, b, c \}$
+  et une sorte coopérative bien formée : $\cs = \{ ab \}$.
+  On en déduit notamment :
+  \begin{align*}
+                   && \conn(c) &= \{ c \} &\text{ et } &&\conn(ab) &= \{ a, b, ab \} \enspace, \\
+    \text{d'où : } && \compin(c) &= \{ c \} &\text{ et } &&\compin(ab) &= \{ a, b \} \enspace. \\
+  \end{align*}
+  D'après $\compin(ab) = \{ a, b \}$,
+  on peut donc considérer que la sorte coopérative $ab$ modélise une coopération
+  entre $a$ et $b$.
+\end{example}
+
+\begin{critere}[Partition des composants et des sortes coopératives]
 \crlabel{part}
+  $\components$ et $\cs$ forment une partition de $\PHs$ :
   \[\PHs = \components \cup \cs \wedge \components \cap \cs = \emptyset\]
-\end{condition}
+\end{critere}
+
+\begin{example}
+  Le modèle de la \figref{livelock} vérifie le \crref{part}.
+\end{example}
+
+
 
 Il est à noter qu'une sorte $a$ qui n'est frappée par aucune action,
 c'est-à-dire telle que $\forall h \in \PHh, \sort{\target{h}} \neq a$,
@@ -163,8 +198,8 @@ Pour toute sorte $a \in \PHs$ et tout état $s \in \PHl$,
 étant donné le point (\ref{csai}) de la \defref{cs}, on a toujours :
 $\exists a_i \in \PHl_a, \pfp_s(a) = \{ a_i \}$.
 On notera donc dans la suite : $\pfp_s(a) = a_i$.
-De plus, du fait du point (\ref{css}) de la \defref{cs}, on introduit la notation
-$\csState(a_i)$ permettant de caractériser l'ensemble des sous-états représentés par le
+De plus, grâce au point (\ref{css}) de la \defref{cs}, on peut introduire la notation
+$\csState(a_i)$ qui permet de caractériser l'ensemble des sous-états représentés par le
 processus $a_i$ de toute sorte coopérative bien formée $a$ (\defref{csState}).
 
 \begin{definition}[$\csState : \PHproc \rightarrow \powerset(\PHproc)$]
@@ -174,16 +209,11 @@ processus $a_i$ de toute sorte coopérative bien formée $a$ (\defref{csState}).
       \exists s \in \PHl, (ps \subseteq s \wedge \pfp_s(a) = a_i) \}\]
 \end{definition}
 
+La notation $\toset{ps}$,
+qui permet de considérer un tuple comme un ensemble,
+a été définie à la \vsecref{notations}.
 Dans la suite, on écrira simplement «~composant~» (\resp «~sorte coopérative~»)
 en lieu et place de «~composant bien formé~» (\resp «~sorte coopérative bien formée~»).
-
-\begin{example}
-  Les Frappes de Processus de la \figref{livelock} comprennent
-  trois composants ($\components = \{ a, b, c \}$)
-  et une sorte coopérative ($\cs = \{ ab \}$).
-  La sorte coopérative $ab$ modélise la coopération entre $a$ et $b$ car
-  $\compin(ab) = \{ a, b \}$.
-\end{example}
 
 Enfin, la \defref{phcanonique} définit la notion de \emph{Frappes de Processus canoniques}.
 La forme particulière de ces Frappes de Processus permettra de développer une méthode efficace
@@ -215,9 +245,8 @@ Cette définition étendue sera notamment utile pour des questions de traduction
 \begin{example}
 \exlabel{livelock-merge}
   Les Frappes de Processus de la \figref{livelock}
-  sont des Frappes de Processus canoniques.
-  Les actions primaires permettent en effet uniquement de mettre à jour la sorte coopérative $ab$,
-  tandis que les actions secondaires frappent les autres composants.
+  sont des Frappes de Processus canoniques,
+  car elles respectent les \allcr.
   Ce modèle décrit un comportement de coopération entre les deux processus $a_1$ et $b_1$.
   En effet, l'action $\PHfrappe{ab_{11}}{c_0}{c_1}$
   permet de représenter fidèlement la coopération entre $a_1$ et $b_1$ pour

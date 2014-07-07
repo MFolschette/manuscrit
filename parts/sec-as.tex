@@ -2,15 +2,13 @@
 \section{Analyse statique}
 \seclabel{as}
 
-\todo{Revoir la glu}
-
 L'objectif de cette section est de définir le problème de l'\emph{atteignabilité} dans des
 Frappes de Processus,
 aussi appelée \emph{accessibilité},
 et de proposer une sous-approximation permettant de la résoudre efficacement
 dans les Frappes de Processus canoniques.
 
-La méthode développée ici est inspirée de \stodo{PMR12-MSCS}.  %~\cite{PMR12-MSCS}.
+\myskip
 
 Le problème de l'atteignabilité dans les Frappes de Processus consiste à rechercher l'existence
 d'un scénario qui permette d'activer un ou plusieurs processus donné(s).
@@ -21,36 +19,60 @@ ou, de façon plus générale pour un ensemble de processus :
 «~Étant donné un état initial $\ctx$ et une séquence de processus $\w$ donnés,
 existe-t-il un scénario $\delta$ jouable dans $\ctx$ et permettant d'activer successivement
 chacun des processus de $\w$ dans l'ordre ?~»
-
-La résolution du problème de l'atteignabilité peut parfois être résolu à l'aide des outils
-de model checking classiques.
-Cependant, de telles méthodes reposent généralement sur l'analyse de la dynamique du modèle.
+Ce problème d'atteignabilité peut parfois être résolu à l'aide des outils
+de \textit{model checking} classiques.
+Cependant, de telles méthodes reposent généralement sur l'analyse de la dynamique complète
+du modèle.
 Pour de grands modèles, ces méthodes se heurtent donc à l'explosion combinatoire inhérente
 au calcul du graphe des états.
+
 La méthode proposée ici repose en revanche sur une sous-approximation du modèle analysé.
 Cela permet d'éviter une complexité exponentielle
-et d'avoir à la place un problème de complexité polynomiale
+et d'avoir à la place un problème de complexité polynomiale dans la taille du modèle
 sous la condition que chaque sorte du modèle possède un nombre restreint de processus
 (une sorte de quatre processus ou moins satisfaisant ce critère).
+Cette méthode repose sur une succession d'analyses locales d'atteignabilités
+qui se concentrent sur les sortes plutôt que sur le modèle complet.
+Chaque atteignabilité est résolue sur une sorte en observant les actions qui permettent
+de faire bondir le processus actif vers le processus recherché.
+Comme ces actions sont éventuellement conditionnées par la présence d'un autre processus
+d'une autre sorte, cela crée d'autres atteignabilités locales qui doivent être résolues.
+Le problème est donc résolu récursivement, la condition d'arrêt étant soit
+une atteignabilité locale impossible (ce qui peut empêcher de conclure),
+soit un processus requis qui fait partie de l'état initial (ce qui consiste en une
+atteignabilité locale \emph{triviale}).
+Cette méthode est inspirée du travail de \citeasnoun{PMR12-MSCS},
+qui portait sur les Frappes de Processus standards.
 
-On considère dans cette section un modèle de Frappes de Processus canoniques
+Un certain nombre d'outils préliminaires nécessaires à la résolution du problème
+de l'atteignabilité dans des Frappes de Processus canoniques sont
+définis à la \secref{sa-defs}.
+Le mécanisme de résolution des atteignabilités locales mentionné au paragraphe précédent
+est alors à son tour formalisé
+à la \secref{ua} sous la forme d'un \emph{graphe de causalité locale} :
+si ce graphe possède certaines propriétés, le \vthmref{approxinf} permet alors de conclure
+quand à un problème d'atteignabilité donné.
+Nous discutons aussi dans la suite du problèmes de l'atteignabilité
+simultanée d'un ensemble de processus (\secref{as-etat}).
+Nous proposons enfin une méthode permettant de raffiner cette approximation
+dans le cas d'atteignabilités successives (\secref{approxinf-ordonnee}).
+
+On considère dans toute la suite de cette section un modèle de Frappes de Processus canoniques
 $\PH = (\PHs; \PHl; (\PHa^{(1)};\PHa^{(2)}))$
-tel que défini à la \defref{phcanonique}.
-
-
-
+telles que définies à la \defref{phcanonique}.
 
 
 
 \subsection{Définitions préliminaires}
 \seclabel{sa-defs}
 
-L'atteignabilité d'un processus $a_j$ d'une sorte donnée $a$ depuis un autre processus $a_i$
+L'atteignabilité d'un processus $a_j$ d'une sorte $a$ donnée depuis un autre processus $a_i$
 de la même sorte est le fait, depuis un état où $a_i$ est actif,
-de pouvoir jouer scénario menant dans un état où $a_j$ est actif.
-La question de l'existence d'un tel scénario se représente sous la forme d'un \emph{objectif},
-noté $\PHobjp{a}{i}{j}$ (\defref{obj}).
-De plus, une \emph{séquence d'objectifs} est une séquence d'éléments de $\Obj$ telle que
+de pouvoir jouer un scénario menant dans un état où $a_j$ est actif.
+La question de l'existence d'un tel scénario possède naturellement un intérêt particulier
+dans la résolution d'une atteignabilité locale ; c'est pourquoi on la représente
+sous la forme d'un \emph{objectif}, noté $\PHobjp{a}{i}{j}$ (\defref{obj}).
+De plus, on appelle \emph{séquence d'objectifs} toute séquence dans laquelle
 la cible de chaque objectif est égale au bond de l'objectif précédent de la même sorte
 dans la séquence, s'il existe (\defref{os}).
 
@@ -83,7 +105,8 @@ La \defref{ctx} introduit la notion de \emph{contexte} qui étend celle d'état
 afin de pouvoir représenter un ensemble d'états initiaux possibles :
 plutôt que d'attribuer un seul processus actif à chaque sorte, comme pour un état,
 un contexte permet d'en attribuer plusieurs.
-La notion de recouvrement est aussi étendue aux contextes dans la \defref{ctxrecouvrement}.
+La notion de recouvrement, précédemment définie sur un états (\vdefref{recouvrement})
+est étendue au cas d'un contexte dans la \defref{ctxrecouvrement}.
 
 \begin{definition}[Contexte ($\Ctx$)]
 \deflabel{ctx}
@@ -114,12 +137,13 @@ on note alors : $\delta \in \Sce(\ctx)$,
 et le jeu de $\delta$ dans $\ctx$ est : $\ctx \PHplay \delta = \ctx \Cap \fin{\delta}$.
 
 Finalement, une séquence de bonds sur une sorte $a$ (\defref{bs}) est une séquence d'actions
-frappant $a$ dans laquelle le bond de chaque action est égal au frappeur de l'action suivante.
+frappant $a$ dans laquelle le bond de chaque action est égal à la cible de l'action suivante,
+en ignorant donc le frappeur de chaque action.
 Les séquences de bonds sont utilisées pour trouver les solutions locales d'un objectif donné.
-Une séquence de bonds sur $a$ peut être abstraite par l'ensemble de ses frappeurs qui ne sont
-pas dans $a$ (\defref{aBS}).
-Cette abstraction permet de résoudre un objectif qui concerne une sorte $a$
-à l'aide d'autres objectifs concernant d'autres sortes.
+Une séquence de bonds sur $a$ peut de plus être abstraite par l'ensemble de tous les frappeurs
+de ses actions qui ne sont pas dans $a$ (\defref{aBS}).
+Cette abstraction permet de déplacer un objectif qui concerne une sorte $a$
+vers d'autres objectifs sur d'autres sortes.
 On note dans la suite : $\Sol = \powerset(\PHproc)$.
 
 \begin{definition}[Séquence de bonds ($\BS$)]
@@ -127,12 +151,13 @@ On note dans la suite : $\Sol = \powerset(\PHproc)$.
   Une \emph{séquence de bonds} $\zeta$ est une séquence d'actions telle que
   $\forall n \in \indexes{\zeta}, n < \card{\zeta}, \PHbounce(\zeta_{n}) = \PHtarget(\zeta_{n+1})$.
   L'ensemble de toutes les séquences de bonds est appelé $\BS$,
-  et l'ensemble de toutes les séquences de bonds \emph{résolvant} un objectif $P$, appelé $\BS(P)$,
-  est défini par :
+  et on note $\BS(P)$ l'ensemble de toutes les séquences de bonds \emph{résolvant}
+  un objectif $P$, appelé $\BS(P)$, qui est défini par :
     \[ \BS(\PHobj{a_i}{a_j}) \DEF \{ \zeta \in \BS \mid
       \PHtarget(\zeta_1) = a_i \wedge \PHbounce(\zeta_{\card{\zeta}}) = a_j \} \enspace. \]
 \end{definition}
 
+\noindent
 On remarque que pour tout objectif $\obj{a_i}{a_j} \in \Obj$,
 $\BS(\obj{a_i}{a_j}) = \emptyset$ s'il n'existe aucune moyen d'atteindre $a_j$ depuis $a_i$.
 À l'inverse, la séquence vide appartient toujours à
@@ -146,6 +171,8 @@ $\forall a_i \in \Proc, \emptyseq \in \BS(\obj{a_i}{a_i})$.
   \]
   où $\abstr{\zeta} \DEF \{ \PHhitter(\zeta_n) \mid  n \in \indexes{\zeta} \wedge \PHsort(\PHhitter(\zeta_n)) \neq \PHsort(P) \}$.
 \end{definition}
+
+
 
 \subsection{Sous-approximation}
 \seclabel{ua}
@@ -188,8 +215,12 @@ $\concr(\w) \cap \Sce(s) \neq \emptyset$.
 \end{lemma}
 
 Pour tout objectif $P \in \Obj$ et tout contexte $\ctx \in \Ctx$, la \defref{maxCont}
-fournit l'ensemble des processus de la sorte $\sorte{P}$ requis pour résoudre $P$ dans $\ctx$,
+fournit l'ensemble des processus de $\sorte{P}$ requis pour résoudre $P$ dans $\ctx$,
 appelé $\gCont_\ctx(\PHsort(P), P)$.
+Cette définition sera utile pour correctement résoudre les atteignabilités locales
+qui nécessitent indirectement un processus de leur propre sorte,
+c'est-à-dire autrement que par une auto-action.
+
 \begin{definition}[$\gCont_\ctx : \Sigma \times \Obj \to \powerset(\PHproc)$]
 \deflabel{maxCont}
   \begin{align*}
@@ -207,8 +238,8 @@ Pour cela, il relie les objectifs à des solutions à
 l'aide des séquences de bonds abstraites de la \defref{aBS}, ce qui produit de nouveaux objectifs
 résolus récursivement.
 Il s'agit donc d'un graphe dont les nœuds sont des éléments de $\Proc \cup \Obj \cup \Sol$,
-c'est-à-dire des processus, des objectifs et des ensembles de processus qui ont le rôle
-de \emph{solutions} :
+c'est-à-dire des processus, des objectifs et des \emph{solutions}
+(c'est-à-dire des ensembles de processus) :
 \begin{itemize}
   \item Un nœud dans $\Obj$ représente un objectif requis pour la résolution de $\w$,
     soit faisant directement partie de la séquence d'objectifs $\w$,
@@ -229,16 +260,20 @@ la possibilité de résoudre tous les objectifs de la forme $\PHobjp{a}{j}{i} \i
 pour tout $a_j$ dans le contexte initial $\ctx$ (\eqref{EReq}) ;
 si $a \in \cs$, l'atteignabilité de $a_i$ est possible si tous les processus du sous-état
 $\csState(a_i)$ (\cf \defref{csState}) qu'il représente sont atteignables (\eqref{EPrio}).
-La résolution d'un objectif $P$ peut nécessiter un processus de $\PHsort(P)$,
+La résolution d'un objectif $P$ peut nécessiter un processus $p$ de $\PHsort(P)$,
 autrement dit : $\gCont(\PHsort(P), P) \neq \emptyset$ (\cf \defref{maxCont}) ;
-dans ce cas, $P$ est re-centré (\eqref{ECont}).
-Enfin, \eqref{Vw,Vproc,VE} assurent que l'ensemble des nœuds est complet.
+dans ce cas, $P$ est \emph{re-centré} en $p$ (\eqref{ECont})
+afin de s'assurer que la résolution intermédiaire de $\PHobj{\cible{P}}{p}$ n'interfère pas.
+Enfin, les \eqref{Vw,Vproc,VE} assurent que l'ensemble des nœuds est complet.
 
 Étant donné que le processus actif de chaque sorte peut évoluer au cours de la résolution,
-le graphe de causalité locale $\cwB$ est obtenu par saturation avec tous les processus
+le graphe de causalité locale $\cwB$ est obtenu par \emph{saturation} avec tous les processus
 qu'il contient, \cad en recouvrant le contexte initial $\ctx$ par $\allprocs(\V, \E)$, défini par:
   \[\allprocs(\V, \E) = (V \cap \Proc) \cup
     \{ \PHtarget(P), \PHbounce(P) \mid P \in \V \cap \Obj \} \enspace.\]
+Ce recouvrement est effectué autant de fois que nécessaire ;
+le graphe de causalité locale est donc re-calculé avec cette saturation
+jusqu'à ce qu'il n'évolue plus ---~autrement dit, jusqu'à atteindre un point fixe.
 
 \begin{definition}
 \deflabel{glc}

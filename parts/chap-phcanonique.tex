@@ -17,8 +17,8 @@
   Nous montrons par ailleurs que toutes les sémantiques alternatives de Frappes de Processus
   introduites au \chapref{sem} peuvent être traduites en Frappes de Processus canoniques,
   prouvant d'une part la large expressivité de cette classe de modèles,
-  et permettant d'autre part d'appliquer la sous-approximation développée dans la suite
-  à tous ces formalismes.
+  et permettant d'autre part d'appliquer à tous ces formalismes la sous-approximation
+  que nous avons développée dans le cadre de cette thèse et qui est présentée dans la suite.
 }
 
 
@@ -30,7 +30,7 @@ Autrement dit, le changement du processus actif d'une sorte est conditionné par
 d'au plus un autre processus actif.
 Dans le cas d'une auto-action $\PHfrappe{b_j}{b_j}{b_k}$, par exemple,
 le frappeur et la cible $b_j$ sont confondus ;
-il n'y a donc formellement aucun prérequis pour que $a_i$ bondisse vers $a_k$.
+il n'y a donc formellement aucun prérequis pour que $b_j$ bondisse vers $b_k$.
 Dans le cas plus général d'une action $\PHfrappe{a_i}{b_j}{b_k}$, où $a_i \neq b_j$,
 le seul prérequis pour que $b_j$ bondisse en $b_k$ est la présence de $a_i$.
 
@@ -41,8 +41,10 @@ au sein des Frappes de Processus standards, qui s'expriment de la façon suivant
   d'atteindre un état dans lequel un processus donné est actif ?~»
 \end{center}
 En termes plus formels, l'atteignabilité d'un processus $b_k$ depuis un état $s$
-se définit comme l'existence d'un scénario $\delta \in \Sce(s)$, tel que
-$\PHget{(s \play \delta)}{b} = b_k$.
+se définit comme l'existence d'un scénario $\delta \in \Sce(s)$,
+c'est-à-dire une séquence d'actions jouables dans $s$ (cf. \vdefref{play})
+tel que $\PHget{(s \play \delta)}{b} = b_k$,
+
 
 En effet, comme expliqué plus haut,
 la forme particulière des actions impose au plus un prérequis pour pouvoir faire bondir

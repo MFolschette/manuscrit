@@ -47,6 +47,23 @@
   \vspace*{1em}\hrule\vspace*{2pt}%
   \end{minipage}}\end{center}\vspace*{3em}}
 
+% Théorèmes et définitions grisées
+\newsavebox{\mybox}
+\newenvironment{graybox}%
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
+  {\end{minipage}\end{lrbox}\noindent\colorbox{couleurchapeau}{\usebox{\mybox}}}
+\makeatletter
+\newcommand{\newgraytheorem}[2]{
+    \newenvironment{#1}{\vskip 10\p@\begin{graybox}\begin{#2}}{
+      \end{#2}\end{graybox}\vskip 10\p@}
+}
+\makeatother
+
+% \newcommand{\boitegrise}[1]{
+%   \colorbox{couleurchapeau}{\begin{minipage}{\textwidth}%
+%   #1%
+%   \end{minipage}}}
+
 % Police
 %\usepackage{times} % times, palatino, charter, lmodern, etc.
 \usepackage{cmbright}  % Police sans empattements
@@ -102,13 +119,15 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \usepackage{amsthm}
 
 \newtheorem{property}{Propriété}[chapter]
-\newtheorem{theorem}{Théorème}[chapter]
+\newtheorem{gtheorem}{Théorème}[chapter]
+\newgraytheorem{theorem}{gtheorem}
 \newtheorem{lemma}{Lemme}[chapter]
 \newtheorem{proposition}{Proposition}[chapter]
 
 \theoremstyle{definition}
-\newtheorem{definition}{Définition}[chapter]
-\newtheorem{condition}{Condition}[chapter]
+\newtheorem{gdefinition}{Définition}[chapter]
+\newgraytheorem{definition}{gdefinition}
+\newtheorem{critere}{Critère}[chapter]
 
 \theoremstyle{remark}
 \newtheorem*{example}{Exemple}
