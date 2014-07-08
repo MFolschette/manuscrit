@@ -1,6 +1,6 @@
 % Conclusion
 
-\chapter{Conclusion}
+\chapter{Conclusion et perspectives}
 \chaplabel{conclusion}
 
 \chapeau{
@@ -10,6 +10,7 @@
   renforcer la puissance de la modélisation d'une part,
   et les capacités d'analyse d'autre part,
   notamment en ce qui concerne les modèles de grande taille.
+  Plusieurs nouvelles perspectives scientifiques sont par ailleurs évoquées.
 }
 
 
@@ -65,10 +66,19 @@ Le travail proposé dans cette thèse avait pour ambition de répondre à cette 
 de modélisation et d'analyse des grands modèles de réseaux de régulation biologiques,
 en partant du formalisme Frappes de Processus précédemment proposé,
 et des différents travaux correspondants.
+Nous proposons un bref rappel des résultats obtenus sur ces deux points à la \secref{resultats}
+et nous ouvrons un certain nombre de perspectives dans la lignée de nos travaux
+à la \secref{perspectives}.
 
 
 
-\section{La modélisation}
+\section{Retour sur les résultats de cette thèse}
+\seclabel{resultats}
+
+Nous mettons en perspective dans la suite l'apport de nos travaux aux deux questions
+que sont la modélisation et l'analyse d'un système.
+
+\subsubsection*{Modélisation}
 
 La représentation d'un système réel (ou fictif) sous forme de modèle est fondamentale
 et doit être adaptée aux besoins de l'analyse.
@@ -173,7 +183,7 @@ sous la forme de Frappes de Processus.
 
 
 
-\section{L'analyse}
+\subsubsection*{Analyse}
 
 Un formalisme adapté à la représentation d'une certaine classe de systèmes présente cependant
 un intérêt limité s'il n'est pas accompagné de méthodes d'analyse efficaces.
@@ -198,7 +208,7 @@ ce qui était auparavant impossible.
 Enfin, le \chapref{applications} nous a permis d'illustrer l'étendue
 des différents résultats proposés dans cette thèse.
 
-Nous appliquons à la \secref{appli-tcrsig} la méthode d'analyse des
+Nous appliquons à la \secref{appli-as-tcrsig} la méthode d'analyse des
 Frappes de Processus canoniques résumée ci-dessus
 à un modèle de 94 composants et pouvant donc être considéré comme de grande taille.
 Cette application a permis de répondre avec succès à plusieurs questions d'atteignabilité
@@ -231,41 +241,131 @@ ou des regroupements de telles bases de données comme hiPathDB \cite{yu12hipath
 
 
 \section{Perspectives de travail}
+\seclabel{perspectives}
 
-\TODO
+Les travaux présentés au cours de cette thèse ouvrent de nombreuses pistes de travail
+permettant d'étendre et d'exploiter les résultats proposés.
 
-Application à des très grands réseaux (> 1000 composants)
+\myskip
 
-Raffiner les traductions pour les grands modèles / pour prendre en compte de nouvelles sémantiques
+% Application à des très grands réseaux (> 1000 composants)
+% 
+% Raffiner les traductions pour les grands modèles / pour prendre en compte de nouvelles sémantiques
 
-Raffinement de l'analyse statique :
-  répondre OUI sur de plus nombreux cas
-  répondre NON sur de plus nombreux cas
-  nouvelles questions (cf. logiques temporelles) tq AF ou U
-  utilisation de compteurs, de logiques non-régulières
-Moyens :
-  revoir la construction du GLC ou la condition nécessaire/suffisante
-  analyse exhaustive du GLC
-  nouvelles approches statiques (directement adaptées aux actions plurielles ?)
-  approches exhaustives (ASP ?)
+L'analyse d'atteignabilité présentée au \chapref{as}
+repose sur une approximation de la dynamique ;
+cette approximation fait chuter la complexité de l'analyse,
+au risque cependant de ne pas pouvoir conclure dans certains cas.
+Si le besoin s'en fait ressentir sur certains modèles,
+il pourrait naturellement être intéressant de raffiner cette analyse tant au niveau
+de la sous-approximation que nous proposons qu'au niveau
+de la sur-approximation définie par \citeasnoun{PMR12-MSCS},
+afin de pouvoir conclure dans un plus grand nombre de cas.
+Un tel raffinement serait basé soit sur la construction du graphe de causalité locale,
+soit sur les conditions nécessaire et suffisante qui l'exploitent.
+D'autres méthodes dérivées peuvent être envisagées,
+permettant par exemple de guider une analyse plus exhaustive,
+comme l'analyse des scénarios permis par le graphe de causalité locale.
 
-Création/inférence/adbuction de modèles :
-  selon un modèle de départ (requis) et des résultats expérimentaux (connaissance),
-    adapter le requis à la connaissance + minimalité
-Moyens :
-  
-Études de résilience :
-  en fonction de perturbations (aléatoires ?) mesurer la capacité de résilience du modèle
-Moyens :
-  analyse statique pour comparer les comportements
-  connaissance des processus clefs ou cut-sets pour connaître les « goulots de résilience »
+De même, les méthodes d'analyse en question pourraient être adaptées à d'autres formalismes
+que les Frappes de Processus canoniques.
+Leur application aux Frappes de Processus avec actions plurielles, par exemple,
+permettrait d'éviter la traduction coûteuse d'un modèle vers les Frappes de Processus canoniques.
 
-Études dynamiques :
-  détecter d'autres comportements (oscillations, etc)
-Méthodes :
-  analyse statique ? pas nécessairement efficace
-  déceler les motifs menant à ces comportements (structure des actions)
-  déceler des propriétés permettant ces comportements ($n-k$) cliques, etc.
-  méthodes exhaustives (ASP)
+Par ailleurs, l'analyse d'atteignabilité ne permet actuellement que de vérifier des propriétés
+qui s'expriment en logiques temporelles sous la forme $\mathbf{EF}(P)$ ;
+il pourrait être intéressant de l'enrichir avec d'autres propriétés comme
+$\mathbf{AF}(P)$, assurant par exemple qu'un état local est toujours atteignable,
+ou encore $(P\:\mathbf{U}\:Q)$, qui permettrait d'observer des commutations,
+par exemple avec la formule :
+$(\mathbf{EF}(P) \wedge \mathbf{EF}(Q))\:\mathbf{U}\:(\neg\mathbf{EF}(P) \wedge \mathbf{EF}(Q))$.
+L'utilisation de logiques intégrant des compteurs,
+ou de logiques non-régulières,
+augmenterait aussi les capacités d'analyse.
+
+% Raffinement de l'analyse statique :
+%   répondre OUI sur de plus nombreux cas
+%   répondre NON sur de plus nombreux cas
+%   nouvelles questions (cf. logiques temporelles) tq AF ou U
+%   utilisation de compteurs, de logiques non-régulières
+% Moyens :
+%   revoir la construction du GLC ou la condition nécessaire/suffisante
+%   analyse exhaustive du GLC
+%   nouvelles approches statiques (directement adaptées aux actions plurielles ?)
+%   approches exhaustives (ASP ?)
+
+\myskip
+
+La question de la résilience d'un système biologique peut aussi être soulevée
+et abordée de plusieurs manières grâce aux Frappes de Processus.
+L'ajout de comportements incontrôlables \cite{schwind13resilience}
+poserait par exemple de nouvelles questions :
+le modèle court-il le risque d'être forcé à rentrer dans un état non acceptable ?
+Est-il capable de revenir à tout moment dans un état acceptable ?
+Et à quel prix ?
+Répondre à ces questions pourra nécessiter d'élargir le cadre des propriétés vérifiables
+de manière efficace.
+D'un autre point de vue, il serait intéressant d'observer les conséquences sur la dynamique
+de perturbations ponctuelles totalement aléatoires, comme l'ajout ou la suppression d'actions
+dans un modèle.
+Cette approche pourrait bénéficier d'autres moyens détournés comme le calcul des
+\textit{cut-sets} afin de détecter des parties sensibles des modèles,
+qui font office de «~goulots d'étranglement~» pour les bonnes propriétés de résilience.
+
+La modélisation de certaines systèmes biologiques peut nécessiter de nouveaux ajouts au niveau du
+formalisme,
+comme l'ajout de classes de priorités dynamiques ou d'actions gardées.
+À l'instar des réseaux d'automates, l'ajout de telles notions crée une forte complexité,
+mais l'approche par interprétation abstraite pourrait à nouveau être plus efficace
+qu'une recherche naïvement exhaustive.
+
+L'inférence et la correction de modèles suscite aussi un engouement justifié,
+alors que les données d'expression deviennent toujours plus accessibles.
+L'utilisation de données de puce à ADN offre en effet la possibilité de corriger des modèles
+existants ; l'automatisation de ce procédé présente alors un intérêt certain,
+notamment pour les systèmes complexes, qui comportent beaucoup de mesures
+et qui sont représentés par des modèles de grande taille
+\citeaffixed{Guziolowski12072013}{voir p.~ex.}.
+Les Frappes de Processus pourraient être avantageusement utilisées pour ce type de problème,
+étant données leur définition atomique et les analyses efficaces de la dynamique
+dont elles font l'objet.
 
 
+
+Enfin, de nombreux autres résultats peuvent être recherchés sur un modèle de Frappes
+de Processus, comme la prévision d'oscillations, la recherche
+de domaines piège et d'attracteurs, etc.
+Il est difficile de prévoir quels types d'analyse ces résultats peuvent requérir.
+Le cas le plus souhaitable est une simple observation de la structure du modèle
+(à l'instar des conjectures de Thomas) impliquant une complexité polynomiale, voire linéaire.
+De telles observations peuvent porter sur la forme et l'agencement des actions,
+sur la recherche d'éléments comme les $(n-k)$\nbd cliques dans le graphe sans-frappe,
+etc.
+Le cas le plus coûteux en temps de calcul, en revanche, serait la nécessite d'effectuer
+une analyse exhaustive de la dynamique pour parvenir à un résultat.
+De telles analyses peuvent cependant bénéficier d'avancées notables
+comme l'utilisation d'un paradigme de programmation logique
+telle que la programmation par ensembles de réponse (\textit{Answer Set Programming}).
+Il est de plus possible de trouver des résultats intermédiaires
+permettant de guider la recherche et de trouver plus rapidement une solution.
+
+
+
+% Création/inférence/adbuction de modèles :
+%   selon un modèle de départ (requis) et des résultats expérimentaux (connaissance),
+%     adapter le requis à la connaissance + minimalité
+% Moyens :
+%   
+% Études de résilience :
+%   en fonction de perturbations (aléatoires ?) mesurer la capacité de résilience du modèle
+% Moyens :
+%   analyse statique pour comparer les comportements
+%   connaissance des processus clefs ou cut-sets pour connaître les « goulots de résilience »
+% 
+% Études dynamiques :
+%   détecter d'autres comportements (oscillations, etc)
+% Méthodes :
+%   analyse statique ? pas nécessairement efficace
+%   déceler les motifs menant à ces comportements (structure des actions)
+%   déceler des propriétés permettant ces comportements ($n-k$) cliques, etc.
+%   méthodes exhaustives (ASP)
