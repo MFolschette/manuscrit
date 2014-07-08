@@ -165,19 +165,22 @@ si les quatre composants peuvent être simultanément actifs depuis l'état init
 L'implémentation répond alors «~Oui~», ce qui permet d'affirmer que les quatre composants
 peuvent être activés simultanément,
 ce qui permet de conclure définitivement que le modèle est fonctionnel.
-La réponse a été obtenue en \todo{48 secondes}.
-Cet écart de temps part rapport aux résultats de la section précédente est causé
-par deux facteurs :
-\begin{itemize}
-  \item L'intégralité du modèle doit être représenté par le graphe de causalité locale,
-    contrairement aux atteignabilités précédentes qui n'en représentaient qu'une portion ;
-  \item L'implémentation cherche à appliquer le \thmref{approxinf} de sous-approximation sur
-    différents sous-ensembles de solutions du graphe, or l'énumération de ces sous-ensembles
-    est exponentielle dans le nombre de solutions du graphe de causalité locale.
-\end{itemize}
-Malgré cela, notre méthode reste conclusive en un temps inférieur à la minute,
-là où des implémentations jugées efficaces mais nécessitant le calcul
-exhaustif de la dynamique ne terminent pas, comme nous l'avons montré plus haut.
+La réponse a été obtenue quelques centièmes de seconde,
+en ne considérant qu'un sous-ensemble des nœuds solution,
+selon la méthode expliquée par la remarque \vpageref{subsetsolution}.
+
+% Cet écart de temps part rapport aux résultats de la section précédente est causé
+% par deux facteurs :
+% \begin{itemize}
+%   \item L'intégralité du modèle doit être représenté par le graphe de causalité locale,
+%     contrairement aux atteignabilités précédentes qui n'en représentaient qu'une portion ;
+%   \item L'implémentation cherche à appliquer le \thmref{approxinf} de sous-approximation sur
+%     différents sous-ensembles de solutions du graphe, or l'énumération de ces sous-ensembles
+%     est exponentielle dans le nombre de solutions du graphe de causalité locale.
+% \end{itemize}
+% Malgré cela, notre méthode reste conclusive en un temps inférieur à la minute,
+% là où des implémentations jugées efficaces mais nécessitant le calcul
+% exhaustif de la dynamique ne terminent pas, comme nous l'avons montré plus haut.
 
 \myskip
 
@@ -212,11 +215,11 @@ et \texttt{Inconc}.
 
 
 
-\section{Traduction vers le modèle de Thomas}
+\section{Traductions vers le modèle de Thomas}
 \seclabel{appli-thomas}
 
 
-\section{Application au récepteur de facteur de croissance épidermique}
+\subsection{Application au récepteur de facteur de croissance épidermique}
 \seclabel{appli-thomas-egfr}
 
 Nous nous intéressons ici à l'étude d'un modèle de récepteur de facteur de croissant épidermique
@@ -351,7 +354,7 @@ du formalisme.
 
 
 
-\section{Temps d'exécution sur quelques modèles de grande taille}
+\subsection{Temps d'exécution sur quelques modèles de grande taille}
 \seclabel{appli-thomas-large}
 
 L'implémentation de la méthode proposée \storef permet de traiter des modèles de

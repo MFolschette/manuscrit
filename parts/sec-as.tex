@@ -401,10 +401,37 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 
 \begin{remark}
-  Il est intéressant de noter que la sur-approximation de \citeasnoun{PMR12-MSCS}
+\label{subsetsolution}
+  Le \thmref{approxinf} peut s'appliquer à tout graphe de causalité locale
+  $\widehat{\cwB}$
+  construit à partir d'un graphe $\widehat{\myB} = (\widehat{\cwV}, \widehat{\cwE})$
+  où $\widehat{\cwV} \cap \Sol \subset \cwV \cap \Sol$.
+  En effet, cela revient à réduire l'ensemble initial des solutions,
+  ce qui réduit aussi l'ensemble de nœuds processus et objectifs utilisés.
+  La solution est alors davantage contrainte, mais le résultat est toujours valable.
+  Cela revient en fait à s'interdire certaines solutions,
+  c'est-à-dire à calculer l'atteignabilité sur un graphe privé de certaines actions.
+  Ainsi, si la sous-approximation est non-conclusive, il est possible de la tester
+  sur tous les graphes comportant un sous-ensemble des nœuds solutions,
+  ce qui permet notamment de supprimer certains cycles
+  et parfois d'obtenir un graphe de causalité locale sur lequel il est possible de conclure.
+  Cette recherche exhaustive est cependant exponentielle dans le nombre de nœuds solutions,
+  mais il est possible de l'orienter de façon à trouver rapidement un sous-ensemble permettant
+  de conclure,
+  par exemple en retirant en priorité les solutions qui forment un cycle.
+\end{remark}
+
+
+
+\begin{remark}
+  \citeasnoun{PMR12-MSCS} ont proposé une méthode de sur-approximation qui se base sur
+  un graphe de causalité locale construit de façon similaire,
+  et permet de réfuter une atteignabilité au sein d'un modèle de
+  Frappes de Processus standards.
+  Il est intéressant de noter que cette sur-approximation
   est toujours valable sur les Frappes de Processus canoniques à condition de l'appliquer
-  sur la version fusionnée du modèle considéré.
-  Cela permet d'obtenir un résultat supplémentaire et de conclure
+  sur la version fusionnée du modèle considéré (cf. \vdefref{aplatissement}).
+  Cela permet d'obtenir un résultat supplémentaire en concluant
   dans certains cas quant à l'impossibilité d'atteindre un processus donné.
 \end{remark}
 

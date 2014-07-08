@@ -3,16 +3,269 @@
 \chapter{Conclusion}
 \chaplabel{conclusion}
 
-\todo{Étendue des applications :}
+\chapeau{
+  Nous revenons dans ce chapitre sur les apports de la présente thèse,
+  en insistant notamment sur la façon donc nous avons répondu aux deux problématiques
+  principales proposées initialement :
+  renforcer la puissance de la modélisation d'une part,
+  et les capacités d'analyse d'autre part,
+  notamment en ce qui concerne les modèles de grande taille.
+}
+
+
+
+L'étude des réseaux de régulation biologique peut s'effectuer sous de nombreuses formes,
+allant des systèmes d'équations différentielles à la programmation logique,
+en passant par des modèles probabilistes.
+L'utilisation de modèles discrets permet une abstraction puissante de la complexité inhérente
+de ces systèmes, en conservant certaines propriétés intéressantes.
+On peut considérer que l'utilisation de tels modèles a été initiée par
+\citefullname{kauffman69}{Stuart A.} plus tard suivi par \citefullname{Thomas73}{René}
+qui y ajoute une dynamique asynchrone
+et par \citefullname{Snoussi89}{El Houssine}
+qui propose la notion de paramètres discrets pour définir totalement la dynamique.
+Ces modèles discrets ont été abondamment étudiés,
+comme nous l'avons vu au \chapref{etatdelart} :
+beaucoup de résultats permettent d'optimiser l'étude de leur dynamique,
+mais aussi de déduire la présence de certains comportements
+simplement à l'aide de la structure du modèle.
+
+Cependant, la simplicité apparente de leur définition masque deux écueils importants.
+Tout d'abord, leur apparente simplicité masque une dynamique souvent très complexe,
+l'espace des états possédant en effet une taille exponentielle dans la taille du modèle.
+Les méthodes de compression ou de réduction des modèles ne permettent pas toujours
+de réduire suffisamment cet espace des états pour en permettre une étude exhaustive.
+L'analyse dynamique des modèles de régulation reste donc souvent cantonnée
+à des modèles de petite ou moyenne taille ---~rarement plus de quelques dizaines de composants.
+De plus, certains paramètres peuvent être difficiles voire impossibles à intégrer dans le modèle.
+En effet, le modèle de Thomas ne permet pas de faire figurer des notions de précédence,
+de préemption ou de synchronisme entre les différentes interactions.
+De même, son étude requiert d'avoir correctement défini tous les paramètres discrets
+propres au système étudié, paramètres qui sont parfois inconnus à priori,
+alors que les comportements attendus le sont (même partiellement).
+Pour finir, il peut s'avérer difficile de raffiner un modèle lorsqu'il n'est pas
+possible d'étudier l'impact de chaque modification
+à cause des difficultés inhérente à l'analyse des grands modèles.
+
+Les Frappes de Processus, introduites par \citeasnoun*{PMR10-TCSB},
+ont offert un outil alternatif puissant de représentation et d'analyse des
+réseaux de régulation biologiques.
+Le formalisme proposé, totalement asynchrone, est basé sur une représentation
+atomique des interactions entre composants,
+où le changement d'état d'un composant ne peut être déclenché que par l'état d'au plus
+un autre composant.
+Cette forme particulière a notamment permis le développement de méthodes efficaces
+d'analyse de la dynamique, qui permettent notamment d'en réduire la complexité \cite{PMR12-MSCS}.
+Cependant, les Frappes de Processus ne permettent pas de représenter fidèlement
+un réseau de régulation biologique sous la forme d'un réseau discret asynchrone.
+De plus, certaines contraintes de modélisation ne peuvent pas toujours être introduites
+efficacement dans ces modèles standards de Frappes de Processus.
+
+Le travail proposé dans cette thèse avait pour ambition de répondre à cette double problématique
+de modélisation et d'analyse des grands modèles de réseaux de régulation biologiques,
+en partant du formalisme Frappes de Processus précédemment proposé,
+et des différents travaux correspondants.
+
+
+
+\section{La modélisation}
+
+La représentation d'un système réel (ou fictif) sous forme de modèle est fondamentale
+et doit être adaptée aux besoins de l'analyse.
+
+\myskip
+
+Nous proposons au \chapref{sem} plusieurs représentations alternatives
+permettant d'enrichir la modélisation d'un système en Frappes de Processus.
+
+À la \secref{php}, nous définissons des classes de priorités sur les actions
+d'un modèle de Frappes de Processus.
+Ces classes de priorités permettent de définir des contraintes de préemption globales
+entre plusieurs ensembles d'actions ---~chaque action ne pouvant être jouée que si
+aucune action plus prioritaire ne l'est.
+Nous avons montré comment ces classes de priorités permettent de représenter de façon
+discrète des contraintes temporelles (éventuellement continues).
+Pour cela, nous prenons comme exemple les modèles de Frappes de Processus intégrant
+des paramètres stochastiques pour chaque action,
+et qui peuvent se traduire en intervalles de tirs,
+et nous montrons comment modéliser une dynamique semblable grâce à des classes de priorités.
+
+L'introduction d'arcs neutralisants à la \secref{phan} permet en revanche de définir
+des contraintes de préemption locales entre les actions.
+Leur plus grande granularité permet d'intégrer plus finement certaines informations
+relatives entre les actions, comme des contraintes de tir ou des durées de réaction.
+Cette granularité est notamment nécessaire pour éviter des relations de préemption
+non désirées qui peuvent bloquer des parties du modèle,
+par exemple en abstrayant certaines phénomènes d'accumulation ,
+provoquant des paradoxes de Zénon.
+
+Enfin, les actions plurielles définies à la \secref{phm} introduisent de la
+synchronicité entre les actions.
+Celle-ci est nécessaire pour modéliser certains phénomènes comme des réactions biochimiques,
+qui nécessitent de représenter la formation de plusieurs produits ou la consommation de plusieurs
+réactifs, voire les deux simultanément.
+Ce formalisme offre donc à fortiori la possibilité de représenter du synchronisme au niveau des
+pré-conditions de tir des actions, et par conséquent permet de compresser les modèles
+à l'aide d'une notion naturelle de coopération.
+
+\myskip
+
+Nous délimitons de plus au \chapref{phcanonique} une sous-classe des Frappes de Processus
+avec classes de priorités, dite \emph{canonique},
+qui ne comporte que deux classes de priorités et une forme particulière pour les actions
+très prioritaires.
+Celle classe de modèles présente un intérêt particulier pour la représentation,
+car elle corrige les problèmes de décalage temporel présents
+dans les coopérations modélisées par des Frappes de Processus standards.
+Nous montrons de plus qu'elle est suffisante pour représenter tous les autres
+formalismes de Frappes de Processus alternatifs rappelés ci-dessus ;
+nous démontrons par ailleurs que tous ces formalismes sont équivalents,
+et nous utilisons les Frappes de Processus canoniques pour proposer
+les traductions adéquates.
+
+\myskip
+
+Enfin, le \chapref{expressivite} est l'occasion de comparer l'expressivité des
+Frappes de Processus avec d'autres formalismes courants.
+
+Nous montrons notamment à la \secref{trad-rda} que les Frappes de Processus canoniques
+permettent de représenter fidèlement et naturellement les réseaux discrets asynchrones.
+Cette équivalence est notamment utile pour pouvoir étudier ce type de modèles
+efficacement à l'aide des outils détaillés plus bas.
+
+Nous nous penchons aussi sur le modèle de Thomas à la \secref{trad-thomas},
+qui présente un intérêt supplémentaire du fait de sa dynamique unitaire
+et de ses paramètres discrets.
+Nous montrons que sous certaines conditions, des Frappes de Processus canoniques
+peuvent être traduites en modèle de Thomas de façon plus ou moins complète,
+ce qui se traduit par des arcs non-signés ou des paramètres impossibles à inférer.
+Cependant, en cas de réponse partielle,
+un ensemble de modèles compatibles peut être énuméré,
+et le modèle d'origine peut être itérativement raffiné afin d'obtenir
+le modèle de Thomas attendu.
+
+% Liens avec plusieurs autres formalismes :
+%   vers le modèle de Thomas :
+%     formalisme historique et mieux connu, plus global (influences)
+%     passage « atomique -> influences globales » difficile
+%     inférence de toutes les influences et paramètres + énumération si incomplet
+%     toujours compatible avec la dynamique du PH
+%   depuis les réseaux discrets asynchrones :
+%     équivalence du formalisme
+%     permet l'étude des RDA
+%   Biocham :
+%     représentation possible
+%   RdP :
+%     formalisme répandu et analyses puissantes
+
+\myskip
+
 Ces différents formalismes de Frappes de Processus
-peuvent directement bénéficier aux biologistes qui désireraient
-vérifier si un modèle sous forme de réseau booléen ou de modèle de Thomas est fonctionnel,
-c'est-à-dire s'il produit les sorties attendues en fonction des données.
-En effet, la traduction de ces modèles vers les Frappes de Processus est possible,
-et leur analyse est efficace grâce aux méthodes d'analyse statique présentées.
-Ces capacités d'analyse sont notamment suffisantes pour pouvoir analyser
-en un temps raisonnable des propriétés dynamiques sur des bases de données métaboliques récentes
-comme PID ou HiPathDB. \tocite
-Cependant, il est aussi envisageable des informaticiens en fassent usage dans un cadre plus large,
-à la condition de pouvoir représenter le système informatique souhaité
+peuvent directement bénéficier aux biologistes désirant
+vérifier la fonctionnalité d'un réseau discret asynchrone ou d'un modèle de Thomas
+ou effectuer des prédictions sur ce modèle.
+Ils peuvent naturellement tout aussi bien être utilisés à d'autres fins,
+comme l'inférence ou la correction de modèles, à l'aide des différentes équivalences proposées.
+Cependant, il est aussi envisageable pour des informaticiens ou bioinformaticiens
+d'en faire usage dans un cadre
+plus large, à la condition de pouvoir représenter le système informatique souhaité
 sous la forme de Frappes de Processus.
+
+
+
+\section{L'analyse}
+
+Un formalisme adapté à la représentation d'une certaine classe de systèmes présente cependant
+un intérêt limité s'il n'est pas accompagné de méthodes d'analyse efficaces.
+
+C'est pourquoi, en sus de la définition des Frappes de Processus canoniques,
+nous proposons au \chapref{as} une méthode efficace d'analyse d'atteignabilité,
+qui peut cependant aussi être appliquée aux autres formalismes
+de Frappes de Processus, moyennant les traductions adéquates.
+Elle s'appuie sur une sous-approximation de la dynamique du modèle étudié,
+ce qui est possible grâce à la forme particulière des actions et de la définition
+des Frappes de Processus canoniques.
+Il est possible grâce à cela de répondre à des questions d'atteignabilité locale
+avec une complexité polynomiale dans la taille du modèle étudié,
+évitant ainsi l'explosion combinatoire inhérente au calcul exhaustif de la dynamique.
+Cette analyse peut de plus se décliner sous plusieurs formes :
+atteignabilité d'un état local, d'une succession d'états locaux
+et même l'atteignabilité simultanée d'un ensemble d'états locaux,
+ce qui était auparavant impossible.
+
+\myskip
+
+Enfin, le \chapref{applications} nous a permis d'illustrer l'étendue
+des différents résultats proposés dans cette thèse.
+
+Nous appliquons à la \secref{appli-tcrsig} la méthode d'analyse des
+Frappes de Processus canoniques résumée ci-dessus
+à un modèle de 94 composants et pouvant donc être considéré comme de grande taille.
+Cette application a permis de répondre avec succès à plusieurs questions d'atteignabilité
+avec des temps de calcul de l'ordre de quelques centièmes de seconde,
+ce qui à notre connaissance est inégalé.
+
+L'étude de comportements peut néanmoins aussi être abordée par d'autres formalismes.
+Les différents modèles de Frappes de Processus traduits en modèle de Thomas
+à la \secref{appli-thomas} illustrent bien cela :
+chaque modèle est issu d'un raffinement différent d'un même système,
+et la traduction en modèle de Thomas permet de déterminer
+les parties de modèle dont le comportement est déterministe.
+De plus, l'analyse efficace de la dynamique sur les Frappes de Processus
+permet d'effectuer des raffinements successifs d'un même modèle
+avant de le traduire vers le formalisme souhaité.
+La conservation de la dynamique %et de certaines bonnes propriétés sur la structure
+pour toutes les traductions présentées
+permet en effet de généraliser les résultats obtenus sur un modèle à tous les formalismes
+dans lesquels il peut être traduit.
+
+\myskip
+
+Les possibilités offertes par l'utilisation conjointe des traductions présentées
+dans cette thèse avec les méthodes d'analyse développées
+rendent accessible l'étude de modèles de grande taille, voire de très grande taille.
+Ces capacités d'analyse devraient notamment être suffisantes pour pouvoir analyser
+en un temps raisonnable des propriétés dynamiques sur des bases de données métaboliques
+comme PID \cite{schaefer09pid}
+ou des regroupements de telles bases de données comme hiPathDB \cite{yu12hipathdb}.
+
+
+\section{Perspectives de travail}
+
+\TODO
+
+Application à des très grands réseaux (> 1000 composants)
+
+Raffiner les traductions pour les grands modèles / pour prendre en compte de nouvelles sémantiques
+
+Raffinement de l'analyse statique :
+  répondre OUI sur de plus nombreux cas
+  répondre NON sur de plus nombreux cas
+  nouvelles questions (cf. logiques temporelles) tq AF ou U
+  utilisation de compteurs, de logiques non-régulières
+Moyens :
+  revoir la construction du GLC ou la condition nécessaire/suffisante
+  analyse exhaustive du GLC
+  nouvelles approches statiques (directement adaptées aux actions plurielles ?)
+  approches exhaustives (ASP ?)
+
+Création/inférence/adbuction de modèles :
+  selon un modèle de départ (requis) et des résultats expérimentaux (connaissance),
+    adapter le requis à la connaissance + minimalité
+Moyens :
+  
+Études de résilience :
+  en fonction de perturbations (aléatoires ?) mesurer la capacité de résilience du modèle
+Moyens :
+  analyse statique pour comparer les comportements
+  connaissance des processus clefs ou cut-sets pour connaître les « goulots de résilience »
+
+Études dynamiques :
+  détecter d'autres comportements (oscillations, etc)
+Méthodes :
+  analyse statique ? pas nécessairement efficace
+  déceler les motifs menant à ces comportements (structure des actions)
+  déceler des propriétés permettant ces comportements ($n-k$) cliques, etc.
+  méthodes exhaustives (ASP)
+
+
