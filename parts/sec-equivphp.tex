@@ -30,10 +30,11 @@ Le but de cette section est de montrer qu'un modèle de Frappes de Processus ave
 de priorités peut être \emph{aplati}, c'est-à-dire traduit en un autre modèle ne comportant
 que 2 classes de priorités.
 Ce dernier modèle est assuré de posséder la même dynamique,
-car il lui est faiblement bisimilaire.
+car il lui est faiblement bisimilaire,
+comme établi par le \vthmref{bisimulaplatissement}.
 De plus, les actions de priorité 1 (les plus prioritaires) ne sont utilisées que pour mettre
 à jour les sortes coopératives ;
-il s'agit donc en fait d'un modèle de Frappes de Processus canoniques telles que définies
+il s'agit en fait d'un modèle de Frappes de Processus canoniques telles que définies
 à la \secref{phcanonique-def}.
 La forme particulière de ces modèles permet d'y appliquer les méthodes d'analyse statique
 développées à la \secref{as}.
@@ -51,7 +52,7 @@ Si $\n = 0$, alors $\Fopphp{h} \equiv \bot$, ce qui signifie que l'action $h$ ne
 être jouée car elle est préemptée dans dans tous les états où son frappeur et sa cible
 sont présents.
 Une telle action peut être retirée du modèle sans en changer le comportement.
-En revanche, si $\n \geq 0$, alors $\Fopphp{h} \not\equiv \bot$ ;
+En revanche, si $\n > 0$, alors $\Fopphp{h} \not\equiv \bot$ ;
 dans ce cas, $\Fopphp{h}$ est une disjonction de $\n$ conjonctions d'atomes,
 et peut donc être vue comme une disjonction de $\n$ propriétés de jouabilité plus petites.
 Ces $\n$ conjonctions d'atomes peuvent être traduites en autant de sortes
@@ -130,7 +131,7 @@ pseudo-canoniques.
     donc $\Feval{\Fopphp{h}}{s}$.
 \end{proof}
 
-\begin{definition}
+\begin{definition}[Aplatissement ($\PHflat$)]
 \deflabel{aplatissement}
   Si $k \in \sNN$ et $\PH = (\PHs; \PHl; \PHa^{\angles{k}})$
   sont des Frappes de Processus pseudo-canoniques avec $k$ classes de priorités,
@@ -252,7 +253,7 @@ qui n'ont pas été prises en compte ici pour ne pas alourdir la définition.
 Nous donnons dans la suite quelques pistes pour obtenir des modèles plus simples
 mais au comportement équivalent, mais n'en donnons pas les preuves.
 
-\subsubsection{Simplification des propriétés d'aplatissement}
+\subsubsection*{Simplification des propriétés d'aplatissement}
 
 La propriété d'aplatissement $\Fopaplat{h}$ d'une action $h = \PHhit{a_i}{b_j}{b_k}$ peut être
 simplifiée à l'aide des propriétés suivantes, permettant d'éviter la création
@@ -269,7 +270,7 @@ ou des coopérations qui sont toujours vraies :
     alors $c_p \wedge c_q \equiv \bot$.
 \end{itemize}
 
-\subsubsection{Suppression des sortes coopératives superflues}
+\subsubsection*{Suppression des sortes coopératives superflues}
 
 Il existe deux cas pour lesquels il est possible de supprimer la sorte coopérative $f^{h,i}$
 créée pour une action $h$ dans le modèle aplati :
@@ -282,6 +283,125 @@ créée pour une action $h$ dans le modèle aplati :
     (étant donné qu'en dehors de la cible, un seul processus, $p$, est requis).
 \end{itemize}
 
+\begin{example}
+  Les Frappes de Processus avec 3 classes de priorités de la \figref{metazoan-php-bis}
+  représentent un modèle de segmentation métazoaire inspiré de la \vfigref{metazoan-php}
+  donc les deux actions suivantes ont été retirées :
+    \[\PHfrappe{f_1}{f_1}{f_0} \quad \text{ et } \quad \PHfrappe{f_0}{c_1}{c_0}\]
+  Cela permet de s'intéresser uniquement à l'état stationnaire du système,
+  qui consiste en l'oscillation alternative des sortes $a$ et $c$.
+  Ce modèle peut être aplati par la méthode donnée à la \vdefref{aplatissement}
+  et les simplifications détaillées ci-dessus.
+  Le résultat est le modèle de Frappes de Processus canoniques donné à la
+  \figref{metazoan-phcanonique}.
+  Le modèle complet (de la \figref{metazoan-php}) peut naturellement aussi être
+  aplati à l'aide de la même méthode, mais le résultat est plus complexe du fait des
+  deux actions «~peu urgentes~» supplémentaires.
+  
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(1,0)}{f}{2}{l}
+    \TSort{(7,4)}{a}{2}{r}
+    
+    \TSetTick{fc}{0}{00}
+    \TSetTick{fc}{1}{01}
+    \TSetTick{fc}{2}{10}
+    \TSetTick{fc}{3}{11}
+    \TSort{(4,1)}{fc}{4}{r}
+    
+    \TAction{c_1}{a_1.west}{a_0.north west}{}{right}
+    \TAction{f_1}{c_0.west}{c_1.south west}{bend left=30, in=90}{left}
+    \TAction{c_1}{c_1.west}{c_0.north west}{selfhit}{right}
+%     \TAction{f_1.north east}{f_1.south east}{f_0.north east}%
+%       {selfhit, min distance=30, bend left, out=150, in=90}{left}
+%     \TAction{f_0.east}{c_1.south east}{c_0.north east}{bend right=60, in=-140}{left}
+
+    \TAction{fc_2}{a_0.west}{a_1.south west}{}{left}
+    \path (1.8, 0.5) edge[coopupdate] (3.2, 2);
+    \path (0.8, 4.5) edge[coopupdate] (3.2, 3);
+    
+    \node[labelprio1] at (2.55,3.85) {$1$}; % c => fc
+    \node[labelprio1] at (2.75,1) {$1$};    % f => fc
+    \node[labelprio2] at (5.5,3.85) {$2$};  % fc_10 -> a_0 / 1
+    \node[labelprio2] at (3.5,5.3) {$2$};   % c_1 -> a_1 / 0
+    \node[labelprio3] at (0,2.5) {$3$};     % f_1 -> c_0 / 1
+    \node[labelprio3] at (0.8,5.8) {$3$};   % c_1 -> c_1 / 0
+  \end{tikzpicture}
+  \end{center}
+  \caption{\figlabel{metazoan-php-bis}%
+    Exemple de Frappes de Processus avec 3 classes de priorités,
+    inspiré du modèle de la \figref{metazoan-ph},
+    dont deux actions ont été retirées pour supprimer
+    l'interruption de l'avancée du front d'onde $f$.
+    Les étiquettes numérotées (de 1 à 3) placées contre les flèches représentant les actions
+    symbolisent leur appartenance à une classe de priorités donnée.
+  }
+  \end{figure}
+
+  \begin{figure}[ht]
+  \begin{center}
+  \begin{tikzpicture}
+    %\path[use as bounding box] (-5.75,0) rectangle (5.75,5.5);
+    \TSort{(-6,5)}{c}{2}{l}
+    \TSort{(0,1)}{f}{2}{l}
+    \TSort{(6,5)}{a}{2}{r}
+
+    \TSetTick{fc}{0}{00}
+    \TSetTick{fc}{1}{01}
+    \TSetTick{fc}{2}{10}
+    \TSetTick{fc}{3}{11}
+    \TSort{(3,0)}{fc}{4}{r}
+    
+    \TSetTick{fa}{0}{00}
+    \TSetTick{fa}{1}{01}
+    \TSetTick{fa}{2}{10}
+    \TSetTick{fa}{3}{11}
+    \TSort{(-3,0)}{fa}{4}{l}
+    
+    \THit{fc_2}{}{a_0}{.south west}{a_1}
+    \path[bounce, bend left=60]
+      \TBounce{a_0}{}{a_1}{.south west};
+    
+    \THit{c_1.north east}{}{a_1}{.west}{a_0}
+    \path[bounce, bend right=50]
+      \TBounce{a_1}{}{a_0}{.north west};
+    
+    \THit{a_0.west}{}{c_1}{.east}{c_0}
+    \path[bounce, bend left=50]
+      \TBounce{c_1}{}{c_0}{.north east};
+    
+    \THit{fa_3}{}{c_0}{.east}{c_1}
+    \path[bounce, bend right=50]
+      \TBounce{c_0}{}{c_1}{.south east};
+    
+    \path (0.8, 1.5) edge[coopupdate] (2.2, 1.5);
+    \path (-5.3, 5.5) edge[coopupdate] (2.2, 2.5);
+    \path (-0.8, 1.5) edge[coopupdate] (-2.2, 1.5);
+    \path (5.3, 5.5) edge[coopupdate] (-2.2, 2.5);
+    
+    \node[labelprio1] at (-1.5,3.2) {$1$};
+    \node[labelprio1] at (1.5,3.2) {$1$};
+    \node[labelprio1] at (-1.5,1.9) {$1$};
+    \node[labelprio1] at (1.5,1.9) {$1$};
+    
+    \node[labelprio2] at (0,6.4) {$2$};
+    \node[labelprio2] at (1,5.7) {$2$};
+    \node[labelprio2] at (-4.8,3.9) {$2$};
+    \node[labelprio2] at (5,3.5) {$2$};
+  \end{tikzpicture}
+  \end{center}
+  \caption{\figlabel{metazoan-phcanonique}%
+    Frappes de Processus canoniques issues de l'aplatissement du modèle
+    de la \vfigref{metazoan-php}.
+    Les étiquettes numérotées (1 et 2) placées contre les flèches représentant les actions
+    symbolisent leur appartenance à une classe de priorités donnée.
+  }
+  \end{figure}
+\end{example}
+
+
 
 
 \subsection{Aplatissement des Frappes de Processus avec arcs neutralisants}
@@ -292,8 +412,8 @@ avec arcs neutralisants en Frappes de Processus canoniques.
 Le procédé est le même car il consiste, pour chaque action,
 en un calcul de propriété d'aplatissement
 qui est ici identique à la propriété de jouabilité.
-En effet, l'opérateur d'aplatissement de cette traduction est égal à l'opérateur de jouabilité 
-donné à la \defref{fopphan} : $\Fopsymbol_\Fopaplatsubsymbol = \Fopsymbol_\Fopphansubsymbol$.
+En effet, l'opérateur d'aplatissement de cette traduction est égal à l'opérateur de jouabilité
+donné à la \vdefref{fopphan} : $\Fopsymbol_\Fopaplatsubsymbol = \Fopsymbol_\Fopphansubsymbol$.
 Par la suite, une fois cette propriété traduite en FND, il est possible de réutiliser
 la traduction de la \defref{aplatissement} afin d'obtenir un modèle canonique
 ayant la même dynamique, comme assuré par le \thmref{bisimulaplatissement}.
@@ -315,9 +435,10 @@ préempteur/préempté entre les actions, rendant la traduction plus efficace.
 
 Il est possible de traduire les Frappes de Processus avec actions plurielles
 en Frappes de Processus canoniques à l'aide d'outils précédemment développés.
-En effet, la \defref{phm2php} offre une traduction des Frappes de Processus avec action plurielles
+En effet, la \vdefref{phm2php} offre une traduction des Frappes de Processus avec action
+plurielles
 en Frappes de Processus avec 4 classes de priorités, celles-ci pouvant être à leur tour traduites
-en Frappes de Processus canoniques à l'aide de la \defref{aplatissement}.
+en Frappes de Processus canoniques à l'aide de la \vdefref{aplatissement}.
 Globalement, cette traduction est donc exponentielle dans le nombre d'actions dans le modèle
 initial, car la traduction de chacune d'entre elles crée une sorte coopérative et plusieurs
 actions de priorités différentes, qui doivent par la suite être aplaties.

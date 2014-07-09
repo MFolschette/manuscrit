@@ -182,8 +182,6 @@ et un ensemble de sortes coopératives bien formées (noté $\cs$).
   Le modèle de la \figref{livelock} vérifie le \crref{part}.
 \end{example}
 
-
-
 Il est à noter qu'une sorte $a$ qui n'est frappée par aucune action,
 c'est-à-dire telle que $\forall h \in \PHh, \sort{\target{h}} \neq a$,
 est en accord à la fois avec la définition de composant bien formé
@@ -269,7 +267,7 @@ Cette définition étendue sera notamment utile pour des questions de traduction
   Intéressons-nous à la dynamique de $\PH'$.
   Comme expliqué à la \vsecref{sc},
   ce modèle comporte une sorte coopérative $ab$ qui est définie de la façon
-  dont le sont toutes les sortes coopératives en
+  dont le sont toutes les sortes coopératives
   en Frappes de Processus standards, faute de priorités.
   Cette version sans priorités introduit des comportements supplémentaires qui ne sont pas
   désirables pour représenter une porte logique exacte.
@@ -385,8 +383,12 @@ Ces résultats permettront de construire la méthode d'analyse statique de la \s
 
 Pour tout état $s \in \PHl$, on appelle $\update(s)$ l'état dans lequel tous les composants
 ont le même processus actif que dans $s$
-mais où sortes coopératives ont été mises à jour en fonction (\defref{update}).
-Cet état est unique du fait des propriétés de $\pfp$ données dans la section précédente.
+mais où les sortes coopératives ont été mises à jour en fonction
+de l'état des sortes qui les influencent (\defref{update}).
+Cet état est unique du fait du point (\ref{csai}) de la \vdefref{cs}.
+La notation «~$\recouvre$~» représente le recouvrement d'un état par ensemble de processus,
+qui avait été donné à la \vdefref{recouvrement}.
+%des propriétés de $\pfp$ données dans la section précédente.
 Le \lemref{update} stipule ensuite que depuis tout état $s$, il existe un scénario d'actions primaires
 mettant à jour toutes les sortes coopératives de façon à arriver dans $\update(s)$.
 %ghtrjy <= Raphaël was here!
@@ -419,7 +421,8 @@ Le \lemref{hcompcomp} stipule que pour un état donné $s \in \PHl$, et pour tou
 $h = \PHhit{a_i}{b_j}{b_k} \in \PHh$ où $a$ et $b$ sont des composants,
 si $\PHget{s}{a} = a_i$ et $\PHget{s}{b} = b_j$, alors
 $h$ peut toujours être jouée après une série d'actions primaires,
-et ces actions n'empêchent pas son jeu.
+et ces actions ne perturbent pas cette jouabilité
+(autrement dit, elles ne modifient pas les processus $a_i$ et $b_j$).
 
 De façon complémentaire, le \lemref{hcscomp} énonce le même résultat si $a$ est une sorte coopérative,
 sous la condition que $a$ soit déjà à jour dans $s$.
@@ -440,9 +443,10 @@ sous la condition que $a$ soit déjà à jour dans $s$.
   $(s \PHplay \delta) = \update(s)$.
   Étant donné que $a$ et $b$ sont des composants,
   $a_i \in (s \PHplay \delta)$ et $b_j \in (s \PHplay \delta)$.
-  De plus, par définition de $\update(s)$, aucune action primaire n'est jouable
-  dans $(s \PHplay \delta)$.
-  $h$ est donc jouable dans $(s \PHplay \delta)$.
+  De plus, par définition de $\update(s)$,
+  toutes les sortes coopératives ont été mises à jour dans $(s \PHplay \delta)$
+  et aucune action primaire n'y est donc jouable.
+  Ainsi, $h$ est jouable dans $(s \PHplay \delta)$.
 \end{proof}
 
 \begin{lemma}

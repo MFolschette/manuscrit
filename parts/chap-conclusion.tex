@@ -256,6 +256,7 @@ permettant d'étendre et d'exploiter les résultats proposés.
 
 \subsubsection*{Raffinement de l'analyse statique}
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 L'analyse d'atteignabilité présentée au \chapref{as}
 repose sur une approximation de la dynamique ;
 cette approximation fait chuter la complexité de l'analyse,
@@ -280,9 +281,9 @@ Par ailleurs, l'analyse d'atteignabilité ne permet actuellement que de vérifie
 qui s'expriment en logiques temporelles sous la forme $\mathbf{EF}(P)$ ;
 il pourrait être intéressant de l'enrichir avec d'autres propriétés comme
 $\mathbf{AF}(P)$, assurant par exemple qu'un état local est toujours atteignable,
-ou encore $(P\:\mathbf{U}\:Q)$, qui permettrait d'observer des commutations,
+ou encore $(P\:\mathbf{EU}\:Q)$, qui permettrait d'observer des commutations,
 par exemple avec la formule :
-$(\mathbf{EF}(P) \wedge \mathbf{EF}(Q))\:\mathbf{U}\:(\neg\mathbf{EF}(P) \wedge \mathbf{EF}(Q))$.
+$(\mathbf{EF}(P) \wedge \mathbf{EF}(Q))\:\mathbf{EU}\:(\neg\mathbf{EF}(P) \wedge \mathbf{EF}(Q))$.
 L'utilisation de logiques intégrant des compteurs,
 ou de logiques non-régulières,
 augmenterait aussi les capacités d'analyse.

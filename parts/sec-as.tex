@@ -27,8 +27,8 @@ Pour de grands modèles, ces méthodes se heurtent donc à l'explosion combinato
 au calcul du graphe des états.
 
 La méthode proposée ici repose en revanche sur une sous-approximation du modèle analysé.
-Cela permet d'éviter une complexité exponentielle
-et d'avoir à la place un problème de complexité polynomiale dans la taille du modèle
+Cela permet d'éviter la complexité exponentielle de l'analyse exhaustive de la dynamique,
+car notre méthode possède une complexité polynomiale dans la taille du modèle
 sous la condition que chaque sorte du modèle possède un nombre restreint de processus
 (une sorte de quatre processus ou moins satisfaisant ce critère).
 Cette méthode repose sur une succession d'analyses locales d'atteignabilités
@@ -42,7 +42,11 @@ une atteignabilité locale impossible (ce qui peut empêcher de conclure),
 soit un processus requis qui fait partie de l'état initial (ce qui consiste en une
 atteignabilité locale \emph{triviale}).
 Cette méthode est inspirée du travail de \citeasnoun{PMR12-MSCS},
-qui portait sur les Frappes de Processus standards.
+qui portait sur l'atteignabilité dans les Frappes de Processus standards.
+Les \defrangeref{obj}{maxCont} sont issues de la thèse de
+\citefullname{Pauleve11}{Loïc}.
+La contribution spécifique à cette thèse débute à la \defref{glc}
+et comprend cette définition et tous les résultats suivants.
 
 Un certain nombre d'outils préliminaires nécessaires à la résolution du problème
 de l'atteignabilité dans des Frappes de Processus canoniques sont
@@ -98,7 +102,8 @@ dans la séquence, s'il existe (\defref{os}).
 %  Les définitions de $\premsymbol_a$ (\eqref{prem}), $\dersymbol_a$ (\eqref{der}),
 %  $\suppsymbol$ (\eqref{supp}) et $\finsymbol$ (\eqref{fin}) sont étendues aux
   Les définitions de $\premsymbol_a$, $\dersymbol_a$,  $\suppsymbol$ et $\finsymbol$
-  (\defref{premder}) sont étendues aux séquences d'objectifs en omettant le cas des frappeurs.
+  (\vdefref{premder}) sont étendues aux séquences d'objectifs en omettant
+  de spécifier le cas des frappeurs.
 \end{definition}
 
 La \defref{ctx} introduit la notion de \emph{contexte} qui étend celle d'état
@@ -107,6 +112,8 @@ plutôt que d'attribuer un seul processus actif à chaque sorte, comme pour un �
 un contexte permet d'en attribuer plusieurs.
 La notion de recouvrement, précédemment définie sur un états (\vdefref{recouvrement})
 est étendue au cas d'un contexte dans la \defref{ctxrecouvrement}.
+Il permettra à la \vdefref{glc} de saturer le contexte initial d'analyse
+avec des processus supplémentaires.
 
 \begin{definition}[Contexte ($\Ctx$)]
 \deflabel{ctx}
@@ -159,7 +166,7 @@ On note dans la suite : $\Sol = \powerset(\PHproc)$.
 
 \noindent
 On remarque que pour tout objectif $\obj{a_i}{a_j} \in \Obj$,
-$\BS(\obj{a_i}{a_j}) = \emptyset$ s'il n'existe aucune moyen d'atteindre $a_j$ depuis $a_i$.
+$\BS(\obj{a_i}{a_j}) = \emptyset$ s'il n'existe aucun moyen d'atteindre $a_j$ depuis $a_i$.
 À l'inverse, la séquence vide appartient toujours à
 l'ensemble des séquences de bonds résolvant un objectif trivial :
 $\forall a_i \in \Proc, \emptyseq \in \BS(\obj{a_i}{a_i})$.
@@ -177,16 +184,16 @@ $\forall a_i \in \Proc, \emptyseq \in \BS(\obj{a_i}{a_i})$.
 \subsection{Sous-approximation}
 \seclabel{ua}
 
-On note $\concr(\w)$ (\defref{concr}) l'ensemble des scénarios concrétisant
-une séquence d'objectifs $\w$ dans le contexte $\ctx$,
-et $\uconcr(\w)$ (\defref{uconcr}) est défini comme étant égal à $\concr(\w)$ si et seulement si,
+On note $\concr(\w)$ l'ensemble des scénarios concrétisant
+une séquence d'objectifs $\w$ dans le contexte $\ctx$ (\defref{concr})
+et $\uconcr(\w)$ est défini comme étant égal à $\concr(\w)$ si et seulement si,
 pour chaque état $s \subseteq \ctx$,
-$\concr(\w) \cap \Sce(s) \neq \emptyset$.
+$\concr(\w) \cap \Sce(s) \neq \emptyset$ (\defref{uconcr}).
 
 \begin{definition}[$\concr : \OS \to \powerset(\Sce)$]
 \deflabel{concr}
   Pour toute séquence d'objectifs $\w \in \OS$, $\concr(\w)$ est l'ensemble des
-  de scénarios minimaux concrétisant $\w$ dans le contexte $\ctx$.
+  scénarios minimaux concrétisant $\w$ dans le contexte $\ctx$.
   Il est défini comme le plus grand ensemble satisfaisant les conditions suivantes :
   \begin{enumerate}[(i)]
   \item $\forall \delta \in \concr(\w), \exists s \subseteq \ctx, \delta \in \Sce(s)$,
@@ -294,6 +301,15 @@ jusqu'à ce qu'il n'évolue plus ---~autrement dit, jusqu'à atteindre un point 
   \end{align}
 \end{definition}
 
+\begin{example}
+\exlabel{livelock-glc}
+  La \vfigref{glc-livelock} représente le graphe de causalité locale
+  associé au modèle de Frappes de Processus canoniques de la \vfigref{livelock},
+  pour la question de l'accessibilité de $c_1$ depuis l'état
+  $\PHstate{a_1, b_0, c_0, ab_{10}}$.
+  Nous discutons \vexpageref{livelock-as} des conclusions qui peuvent en être tirées.
+\end{example}
+
 Au sein de ce graphe de causalité locale, un arc $(p, ps) \in \Proc \times \Sol$
 est dit \emph{cohérent} (\defref{coherent}) si aucun des processus dans $ps$
 n'est «~compromis~» par un processus successeur du nœud $ps$,
@@ -356,7 +372,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
       et d'après le \lemref{hcscomp} :
       $\forall i \in \segm{1}{n+1}, \PHget{(s \PHplay \delta_{n+1})}{\PHsort(p_i)} = p_i$
   \end{itemize}
-  Ainsi, $\delta = \delta_{|ps|}$ existe, et étant donné ses propriétés, on a immédiatement :
+  Ainsi, $\delta = \delta_{|ps|}$ existe, et étant données ses propriétés, on a immédiatement :
   $\PHget{(s \PHplay \delta)}{a} = a_i$ et $\update(s \PHplay \delta) = s \PHplay \delta$.
   
   Soit un état $s \in L$ tel que $s \subseteq max\ctx$.
@@ -380,7 +396,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
         Montrons par récurrence que pour tout $n \in \indexes{\zeta}$, il existe un scénario
         $\delta_n$ tel que $\PHget{(s \PHplay \delta_n)}{\PHsort(P)} = \PHbounce(\zeta_n)$.
         \begin{itemize} %\item[$\circ$]
-          \item[$\circ$] Supposons que $\delta_n$ existe et posons $\zeta_n = \PHhit{b_i}{a_j}{a_k}$.
+          \item[] Supposons que $\delta_n$ existe et posons $\zeta_n = \PHhit{b_i}{a_j}{a_k}$.
             Par hypothèse, il existe $\delta' \in \muconcr_{s \PHplay \delta_n}(\PHobj{\any}{b_i})$
             avec $\PHsort(P) \notin \PHsort(\delta')$ (\defref{maxCont}).
             D'après le \lemref{update}, il existe
@@ -439,7 +455,8 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
 
 \begin{example}
 \exlabel{livelock-as}
-  La sous-approximation développée dans cette section au \thmref{approxinf}
+  En ce qui concerne le modèle de Frappes de Processus canoniques de la \vfigref{livelock},
+  la sous-approximation développée au \thmref{approxinf}
   ne conclut pas quant à l'accessibilité de $c_1$ depuis l'état
   $\PHstate{a_1, b_0, c_0, ab_{10}}$.
   En effet, comme le montre la \figref{glc-livelock},
@@ -530,7 +547,7 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
       sont mis en valeur avec des traits doubles car il s'agit du principal ajout de la méthode
       présentée à la \secref{ua}.
       Il est à noter que l'arc dessiné avec un trait double n'est pas cohérent
-      au sens de la \defref{coherent}
+      au sens de la \defref{coherent}.
       En effet, sa cible est la solution $\{ a_1, b_1 \}$,
       or l'un de ses successeurs indirects est $a_0$, qui est un autre processus de la même sorte
       que $a_1$ (et le même raisonnement fonctionne pour $b_0$).
@@ -561,7 +578,7 @@ ce qui permet par exemple d'utiliser le résultat qui sera présenté à la
 
 
 
-\subsection{Atteignabilité d'un état}
+\subsection{Atteignabilité d'un sous-état}
 \seclabel{as-etat}
 
 \newcommand{\uastotal}{\tau}
@@ -612,6 +629,8 @@ la vitesse de résolution de l'analyse statique.
 Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative comme expliqué
 \vpageref{factorisation-coop}.
 
+\todoplustard{Exemple ! Lequel ?}
+
 
 
 \subsection{Raffinement de la sous-approximation séquentielle}
@@ -620,7 +639,7 @@ Pour pallier cela, il est possible de «~factoriser~» cette sorte coopérative 
 Dans cette section, nous donnons une alternative à la condition suffisante du \thmref{approxinf}
 qui permet de prendre en compte la séquentialité des objectifs plutôt que de les considérer
 simultanément, tel que cela est fait dans la version actuelle.
-Comme les objectifs sont prix en compte individuellement, une telle approche ne prend en compte
+Comme les objectifs sont pris en compte individuellement, une telle approche ne prend en compte
 qu'un sous-ensemble des scénarios possibles.
 Cependant, en se concentrant à chaque itération sur une plus petite partie du réseau, 
 cette sous-approximation séquentielle peut s'avérer plus souvent conclusive.
@@ -683,3 +702,5 @@ Ainsi, le scénario  $\delta \concat \delta'$ concrétise $\w$.
   Donc, pour tout $s \in \PHl, s \subset \ctx$, il existe un scénario concrétisant $\w$.
   D'où : $\uconcr(\w) \neq \emptyset$.
 \end{proof}
+
+\todoplustard{Appliquer au modèle de segmentation métazoaire}

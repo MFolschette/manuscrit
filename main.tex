@@ -89,7 +89,6 @@
 \usepackage{hyperref}   % Liens sur les références
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=black}
 
-
 % Divers
 %\usepackage{color}     % Couleurs du texte
 \usepackage{array}      % Tableaux évolués
@@ -247,6 +246,17 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
   {École Centrale de Nantes}
 
 
+% \renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
+% \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
+
+\pagestyle{myheadings}
+\renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1 \hfill \thepage}{}}
+%\renewcommand{\sectionmark}[1]{\markboth{\MakeUppercase{\thesection.\ %
+%  Test section !}}{}}
+% \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\chaptername\ \thechapter.\ %
+%   \theheaderchapter}}{}}
+% \newcommand{\theheaderchapter}{TEst !}
 
 \begin{document}
 
@@ -269,7 +279,7 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
   une méthode d'analyse de la dynamique par interprétation abstraite
   qui permet de répondre à des questions d'atteignabilité
   et qui est adaptée à l'étude des modèles de grande taille
-  (contenant jusqu'à plusieurs centaines de composants, et potentiellement davantage).
+  (pouvant contenir plusieurs centaines de composants, et potentiellement davantage).
   Cette méthode repose sur une approximation de la dynamique qui évite ainsi
   l'explosion combinatoire inhérente à ce type d'analyse,
   permettant de répondre en quelques dixièmes de secondes au prix d'être parfois non conclusive.
@@ -282,7 +292,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \end{resume}
 
 \begin{motscles}
-  Frappes de Processus,
+  réseaux de régulation biologiques,
+  frappes de processus,
   formalisme asynchrone,
   atteignabilité,
   analyse statique
@@ -318,7 +329,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \end{abstract}
 
 \begin{keywords}
-  Process Hitting,
+  biological regulatory networks,
+  process hitting,
   asynchronous framework,
   reachability,
   static analysis
