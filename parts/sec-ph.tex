@@ -204,51 +204,51 @@ Pour toute séquence d'actions $A$,
 on note $\sortes{A}$ l'ensemble des sortes dont au moins un processus figure dans $A$
 en tant que frappeur, cible ou bond d'une action.
 De plus, pour toute sorte $a$,
-on note $\prem{a}{A}$ le premier processus référencé de $a$,
+on note $\prem{a}{A}$ le premier processus de $a$ référencé dans $A$,
+en tant que frappeur ou en tant que cible,
+et $\der{a}{A}$ le dernier, en tant que frappeur ou en tant que bond.
+On note de plus
 $\sup{A}$ l'ensemble de tous ces premiers processus,
-$\der{a}{A}$ le dernier processus référencé de $a$
 et $\fin{A}$ l'ensemble de tous ces derniers processus.
-Ces notations sont formellement définies dans la \defref{premder}.
 
 \begin{definition}[$\premsymbol$, $\dersymbol$, $\suppsymbol$ et $\finsymbol$]
 \deflabel{premder}
-  Pour toute séquence d'actions $A$ et pour toute sorte $a$,
-  $\prem{a}{A}$ est le premier processus de $a$ référencé dans $A$,
-  en tant que frappeur ou en tant que cible,
-  et $\der{a}{A}$ en est le dernier,
-  en tant que frappeur ou en tant que bond.
-  \begin{align}
-  \eqlabel{prem}
+%   Pour toute séquence d'actions $A$ et pour toute sorte $a$,
+%   $\prem{a}{A}$ est le premier processus de $a$ référencé dans $A$,
+%   en tant que frappeur ou en tant que cible,
+%   et $\der{a}{A}$ en est le dernier,
+%   en tant que frappeur ou en tant que bond.
+  \begin{align*}
+%   \eqlabel{prem}
     \prem{a}{A} &=
       \begin{cases}
-        \varnothing & \text{si } a \notin \sortes{A}, \\
+        \varnothing & \text{si } a \notin \sortes{A} \\
         \hitter{A_m} & \text{si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\hitter{A_m}} = a, \\
+          \wedge \sorte{\hitter{A_m}} = a \\
         \target{A_m} & \text{sinon si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\target{A_m}} = a \enspace;
+          \wedge \sorte{\target{A_m}} = a
       \end{cases} \\
-  \eqlabel{der}
+%   \eqlabel{der}
     \der{a}{A} &=
       \begin{cases}
-        \varnothing & \text{si } a \notin \sortes{A}, \\
+        \varnothing & \text{si } a \notin \sortes{A} \\
         \bounce{A_m} & \text{si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\bounce{A_m}} = a, \\
+          \wedge \sorte{\bounce{A_m}} = a \\
         \hitter{A_m} & \text{sinon si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\hitter{A_m}} = a \enspace.
+          \wedge \sorte{\hitter{A_m}} = a
       \end{cases}
-  \end{align}
-
-  Pour toute séquence d'actions $A$,
-  $\supp{A}$ et $\fin{A}$ renvoient respectivement à l'ensemble des premiers
-  et derniers processus de $A$ pour toutes les sortes qui y figurent.
-  \begin{align}
-  \eqlabel{supp}
+  \end{align*}
+%   Pour toute séquence d'actions $A$,
+%   $\supp{A}$ et $\fin{A}$ renvoient respectivement à l'ensemble des premiers
+%   et derniers processus de $A$ pour toutes les sortes qui y figurent.
+  \begin{align*}
+%   \eqlabel{supp}
     \supp{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
-      p = \prem{\sort{p}}{\delta} \} \enspace, \\
-  \eqlabel{fin}
+      p = \prem{\sort{p}}{\delta} \} \\
+%   \eqlabel{fin}
     \fin{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
-      p = \der{\sort{p}}{\delta} \} \enspace.
-  \end{align}
+      p = \der{\sort{p}}{\delta} \}
+  \end{align*}
 \end{definition}
 
 La \defref{substate} établit la notion de sous-état sur un ensemble de sortes,

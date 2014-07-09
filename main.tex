@@ -53,9 +53,13 @@
   {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
   {\end{minipage}\end{lrbox}\noindent\colorbox{couleurchapeau}{\usebox{\mybox}}}
 \makeatletter
+% \newcommand{\newgraytheorem}[2]{
+%     \newenvironment{#1}{\vskip 10\p@\begin{graybox}\begin{#2}}{
+%       \end{#2}\end{graybox}\vskip 10\p@}
+% }
 \newcommand{\newgraytheorem}[2]{
-    \newenvironment{#1}{\vskip 10\p@\begin{graybox}\begin{#2}}{
-      \end{#2}\end{graybox}\vskip 10\p@}
+    \newenvironment{#1}{\vskip 5\p@\begin{graybox}\begin{#2}}{
+      \end{#2}\end{graybox}\vskip 5\p@}
 }
 \makeatother
 
@@ -184,30 +188,29 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 %\usepackage[notref,notcite]{showkeys}
 
 % Commandes À FAIRE
-%\definecolor{darkgreen}{rgb}{0,0.5,0}
-%\definecolor{darkblue}{rgb}{0,0,0.5}
-\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
-\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
-\newcommand{\TODO}{\todo{TODO}}
-\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
-\newcommand{\toref}{\stodo{ref}}
-\newcommand{\storef}{\toref}
-\newcommand{\tocite}[1][citation]{\stodo{#1}}
-%\newcommand{\idea}[1]{\textcolor{darkgreen}{[#1]}}
-%\newcommand{\warn}{\textcolor{purple}{\textbf{/!\textbackslash}}}
-%\newcommand{\mq}[1]{\textcolor{darkblue}{[MQ : #1]}}
-\newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
-\renewcommand{\restriction}{\todo{\textbackslash{}reduction}}
+%\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+%\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
+%\newcommand{\tocite}[1][citation]{\stodo{#1}}
+%\newcommand{\TODO}{\todo{TODO}}
+%\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+%%%\newcommand{\toref}{\stodo{ref}}
+%%%\newcommand{\storef}{\toref}
+
+\newcommand{\todo}[1]{}
+\newcommand{\todoplustard}[1]{}
+\newcommand{\tocite}[1][]{}
+%\newcommand{\TODO}{\todo{TODO}}
+%\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
 
 
 
 \titre{Modélisation algébrique de l'évolution et de la dynamique multi-échelles
   des réseaux de régulation biologique}
-\soustitre{\TODO}
+%\soustitre{\TODO}
 
 \title{Algebraic Modeling of the Evolution and Dynamics of Multi-scale
   Biological Regulatory Networks}
-\subtitle{\TODO}
+%\subtitle{\TODO}
 
 \author{M.}{Maxime}{Folschette}
 \discipline{Informatique et applications}
@@ -362,7 +365,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \input{parts/chap-phcanonique}
 
 % Expressivité du PH et positionnement par rapport à d'autres formalismes
-\input{parts/chap-expressivite}
+\input{parts/chap-expressivite-temp}
+%\input{parts/chap-expressivite}
 
 % Applications
 \input{parts/chap-applications}
