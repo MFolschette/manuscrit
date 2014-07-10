@@ -45,6 +45,7 @@
 
 % Chapeau
 \definecolor{couleurchapeau}{rgb}{0.9,0.9,0.9}
+\definecolor{couleurframe}{rgb}{0.7,0.7,0.7}
 \newcommand{\chapeau}[1]{\medskip\noindent\begin{center}\colorbox{couleurchapeau}{%
   \begin{minipage}{.95\textwidth}%
   \vspace*{2pt}\hrule\vspace*{1em}%
@@ -62,24 +63,23 @@
 
 % Théorèmes et définitions grisées
 \newsavebox{\mybox}
+% \newenvironment{graybox}%
+%   {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
+%  {\end{minipage}\end{lrbox}\noindent\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}
+\newenvironment{framedgraybox}%
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.975\linewidth}}%
+  {\end{minipage}\end{lrbox}%
+  \noindent\textcolor{couleurframe}{\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}}
 \newenvironment{graybox}%
-  {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
-  {\end{minipage}\end{lrbox}\noindent\colorbox{couleurchapeau}{\usebox{\mybox}}}
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.988\linewidth}}%
+  {\end{minipage}\end{lrbox}%
+  \noindent\colorbox{couleurchapeau}{\usebox{\mybox}}}
+%  \noindent\textcolor{white}{\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}}
 \makeatletter
-% \newcommand{\newgraytheorem}[2]{
-%     \newenvironment{#1}{\vskip 10\p@\begin{graybox}\begin{#2}}{
-%       \end{#2}\end{graybox}\vskip 10\p@}
-% }
-\newcommand{\newgraytheorem}[2]{
-    \newenvironment{#1}{\vskip 5\p@\begin{graybox}\begin{#2}}{
-      \end{#2}\end{graybox}\vskip 5\p@}
-}
+\newcommand{\newgraytheorem}[3]{%
+  \newenvironment{#1}{\vskip 5\p@\begin{#3}\begin{#2}}{%
+  \end{#2}\end{#3}\vskip 5\p@}}
 \makeatother
-
-% \newcommand{\boitegrise}[1]{
-%   \colorbox{couleurchapeau}{\begin{minipage}{\textwidth}%
-%   #1%
-%   \end{minipage}}}
 
 % Police
 %\usepackage{times} % times, palatino, charter, lmodern, etc.
@@ -136,13 +136,17 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 \newtheorem{property}{Propriété}[chapter]
 \newtheorem{gtheorem}{Théorème}[chapter]
-\newgraytheorem{theorem}{gtheorem}
+\newgraytheorem{theorem}{gtheorem}{framedgraybox}
+% \newenvironment{theorem}{\vskip 5\p@\begin{graybox}\begin{gtheorem}}{%
+%   \end{gtheorem}\end{graybox}\vskip 5\p@}
 \newtheorem{lemma}{Lemme}[chapter]
 \newtheorem{proposition}{Proposition}[chapter]
 
 \theoremstyle{definition}
 \newtheorem{gdefinition}{Définition}[chapter]
-\newgraytheorem{definition}{gdefinition}
+\newgraytheorem{definition}{gdefinition}{graybox}
+% \newenvironment{definition}{\vskip 5\p@\begin{framedgraybox}\begin{gdefinition}}{%
+%   \end{gdefinition}\end{graybox}\vskip 5\p@}
 \newtheorem{critere}{Critère}[chapter]
 
 \theoremstyle{remark}
