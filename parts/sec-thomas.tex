@@ -74,7 +74,7 @@ De plus, pour tout composant $b \in \Gamma$, on note $\RRBreg{b}$ l'ensemble de 
     \[\RRBreg{b} \DEF \{ a \in \Gamma \mid \exists \arc{a}{s}{t}{b} \in E \}\]
 
 \begin{example}
-  \figref{thomas}(gauche) représente un graphe des interactions $(\Gamma; E)$ où
+  La \figref{thomas}(gauche) représente un graphe des interactions $(\Gamma; E)$ où
   $\Gamma = \{a, b, c\}$, avec $l_a = 2$ et $l_b = l_c = 1$, et :
   \begin{align*}
     E_+ &= \{\arc{b}{+}{1}{a}, \arc{c}{+}{1}{a}\} &
@@ -168,9 +168,9 @@ si $s = +$, ou l'activation de $b$ en l'absence de l'inhibition de $a$ si $s = -
 
 Un \emph{état} d'un graphe des interactions $(\Gamma; E)$ est un élément de l'ensemble
 $\RRBstates \DEF \prod_{a \in \Gamma} \segm{0}{l_a}$.
-$\RRBget{s}{a}$ rapport au niveau d'expression du composant $a$ dans $s$.
+$\RRBget{s}{a}$ se rapporte au niveau d'expression du composant $a$ dans $s$.
 Pour tout état, l'ensemble des \emph{ressources} d'un composant donné est
-l'ensemble de ses régulateurs dont le niveau d'expression est supérieur ou égal au seul
+l'ensemble de ses régulateurs dont le niveau d'expression est supérieur ou égal au seuil
 de la régulation (\defref{ressources}).
 En d'autres termes, pour chaque état $s$, tout régulateur $b$ d'un composant $a$
 est une ressource si et seulement si $\RRBget{s}{b} \in \levels{b}{a}$
@@ -179,7 +179,7 @@ Cependant, la dynamique manque de précision dans toute situation où un
 composant est à la fois activé et inhibé par deux composants différents.
 C'est pour supprimer ce flou que \citeasnoun{Snoussi89} propose l'ajout d'une
 \emph{paramétrisation},
-c'est-à-dire un ensemble de \emph{paramètres} discrets
+c'est-à-dire d'un ensemble de \emph{paramètres} discrets
 qui tiennent lieu de points focaux :
 à chaque configuration de ressources d'un composant est associé un paramètre
 qui détermine le niveau vers lequel le composant va évoluer.
@@ -211,7 +211,7 @@ L'intérêt des paramètres sous forme d'intervalles est discuté à la fin de c
 
 Un graphe des interactions et une paramétrisation permettent de représenter
 un réseau de régulation biologique complet grâce à sa structure et son évolution.
-En effet, un paramètre $K_{a,\omega}$ représente un ensemble de valeurs vers lesquels
+En effet, un paramètre $K_{a,\omega}$ représente un ensemble de valeurs vers lesquelles
 le composant $a$ évolue dans tout état où l'ensemble de ses ressources est égal à $\omega$.
 Plus précisément, $a$ va évoluer vers la valeur de $K_{a,\omega}$ qui est la plus proche de
 son niveau d'expression courant.
@@ -254,7 +254,7 @@ appartient déjà à l'intervalle du paramètre $K_{a,\RRBres{a}{s}}$.
     \end{cases}$
 \end{definition}
 Les symboles «~$<$~» et «~$>$~» de cette définition permettant de comparer un entier à
-un intervalle sont définis à la \secref{notations}.
+un intervalle sont définis à la \vsecref{notations}.
 
 
 
@@ -379,9 +379,9 @@ Il est à noter qu'utiliser $\uns$ comme signe pour étiqueter les régulations 
 des deux signes habituels $+$ et $-$ n'augmente pas l'expressivité du formalisme.
 En effet, les signes n'ont pas d'impact sur la paramétrisation (\defref{thomas-param})
 ou sur la dynamique (\defref{thomas-dynamique}).
-Ils cependant un but informatif, car ils résument les différentes régulations du modèle.
+Ils ont cependant un but informatif, car ils résument les différentes régulations du modèle.
 Ils seront d'ailleurs utilisés au \chapref{expressivite}
-comme base pour énumérer des paramétrisation incomplètes.
+comme base pour énumérer des paramétrisations incomplètes.
 Les arcs non-signés sont de plus notamment utiles pour modéliser un graphe des interactions
 avec une connaissance partielle de certaines régulations.
 Cependant, comme ils ne sont pas courants dans la littérature,
@@ -401,7 +401,7 @@ En effet, considérons un cas fictif où $K_{a,\omega} = \segm{i}{i+2}$
 (c'est-à-dire un intervalle contenant trois valeurs) et $s$ un état tel que
 $\RRBres{a}{s} = \omega$.
 D'après la \defref{thomas-dynamique}, si $\RRBget{s}{a} \in K_{a,\omega}$, alors $a$
-de peut pas évoluer dans $s$ ; ainsi, $a$ possède trois états locaux stables :
+ne peut pas évoluer dans $s$ ; ainsi, $a$ possède trois états locaux stables :
 $a_i$, $a_{i+1}$ et $a_{i+2}$.
 Ce comportement ne peut pas être retrouvé à l'aide de paramètres entiers,
 car il n'est pas possible de distinguer les trois configurations de ressources
@@ -425,7 +425,7 @@ mais il utilisent des fonctions d'évolution (\defref{rda-def}) en lieu et place
 pour plus de permissivité.
 Par ailleurs, l'hypothèse d'asynchronisme est conservée car un seul composant peut évoluer
 depuis chaque état,
-mais leur dynamique n'est pas nécessairement unitaire 
+mais leur dynamique n'est pas unitaire dans le cas général
 car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
 (\defref{rda-dynamique}).
 
@@ -517,14 +517,13 @@ Plusieurs travaux permettent d'analyser la fonctionnalité des circuits,
 c'est-à-dire leur capacité à effectivement «~générer~» ces comportements,
 et donc de rendre ces conditions susnommées nécessaires.
 Partant d'un modèle de Thomas donné,
-\citeasnoun{Naldi07} proposent de représenter sa paramétrisation
-à l'aide de diagrammes de décision binaires ou multivalués \cite{Bryant86,Srinivasan90}.
-Cette représentation alternative permet de déduire efficacement
+il est possible de représenter sa paramétrisation
+à l'aide de diagrammes de décision binaires ou multivalués \cite{Bryant86,Srinivasan90}
+afin d'en déduire
 l'ensemble des états stables mais aussi d'analyser la fonctionnalité des circuits
-en effectuant des produits de diagrammes de décision.
-Par la suite, \cite{Comet13} ont aussi étudié les différentes façons
-dont les oscillations et la multistationnarité sont «~générées~»,
-permettant de préciser ces conditions.
+en effectuant des produits de diagrammes de décision \cite{Naldi07}.
+Les différentes façons dont les oscillations et la multistationnarité sont «~générées~»
+ont aussi été étudiées, ce qui a permis de préciser ces conditions \cite{Comet13}.
 
 % Compression des paramètres : \cite{Naldi07}
 %   qui utilisent des BDD : \cite{Bryant86,Srinivasan90}
@@ -554,17 +553,21 @@ permettant de préciser ces conditions.
 % pour l'énumération des points fixes.
 
 \subsubsection*{Analyse de la dynamique}
-Afin d'obtenir des résultats plus précis sur le comportement d'un modèle
-que les méthodes décrites précédemment ne permettent pas d'obtenir,
+Afin d'obtenir des résultats plus précis sur le comportement d'un modèle,
+comme l'activation d'un composant ou la présence d'oscillations sur une partie
+donnée du modèle,
+ce que les méthodes décrites précédemment ne permettent pas d'obtenir,
 il peut devenir nécessaire de faire appel à des techniques
-de \textit{model checking} plus poussées.
+de \textit{model checking} plus poussées
+\citeaffixed{Richard06,gallet14adapting}{voir p.~ex.}.
 Ces méthodes permettent généralement une analyse exhaustive de la dynamique,
 tout en devant faire face à l'explosion combinatoire typique de ce type d'analyse,
 qui limite grandement la taille des modèles étudiés.
-C'est le cas par exemple de SMBioNet \cite{Richard06} qui permet de vérifier sur un modèle
-des propriétés exprimées en logique temporelle CTL \cite{Clarke82}.
-Cette analyse possède l'avantage d'être très complète
-car la dynamique est entièrement explorée et l'expressivité de CTL permet
+De telles analyses ont été théorisées par \citeasnoun{bernot04}
+et se basent sur l'expression de propriétés exprimées en logiques temporelles
+CTL \cite{Clarke82} ou LTL \cite{Pnueli77}.
+Elles possèdent l'avantage d'être très complètes
+car la dynamique est entièrement explorée et l'expressivité des logiques temporelles permet
 d'exprimer beaucoup de propriétés intéressantes,
 mais au prix d'une complexité très importante.
 Afin de réduire cette complexité,

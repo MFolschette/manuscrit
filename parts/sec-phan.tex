@@ -228,6 +228,9 @@ en Frappes de Processus canoniques, qui sont une sous-classe des Frappes de Proc
   Ainsi, $\forall h \in \PHh, \Fopphp{h} = \Fopphan{h}$,
   ce qui implique que les actions jouables dans l'état $s$ du modèle $\PH$
   sont exactement les actions jouables dans l'état $s$ du modèle $\oPH$.
+  Naturellement, leur jeu amène aux mêmes états car la sémantique des Frappes de Processus
+  avec arcs neutralisants et celle des Frappes de Processus avec $k$ classes de priorités
+  sont basées sur la même définition de la sémantique (\vdefref{play}).
   D'où : $s \trans{\PH} s' \Longleftrightarrow s \trans{\oPH} s'$.
 \end{proof}
 
@@ -240,6 +243,9 @@ en Frappes de Processus canoniques, qui sont une sous-classe des Frappes de Proc
 
 \todo{Faudrait-il fusionner cette section avec ses semblables des \secref{php} et \secref{phm} ?}
 
+À l'instar de la \vsecref{php-outils}, nous transposons dans la suite une partie des résultats
+des Frappes de Processus standards aux Frappes de Processus avec arcs neutralisants.
+
 \subsubsection{Points fixes}
 \seclabel{phan-outils-pf}
 
@@ -251,7 +257,7 @@ mais permet d'obtenir tous les points fixes.
 
 \myskip
 
-De façon analogue à la \secref{php-outils-pf}, nous définissions ici
+De façon analogue à la \secref{php-outils-pf}, nous définissons ici
 la \emph{fusion} d'un modèle de Frappes de Processus avec arcs neutralisants
 comme étant le même modèle en Frappes de Processus standards,
 dont les arcs neutralisants ont été ignorés (\defref{phan-fusion}).

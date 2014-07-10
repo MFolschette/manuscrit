@@ -42,7 +42,7 @@ qu'il s'agisse de composant ayant une réalité biologique (gène, protéine...)
 ou d'entités nécessaire à la modélisation (comme les sortes coopératives
 qui seront décrites à la \secref{sc}).
 Chaque sortes contient plusieurs \emph{processus},
-qui représentent les différentes
+qui représentent les différents
 niveaux d'expression discrets accessibles par la sorte,
 et qui sont notés $a_i$
 où $a$ est le nom de la sorte et $i$ l'indice du processus dans cette sorte.
@@ -81,7 +81,7 @@ De plus, cela rend la dynamique Frappes de Processus indéterministe,
 car à tout état du modèle peuvent correspondre plusieurs états successeurs
 dans le cas où plusieurs actions peuvent y être jouées.
 Enfin, nous notons que si aucune action n'est jouable dans un état, alors celui-ci
-ne possède pas de successeurs et le modèle ne peut plus évoluer.
+ne possède pas de successeur et le modèle ne peut plus évoluer.
 
 \begin{definition}[Frappes de Processus standards]
 \deflabel{ph}
@@ -119,7 +119,7 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
 
 \begin{example}
 \exlabel{metazoan-ph-nocoop}
-  La figure \figref{metazoan-ph-nocoop} illustre une représentation possible des
+  La \figref{metazoan-ph-nocoop} illustre une représentation possible des
   Frappes de Processus standards.
   Le modèle $\PH = (\PHs, \PHl, \PHh)$ représenté comporte trois sortes :
   $\PHs = \{ a, c, f \}$.
@@ -316,8 +316,7 @@ Les définitions de propriété de jouabilité (\defref{ppl}) et de dynamique de
 
 \begin{definition}[Propriété de jouabilité ($\F$)]
 \deflabel{ppl}
-  Une \emph{propriété de jouabilité} est un élément du langage $\F$ défini inductivement
-  \todo{OU : par récurrence ?} par :
+  Une \emph{propriété de jouabilité} est un élément du langage $\F$ défini inductivement par :
   \begin{itemize}
     \item $\top$ et $\bot$ appartiennent à $\F$ ;
     \item si $a \in \PHs$ et $a_i \in \PHl_a$, alors $a_i$ appartient à $\F$
@@ -492,76 +491,83 @@ Pour cela, à chaque processus de la sorte coopérative correspond un sous-état
 qu'elle \emph{représente}.
 Ainsi, il est possible de représenter les différents états combinés d'un ensemble de sortes,
 afin de ne jouer une action que dans une configuration particulière.
-Ces sortes ont de plus l'avantage d'être des sortes standards,
+Ces sortes ont l'avantage d'être des sortes standards,
 et donc de ne pas nécessiter d'enrichissement particulier de la sémantique.
+De plus, leur utilisation n'impacte pas les méthodes d'analyse de la dynamique développées :
+en effet, ces méthodes sont principalement impactées par le nombre de processus dans chaque sorte,
+et non le nombre total de sortes.
+Ainsi, à condition de limiter le nombre de processus dans les sortes coopératives,
+comme expliqué à la fin de cette section,
+il est possible de les utiliser en maintenant de bonnes performances d'analyse.
 
 \begin{example}
   Les Frappes de Processus standards de la \figref{excoop-ph}
-  comprennent quatre sortes ($a$, $b$, $c$ et $ab$) dont une sorte coopérative ($ab$)
-  permettant de détecter la présence simultanée de $a_1$ et $b_1$.
-  Les processus de $ab$ décrivent les combinaisons possibles des états de $a$ et de $b$ :
-  $ab_{00}$ correspond à $a_0$ et $b_0$, $ab_{01}$ correspond à $a_0$ et $b_1$, etc.
+  reprennent les trois sortes $f$, $c$ et $a$ du modèle de la \figref{metazoan-ph-nocoop}
+  et comprennent en plus une sorte coopérative $fc$
+  permettant de détecter la présence simultanée de $f_1$ et $c_1$.
+  Les processus de $fc$ décrivent les combinaisons possibles des états de $f$ et de $c$ :
+  $fc_{00}$ correspond à $f_0$ et $c_0$, $fc_{01}$ correspond à $f_0$ et $c_1$, etc.
   Les actions en amont de cette sorte coopérative permettent la mettre à jour,
   c'est-à-dire de changer son processus actif en fonction des évolutions
-  du processus actif de $a$ et $b$.
-  Par exemple, si $a_1$ est actif, les deux actions
-  $\PHfrappe{a_1}{ab_{00}}{ab_{10}}$ et $\PHfrappe{a_1}{ab_{01}}{ab_{11}}$
-  effectuent cette mise à jour en faisant bondir le processus actif de $ab$ depuis
-  un processus représentant la présence de $a_0$ ($ab_{00}$ ou $ab_{01}$)
-  vers le processus correspondant représentant la présence de $a_1$
-  (respectivement $ab_{10}$ ou $ab_{11}$).
-  Son action en aval, $\PHfrappe{ab_{11}}{c_0}{c_1}$
-  joue alors le rôle d'une coopération entre $a_1$ et $b_1$
-  pour frapper $c_0$ et le faire bondir en $c_1$.
+  du processus actif de $f$ et $c$.
+  Par exemple, si $f_1$ est actif, les deux actions
+  $\PHfrappe{f_1}{fc_{00}}{fc_{10}}$ et $\PHfrappe{f_1}{fc_{01}}{fc_{11}}$
+  effectuent cette mise à jour en faisant bondir le processus actif de $fc$ depuis
+  un processus représentant la présence de $f_0$ ($fc_{00}$ ou $fc_{01}$)
+  vers le processus correspondant représentant la présence de $f_1$
+  (respectivement $fc_{10}$ ou $fc_{11}$).
+  Son action en aval, $\PHfrappe{fc_{11}}{c_0}{c_1}$,
+  joue alors le rôle d'une coopération entre $f_1$ et $c_0$
+  pour frapper $a_0$ et le faire bondir en $a_1$.
   
-  \begin{figure}[tb]
+  \begin{figure}[p]
   \begin{center}\scalebox{1.2}{
   \begin{tikzpicture}
-    \TSort{(0,0)}{a}{2}{l}
-    \TSort{(0,4)}{b}{2}{l}
-    \TSort{(7,2)}{c}{2}{r}
+    \TSort{(0,0)}{f}{2}{l}
+    \TSort{(0,4)}{c}{2}{l}
+    \TSort{(7,2)}{a}{2}{r}
 
-    \TSetTick{ab}{0}{00}
-    \TSetTick{ab}{1}{01}
-    \TSetTick{ab}{2}{10}
-    \TSetTick{ab}{3}{11}
-    \TSort{(4,1)}{ab}{4}{r}
+    \TSetTick{fc}{0}{00}
+    \TSetTick{fc}{1}{01}
+    \TSetTick{fc}{2}{10}
+    \TSetTick{fc}{3}{11}
+    \TSort{(4,1)}{fc}{4}{r}
 
-    \THit{a_0}{}{ab_3}{.west}{ab_1}
-    \THit{a_0}{}{ab_2}{.south west}{ab_0}
-    \THit{a_1}{}{ab_1}{.west}{ab_3}
-    \THit{a_1}{}{ab_0}{.south west}{ab_2}
+    \THit{f_0}{}{fc_3}{.west}{fc_1}
+    \THit{f_0}{}{fc_2}{.south west}{fc_0}
+    \THit{f_1}{}{fc_1}{.west}{fc_3}
+    \THit{f_1}{}{fc_0}{.south west}{fc_2}
 
-    \THit{b_0}{}{ab_3}{.north west}{ab_2}
-    \THit{b_0}{}{ab_1}{.north west}{ab_0}
-    \THit{b_1}{}{ab_2}{.west}{ab_3}
-    \THit{b_1}{}{ab_0}{.west}{ab_1}
+    \THit{c_0}{}{fc_3}{.north west}{fc_2}
+    \THit{c_0}{}{fc_1}{.north west}{fc_0}
+    \THit{c_1}{}{fc_2}{.west}{fc_3}
+    \THit{c_1}{}{fc_0}{.west}{fc_1}
 
-    \THit{ab_3}{}{c_0}{.west}{c_1}
+    \THit{fc_2}{}{a_0}{.west}{a_1}
 
     \path[bounce, bend right = 70]
-      \TBounce{ab_3}{}{ab_1}{.north}
-      \TBounce{ab_2}{}{ab_0}{.north west}
-      \TBounce{ab_3}{}{ab_2}{.north west}
-      \TBounce{ab_1}{}{ab_0}{.north}
+      \TBounce{fc_3}{}{fc_1}{.north}
+      \TBounce{fc_2}{}{fc_0}{.north west}
+      \TBounce{fc_3}{}{fc_2}{.north west}
+      \TBounce{fc_1}{}{fc_0}{.north}
     ;
     \path[bounce, bend left = 70]
-      \TBounce{ab_1}{}{ab_3}{.south}
-      \TBounce{ab_0}{}{ab_2}{.south}
-      \TBounce{ab_2}{}{ab_3}{.south west}
-      \TBounce{ab_0}{}{ab_1}{.south west}
+      \TBounce{fc_1}{}{fc_3}{.south}
+      \TBounce{fc_0}{}{fc_2}{.south}
+      \TBounce{fc_2}{}{fc_3}{.south west}
+      \TBounce{fc_0}{}{fc_1}{.south west}
     ;
     \path[bounce, bend left]
-      \TBounce{c_0}{}{c_1}{.south west}
+      \TBounce{a_0}{}{a_1}{.south west}
     ;
     %\TState{a_0, b_0, ab_0, c_0}
   \end{tikzpicture}
   }\end{center}
   \caption{\figlabel{excoop-ph}%
     Un exemple de Frappes de Processus standards
-    avec une sorte coopérative $ab$.
-    L'action $\PHfrappe{ab_{11}}{a_1}{b_1}$ modélise
-    une coopération entre $a_1$ et $b_1$ pour faire bondir le processus actif de $c$.}
+    avec une sorte coopérative $fc$.
+    L'action $\PHfrappe{fc_{10}}{a_0}{a_1}$ modélise
+    une coopération entre $f_1$ et $c_0$ pour faire bondir le processus actif de $a$.}
   \end{figure}
 \end{example}
 
@@ -569,14 +575,15 @@ et donc de ne pas nécessiter d'enrichissement particulier de la sémantique.
 \exlabel{metazoan-ph}
   Afin de pallier partiellement l'absence de coopération entre les sortes $f$ et $c$
   dans le modèle de la \figref{metazoan-ph-nocoop},
-  il est possible d'ajouter une sorte coopérative.
+  il est possible d'intégrer la sorte coopérative
+  décrite à la \figref{excoop-ph}.
   La \figref{metazoan-ph} propose un modèle corrigé de cette manière,
   avec une sorte coopérative $fc$ permettant de détecter la présence de $f_1$ et $c_0$.
   Les deux actions $\PHfrappe{c_0}{a_0}{a_1}$ et $\PHfrappe{c_0}{a_0}{a_1}$
   sont alors remplacées par une action $\PHfrappe{fc_{10}}{a_0}{a_1}$
   afin d'avoir une véritable coopération entre ces deux processus pour activer $a$.
   
-  \begin{figure}[ht]
+  \begin{figure}[p]
   \begin{center}
   \begin{tikzpicture}
     \exmetazoan
@@ -590,7 +597,7 @@ et donc de ne pas nécessiter d'enrichissement particulier de la sémantique.
     deux sortes $f$ et $c$.
     Ainsi, $fc_{00}$ représente le fait que $f_0$ et $c_0$ sont actifs, etc.
     Les actions permettant la mise à jour de cette sorte coopérative n'ont pas
-    été représentée explicitement mais sont symbolisées par les deux flèches
+    été représentées explicitement mais sont symbolisées par les deux flèches
     en zigzag provenant de $f$ et $c$.
   }
   \end{center}
@@ -613,7 +620,7 @@ car même si l'un des processus modélisant la coopération a bondi,
 la sorte coopérative peut ne pas en avoir fait de même.
 Mais ce décalage peut aussi aboutir à des comportements indésirables.
 En effet, le processus actif d'une sorte coopérative ne correspond de fait pas à l'état courant
-des sortes représentée, mais uniquement à une combinaison d'état passés.
+des sortes représentées, mais uniquement à une combinaison d'état passés.
 Il est alors possible d'activer un processus de la sorte coopérative correspondant à
 un sous-état artificiel,
 c'est -à-dire non accessible aux sortes représentées.
@@ -623,7 +630,7 @@ Ce mécanisme sera détaillé notamment au \chapref{phcanonique}.
 \exlabel{metazoan-ph-decalagetemporel}
   Malgré l'ajout d'une sorte coopérative $fc$ dans le modèle
   de la \figref{metazoan-ph-nocoop},
-  il faut noter que le comportement désiré n'est pas exactement atteint.
+  il faut noter que le comportement désiré n'est pas exactement représenté.
   En effet, l'ajout de cette sorte coopérative devait permettre d'éviter toute activation de $a$
   lorsque $f$ devenait inactif, en permettant par exemple de jouer ce type de scénario
   depuis l'état initial $\etat{a_0, c_0, f_1, fc_{10}}$ :
@@ -633,7 +640,7 @@ Ce mécanisme sera détaillé notamment au \chapref{phcanonique}.
   Cependant, il se trouve qu'il existe encore un cas particulier où $a$ peut être activé
   malgré la présence de $f_0$.
   Ce cas particulier relève du comportement mis en valeur ci-dessus,
-  où une action a pour frappeur un processus de sorte coopératif qui ne devrait pas être
+  où une action a pour frappeur un processus de sorte coopérative qui ne devrait pas être
   actif si celle-ci avait été mise à jour.
   Il s'observe par exemple en jouant le scénario suivant depuis l'état initial
   $\etat{a_0, c_0, f_1, fc_{10}}$ :
@@ -766,7 +773,8 @@ avec exactement un nœud par partie (\defref{clique}).
 
 Nous présentons brièvement et informellement dans cette section
 l'analyse statique par interprétation abstraite
-développée par \citeasnoun{PMR12-MSCS}.
+développée par \citeasnoun{PMR12-MSCS}
+et inspirée des méthodes d'interprétation abstraite de programmes \cite{Cousot77}.
 Celle-ci permet de répondre à des questions d'atteignabilité,
 c'est-à-dire déterminer s'il est possible d'activer un processus depuis un état initial donné.
 Sa complexité polynomiale dans la taille du modèle
@@ -979,14 +987,14 @@ car ce deuxième paramètre ne changerait rien à sa condition de tir.
   \begin{tikzpicture}
     \exmetazoan
     
-    \node[labelprio1] at (2.55,3.85) {\small\stochainf}; % c => fc
-    \node[labelprio1] at (2.75,1) {\small\stochainf};    % f => fc
-    \node[labelprio2] at (5.5,3.85) {\stochaa};  % fc_10 -> a_0 / 1
-    \node[labelprio2] at (3.5,5.3) {\stochaa};   % c_1 -> a_1 / 0
-    \node[labelprio3] at (0,2.5) {\stochab};     % f_1 -> c_0 / 1
-    \node[labelprio3] at (0.8,5.8) {\stochab};   % c_1 -> c_1 / 0
-    \node[labelprio3] at (2.15,2.5) {\stochab};  % f_0 -> c_1 / 0
-    \node[labelprio4] at (1.5,1.8) {\stochac};   % f_1 -> f_1 / 0
+    \node[labelprio1,labelstocha] at (2.55,3.85) {\small\stochainf}; % c => fc
+    \node[labelprio1,labelstocha] at (2.75,1) {\small\stochainf};    % f => fc
+    \node[labelprio2,labelstocha] at (5.5,3.85) {\stochaa};  % fc_10 -> a_0 / 1
+    \node[labelprio2,labelstocha] at (3.5,5.3) {\stochaa};   % c_1 -> a_1 / 0
+    \node[labelprio3,labelstocha] at (0,2.5) {\stochab};     % f_1 -> c_0 / 1
+    \node[labelprio3,labelstocha] at (0.8,5.8) {\stochab};   % c_1 -> c_1 / 0
+    \node[labelprio3,labelstocha] at (2.15,2.5) {\stochab};  % f_0 -> c_1 / 0
+    \node[labelprio4,labelstocha] at (1.5,1.8) {\stochac};   % f_1 -> f_1 / 0
     
     \TState{f_1, a_0, c_0, fc_2}
   \end{tikzpicture}
@@ -1011,8 +1019,8 @@ de chemin d'exécution ---~ou, pour un même chemin d'exécution,
 en termes de temps de tir des actions.
 Il est donc possible d'effectuer un grand nombre de simulations pour obtenir des
 statistiques sur le comportement d'un modèle.
-Il est aussi possible de faire recours à un \textit{model checker} probabiliste
-comme PRISM, qui fournit des résultats formels sur la dynamique d'un modèle,
+Il est aussi possible de recourir à un \textit{model checker} probabiliste
+comme \tool{PRISM}, qui fournit des résultats formels sur la dynamique d'un modèle,
 et des probabilités d'atteignabilité.
 Cependant, une telle approche est très coûteuse en termes de temps de calcul
 et d'espace mémoire, ce qui empêche l'analyse de réseaux de grande taille.

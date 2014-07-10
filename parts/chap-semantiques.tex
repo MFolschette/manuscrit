@@ -166,3 +166,25 @@ a été publiée dans \cite{FPMR13-CS2Bio}.
 
 % Frappes de Processus avec actions plurielles
 \input{parts/sec-phm}
+
+
+
+\section{Bilan}
+
+Nous avons proposé dans ce chapitre trois modélisations alternatives des Frappes de Processus.
+L'ajout de classes de priorités (\secref{php}) permet de définir des contraintes
+de préemption globales entre les ensembles d'action d'un modèle
+tandis que les arcs neutralisants (\secref{phan}) permettent plus de finesse
+en définissant des relations locale de préemption entre des couples d'actions.
+À l'inverse, l'introduction d'actions plurielles (\secref{phm}) permet de représenter des relations
+de synchronisme entre actions.
+
+Nous traçons par ailleurs des liens entre ces formalismes,
+en montrant notamment que le synchronisme des actions plurielles
+et la granularité des arcs neutralisants
+peuvent tous deux être décrits à l'aide de classes de priorités,
+bien que cela rende le modèle plus complexe.
+Ces traductions auront néanmoins un intérêt particulier dans le chapitre suivant,
+qui se base sur le formalisme des Frappes de Processus avec 2 classes de priorités
+pour définir une classe de modèles particulière,
+dont la dynamique peut être analysée efficacement.

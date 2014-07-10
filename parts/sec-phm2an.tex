@@ -93,7 +93,7 @@ par un autre comprenant uniquement des processus issus des mêmes sortes
 (\defref{recouvrementps}).
 Cette notion de recouvrement est une extension
 du recouvrement d'un état par un ensemble de processus
-tel que précédemment donné à la \defref[vref]{recouvrement}.
+tel que précédemment formalisé à la \defref[vref]{recouvrement}.
 
 \begin{definition}[Recouvrement ($\recouvre : \PHsublset \times \PHsublset \rightarrow \PHsublset$)]
 \deflabel{recouvrementps}
@@ -109,7 +109,7 @@ tel que précédemment donné à la \defref[vref]{recouvrement}.
 
 \begin{definition}[Réseau d'automates équivalent ($\phmtoansymbol$)]
 \deflabel{phm2an}
-  Le réseau d'automates synchronisé équivalent aux Frappes de Processus
+  Le réseau d'automates synchronisés équivalent aux Frappes de Processus
   avec actions plurielles $\PH = (\PHs; \PHl; \PHh)$
   est défini par : $\phmtoan = (\PHs; \PHl; \ANi; \ANt)$, où :
   \begin{itemize}
@@ -159,7 +159,7 @@ tel que précédemment donné à la \defref[vref]{recouvrement}.
 \end{proof}
 
 Pour finir, nous proposons à la \defref{an2phm} la traduction inverse
-d'un réseau d'automates synchronisé $\AN$
+d'un réseau d'automates synchronisés $\AN$
 en des Frappes de Processus avec actions plurielles équivalentes $\antophm$.
 Le \thmref{bisimulationan2phm} stipule que le modèle obtenu est bien bisimilaire
 au modèle d'origine.
@@ -170,7 +170,7 @@ actions plurielles et les réseaux d'automates synchronisés.
 \begin{definition}[Frappes de Processus équivalentes ($\antophmsymbol$)]
 \deflabel{an2phm}
   Les Frappes de Processus avec actions plurielles
-  équivalentes au réseau d'automates synchronisé $\AN = (\PHs, \PHl, \ANi, \ANt)$
+  équivalentes au réseau d'automates synchronisés $\AN = (\PHs, \PHl, \ANi, \ANt)$
   sont définies par $\antophm = (\ANs, \ANl, \PHh)$, où :
 %   $\PHh = \{ \PHfrappemult{\precond{\ell}}{(\postcond{\ell} \setminus \invcond{\ell})}
 %     \mid \ell \in \ANi \}$.

@@ -47,16 +47,21 @@ restent l'objet d'une explosion combinatoire non négligeable.
 Plusieurs travaux apportent des résultats qui s'appuient uniquement sur les données
 du modèles et non sur le calcul de sa dynamique,
 ce qui évite de calculer celle-ci explicitement.
-Cependant, ces résultats sont très généraux et il est rare de pouvoir totalement faire l'impasse
+Cependant, ces résultats sont très généraux
+car ils se focalisent le plus souvent sur la présence ou l'absence de comportements
+dans le modèle (comme des oscillations ou des points fixes).
+Il est donc rare de pouvoir totalement faire l'impasse
 sur une analyse plus détaillée de la dynamique,
 qui nécessite cependant de calculer l'espace des états du modèle,
 ou une version compressée de celui-ci.
 
 Nous définirons ensuite le formalisme des Frappes de Processus
 à la \secref{ph}, tel qu'il a été proposé par \citeasnoun{PMR10-TCSB}.
-Il se présente comme une alternative au modèle de Thomas,
-basé sur les mêmes hypothèses d'états discrets et d'asynchronisme,
-mais plus atomique dans sa représentation.
+Il a été conçu comme une alternative complémentaire au modèle de Thomas
+avec lequel il partage certaines hypothèses, à savoir la discrétisation des états
+et l'asynchronisme de la dynamique,
+%basé sur certaines hypothèse les mêmes hypothèses d'états discrets et d'asynchronisme,
+bien qu'il soit plus atomique par ailleurs dans sa représentation.
 Il permet notamment de modéliser tout modèle de Thomas,
 avec cependant une légère sur-approximation de la dynamique.
 Des outils ont de surcroît été développés afin de calculer les points fixes d'un modèle de
@@ -68,6 +73,13 @@ qui permettent d'effectuer des calculs d'atteignabilité locale
 avec une complexité polynomiale dans la taille du modèle considéré.
 Cela permet notamment d'étudier la dynamique de grands modèles
 ---~jusqu'à plusieurs centaines de composants, voire au-delà.
+
+\todoplustard{Processus de modélisation des biologistes :
+\begin{itemize}
+  \item types de données en entrée,
+  \item type de questions pour lesquelles ils attendent des résultats,
+  \item repositionnement par rapport à cela.
+\end{itemize}}
 
 
 

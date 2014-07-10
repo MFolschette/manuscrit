@@ -37,7 +37,7 @@ un nombre arbitraire de bonds simultanés
 ---~autrement dit, de changements simultanés de processus actifs~---
 déclenchés par un nombre arbitraire de prérequis
 ---~sous la forme de processus actifs dans l'état courant.
-Les figref{metazoan-phm,simple-phm},
+Les \figref{metazoan-phm,simple-phm},
 plus loin dans cette section,
 représentent des exemples de Frappes de Processus avec actions plurielles.
 
@@ -420,7 +420,7 @@ amener le système dans un état normalement inaccessible.
       \item $h_3 = \PHhit{\sr{}_1}{\sr{}_1}{\sr{}_0}$ et
       \item $h_4 = \PHhit{\scf{}_\mypi}{\sr{}_0}{\sr{}_1}$.
     \end{itemize}
-    D'après la construction de $\phmtophp$ donné à la \defref{phm2php},
+    D'après la construction de $\phmtophp$ donnée à la \defref{phm2php},
     il existe donc nécessairement une action $h \in \PHh$
     dont $\sr{}$ est la sorte de réaction et $\scf{}$ est la sorte coopérative correspondante.
     De plus, toujours grâce à cette définition, on a :
@@ -448,11 +448,12 @@ amener le système dans un état normalement inaccessible.
   nous nous intéressons aux Frappes de Processus avec actions plurielles
   $\PH = (\PHs; \PHl; \PHh)$ suivantes,
   représentées à la \figref{simple-phm} :
-  \begin{align*}
-    \PHs &= {a, b, c} & \PHl_a &= \{ a_0, a_0\} \\
-    \PHl_b &= \{ b_0, b_0 \} & \PHl_c &= \{ c_0, c_0\} \\
-    \PHh = \{ \PHfrappemults{a_1, b_1, c_1}{b_0, c_0} \}
-  \end{align*}
+  \begin{itemize}
+    \item $\PHs = {a, b, c}$,
+    \item $\PHl_a = \{ a_0, a_0\} \quad,\quad \PHl_b = \{ b_0, b_0 \} \quad,\quad
+      \PHl_c = \{ c_0, c_0\}$,
+    \item $\PHh = \{ \PHfrappemults{a_1, b_1, c_1}{b_0, c_0} \}$.
+  \end{itemize}
   On appelle $h = \PHfrappemults{a_1, b_1, c_1}{b_0, c_0}$
   l'unique action que comporte ce modèle.
   Celle-ci représente un cas intéressant d'action plurielle,
@@ -460,7 +461,7 @@ amener le système dans un état normalement inaccessible.
   En effet : $\cible{h} = \{ b_1, c_1 \}$ ;
   par ailleurs : $\invariant{h} = \{ a_1 \}$.
   
-  \begin{figure}[ht]
+  \begin{figure}[p]
   \begin{center}
   \begin{tikzpicture}
     \TSort{(1,3)}{a}{2}{t}
@@ -477,7 +478,7 @@ amener le système dans un état normalement inaccessible.
   \caption{\figlabel{simple-phm}%
     Exemple de Frappes de Processus avec actions plurielles.
     L'unique action de ce modèle est $\PHfrappemults{a_1, b_1, c_1}{b_0, c_0}$
-    et comporte plusieurs cibles ($a_1$ et $b_1$).
+    et comporte plusieurs cibles ($b_1$ et $c_1$).
   }
   \end{center}
   \end{figure}
@@ -492,11 +493,11 @@ amener le système dans un état normalement inaccessible.
   \begin{align*}
     \PHh'^{(2)} &= \{\quad \PHfrappe{\sr{h}_1}{b_1}{b_0} \quad,
       \qquad \PHfrappe{\sr{h}_1}{c_1}{c_0} \quad\} \\
-    \PHh'^{(3)} &= \{\quad \PHfrappe{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \quad\} \qquad\quad
+    \PHh'^{(3)} &= \{\quad \PHfrappe{\sr{h}_1}{\sr{h}_1}{\sr{h}_0} \quad\} \qquad\qquad
       \PHh'^{(4)} = \{\quad \PHfrappe{\scf{h}_7}{\sr{h}_0}{\sr{h}_1} \quad\}
   \end{align*}
   
-  \begin{figure}[ht]
+  \begin{figure}[p]
   \begin{center}
   \begin{tikzpicture}
     \TSort{(0,-3)}{a}{2}{l}
@@ -535,8 +536,15 @@ amener le système dans un état normalement inaccessible.
     \TState{a_1, b_1, c_1, \sr{h}_0, \scf{h}_7}
   \end{tikzpicture}
   \caption{\figlabel{simple-php-trad}%
-    La traduction des Frappes de Processus avec actions plurielles
+    Traduction des Frappes de Processus avec actions plurielles
     de la \figref{simple-phm} en Frappes de Processus avec 4 classes de priorités.
+    Le sortes $a$, $b$ et $c$ sont identiques à celles du modèle d'origine.
+    Les deux autres sortes ont été ajoutées pour les besoins de la traduction de l'action $h$.
+    $\sr{h}$ est une sorte de réaction
+    (la présence de
+    $\sr{h}_1$ modélise le fait que les actions représentant $h$ sont en train d'être jouées)
+    et $\scf{h}$ est une sorte coopérative
+    (permettant de vérifier la présence de tous les frappeurs).
   }
   \end{center}
   \end{figure}
@@ -544,7 +552,7 @@ amener le système dans un état normalement inaccessible.
 
 
 
-\subsection{Équivalence avec les Frappes de Processus avec classes de priorités}
+\subsection{Équivalence avec les Frappes de Processus avec $k$ classes de priorités}
 \seclabel{equivphmphp}
 
 Cette section permet de formaliser l'équivalence d'expressivité entre les Frappes de Processus
@@ -595,6 +603,12 @@ Frappes de Processus avec actions plurielles.
 
 \todo{Faudrait-il fusionner cette section avec ses semblables des \secref{php} et \secref{phan} ?}
 
+Nous passons rapidement en revue dans la suite différentes méthodes permettant de réutiliser
+certains résultats des Frappes de Processus standards sur les Frappes de Processus avec
+actions plurielles.
+Nous ne détaillons pas ces méthodes qui reprennent principalement des résultats
+traités à d'autres endroits de cette thèse.
+
 \subsubsection{Points fixes}
 \seclabel{phm-outils-pf}
 
@@ -602,9 +616,9 @@ Du fait de la complexité des actions plurielles, il n'existe pas à l'heure act
 générique efficace permettant de déduire les points fixes de Frappes de Processus avec
 actions plurielles.
 Cependant, à l'instar des Frappes de Processus avec arcs neutralisants
-(\secref{phan-outils-pf})
+(voir \vsecref{phan-outils-pf})
 il est possible d'obtenir ces points fixes en les cherchant sur
-le modèle aplati (tel que défini à la \secref{phm-aplatissement}).
+le modèle aplati (tel que défini à la \vsecref{phm-aplatissement}).
 En effet, sa dynamique étant équivalente, aux sortes coopératives près, le résultat
 peut être transposé au modèle d'origine.
 
