@@ -37,7 +37,7 @@ Il est par exemple possible de donner une priorité différente aux
 actions qui n'ont pas de sens biologique propre
 ---~mais dont ce sens émerge uniquement dans leur relation avec d'autres actions.
 L'application la plus immédiate de ce cas est celle des actions de mise à jour
-des sortes coopérative, comme cela est développé au \chapref{phcanonique},
+des sortes coopératives, comme cela est développé au \chapref{phcanonique},
 où une classe de priorités supérieure offre l'avantage de supprimer les effets d'entrelacement,
 et ainsi de simuler le comportement d'une véritable porte logique
 sans le problème de décalage temporel soulevé à la \secref{sc}.
@@ -238,11 +238,11 @@ comme défini à la \secref{phcanonique-def},
 qui sont des Frappes de Processus avec 2 classes de priorités
 avec une forme particulière.
 À l'inverse, les Frappes de Processus avec 2 classes de priorités sont
-naturellement \textit{a fortiori}
+naturellement à fortiori
 des Frappes de Processus avec $k$ classes de priorités, pour tout $k \in \sNN$.
 
 Nous notons cependant que ce résultat n'inclut pas les Frappes de Processus
-avec 1 classe de priorité (c'est-à-dire les Frappes de Processus standard).
+avec 1 classe de priorité (c'est-à-dire les Frappes de Processus standards).
 En effet, il est intuité que leur expressivité est strictement moindre
 que les Frappes de Processus possédant plusieurs classes de priorités,
 mais nous ne démontrons pas ce résultat ici.
@@ -257,23 +257,25 @@ mais nous ne démontrons pas ce résultat ici.
   Nous utilisons pour cette démonstration
   l'opérateur d'aplatissement $\PHflat$ donné à la \defref[vref]{fopaplat}
   et les résultats qui le concernent.
-  
   Soient $k, n \in \sNN$,
   et soient $\PH$ des Frappes de Processus avec $k$ classes de priorités.
   D'après le \thmref{bisimulaplatissement},
   l'aplatissement $\PHflat(\PH)$ est faiblement bisimilaire à $\PH$.
-  Posons $\PHflat(\PH) = (\PHs; \PHl; \PHh^{\angles{2}})$
-  avec $\PHh^{\angles{2}} = (\PHh^{(1)}; \PHh^{(2)})$,
-  et : $\PH' = (\PHs; \PHl; \PHh'^{\angles{n}})$
-  avec $\PHh'^{\angles{n}} = (\PHh^{(1)}; \PHh^{(2)}; \PHh'^{(3)}; \ldots; \PHh'^{(n)})$
-  où $\forall i \in \segm{3}{n}, \PHh'^{(i)} = \emptyset$.
+  Posons :
+  \begin{itemize}
+    \item $\PHflat(\PH) = (\PHs; \PHl; \PHh^{\angles{2}})$
+      avec $\PHh^{\angles{2}} = (\PHh^{(1)}; \PHh^{(2)})$,
+    \item $\PH' = (\PHs; \PHl; \PHh'^{\angles{n}})$
+      avec $\PHh'^{\angles{n}} = (\PHh^{(1)}; \PHh^{(2)}; \PHh'^{(3)}; \ldots; \PHh'^{(n)})$
+      où $\forall i \in \segm{3}{n}, \PHh'^{(i)} = \emptyset$.
+  \end{itemize}
   Autrement dit, $\PH'$ sont les Frappes de Processus avec $n$ classes de priorités
   identiques à $\PHflat(\PH)$, où des classes de priorités vides ont été
   artificiellement ajoutées.
   Cela est possible car $n \geq 2$.
-  Ainsi, $\PH'$ est possède la même dynamique que $\PHflat(\PH)$,
-  et est donc faiblement bisimilaire à $\PH$.
-  
+  Ainsi, $\PH'$ possède la même dynamique que $\PHflat(\PH)$,
+  et est donc faiblement bisimilaire à $\PH$
+  (autrement dit, sa dynamique est équivalente au jeu des actions de priorité 1 près).
   Ainsi, pour tout $k, n \in \sNN$,
   toutes Frappes de Processus avec $k$ classes de priorités peuvent être représentées
   en Frappes de Processus avec $n$ classes de priorités.
@@ -281,7 +283,7 @@ mais nous ne démontrons pas ce résultat ici.
 
 
 
-\subsection{Réutilisation des outils existants}
+\subsection{Réutilisation des résultats existants}
 \seclabel{php-outils}
 
 \todo{Revoir le titre de cette section}
@@ -453,7 +455,7 @@ mêlant classes de priorités et paramètres stochastiques.
 
 \myskip
 
-Plutôt que d'intégrer des données stochastiques connues dans un modèles,
+Plutôt que d'intégrer des données stochastiques connues dans un modèle,
 il est aussi possible de s'en servir pour l'obtention d'un modèle discret.
 En effet, pour créer un modèle de Frappes de Processus avec classes de priorités,
 il est nécessaire de connaître certaines relations entre les phénomènes modélisés
@@ -485,7 +487,7 @@ chaque intervalle est joué en priorité avant tous les suivants.
 
 \begin{example}
 \exlabel{paramsstocha-php}
-  Le modèle de Frappes de Processus standard de la \vfigref{metazoan-ph}
+  Le modèle de Frappes de Processus standards de la \vfigref{metazoan-ph}
   peut être enrichi à l'aide des paramètres proposés \vexpageref{metazoan-stocha-params},
   permettant ainsi
   de contraindre (à l'intervalle de confiance près) le jeu des actions entre elles,
@@ -573,7 +575,7 @@ comme développé à la \v secref{phan}.
 
 Nous avons ici montré l'une des limites de la modélisation par
 Frappes de Processus avec classes de priorités, qui fait abstraction du temps
-continu sur lequel se basent les paramètres stochastiques proposés par \cite{PMR10-TCSB}.
+continu sur lequel se basent les paramètres stochastiques proposés par \citeasnoun{PMR10-TCSB}.
 Le modélisateur doit effectivement être prudent pour ne pas rendre impossibles des
 comportements qui sont seulement retardés par des modélisations chronométriques.
 Cependant, à condition d'éviter ces écueils, nous avons montré qu'il est possible

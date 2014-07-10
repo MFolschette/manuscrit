@@ -43,6 +43,8 @@ comme le modèle équivalent dont on a retiré toutes les actions qui ne sont pa
 (\defref{reduction}).
 Cette définition permet dans la suite de considérer le comportement des actions les plus prioritaires
 d'un modèle afin d'en contraindre la forme.
+Il est à noter cependant que cette réduction provoque une perte d'informations,
+et n'est donc pas comparable aux réductions de modèles comme \cite{Naldi09}.
 
 \begin{definition}[Réduction ($\reductionsymbol{\PH}$)]
 \deflabel{reduction}
@@ -89,7 +91,7 @@ d'actions primaires.
 En effet, pour que ces actions effectuent une mise à jour des sortes coopératives sans perturber
 le reste du système, il est nécessaire qu'elles ne puissent pas préempter les actions secondaires
 indéfiniment.
-Sans cela, le modèle serait victime du paradoxe de Zénon,
+Sans cela, le modèle pourrait exhiber un comportement dit de Zénon \cite{zhang92zeno},
 où une suite infinie d'actions peut être jouée en un temps nul et ainsi
 bloquer l'évolution du système.
 Il est donc nécessaire de postuler que tous les scénarios d'actions primaires sont finis,

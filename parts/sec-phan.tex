@@ -38,7 +38,7 @@ même si elle-même est neutralisée.
 Nous ne nous avancerons cependant pas sur la signification biologique de ce fait.
 
 Enfin, il semble nécessaire de faire un parallèle entre les arcs inhibiteurs développés ici
-et les arcs inhibiteurs utilisés dans les réseaux de Petri \cite{Busi02}.
+et les arcs inhibiteurs utilisés dans les réseaux de Petri \cite{Peterson77petrinets}.
 Leur rôle est effectivement proche, leur but étant la préemption d'une action en fonction
 d'une condition extérieure à son déclenchement.
 Malgré tout, les arcs inhibiteurs des réseaux de Petri se différencient car ils
@@ -203,7 +203,7 @@ utiles pour rendre compte de contraintes locales connues.
 \seclabel{phan-equiv-php}
 
 Les Frappes de Processus avec arcs neutralisants ont une expressivité équivalente
-aux Frappes de Processus avec $k$ classes de priorité, où $k \in \sN^*$.
+aux Frappes de Processus avec $k$ classes de priorités, où $k \in \sN^*$.
 En effet, la \thmref{phpbisimphan} propose une traduction des Frappes de Processus
 avec $k$ classes de priorités en Frappes de Processus avec arcs neutralisants.
 À l'inverse, les Frappes de Processus avec arcs neutralisants peuvent être représentées
@@ -226,14 +226,14 @@ en Frappes de Processus canoniques, qui sont une sous-classe des Frappes de Proc
   D'après la définition de $\oPH$, on constate que :
   $\{ g \in \PHh \mid \PHan{g}{h} \in \PHn \} = \{ g \in \PHh \mid n < \prio(h) \}$.
   Ainsi, $\forall h \in \PHh, \Fopphp{h} = \Fopphan{h}$,
-  ce qui implique que les actions jouables dans l'état $s$ du le modèle $\PH$
+  ce qui implique que les actions jouables dans l'état $s$ du modèle $\PH$
   sont exactement les actions jouables dans l'état $s$ du modèle $\oPH$.
   D'où : $s \trans{\PH} s' \Longleftrightarrow s \trans{\oPH} s'$.
 \end{proof}
 
 
 
-\subsection{Réutilisation des outils existants}
+\subsection{Réutilisation des résultats existants}
 \seclabel{phan-outils}
 
 \todo{Revoir le titre de cette section}
@@ -288,13 +288,20 @@ En effet, si plusieurs actions sont actives mais se neutralisent de façon circu
 (par exemple, $\PHan{h_1}{h_2}$, $\PHan{h_2}{h_3}$ et $\PHan{h_3}{h_1}$)
 alors aucune des trois ne sera jouable dans le modèle avec arcs neutralisants,
 mais elles le seront dans le modèle fusionné.
-Il est à noter que
-ce cas ne se présente pas pour les Frappes de Processus avec classes de priorités.
+Nous intuitons que l'ensemble des points fixes d'un modèle de Trappes de Processus avec
+arcs neutralisants est l'ensemble des points fixes de son modèle fusionné
+entremêlés avec les cycles d'arcs neutralisants existants ;
+autrement dit, ces cycles d'arcs neutralisants ajoutent des points fixes partiels
+qui peuvent être combinés à d'autres points fixes partiels sur le reste du modèle,
+trouvés à l'aide du graphe sans-frappes.
+Cependant, nous ne démontrons pas ce résultat.
+% Il est à noter que
+% ce cas ne se présente pas pour les Frappes de Processus avec classes de priorités.
 
 \myskip
 
-Cependant, pour obtenir l'ensemble des points fixes d'un modèle de Frappes de Processus
-avec arcs neutralisants, il est possible d'aplatir celui-ci
+Pour obtenir l'ensemble des points fixes d'un modèle de Frappes de Processus
+avec arcs neutralisants de façon certaine, il est possible d'aplatir celui-ci
 comme décrit à la \secref{phan-aplatissement},
 afin de produire un modèle équivalent de Frappes de Processus avec 2 classes de priorités.
 %en Frappes de Processus canoniques,

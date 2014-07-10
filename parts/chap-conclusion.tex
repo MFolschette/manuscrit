@@ -5,11 +5,12 @@
 
 \chapeau{
   Nous revenons dans ce chapitre sur les apports de la présente thèse,
-  en insistant notamment sur la façon donc nous avons répondu aux deux problématiques
+  en insistant notamment sur la façon dont nous avons répondu aux deux problématiques
   principales proposées initialement :
   renforcer la puissance de la modélisation d'une part,
+  en permettant notamment l'intégration de données temporelles et de synchronisation,
   et les capacités d'analyse d'autre part,
-  notamment en ce qui concerne les modèles de grande taille.
+  particulièrement en ce qui concerne les modèles de grande taille.
   Plusieurs nouvelles perspectives scientifiques sont par ailleurs évoquées.
 }
 
@@ -50,7 +51,7 @@ possible d'étudier l'impact de chaque modification
 
 Les Frappes de Processus, introduites par \citeasnoun*{PMR10-TCSB},
 offrent un outil alternatif puissant de représentation et d'analyse des
-réseaux de régulation biologiques.
+réseaux de régulation biologique.
 Le formalisme proposé, totalement asynchrone, est basé sur une représentation
 atomique des interactions entre composants,
 où le changement d'état d'un composant ne peut être déclenché que par l'état d'au plus
@@ -63,7 +64,7 @@ De plus, certaines contraintes de modélisation ne peuvent pas toujours être in
 efficacement dans ces modèles standards de Frappes de Processus.
 
 Le travail proposé dans cette thèse avait pour ambition de répondre à cette double problématique
-de modélisation et d'analyse des grands modèles de réseaux de régulation biologiques,
+de modélisation et d'analyse des grands modèles de réseaux de régulation biologique,
 en partant du formalisme Frappes de Processus précédemment proposé,
 et des différents travaux correspondants.
 Nous proposons un bref rappel des résultats obtenus sur ces deux points à la \secref{resultats}
@@ -107,7 +108,7 @@ relatives entre les actions, comme des contraintes de tir ou des durées de réa
 Cette granularité est notamment nécessaire pour éviter des relations de préemption
 non désirées qui peuvent bloquer des parties du modèle,
 par exemple en abstrayant certaines phénomènes d'accumulation,
-provoquant des paradoxes de Zénon.
+provoquant des comportements Zénon.
 
 Enfin, les actions plurielles définies à la \secref{phm} introduisent de la
 synchronicité entre les actions.
@@ -256,7 +257,6 @@ permettant d'étendre et d'exploiter les résultats proposés.
 
 \subsubsection*{Raffinement de l'analyse statique}
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 L'analyse d'atteignabilité présentée au \chapref{as}
 repose sur une approximation de la dynamique ;
 cette approximation fait chuter la complexité de l'analyse,

@@ -7,7 +7,7 @@ En tant que restrictions du $\pi$\nbd calcul \cite{Brand83,Milner89},
 les Frappes de Processus offrent une représentation discrète, asynchrone et indéterministe
 avec une définition atomique des interactions entre les différents composants du modèle.
 En cela,
-elles sont particulièrement adaptées aux représentations des réseaux de régulation biologiques
+elles sont particulièrement adaptées aux représentations des réseaux de régulation biologique
 bien qu'elles soient assez générales pour potentiellement permettre des applications plus
 larges en informatique ou dans d'autres domaines.
 
@@ -103,8 +103,11 @@ ne possède pas de successeurs et le modèle ne peut plus évoluer.
 \noindent
 On note $\PHproc \DEF \bigcup_{a \in \PHs} \PHl_a$ l'ensemble de tous les processus.
 La sorte d'un processus $a_i$ est donnée par $\PHsort(a_i) = a$ ;
-on définit aussi l'ensemble des sortes d'un ensemble de processus par :
-$\forall A \subset \Proc, \sortes{A} = \{ \sorte{p} \mid p \in A \}$.
+on définit aussi l'ensemble des sortes d'une action ou d'un ensemble de processus par :
+\begin{align*}
+  \forall h \in \PHh, \sortes{h} &= \{ \sorte{\frappeur{h}}, \sorte{\cible{h}} \} \\
+  \forall A \subset \Proc, \sortes{A} &= \{ \sorte{p} \mid p \in A \}
+\end{align*}
 Étant donné un état $s \in \PHl$, le processus de la sorte $a \in \PHs$ présent dans $s$ est donné
 par $\PHget{s}{a}$, \cad la coordonnée correspondant à $a$ dans l'état $s$.
 Si $a_i \in \PHl_a$, nous définissons la notation : $a_i \in s \EQDEF \PHget{s}{a} = a_i$ ;
@@ -207,7 +210,7 @@ De plus, pour toute sorte $a$,
 on note $\prem{a}{A}$ le premier processus de $a$ référencé dans $A$,
 en tant que frappeur ou en tant que cible,
 et $\der{a}{A}$ le dernier, en tant que frappeur ou en tant que bond.
-On note de plus
+On note en conséquence
 $\sup{A}$ l'ensemble de tous ces premiers processus,
 et $\fin{A}$ l'ensemble de tous ces derniers processus.
 
@@ -243,10 +246,10 @@ et $\fin{A}$ l'ensemble de tous ces derniers processus.
 %   et derniers processus de $A$ pour toutes les sortes qui y figurent.
   \begin{align*}
 %   \eqlabel{supp}
-    \supp{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
+    \supp{A} &= \{ p \in \Proc \mid \sorte{p} \in \sortes{A} \wedge
       p = \prem{\sort{p}}{\delta} \} \\
 %   \eqlabel{fin}
-    \fin{A} &= \{ p \in \Proc \mid \sorte{p} \in \sorte{A} \wedge
+    \fin{A} &= \{ p \in \Proc \mid \sorte{p} \in \sortes{A} \wedge
       p = \der{\sort{p}}{\delta} \}
   \end{align*}
 \end{definition}
@@ -349,8 +352,8 @@ cela signifie alors qu'un autre processus de la même sorte l'est :
   \Feval{\neg a_i}{\mysigma} \Leftrightarrow
   \Feval{\bigvee_{\substack{a_j \in \PHl_a\\a_j \neq a_i}} a_j}{\mysigma}\]
 
-Enfin, on note dans la suite :
-\[\forall A \in \PHsublset, \Fconj{A} \equiv \bigwedge_{p \in A} p \enspace.\]
+% Enfin, on note dans la suite :
+% \[\forall A \in \PHsublset, \Fconj{A} \equiv \bigwedge_{p \in A} p \enspace.\]
 
 L'opérateur de jouabilité $\Fopsymbol$ donné à la \defref{fopph} est propre aux
 Frappes de Processus standards.
@@ -378,6 +381,25 @@ des Frappes de Processus standards.
   est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
   L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
 \end{definition}
+
+
+
+\begin{remark}
+  Les Frappes de Processus standards possèdent une dynamique totalement asynchrone :
+  entre deux états, une unique action peut être jouée.
+  Ce choix de conception est largement inspiré du modèle de Thomas
+  présenté à la \vsecref{thomas-def},
+  dont la dynamique est aussi totalement asynchrone.
+  Biologiquement, une telle hypothèse est cohérent avec le fait que la probabilité
+  que deux composants franchissent simultanément un seuil d'expression est très faible.
+  Cependant, cette sémantique asynchrone permet aussi de simplifier la dynamique des
+  Frappes de Processus standards en assurant que deux états successifs ne varient
+  que d'un seul processus (en fait : exactement d'un processus).
+  Cela a notamment permis le développement de l'analyse statique évoquée
+  plus loin, à la \secref{ph-as}.
+\end{remark}
+
+
 
 \begin{example}
   La dynamique des Frappes de Processus standards de la \figref{metazoan-ph-nocoop}
@@ -661,7 +683,7 @@ Nous rappelons ici les méthodes de recherche de points fixes développées par
 \myskip
 
 La recherche de points fixes peut apporter des informations fondamentales
-dans l'étude des réseaux de régulation biologiques.
+dans l'étude des réseaux de régulation biologique.
 Un point fixe représente généralement un état stable pour le système
 ---~tout du moins du point de vue du modèle.
 La détection de plusieurs points fixes, par exemple,
@@ -753,7 +775,7 @@ modélisés en Frappes de Processus.
 
 \myskip
 
-L'étude de la dynamique des réseaux de régulation biologiques se heurte généralement
+L'étude de la dynamique des réseaux de régulation biologique se heurte généralement
 à la taille des modèles, et à la complexité qu'elle engendre.
 Les \textit{model checkers} traditionnels doivent en effet généralement calculer
 l'intégralité des comportements possibles de réseau,

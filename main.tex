@@ -38,12 +38,25 @@
 \renewcommand{\labelitemi}{--}
 \renewcommand{\labelitemii}{-}
 
+% Sauts de paragraphes
+%\setlength{\parskip}{4mm plus3mm minus3mm}
+%\usepackage{parskip}
+%\setlength{\parindent}{15pt}
+
 % Chapeau
 \definecolor{couleurchapeau}{rgb}{0.9,0.9,0.9}
 \newcommand{\chapeau}[1]{\medskip\noindent\begin{center}\colorbox{couleurchapeau}{%
   \begin{minipage}{.95\textwidth}%
   \vspace*{2pt}\hrule\vspace*{1em}%
   \hfill\begin{minipage}{.95\textwidth}#1\end{minipage}\hfill%
+  \vspace*{1em}\hrule\vspace*{2pt}%
+  \end{minipage}}\end{center}\vspace*{3em}}
+\newcommand{\chapeaupublis}[2]{\medskip\noindent\begin{center}\colorbox{couleurchapeau}{%
+  \begin{minipage}{.95\textwidth}%
+  \vspace*{2pt}\hrule\vspace*{1em}%
+  \hfill\begin{minipage}{.95\textwidth}#1\end{minipage}\hfill%
+  \vspace*{.7em}\textcolor{gray}{\hrule}\vspace*{.7em}%
+  \hfill\begin{minipage}{.95\textwidth}#2\end{minipage}\hfill%
   \vspace*{1em}\hrule\vspace*{2pt}%
   \end{minipage}}\end{center}\vspace*{3em}}
 
@@ -201,34 +214,35 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \newcommand{\tocite}[1][]{}
 %\newcommand{\TODO}{\todo{TODO}}
 %\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\todoexplicite}{\textcolor{blue}{\textbf{[Cette section est en cours de rédaction]}}}
 
 
 
-\titre{Modélisation algébrique de l'évolution et de la dynamique multi-échelles
+\titre{Modélisation algébrique de la dynamique multi-échelles
   des réseaux de régulation biologique}
-%\soustitre{\TODO}
+\soustitre{Méthodes de modélisation et d'analyse pour l'enrichissement des Frappes de Processus}
 
-\title{Algebraic Modeling of the Evolution and Dynamics of Multi-scale
+\title{Algebraic Modeling of the Dynamics of Multi-scale
   Biological Regulatory Networks}
-%\subtitle{\TODO}
+\subtitle{Modeling and Analysis Methods for the Enrichment of Process Hitting}
 
 \author{M.}{Maxime}{Folschette}
 \discipline{Informatique et applications}
 \sectionCNU{27}
-\specialty{Bioinformatique \todo{?}}
+\specialty{Bioinformatique}
 
 \institution{ECN}
 \doctoralschool{Sciences et technologies de l'information, et mathématiques}
 \laboratory{Institut de Recherche en Communications et Cybernétique de Nantes (IRCCyN)
   UMR CNRS 6597}
 %\thesisnumber{}
-\date{8 octobre 2014}
+\date{8 octobre 2014 (prévision)}
 
 
 
 % Étoiler les \reviewer, \supervisor et \cosupervisor absents
 \reviewer{M.}{Jean-Paul}{Comet}{Professeur des universités}%
-  {École Polytechnique de l'Université de Nice Sophia Antipolis}
+  {Université de Nice -- Sophia Antipolis}
 
 \reviewer{Mme}{Anne}{siegel}{Directrice de recherche CNRS}%
   {IRISA (CNRS \& Université Rennes 1), Inria Rennes}
@@ -245,8 +259,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \supervisor{M.}{Olivier}{Roux}{Professeur des universités}%
   {École centrale de Nantes}
 
-\cosupervisor{M.}{Morgan}{Magnin}{Enseignant-chercheur}%
-  {École Centrale de Nantes}
+\cosupervisor{M.}{Morgan}{Magnin}{Maître de conférences}%
+  {École centrale de Nantes}
 
 
 % \renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
@@ -254,7 +268,7 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 \pagestyle{myheadings}
 \renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1 \hfill \thepage}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
 %\renewcommand{\sectionmark}[1]{\markboth{\MakeUppercase{\thesection.\ %
 %  Test section !}}{}}
 % \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\chaptername\ \thechapter.\ %
@@ -266,40 +280,40 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \begin{resume}
   %\footnotesize
   \scriptsize
-  La représentation et l'analyse des grands réseaux de régulation biologiques
+  La représentation et l'analyse des grands réseaux de régulation biologique
   sont les deux défis majeurs dans la compréhension des mécanismes du vivant.
-  Le travail exposé dans ce document se concentre sur les modèles discrets,
-  qui se présentent souvent sous la forme de graphes et d'ensembles de paramètres.
+  Le travail exposé dans cette thèse se concentre sur les modèles discrets,
+  souvent représentés sous la forme de graphes et d'ensembles de paramètres.
   Il s'inspire notamment d'un formalisme préalablement développé,
   appelé Frappes de Processus,
   qui repose sur une représentation atomique d'un ensemble de composants et de leur dynamique.
   Nous proposons dans cette thèse plusieurs représentations alternatives à
-  ce formalisme, possédant une plus grande expressivité
-  et particulièrement bien adaptées pour l'intégration
+  ce formalisme, qui possèdent une plus grande expressivité.
+  Ces représentations sont adaptées à l'intégration
   de contraintes discrètes dans les modèles
   provenant de durées relatives ou de relations de synchronisme entre certaines réactions.
   Nous proposons par ailleurs
   une méthode d'analyse de la dynamique par interprétation abstraite
-  qui permet de répondre à des questions d'atteignabilité
-  et qui est adaptée à l'étude des modèles de grande taille
-  (pouvant contenir plusieurs centaines de composants, et potentiellement davantage).
-  Cette méthode repose sur une approximation de la dynamique qui évite ainsi
+  qui permet de répondre à des questions d'atteignabilité.
+  Cette méthode est spécifiquement adaptée à l'étude des modèles de grande taille,
+  pouvant contenir plusieurs centaines de composants, et potentiellement davantage.
+  Elle repose en effet sur une approximation de la dynamique qui évite ainsi
   l'explosion combinatoire inhérente à ce type d'analyse,
   permettant de répondre en quelques dixièmes de secondes au prix d'être parfois non conclusive.
-  Pour terminer, nous traçons des liens formels entre
+  Enfin, nous traçons des liens formels entre
   les différents formalismes développés dans cette
   thèse, ainsi qu'avec plusieurs autres modélisation discrètes répandues.
-  En proposant des traductions depuis et vers ces formalismes,
-  nous permettons à un modèle de jouir des capacités de représentation et d'analyse
+  Nous permettons ainsi à un modèle de jouir des capacités de représentation et d'analyse
   de plusieurs formalismes à la fois.
 \end{resume}
 
 \begin{motscles}
-  réseaux de régulation biologiques,
+  réseaux de régulation biologique,
   frappes de processus,
+  modèle de Thomas,
   formalisme asynchrone,
-  atteignabilité,
-  analyse statique
+  analyse statique,
+  atteignabilité
 \end{motscles}
 
 \begin{abstract}
@@ -319,7 +333,7 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
   We also propose a new method to analyze the dynamics of such models by abstract interpretation
   which allows to answer reachability questions
   and is well-suited to large-scale models
-  (made of up to hundreds of components, and potentially more).
+  (made of hundreds of components, and potentially more).
   This method relies on an approximation of the dynamics that avoids
   the combinatorial explosion usually inherent to such analyses,
   thus answering in in tenths of a second
@@ -334,9 +348,10 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \begin{keywords}
   biological regulatory networks,
   process hitting,
+  Thomas modeling
   asynchronous framework,
-  reachability,
-  static analysis
+  static analysis,
+  reachability
 \end{keywords}
 
 

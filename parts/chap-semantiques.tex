@@ -4,7 +4,7 @@
 \chaplabel{semantiques}
 %\newcommand{\theheaderchapter}{Enrichissement des Frappes de Processus pour l'aide à la modélisation}
 
-\chapeau{%
+\chapeaupublis{%
   La sémantique standard des Frappes de Processus de la \secref{ph} peut s'avérer insuffisante pour
   prendre en compte certaines informations connues sur le système étudié, comme des informations
   en terme de vitesse de réaction.
@@ -19,7 +19,7 @@
   \end{itemize}
   Ces deux axes ont pour but de permettre ou de faciliter l'intégration de telles informations
   au sein des modèles.
-
+  
   Du premier axe découlent deux extensions aux Frappes de Processus
   prenant la forme d'arcs neutralisants, qui modélisent la préemption d'une action par une autre,
   et de classes de priorités, qui modélisent la préemption d'un ensemble d'actions par un autre.
@@ -32,19 +32,22 @@
   peut s'appliquer à toutes ces extensions, moyennant une traduction.
 %   Les classes de priorités sont d'ailleurs réutilisées
 %   pour définir la forme canonique des Frappes de Processus.
+}{%
+  L'extension des Frappes de Processus sous forme de classes de priorités
+  a été publiée dans \cite*{FPMR13-CS2Bio}.
 }
 
 Nous présentons dans ce chapitre les trois sémantiques de Frappes de Processus développées
 pour enrichir l'expressivité de ce formalisme.
 Nous les définissons et discutons de leurs avantages en termes de modélisation
-pour les réseaux de régulation biologiques ou les réseaux de réactions biochimiques.
+pour les réseaux de régulation biologique ou les réseaux de réactions biochimiques.
 De plus, nous traçons des liens formels entre ces différents formalismes
 afin de mieux comprendre leur complémentarité
 et d'offrir une bonne souplesse de représentation et d'analyse.
 
 \myskip
 
-Nous proposons dans le présent chapitre des outils permettant
+Les outils que nous proposons dans le présent chapitre permettent
 d'enrichir un modèle de Frappes de Processus à l'aide de
 contraintes dérivées d'informations biologiques
 comme les vitesses de réaction,
@@ -67,7 +70,7 @@ ne permet pas de concilier l'introduction de contraintes dérivées d'informatio
 et une bonne capacité d'analyse des modèles ainsi créés.
 En effet, s'il est possible d'y intégrer des informations temporelles
 sous la forme de paramètres stochastiques, tel que mentionné à la \vsecref{ph-stocha},
-en revanche les analyses puissantes de la dynamiques rappelées à la \vsecref{ph-as}
+en revanche les analyses puissantes de la dynamique rappelées à la \vsecref{ph-as}
 ne sont alors plus valables.
 En effet, celles-ci ne prennent pas en compte les fenêtres de tir introduites par les
 paramètres stochastiques.
@@ -116,7 +119,8 @@ comme c'est le cas pour les Frappes de Processus avec classes de priorités (\se
 où chaque action peut bloquer l'ensemble des actions de priorité inférieure ;
 ou de façon ponctuelle, comme au sein des Frappes de Processus avec arcs neutralisants
 (\secref{phan}),
-qui permet de définir des relations plus fines de préemption entre actions individuelles.
+qui permet de définir des relations plus fines de préemption entre actions individuelles
+(sans que cette préemption ne soit généralisée à un ensemble d'autres actions).
 À l'inverse, la simultanéité entre actions permet de s'assurer qu'un ensemble de frappes est joué
 de façon simultanée, ou plus généralement qu'un ensemble de processus bondit en même temps,
 comme permettent de le représenter les Frappes de Processus avec actions plurielles (\secref{phm}).
@@ -141,7 +145,7 @@ ce qui assure de pouvoir étudier efficacement la dynamique des modèles créés
 Ces différentes notions font naturellement écho aux problématiques plus générales d'enrichissement
 dans les modèles discrets.
 Ainsi, on peut par exemple rapprocher la notion d'arc neutralisant des Frappes de Processus
-à celle d'arc inhibiteur propre aux réseaux de Petri \cite{Busi02}
+à celle d'arc inhibiteur propre aux réseaux de Petri \cite{Peterson77petrinets}
 à la différence que celle-ci permet de préempter des actions en fonction de l'activité
 d'une place (correspondant ici à un processus ou à une sorte, selon le point de vue).
 De même, la notion de priorités a déjà été introduite dans certaines sémantiques de réseaux
