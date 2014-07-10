@@ -27,7 +27,7 @@ Cette abstraction permet de simplifier le modèle pour en faciliter l'analyse,
 à condition de rester cohérente avec la représentation initiale.
 Le caractère asynchrone des formalismes vient quant à lui de la constatation suivante :
 il est biologiquement très improbable que plusieurs entités d'un système
-évoluent de manière exactement simultanée.
+évoluent en parfaite simultanéité.
 Le parallèle avec les systèmes d'équations différentielles est le suivant :
 il est rare d'observer plusieurs composants passer un seuil simultanément
 au cours d'une évolution continue de leur état.
@@ -64,12 +64,15 @@ et l'asynchronisme de la dynamique,
 bien qu'il soit plus atomique par ailleurs dans sa représentation.
 Il permet notamment de modéliser tout modèle de Thomas,
 avec cependant une légère sur-approximation de la dynamique.
+Bien que cette sur-approximation permette de représenter une classe de modèles de façon
+abstraite, elle est cependant indésirable lorsque l'on souhaite modéliser
+fidèlement certains comportements.
 Des outils ont de surcroît été développés afin de calculer les points fixes d'un modèle de
 Frappes de Processus ou encore d'y intégrer des paramètres continus
 sous forme de probabilités.
 Cependant, l'atout principal des Frappes de Processus réside dans les puissantes
-méthodes d'analyse statique par interprétation abstraite dont il est pourvu,
-qui permettent d'effectuer des calculs d'atteignabilité locale
+méthodes d'analyse statique par interprétation abstraite qui y sont associées,
+permettant ainsi d'effectuer des calculs d'atteignabilité locale
 avec une complexité polynomiale dans la taille du modèle considéré.
 Cela permet notamment d'étudier la dynamique de grands modèles
 ---~jusqu'à plusieurs centaines de composants, voire au-delà.

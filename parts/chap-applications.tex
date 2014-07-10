@@ -40,10 +40,10 @@ Afin de montrer l'efficacité des méthodes développées dans le cadre de cette
 nous proposons dans cette section d'en illustrer l'utilisation sur des modèles
 de grande taille.
 Nous considérons comme des modèles de grande taille les modèles comportant plusieurs
-dizaines de composants
+dizaines ou centaines de composants
 ---~en somme, les modèles dont la taille ne permet actuellement pas d'en étudier
 le comportement à l'aide de \textit{model checkers} classiques
-qui doivent calculer l'intégralité de la dynamique.
+devant calculer l'intégralité de la dynamique.
 Les exemples que nous donnons ici montrent que nos méthodes peuvent être
 appliquées à des modèles de grande taille.
 De plus, nous détaillons la nature et l'utilisation de l'implémentation
@@ -90,15 +90,15 @@ et une chaîne de réactions permet l'activation de la protéine pRB qui est res
 de la régulation de la division cellulaire.
 Celle-ci est donc essentielle pour la prévention du développement de cancers.
 
-Trois modèles de Frappes de Processus canoniques
-sont créés à partir du graphe des interactions original, avec différents niveaux
+Nous créons trois modèles de Frappes de Processus canoniques
+à partir du graphe des interactions original, avec différents niveaux
 de précision dans la modélisation des coopérations entre composants.
 \begin{itemize}
   \item Le modèle (1) représente la dynamique généralisée du graphe des interactions,
     telle que théorisée par \citeasnoun{PMR10-TCSB},
     c'est-à-dire sans aucune information concernant les règles booléennes des coopérations,
     et ne contient donc aucune sorte coopérative (ni aucune action primaire) ;
-  \item Le modèle (2) est partiellement raffiné : il intègre quelques-unes des règles
+  \item Le modèle (2) est partiellement raffiné : il intègre certaines des règles
     booléennes en question en tant que sortes coopératives,
     choisies d'après des expériences de \textit{knockdown} menées sur le système ;
   \item Le modèle (3) est le modèle totalement raffiné contenant toutes les coopérations.
@@ -160,12 +160,13 @@ Ainsi, le graphe des interactions inféré d'après le modèle (1) est exactemen
 au graphe des interactions utilisé pour créer ce modèle,
 à l'exception d'une auto-activation sur l'entrée EGF,
 qui est due à son absence de régulateurs,
-comme expliqué à la \vsecref{trad-thomas}.
+comme expliqué à la \vsecref{trad-thomas},
+et se retrouve aussi pour les modèles suivants.
 Les seuls paramètres ayant pu être inférés sont ceux qui concernent les configurations extrêmes
 des ressources de chaque régulation,
 à savoir dans le cas où tous les activateurs sont présents et tous les inhibiteurs absents,
 et dans le cas inverse.
-Ce premier modèle abstrait donc un grand nombre de modèle de Thomas
+Ce premier modèle abstrait donc un grand nombre de modèles de Thomas
 (de l'ordre de $9\cdot10^{52}$)
 étant donné que la quasi-totalité des paramètres restent indéterminés.
 
@@ -189,12 +190,13 @@ décrite \vpageref{factorisation-coop} a été utilisée afin de réduire la tai
 Les sortes coopératives ainsi ajoutées ont permis d'inférer environ la moitié des paramètres ;
 cependant, le nombre de modèles de Thomas compatibles avec ce modèle reste très élevé
 du fait des nombreux paramètres qui restent indéterminés.
-De plus, on note que le graphe des interactions inféré comporte un arc de moins que
+De plus, ce graphe des interactions inféré comporte un arc de moins que
 le graphe des interactions d'origine.
-Cela est du au fait que la fonction booléenne de pRB intégrée sous la forme
+Cela est dû au fait que la fonction booléenne de pRB intégrée sous la forme
 d'une sorte coopérative pouvait en fait être simplifiée
 d'une façon telle que le composant CDK2 n'y apparaissait plus.
-Aucun arc n'a alors été inféré entre CDK2 et pRB par notre méthode.
+Aucun arc n'a alors été inféré entre CDK2 et pRB par notre méthode,
+car il ne participait pas à modifier la dynamique.
 
 Enfin, le modèle (3) a été construit en utilisant toutes les fonctions booléennes
 fournies par \citeasnoun{Sahin09}.
@@ -203,14 +205,14 @@ le comportement attendu du système.
 Toutes ces coopérations étant correctement définies dans le modèle,
 tous les paramètres peuvent être inférés et un seul modèle de Thomas est compatible
 avec la dynamique des Frappes de Processus canoniques utilisées.
-Nous notons de plus que ce modèle est le seul à contenir des points fixes,
+Nous notons de plus que ce modèle est le seul à \bemph{contenir des points fixes},
 calculés à l'aide du \vthmref{php-pf},
 et qui comprennent notamment les deux états stables correspondant à une propagation
 totale du signal pour les deux cas initiaux,
 c'est-à-dire dans le cas où EGF est initialement actif et dans le cas où il ne l'est pas.
 Les deux autres modèles ne contiennent pas de point fixe car les coopérations manquantes
 créent des oscillations qui sont la conséquence du comportement non-déterministe
-du formalisme.
+du formalisme lorsqu'on en reste à un stade de précision incomplet.
 
 \subsection{Temps d'exécution sur quelques modèles de grande taille}
 \seclabel{appli-thomas-large}
@@ -244,20 +246,18 @@ automatique depuis le format CellNetAnalyzer \cite{klamt2007structural}
 vers le Frappes de Processus canoniques.
 
 La composition de ces modèles et les résultats de l'inférence du modèle de Thomas
-cons résumés dans la \tabref{appli-thomas-large}.
+sont résumés dans la \tabref{appli-thomas-large}.
 Nous notons notamment que, du fait de la très grande taille des paramétrisations
 des modèles de 94 et 104 composants, l'inférence des paramètres n'a pas pu être réalisée.
 Ce nombre anormal de paramètres est dû à la présence d'un très grand nombre de régulateurs
 pour un même composant dans ces deux modèles, faisant croître la taille de la paramétrisation
 de façon exponentielle.
-Il est à noter que ces régulations sont principalement dues à des contraintes de modélisation ;
+Il est à noter que ces régulations sont principalement dues à des contraintes de modélisation
+propres à la représentation d'origine au format CellNetAnalyzer ;
 notre méthode devrait néanmoins être en mesure de traiter des modèles d'aussi grande taille
 à condition que chaque composant ne possède qu'un nombre limité de régulateurs.
 Cela indique de plus que de tels modèles seraient plus efficacement étudiés
 en tant que Frappes de Processus qu'en tant que modèles de Thomas.
-
-\newcommand{\egfr}{5}
-\newcommand{\tcrsig}{6}
 
 \begin{table}[ht]
   \ZifferAn
@@ -266,23 +266,25 @@ en tant que Frappes de Processus qu'en tant que modèles de Thomas.
     \textbf{Modèle} & $\mathbf{\card{\Gamma}}$ & $\mathbf{\card{\cs}}$ &
       \textbf{Inférence GI} & \textbf{Inférence K} & $\mathbf{\card{K}}$
   \\\hline\hline
-    RFCE\footnotemark[\egfr] \cite{Sahin09} &
+    RFCE \cite{Sahin09} &
       $20$ & $22$ & < 1 s & < 1 s & 192
   \\\hline
-    RLT\footnotemark[\tcrsig] \cite{Klamt06} &
+    RLT \cite{Klamt06} &
       $40$ & $14$ & < 1 s & < 1 s & 143
   \\\hline
-    RLT\footnotemark[\tcrsig] \cite{SaezRodriguez2007} &
+    RLT \cite{SaezRodriguez2007} &
       $94$ & $39$ & 10 s & --- & $2,1\cdot10^{9}$
   \\\hline
-    RFCE\footnotemark[\egfr] \cite{Samaga2009} &
+    RFCE \cite{Samaga2009} &
       $104$ & $89$ & 3 min 20 s & --- & $4,2\cdot10^{6}$
   \end{tabular}
   \end{center}
   \caption{\tablabel{appli-thomas-large}%
-    Temps d'exécution de notre implémentation et informations relatives aux modèles
+    Temps d'exécution et informations relatives aux modèles
     utilisés dans l'inférence du graphe des interactions et de la paramétrisation
     de quatre modèles de réseaux de régulation biologique.
+    Dans la première colonne, RFCE signifie «~Récepteur de facteur de croissance épidermique~»
+    et RLT signifie «~Récepteur de lymphocyte~T~».
     La deuxième colonne donne le nombre de composants de chaque modèle
     et la troisième donne le nombre de sortes coopératives utilisées pour modéliser
     des coopérations entre composants.
@@ -295,15 +297,16 @@ en tant que Frappes de Processus qu'en tant que modèles de Thomas.
   \ZifferAus
 \end{table}
 
-\footnotetext[\egfr]{Récepteur de facteur de croissance épidermique.}
-\footnotetext[\tcrsig]{Récepteur de lymphocyte~T.}
-
-%\myskip
+\todoplustard{Gros exemples avec inférence des paramètres possible}
 
 \subsubsection*{Implémentation}
 
 La traduction de Frappes de Processus canoniques en modèle de Thomas développée
-à la \vsecref{trad-thomas} a été implémentée et intégrée à \Pint.
+à la \vsecref{trad-thomas} a été implémentée%
+\footnote{Cette implémentation a été réalisée dans le cadre d'un stage doctoral
+en tant qu'invité dans l'équipe de
+Katsumi Inoue (National Institute of Informatics, Tokyo, Japon).}
+et intégrée à \Pint.
 L'implémentation consiste principalement en trois programmes
 écrits en programmation par ensembles de réponses
 (ou \textit{Answer Set Programming}),
@@ -315,8 +318,9 @@ qui a déjà montré ses capacités dans la résolution de problèmes de complex
 Les trois programmes de cette implémentation se chargent respectivement
 de réaliser l'inférence
 du graphe des interactions, des paramètres et de tous les modèles de Thomas compatibles.
-Des compléments écrits en OCaml assurent de plus la traduction du modèle en ASP
-et la récupération des résultats de \textit{solver}.
+Des compléments écrits en \tool{OCaml} assurent de plus la traduction du modèle vers
+le langage de programmation par ensembles de réponses
+puis la récupération des résultats du \textit{solver}.
 Cette traduction peut être appelée par l'outil \texttt{ph2thomas}, par exemple avec la
 ligne de commande suivante :
 \cl{ph2thomas -i ERBB\_G1-S.ph}
@@ -328,6 +332,7 @@ ou de lancer l'énumération des modèles de Thomas compatibles
 avec \texttt{-{}-full-enumerate} (ou \texttt{-{}-enumerate} pour se restreindre
 à des paramètres entiers).
 
+\todoplustard{Exemple visuel du fichier .DOT}
 
 
 
@@ -339,9 +344,15 @@ de l'analyse statique par sous-approximation développée à la \secref{as}.
 Nous l'appliquons pour cela à un réseau booléen asynchrone
 comportant 94 composants, ce qui peut être considéré comme un grand modèle,
 et modélisant le récepteur de lymphocyte~T (\textit{T-cell receptor}).
-Ce modèle est traduit en Frappes de Processus standards
-et nous montrons que notre méthode d'analyse statique reste efficace malgré la taille du modèle ;
-par ailleurs, nous constatons que toutes les analyses effectuées sont conclusives.
+Ce modèle avait auparavant été étudié par une méthode proche dans le cadre
+des Frappes de Processus standards \cite{PMR12-MSCS},
+qui ne permettaient cependant d'étudier qu'une approximation du modèle d'origine.
+Nous utilisons ici une représentation en Frappes de Processus standards
+en assignant une priorité haute à toutes les actions mettant à jour les sortes coopératives
+ajoutées pour représenter les coopérations entre composants.
+Nous constatons que
+\bemph{notre méthode d'analyse statique reste efficace malgré la taille du modèle} ;
+par ailleurs, nous toutes les analyses effectuées s'avèrent être conclusives.
 
 \myskip
 
@@ -363,7 +374,7 @@ en fonction de l'état initial (activé ou non) de chaque composant d'entrée.
 Cela permet notamment de vérifier que le modèle est fonctionnel,
 autrement dit de vérifier que
 tous les composants de sortie peuvent être activés si toutes les entrées le sont
----~et qu'elles ne peuvent pas l'être si aucune entrée c'est active.
+---~et qu'elles ne peuvent pas l'être si aucune entrée n'est active.
 De plus, tous les autres comportements intermédiaires peuvent être analysés
 afin de prévoir le comportement du système réel dans ces situations.
 
@@ -378,21 +389,34 @@ Les états initiaux sont construits en définissant tous les composants
 comme étant inactifs sauf pour certains d'entre eux
 (à savoir : CD45, CARD11, Bcl10, Malt1, Rac1r, Lckr, cCblr et IkB)
 et pour les composants d'entrée choisis comme initialement actifs.
-Pour chacun des 8 états initiaux ainsi obtenus,
-nous testons l'atteignabilité des processus $x_1$ de chaque composant $x$ de sortie
-indépendamment à l'aide des deux analyses statiques suivantes :
+Pour chacun des 8 états initiaux $\ctx$ ainsi obtenus,
+et pour chaque composant $x$ de sortie,
+nous vérifions la propriété $P_\ctx^x$ qui s'exprime de la manière suivante :
+«~Depuis l'état $\ctx$, existe-t-il une succession d'actions permettant d'atteindre
+un état où $x_1$ est actif ?~»
+En d'autre termes, nous testons l'atteignabilité de chaque processus $x_1$
+indépendamment.
+Nous utilisons pour cela les deux analyses statiques suivantes :
 \begin{itemize}
-  \item La sous-approximation développée à la \vsecref{as},
+  \item la sous-approximation développée à la \vsecref{as},
     et notamment le \thmref{approxinf},
-    qui permet de répondre «~Oui~» ou «~Non-conclusif~» ;
-  \item La sur-approximation proposée par \citeasnoun{PMR12-MSCS},
+    qui permet de répondre «~Oui~» ou «~Non-conclusif~»
+    à une question d'atteignabilité locale,
+  \item la sur-approximation proposée par \citeasnoun{PMR12-MSCS},
     appliquée au modèle fusionné d'après la \vdefref{fusion},
     qui permet de répondre «~Non~» ou «~Non-conclusif~».
 \end{itemize}
-L'utilisation de ces deux approches conjointement permet d'obtenir un résultat dans un
-plus grand nombre de cas,
-l'analyse par sous-approximation présentée à la \vsecref{as} de cette thèse
-ne permettant pas de répondre «~Non~».
+En d'autres termes, la première méthode, issue du travail présenté dans cette thèse,
+teste l'atteignabilité afin de répondre positivement ;
+son utilisation se justifie par le fait qu'elle est propre aux Frappes de Processus canoniques,
+qui sont utilisées pour représenter le modèle étudié.
+Dans les cas où cette méthode ne permet pas de répondre (c'est-à-dire lorsqu'elle
+répond «~Non-conclusif~»),
+la seconde méthode est utilisée en complément afin de tester l'atteignabilité
+et de répondre négativement.
+Dans le cas où les deux méthodes répondraient «~Non-conclusif~», aucune conclusion ne pourrait
+être formulée pour la question d'atteignabilité ;
+cependant, ce cas ne s'est pas présenté pour le modèle étudié ici.
 
 Il s'avère finalement que cette méthode est conclusive pour tous les cas testés ;
 autrement dit, les deux méthodes ne répondent jamais «~Non-conclusif~»
@@ -413,7 +437,7 @@ ce qui permet d'effectuer un grand nombre de tests sur un même modèle.
 sur une traduction en réseau de Petri du modèle étudié,
 à l'aide du \textit{model checker} symbolique libDDD \cite{Kordon09libddd},
 connu pour ses bonnes performances.
-Cependant, du fait de la taille du modèle, le programme effectue un dépassement de mémoire
+Cependant, du fait de la taille du modèle, le programme s'arrête sur un dépassement de mémoire
 pour chacun des cas testés.
 
 \myskip
@@ -429,7 +453,7 @@ Pour ce résultat supplémentaire, nous modifions le modèle comme expliqué à 
   \item une sorte coopérative $\uastotal$ entre les quatre composants considérés,
   \item toutes les actions primaires nécessaires à la mise à jour de $\uastotal$,
   \item une sorte $\uasreach$ comprenant deux processus ($\uasreach_0$ et $\uasreach_1$),
-  \item une action $\PHfrappe{\uastotal_{1111}}{\uasreach_0}{\uasreach_1}$ de priorité basse.
+  \item une action secondaire $\PHfrappe{\uastotal_{1111}}{\uasreach_0}{\uasreach_1}$.
 \end{itemize}
 Nous pouvons alors calculer l'atteignabilité de $\uasreach_1$, qui permettra de déterminer
 si les quatre composants peuvent être simultanément actifs depuis l'état initial.
@@ -477,7 +501,8 @@ Voici un exemple de ligne de commande :
 Cette ligne de commande utilise le modèle du fichier \texttt{tcrsig94.ph} ;
 elle définit l'état initial du modèle comme étant
 $s \recouvre \{ \text{CD4}_1, \text{CD45}_1, \text{CD28}_1, \text{TCRlig}_1 \}$
-(où $s$ est défini préalablement dans le fichier \texttt{tcrsig94.ph})
+(où $s$ est défini préalablement dans le fichier \texttt{tcrsig94.ph}
+et $\recouvre$ représente l'opérateur de recouvrement défini à la \vdefref{recouvrement})
 et calcule l'atteignabilité de $\text{AP1}_1$ à partir de cet état.
 Après exécution, l'outil retourne \texttt{True}, ce qui signifie que l'atteignabilité
 testée à l'aide de la méthode de la \vsecref{as} est possible.

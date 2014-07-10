@@ -18,7 +18,7 @@ nécessaires pour la suite de ce manuscrit.
 Nous détaillons ensuite à la \secref{sc} le mécanisme particulier des sortes coopératives
 tel qu'il avait été formalisé dans les travaux de Loïc Paulevé,
 et nous montrerons qu'il permet de représenter l'action conjointe de plusieurs composants,
-mais avec certains défauts difficiles à corriger dans cette version du formalisme.
+mais avec certains inconvénients difficiles à corriger dans cette version du formalisme.
 Enfin, nous aborderons brièvement les travaux précédents
 concernant l'analyse statique qui permet d'obtenir des résultats
 sur l'ensemble des états stables (\secref{ph-pf})
@@ -38,16 +38,17 @@ permettent une modélisation atomique et asynchrone des interactions entre compo
 Un modèle de Frappes de Processus standards comporte un nombre fini de \emph{sortes}
 généralement notées $a$, $b$, $c$...
 Celles-ci permettent de représenter les différentes entités du modèle,
-qu'il s'agisse de composant ayant une réalité biologique (gène, protéine...)
-ou d'entités nécessaire à la modélisation (comme les sortes coopératives
+qu'il s'agisse de composants ayant une réalité biologique (gène, protéine...)
+ou d'entités nécessaires à la modélisation (comme les sortes coopératives
 qui seront décrites à la \secref{sc}).
-Chaque sortes contient plusieurs \emph{processus},
+Chaque sorte contient plusieurs \emph{processus},
 qui représentent les différents
 niveaux d'expression discrets accessibles par la sorte,
 et qui sont notés $a_i$
 où $a$ est le nom de la sorte et $i$ l'indice du processus dans cette sorte.
 Un processus n'appartient qu'à une unique sorte.
-Chaque processus est dit \emph{actif} s'il représente le niveau d'expression
+Chaque processus est dit \emph{actif} (on écrira aussi : \emph{présent})
+s'il représente le niveau d'expression
 dans lequel doit se trouver sa sorte à un certain moment.
 Un \emph{état} du modèle est donc décrit par l'ensemble des processus actifs à un instant donné,
 avec exactement un processus actif par sorte
@@ -59,13 +60,13 @@ qui permettent de modifier le processus actif d'une sorte,
 Une action consiste donc en un triplet de processus $\PHfrappe{a_i}{b_j}{b_k}$
 qui se lit : «~$a_i$ frappe $b_j$ pour le faire bondir en $b_k$~»,
 et qui signifie que si, dans un état donné, les processus $a_i$ et $b_j$ sont
-tous les deux présents, alors il est possible d'activer $b_k$ (et de désactiver $b_j$)
+tous les deux actifs, alors il est possible d'activer $b_k$ (et de désactiver $b_j$)
 dans l'état suivant.
 Autrement dit, le processus actif de la sorte $b$ peut \emph{bondir}
 de $b_j$ à $b_k$ à condition que $a_i$ soit actif ;
 lorsque cela arrive, on dit qu'on a \emph{joué} l'action $\PHfrappe{a_i}{b_j}{b_k}$.
 Par convention, on contraint de plus que $b_j \neq b_k$ pour assurer que le jeu d'une action
-provoque bien un changement de processus actif.
+provoque bien le changement d'un processus actif.
 Il est aussi possible de définir une auto-action, où $a_i = b_j$ (et nécessairement $a = b$),
 qui permet de représenter le cas particulier où le processus $b_j$ peut bondir en $b_k$
 sans autre condition.
@@ -128,8 +129,11 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
     \PHl_b = \{ b_0, b_1 \} \enspace;\quad
     \PHl_f = \{ f_0, f_1 \} \enspace.\]
   On peut notamment en déduire le nombre total d'états du système :
-  $\card{\PHl} = 2^3 = 8$.
-  Enfin, ce modèle comporte 7 actions :
+  $\card{\PHl} = \card{\PHl_a} \cdot \card{\PHl_c} \cdot \card{\PHl_f} = 2^3 = 8$.
+  Cette grandeur n'est cependant donnée qu'à titre indicatif,
+  car nous évitons de construire explicitement l'espace des états
+  dont la taille est exponentielle dans le nombre de sortes et de processus du modèle.
+  Enfin, le modèle étudié comporte 7 actions :
   \begin{align*}
     \PHh = \{\qquad
       \PHfrappe{c_1}{a_1}{a_0}\quad, && \PHfrappe{c_0}{a_0}{a_1}\quad,& \\
@@ -139,7 +143,8 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
     \qquad\}
   \end{align*}
   
-  Ces Frappes de Processus représentent un modèle simplifié du mécanisme
+  Dans cet exemple,
+  les Frappes de Processus représentent un modèle simplifié du mécanisme
   de segmentation des métazoaires qui permet par exemple de décrire la production de rayures
   chez les drosophiles.
   Il a été originellement établi \textit{in silico} par \citeasnoun{MSB4100192}
@@ -147,9 +152,12 @@ et on note : $\hitter{h} = a_i$, $\target{h} = b_j$ et $\bounce{h} = b_k$.
   et le modèle présenté ici est inspiré du modèle proposé par \citeasnoun{PMR10-TCSB}.
   
   Les trois sortes $a$, $b$ et $c$ de ce modèle représentent différents gènes du système,
-  que nous qualifierons d'\emph{actifs} dans le reste de ce document lorsqu'ils seront à l'état 1.
+  que nous qualifierons d'\emph{actifs} dans le reste de ce document lorsqu'ils seront à l'état 1
+  (ce qui ne doit pas être confondu avec le caractère \emph{actif} d'un processus,
+  défini \vpageref{sec:ph}).
   La production de pigment est déclenchée par le produit du gène $a$,
-  et une succession d'activations de celui-ci permet donc de produire des rayures.
+  et une succession d'activations et de désactivations
+  de celui-ci permet donc de produire des rayures.
   Pour que celles-ci soient régulières, il est donc nécessaire que la durée d'activation
   de $a$ soit constante, et que la durée entre deux activations le soit aussi.
   Ce mécanisme est réglé par le gène $c$ qui inhibe à la fois le gène $a$ à intervalles réguliers,
@@ -377,7 +385,7 @@ des Frappes de Processus standards.
   De plus, on note alors : $s \PHtrans (s \PHplay h)$.
 
   Si $s \in \PHl$, un \emph{scénario} $\delta$ dans $s$
-  est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement dans $s$.
+  est une séquence d'actions de $\PHh$ qui peuvent être jouées successivement depuis $s$.
   L'ensemble de tous les scénarios dans $s$ est noté $\Sce(s)$.
 \end{definition}
 
@@ -466,8 +474,9 @@ si on souhaite par exemple représenter l'activation d'un processus $c_1$ (d'une
 uniquement lorsque deux autres processus $a_1$ et $b_1$ (de deux autres sortes $a$ et $b$)
 sont actifs, il n'est pas suffisant d'ajouter deux actions
 $\PHfrappe{a_1}{c_0}{c_1}$ et $\PHfrappe{b_1}{c_0}{c_1}$,
-car celles-ci permettent d'activer $c_1$ à la condition que $a_1$ ou $b_1$
-soit présent : il s'agit bien de deux interactions distinctes et non d'une coopération.
+car celles-ci permettent d'activer $c_1$ à la condition que $a_1$ soit actif
+ou que $b_1$ soit actif :
+il s'agit bien de deux interactions distinctes et non d'une coopération.
 
 \begin{example}
 \exlabel{metazoan-ph-nocoop-explications}
@@ -606,8 +615,8 @@ il est possible de les utiliser en maintenant de bonnes performances d'analyse.
 
 \myskip
 
-Le sortes coopératives possèdent cependant un défaut, qui est lié au fait que les actions
-sont totalement indépendantes, car
+Le sortes coopératives possèdent cependant un inconvénient, qui est lié au fait que les actions
+sont totalement indépendantes car
 le formalisme des Frappes de Processus standards est totalement asynchrone et indéterministe.
 En effet, les sortes coopératives ne sont pas nécessairement mises à jour immédiatement
 après un bond du processus actif d'une des sortes qu'elles représentent.
@@ -620,7 +629,7 @@ car même si l'un des processus modélisant la coopération a bondi,
 la sorte coopérative peut ne pas en avoir fait de même.
 Mais ce décalage peut aussi aboutir à des comportements indésirables.
 En effet, le processus actif d'une sorte coopérative ne correspond de fait pas à l'état courant
-des sortes représentées, mais uniquement à une combinaison d'état passés.
+des sortes représentées, mais uniquement à une combinaison d'états passés.
 Il est alors possible d'activer un processus de la sorte coopérative correspondant à
 un sous-état artificiel,
 c'est -à-dire non accessible aux sortes représentées.
@@ -819,7 +828,7 @@ peut être résolue localement, en observant les actions frappant une sorte donn
 ce qui simplifie la recherche.
 Une fois ce problème résolu localement pour une sorte, 
 la deuxième constatation permet de déplacer ce problème
-à d'autres sortes afin de faire en sorte d'activer les processus requis
+à d'autres sortes afin dans le but d'activer les processus requis
 pour jouer chaque action nécessaire (c'est-à-dire les frappeurs de ces actions).
 
 Il existe donc un lien de causalité récursif entre l'activation locale d'un processus,
@@ -827,13 +836,15 @@ les actions requises pour le faire, et de nouveau l'activation des processus
 nécessaires pour jouer ces actions, etc.
 Afin de réduire la complexité de la méthode,
 une approximation de la dynamique est effectuée à chaque étape :
-pour chaque résolution atteignabilité locale au sein d'une sorte,
+pour chaque résolution d'atteignabilité locale au sein d'une sorte,
 un ensemble de processus requis appartenant à d'autres sortes est produit,
 mais l'ordre dans lequel ces processus sont nécessaires est abstrait.
 Cela permet donc de déplacer l'atteignabilité locale d'un processus
 à plusieurs atteignabilités indépendantes dans d'autres sortes.
 
-Cette approche permet de décliner une sur-approximation et une sous-approximation de la dynamique.
+Cette approche permet de décliner une approximation supérieure (sur-approximation)
+et une approximation inférieure (sous-approximation)
+de l'ensemble de toutes les dynamiques possibles du modèle.
 La sur-approximation consiste à ne pas s'intéresser à l'ordre dans lequel les processus requis
 sont activables ---~et donc à l'ordre dans lequel les actions résolvant l'atteignabilité
 locale sont jouables.
@@ -860,7 +871,7 @@ et la vérification des deux propriétés l'est dans la taille des graphes obten
 Ainsi, cette méthode est plus efficace que les approches par force brute
 car elle évite l'explosion combinatoire propre à l'analyse de la dynamique.
 Son implémentation produit des résultats en quelques dixièmes de seconde sur des modèles
-de centaines de composants, et s'avère toujours conclusive sur les exemples présentés.
+de plusieurs centaines de composants, et s'avère toujours conclusive sur les exemples étudiés.
 
 Une partie de cette analyse statique a par la suite été
 %étendue aux réseaux d'automates asynchrones, et
@@ -893,8 +904,8 @@ La probabilité de tirer une action à un instant donné (sur un axe de temps co
 suit alors une loi d'Erlang en fonction de ces deux paramètres,
 c'est-à-dire une somme de lois exponentielles.
 Le premier paramètre, appelé \emph{taux}, indique le nombre de fois qu'une action
-peut être tirée dans une unité de temps.
-Le second paramètres est l'\emph{absorption de stochasticité},
+peut être tirée par unité de temps.
+Le second paramètre est l'\emph{absorption de stochasticité},
 qui détermine le nombre de lois exponentielles sommées pour obtenir la distribution finale.
 
 Tout couple de paramètres stochastiques $\couple{r}{sa}$
