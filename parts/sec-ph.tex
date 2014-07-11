@@ -234,19 +234,19 @@ et $\fin{A}$ l'ensemble de tous ces derniers processus.
     \prem{a}{A} &=
       \begin{cases}
         \varnothing & \text{si } a \notin \sortes{A} \\
-        \hitter{A_m} & \text{si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\hitter{A_m}} = a \\
-        \target{A_m} & \text{sinon si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\target{A_m}} = a
+        \hitter{A_m} & \text{si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \} \\
+          & \hspace*{6em} \wedge\ \sorte{\hitter{A_m}} = a \\
+        \target{A_m} & \text{sinon si } m = \min\{ n \in \indexes{A} \mid a \in \sortes{A_n} \} \\
+          & \hspace*{8em} \wedge\ \sorte{\target{A_m}} = a
       \end{cases} \\
 %   \eqlabel{der}
     \der{a}{A} &=
       \begin{cases}
         \varnothing & \text{si } a \notin \sortes{A} \\
-        \bounce{A_m} & \text{si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\bounce{A_m}} = a \\
-        \hitter{A_m} & \text{sinon si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \}
-          \wedge \sorte{\hitter{A_m}} = a
+        \bounce{A_m} & \text{si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \} \\
+          & \hspace*{6em} \wedge\ \sorte{\bounce{A_m}} = a \\
+        \hitter{A_m} & \text{sinon si } m = \max\{ n \in \indexes{A} \mid a \in \sortes{A_n} \} \\
+          & \hspace*{8em} \wedge\ \sorte{\hitter{A_m}} = a
       \end{cases}
   \end{align*}
 %   Pour toute séquence d'actions $A$,
@@ -959,12 +959,12 @@ car ce deuxième paramètre ne changerait rien à sa condition de tir.
   \bigskip\medskip
   
   \begin{tikzpicture}[plot]
-    \draw[axe] (0,0) -- (16,0) node[right] {$t$};
+    \draw[axe] (0,0) -- (15,0) node[right] {$t$};
     \draw (0,-.1) -- (0,.1);
     \draw[interval,blue!50] (-0.1,0) -- (0.1,0) node[above, pos=.5, black] {\stochainf};
     \draw[interval] (0.742,0) -- (1.29,0) node[above, pos=.5, black] {\stochaa};
     \draw[interval,orange] (1.48,0) -- (2.59,0) node[above, pos=.5, black] {\stochab};
-    \draw[interval,brown] (3.9,0) -- (15.5,0) node[above, pos=.5, black] {\stochac};
+    \draw[interval,brown] (3.9,0) -- (14.5,0) node[above, pos=.5, black] {\stochac};
 %    \draw[double distance = 3pt] (3.25,-.2) -- (3.4,.2);
     \draw[line width=.2cm, white] (3.25,-.2) -- (3.4,.2);
     \draw[] (3.15,-.2) -- (3.3,.2);

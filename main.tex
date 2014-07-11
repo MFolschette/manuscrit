@@ -16,7 +16,26 @@
 
 % Mise en page
 \geometry{inner=2.5cm, outer=2.5cm, top=2.5cm, bottom=2cm} % Format A4
-\geometry{inner=1.5cm, outer=1.5cm, top=2cm, bottom=2cm}
+%\geometry{inner=1.5cm, outer=1.5cm, top=2cm, bottom=2cm}
+
+% En-têtes
+% \renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
+% \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
+%\pagestyle{myheadings}
+
+%\renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter\ ---\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ ---\ #1}{}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
 
 % Style des listes
 \let\oldenumerate\enumerate
@@ -67,11 +86,11 @@
 %   {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
 %  {\end{minipage}\end{lrbox}\noindent\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}
 \newenvironment{framedgraybox}%
-  {\begin{lrbox}{\mybox}\begin{minipage}{0.975\linewidth}}%
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.97\linewidth}}%
   {\end{minipage}\end{lrbox}%
   \noindent\textcolor{couleurframe}{\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}}
 \newenvironment{graybox}%
-  {\begin{lrbox}{\mybox}\begin{minipage}{0.988\linewidth}}%
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.985\linewidth}}%
   {\end{minipage}\end{lrbox}%
   \noindent\colorbox{couleurchapeau}{\usebox{\mybox}}}
 %  \noindent\textcolor{white}{\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}}
@@ -184,6 +203,9 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \hyphenation{jou-a-bi-li-tés}
 \hyphenation{at-tei-gna-bi-li-té}
 \hyphenation{at-tei-gna-bi-li-tés}
+\hyphenation{ap-pro-xi-ma-tion}
+\hyphenation{ap-pro-xi-ma-tions}
+\hyphenation{sur-ap-pro-xi-ma-tion}
 
 % Raccourcis propres à ce document
 \newcommand{\allcr}{\crref{tf,part}}
@@ -267,17 +289,6 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
   {École centrale de Nantes}
 
 
-% \renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
-% \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
-
-\pagestyle{myheadings}
-\renewcommand{\chaptermark}[1]{\markboth{Chapitre\ \thechapter.\ #1}{}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}{}}
-%\renewcommand{\sectionmark}[1]{\markboth{\MakeUppercase{\thesection.\ %
-%  Test section !}}{}}
-% \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\chaptername\ \thechapter.\ %
-%   \theheaderchapter}}{}}
-% \newcommand{\theheaderchapter}{TEst !}
 
 \begin{document}
 

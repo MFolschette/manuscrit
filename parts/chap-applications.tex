@@ -222,6 +222,7 @@ des modèles de
 Frappes de Processus canoniques de grande taille et obtenus à partir de données
 trouvées dans la littérature.
 Ont notamment été traités :
+\label{refmodels}
 \begin{itemize}
   \item les modèles du récepteur de croissance épidermique présentés
     à la \vsecref{appli-thomas-egfr} \cite{Sahin09},
@@ -238,8 +239,8 @@ un processeur de 3,4~Ghz avec 8~Go de mémoire vivre.}
 D'autres modèles de plus grande taille portant sur les mêmes systèmes ont aussi été testés :
 \begin{itemize}
   \item un modèle du récepteur de lymphocyte~T contenant 94 composants,
-    déjà présenté à la section précédente \cite{SaezRodriguez2007},
-  \item un modèle du récepteur de croissance avec 104 composants \cite{Samaga2009}.
+    qui sera par ailleurs présenté à la section suivante \cite{SaezRodriguez2007},
+  \item un modèle du récepteur de croissance épidermique avec 104 composants \cite{Samaga2009}.
 \end{itemize}
 Ces deux modèles ont été obtenus par \citeasnoun{PMR12-MSCS} à l'aide d'une traduction
 automatique depuis le format CellNetAnalyzer \cite{klamt2007structural}
@@ -266,16 +267,16 @@ en tant que Frappes de Processus qu'en tant que modèles de Thomas.
     \textbf{Modèle} & $\mathbf{\card{\Gamma}}$ & $\mathbf{\card{\cs}}$ &
       \textbf{Inférence GI} & \textbf{Inférence K} & $\mathbf{\card{K}}$
   \\\hline\hline
-    RFCE \cite{Sahin09} &
+    RFCE & %\cite{Sahin09} &
       $20$ & $22$ & < 1 s & < 1 s & 192
   \\\hline
-    RLT \cite{Klamt06} &
+    RLT & %\cite{Klamt06} &
       $40$ & $14$ & < 1 s & < 1 s & 143
   \\\hline
-    RLT \cite{SaezRodriguez2007} &
+    RLT & %\cite{SaezRodriguez2007} &
       $94$ & $39$ & 10 s & --- & $2,1\cdot10^{9}$
   \\\hline
-    RFCE \cite{Samaga2009} &
+    RFCE & %\cite{Samaga2009} &
       $104$ & $89$ & 3 min 20 s & --- & $4,2\cdot10^{6}$
   \end{tabular}
   \end{center}
@@ -285,6 +286,7 @@ en tant que Frappes de Processus qu'en tant que modèles de Thomas.
     de quatre modèles de réseaux de régulation biologique.
     Dans la première colonne, RFCE signifie «~Récepteur de facteur de croissance épidermique~»
     et RLT signifie «~Récepteur de lymphocyte~T~».
+    Les références dont sont tirés ces modèles sont données \vpageref{refmodels}.
     La deuxième colonne donne le nombre de composants de chaque modèle
     et la troisième donne le nombre de sortes coopératives utilisées pour modéliser
     des coopérations entre composants.

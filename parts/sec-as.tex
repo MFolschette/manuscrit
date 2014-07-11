@@ -222,8 +222,9 @@ $\concr(\w) \cap \Sce(s) \neq \emptyset$ (\defref{uconcr}).
 \end{lemma}
 
 Pour tout objectif $P \in \Obj$ et tout contexte $\ctx \in \Ctx$, la \defref{maxCont}
-fournit l'ensemble des processus de $\sorte{P}$ requis pour résoudre $P$ dans $\ctx$,
-appelé $\gCont_\ctx(\PHsort(P), P)$.
+permet d'obtenir $\gCont_\ctx(\PHsort(P), P)$
+qui est l'ensemble des processus de $\sorte{P}$ requis pour résoudre $P$ dans $\ctx$.
+%appelé $\gCont_\ctx(\PHsort(P), P)$.
 Cette définition sera utile pour correctement résoudre les atteignabilités locales
 qui nécessitent indirectement un processus de leur propre sorte,
 c'est-à-dire autrement que par une auto-action.
@@ -474,9 +475,13 @@ dans le contexte $\ctx$, qui est basée directement sur ce graphe $\cwB$.
   
   On note pour finir que le \thmref{approxinf} est conclusif sur l'atteignabilité de $c_1$
   depuis $\PHstate{a_1, b_0, c_0, ab_{10}}$ dans les Frappes de Processus canoniques $\PH''$, où :
-  $\PH'' = (\PHs; \PHl; (\PHa^{(1)};\PHa'^{(2)}))$ avec :
-  \[\PHa'^{(2)} = (\PHa^{(2)} \setminus \{ \PHhit{a_0}{b_0}{b_1}, \PHhit{b_0}{a_0}{a_1} \})
-    \cup \{ \PHhit{a_0}{a_0}{a_1}, \PHhit{b_0}{b_0}{b_1} \} \enspace.\]
+  \begin{align*}
+  \PH'' &= (\PHs; \PHl; (\PHa^{(1)};\PHa'^{(2)})) \\
+  \text{avec : } \quad
+  \PHa'^{(2)} &= (\PHa^{(2)} \setminus \{ \PHhit{a_0}{b_0}{b_1}, \PHhit{b_0}{a_0}{a_1} \})
+    \cup \{ \PHhit{a_0}{a_0}{a_1}, \PHhit{b_0}{b_0}{b_1} \}
+  \end{align*}
+
   En effet, dans ce cas les processus $a_0$ et $b_0$ du graphe de la \figref{glc-livelock}
   sont permutés, ce qui rend tous les arcs cohérents.
   
