@@ -227,19 +227,25 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 %\usepackage[notref,notcite]{showkeys}
 
 % Commandes À FAIRE
-%\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
-%\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
-%\newcommand{\tocite}[1][citation]{\stodo{#1}}
-%\newcommand{\TODO}{\todo{TODO}}
-%\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
-%%%\newcommand{\toref}{\stodo{ref}}
-%%%\newcommand{\storef}{\toref}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
+\newcommand{\TODO}{\todo{TODO}}
+\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\tocite}[1][citation]{\stodo{#1}}
+\newcommand{\toref}{\stodo{ref}}
+\newcommand{\storef}{\toref}
+\newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
 
-\newcommand{\todo}[1]{}
-\newcommand{\todoplustard}[1]{}
-\newcommand{\tocite}[1][]{}
-%\newcommand{\TODO}{\todo{TODO}}
-%\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\focals}{\textcolor{red}{\f{focals}}}
+\newcommand{\PHdirectpredec}[1]{\textcolor{red}{\conn_{direct}(#1)}}
+\newcommand{\PHpredec}[1]{\textcolor{red}{\conn(#1)}}
+\newcommand{\PHpredecgene}[1]{\textcolor{red}{\compin(#1)}}
+%\newcommand{\irB}{\textcolor{red}{B}}
+\newcommand{\ie}{i.e.,}
+
+% \newcommand{\todo}[1]{}
+% \newcommand{\todoplustard}[1]{}
+% \newcommand{\tocite}[1][]{}
 \newcommand{\todoexplicite}{\textcolor{blue}{\textbf{[Cette section est en cours de rédaction]}}}
 
 
@@ -395,8 +401,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \input{parts/chap-phcanonique}
 
 % Expressivité du PH et positionnement par rapport à d'autres formalismes
-\input{parts/chap-expressivite-temp}
-%\input{parts/chap-expressivite}
+%\input{parts/chap-expressivite-temp}
+\input{parts/chap-expressivite}
 
 % Applications
 \input{parts/chap-applications}
