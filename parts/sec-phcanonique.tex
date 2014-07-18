@@ -138,7 +138,8 @@ et un ensemble de sortes coopératives bien formées (noté $\cs$).
 
 \begin{definition}[Influence ($\compin : \PHs \to \powerset(\components)$)]
 \deflabel{comp}
-  Pour toute sorte $a \in \PHs$, on définit : $\compin(a) \DEF \conn(a) \cap \components$ où
+  Pour toute sorte $a \in \PHs$, on définit :
+  $\compin(a) \DEF (\conn(a) \cap \components) \setminus \{ a \}$ où
   $\conn(a) \subset \PHs$ est le plus petit ensemble de sortes satisfaisant :
   \begin{align*}
     a \in \conn(a) & \\
@@ -154,7 +155,7 @@ et un ensemble de sortes coopératives bien formées (noté $\cs$).
     \item $\forall h \in \PHh, \sort{\target{h}} = a \Rightarrow \prio(h) = 1$,
     \item \label{csai} $\forall s \in \PHl, \card{\pfp_s(a)} = 1$,
     \item \label{css} $\forall a_i \in \PHl_a, \exists s \in \PHl, a_i \in \pfp_s(a)$,
-    \item $\forall \mysigma \in \PHsubl[\PHl]_{\compin(a)}, \forall s, s' \in \PHl,
+    \item \label{csss} $\forall \mysigma \in \PHsubl[\PHl]_{\compin(a)}, \forall s, s' \in \PHl,
         (\mysigma \subseteq s \wedge \mysigma \subseteq s') \Rightarrow \pfp_s(a) = \pfp_{s'}(a)$.
   \end{enumerate}
   On note $\cs$ l'ensemble des sortes coopératives bien formées du modèle.

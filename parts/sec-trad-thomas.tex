@@ -67,7 +67,11 @@ Naturellement, toute autre relations d'ordre entre les indices est admissible,
   $\forall \PHfrappe{a_i}{b_j}{b_k} \in \PHh^{(2)}, \card{j - k} = 1$
 \end{critere}
 
-\todo{Exemple}
+\begin{example}
+  Les Frappes de Processus canoniques représentées à la \figref{infer-ex-ph}
+  possèdent une dynamique unitaire, et sont donc compatibles
+  avec l'inférence du graphe des interactions proposée à la section suivante.
+\end{example}
 
 \begin{remark}
   Le \crref{unitaire} est naturellement vérifié pour tout modèle booléen,
@@ -85,445 +89,563 @@ le \crref{unitaire}.
 
 
 
-
-
-\begin{comment}
-
-\subsection{Focal Processes}\label{ssec:focal}
-
-Many of the inferences defined in the rest of this paper rely on the knowledge of \emph{focal
-processes} w.r.t. a given context (a set of processes that are potentially present).
-When such a context applies, we expect to (always) reach one focal process in a bounded number of
-actions.
-
-For $S_a\subseteq L_a$ and a context (set of processes) $\ctx$, let us define as $\PHa(S_a,\ctx)$
-the set of actions on the sort $a$ having their hitter in $\ctx$ and target in $S_a$
-(\pref{eq:PHa-ctx});
-and the digraph $(V, E)$ where arcs are the bounces within the sort $a$ triggered by actions
-in $\PHa(S_a,\ctx)$ (\pref{eq:bounce-graph}).
-$\focals(a,S_a,\ctx)$ denotes the set of focal processes of sort $a$ in the scope of
-$\PHa(S_a,\ctx)$ (\pref{def:focals}).
-\begin{align}
-\PHa(S_a,\ctx) & \DEF \{ \PHfrappe{b_i}{a_j}{a_k}\in\PHa \mid b_i\in\ctx \wedge a_j\in S_a \}
-\label{eq:PHa-ctx}
-\\
-\begin{split}
-E  & \DEF \{(a_j,a_k)\in (S_a \times \PHl_a) \mid 
-      \exists\PHfrappe{b_i}{a_j}{a_k}\in \PHa(S_a,\ctx) \}
-\\
-V & \DEF S_a \cup \{ a_k\in L_a\mid \exists (a_j,a_k)\in E\}
-\end{split}
-\label{eq:bounce-graph}
-\end{align}
-
-\begin{definition}[$\focals(a,S_a,\ctx)$]\label{def:focals}
-The set of processes that are focal for processes in $S_a$ in the scope of $\PHa(S_a,\ctx)$
-are given by:
-%$\focals(a,S_a,\ctx)$ is the set of focal processes of sort $a$ in the context $\ctx$:
-\[
-\focals(a,S_a,\ctx) \DEF
-\begin{cases}
-\{ a_i \in V \mid \nexists (a_i,a_j)\in E\} & \text{if the digraph $(V,E)$ is acyclic},\\
-\emptyset & \text{otherwise.}\\
-\end{cases}
-\]
-\end{definition}
-
-We note $\PHl(\ctx)$ the set of states $s\in L$ such that $\forall a\in\PHsort(\ctx), \PHget{s}{a}\in\ctx$,
-where $\PHsort(\ctx)$ is the set of sorts with processes in $\ctx$.
-We say a sequence of actions $h^1,\dots,h^n$ is \emph{bounce-wise} if and only if
-$\forall m\in\segm{1}{n-1}, \PHbounce(h^m)=\PHtarget(h^{m+1})$.
-From \pref{def:focals}, it derives that:
-\begin{enumerate}
-\item if $\focals(a,S_a,\ctx)=\emptyset$, there exists a 
-state $s\in \PHl(\ctx\cup S_a)$ such that $\forall n\in\mathbb N$ there
-exists a bounce-wise sequence of actions $h^1,\dots,h^{n+1}$ in $\PHa(S_a,\ctx)$ 
-with $\PHtarget(h^1)\in s$.
-\item if $\focals(a,S_a,\ctx)\neq\emptyset$, for all
-state $s\in \PHl(\ctx\cup S_a)$,
-for any bounce-wise sequence of actions $h^1,\dots,h^n$ in $\PHa(S_a,\ctx)$ where $\PHtarget(h^1)\in
-s$,
-either
- $\PHbounce(h^n) \in \focals(a,S_a,\ctx)$,
-or
-$\exists h^{n+1}\in \PHa(a,\ctx)$ such that $\PHbounce(h^n) = \PHtarget(h^{n+1})$.
-Moreover $n\leq|\PHa(S_a,\ctx)|$ (i.e. no cycle of actions possible).
-\end{enumerate}
-
-It is worth noticing that those bounce-wise sequences of actions may not be successively playable in
-a state $s\in L(\ctx\cup S_a)$.
-Indeed, nothing impose that the hitters of actions are present in $s$.
-In the general case, the playability of those bounce-wise sequences, referred to as \emph{focals
-reachability} may be hard to prove.
-However, in the scope of this paper, the particular contexts used with $\focals$ ensure this property.
-Notably, the rest of this section uses only \emph{strict} contexts (\pref{def:strict-ctx}) which
-allow at most one hitter per sort in the bounce-wise sequences (and thus are present in $s$).
-
-\begin{definition}[Strict context for $S_a$]\label{def:strict-ctx}
-A context (set of processes) $\ctx$ is strict for $S_a\subseteq L_a$ if and only if
-$\{b_i,b_j\} \subset \ctx \wedge b\neq a \Rightarrow i=j$.
-\end{definition}
-
-In other words, assuming focals reachability, if $\focals(a,S_a,\ctx)$ is empty, there exists a
-sequence of actions that may be played an unbound number of times (cycle);
-if it is non-empty, it is ensured that any state in $\PHl(\ctx\cup S_a)$ converges, in a bounded
-number of steps, either to a process in $S_a$ that is not hit by processes in $\ctx$, or to a process in
-$L_a\setminus S_a$.
-
-\begin{example}
-In the PH of \pref{fig:runningPH-1}, we obtain:
-\begin{align*}
-\focals(a,L_a,\{b_0,c_0\}) &= \{ a_0 \}
-&
-\focals(a,L_a,\{b_1,c_1\}) &= \{ a_2 \}
-\\
-\focals(a,L_a,\{b_1,c_0\}) &= \emptyset
-&
-\focals(a,\{a_1\},\{b_1,c_0\}) &= \{ a_0, a_2 \}
-\end{align*}
-\end{example}
-
-
-
-
-\subsection{Well-formed Process Hitting for Interaction Graph Inference}\label{ssec:wf}
-
-The inference of an IG from a PH assumes that the PH defines two types of sorts:
-the sorts corresponding to BRN components, and the cooperative sorts.
-This leads to the characterization of a \emph{well-formed} PH for IG inference.
-
-The identification of sorts modeling components relies on the observation that their processes
-represent (ordered) qualitative levels.
-Hence an action on such a sort cannot make it bounce to a process at a distance more than one.
-The set of sorts satisfying such a condition is referred to as $\Gamma$
-(\pref{eq:PH-components}).
-Therefore, in the rest of this paper, $\Gamma$ denotes the set of components of the BRN to infer.
-
-\begin{equation}
-\Gamma \DEF \{a \in \PHs \mid \nexists \PHfrappe{b_i}{a_j}{a_k} \in \PHa, |j - k| > 1\} \\
-\label{eq:PH-components}
-\end{equation}
-
-Any sort that does not act as a component should then be treated as a cooperative sort.
-As explained in \pref{ssec:PH}, the role of a cooperative sort $\upsilon$ is to compute the current
-state of set of cooperating processes.
-Hence, for each sub-state $\sigma$ formed by the sorts hitting $\upsilon$, $\upsilon$ should
-converge to a focal process.
-This is expressed by \pref{pro:wf-cooperative-sort}, where
-the set of sorts having an action on a given sort $a$ is given by 
-$\PHdirectpredec{a}$ (\pref{eq:ph-direct-predec})
-and $\PHproc(\sigma)$ is the set of processes that compose the sub-state $\sigma$.
-
-\begin{equation}
-\forall a \in \PHs, \PHdirectpredec{a} \DEF \{b \in \PHs \mid \exists \PHfrappe{b_i}{a_j}{a_k}\in\PHa \}
-\label{eq:ph-direct-predec}
-\end{equation}
-
-\begin{property}[Well-formed cooperative sort]\label{pro:wf-cooperative-sort}
-A sort $\upsilon\in\PHs$ is a well-formed cooperative sort if and only if
-each configuration $\sigma$ of its predecessors leads $\upsilon$ to a unique focal process,
-denoted by $\upsilon(\sigma)$:
-\[
-\forall \sigma \in {\textstyle\prod_{
-a\in\PHdirectpredec{\upsilon} \wedge a\neq \upsilon}}
-\PHl_{a},
-\focals(\upsilon,\PHl_\upsilon,\PHproc(\sigma)\cup \PHl_\upsilon) = \{ \upsilon(\sigma) \}\]
-\end{property}
-
-Such a property allows a large variety of definitions of a cooperative sort, but
-for the sake of simplicity, does not allow the existence of multiple focal processes.
-While this may be easily extended to (the condition becomes 
-$\focals(\upsilon,\PHl_\upsilon, \PHproc(\sigma)\cup \PHl_\upsilon)\neq\emptyset$), it makes some
-hereafter equations a bit more complex to read as they should handle a set of focal processes instead
-of a unique focal process.
-
-
-Finally, \pref{pro:wf-ph} sums up the conditions for a Process Hitting to be suitable for IG
-inference.
-In addition of having either component sorts or well-formed cooperative sorts, we also require that
-there is no cycle between cooperative sorts, and that
-sorts being never hit (\ie serving as an invariant environment) are components.
-
-\begin{property}[Well-formed Process Hitting for IG inference]\label{pro:wf-ph}
-A PH is well-formed for IG inference if and only if the following conditions are verified:
-\begin{itemize}
-\item 
-each sort $a\in\PHs$ either belongs to $\Gamma$, or is a well-formed cooperative sort;
-\item 
-there is no cycle between cooperative sorts
-(the digraph $(\Sigma,\{(a,b)\in(\Sigma\times\Sigma)\mid \exists \PHfrappe{a_i}{b_j}{b_k}\in\PHa
-\wedge a\neq b\wedge \{a,b\}\cap\Gamma=\emptyset \})$ is
-acyclic);
-\item 
-sorts having no action hitting them belong to $\Gamma$
-($\{ a \in \Sigma\mid \nexists \PHfrappe{b_i}{a_j}{a_k}\in\PHa\} \subset \Gamma$).
-\end{itemize}
-\end{property}
-
-\begin{example}
-In the PH of \pref{fig:runningPH-2}, $bc$ is a well-formed cooperative sort as defined in \pref{pro:wf-cooperative-sort}, because:
-\begin{align*}
-\focals(bc, \PHl_{bc}, \{b_0, c_0\} \cup \PHl_{bc}) = \{bc_{00}\} && \focals(bc, \PHl_{bc}, \{b_0, c_1\} \cup \PHl_{bc}) = \{bc_{01}\} \\
-\focals(bc, \PHl_{bc}, \{b_1, c_0\} \cup \PHl_{bc}) = \{bc_{10}\} && \focals(bc, \PHl_{bc}, \{b_1, c_1\} \cup \PHl_{bc}) = \{bc_{11}\}
-\end{align*}
-Hence, both \pref{fig:runningPH-1} and \pref{fig:runningPH-2} are well-formed PH for IG inference
-with $\Gamma = \{a,b,c\}$.
-\end{example}
-
-\end{comment}
-
-
-
 \subsection{Inférence des interactions}
 \seclabel{infer-gi}
 
 
-\begin{comment}
+L'inférence de cette section est directement inspirée des travaux de \citeasnoun{Richard10},
+qui déduit les influences d'un graphe des interactions en fonction des évolutions des différents
+composants, selon l'état de ses régulateurs.
 
-At this point we can divide the set of sorts $\PHs$ into components ($\Gamma$, see \pref{eq:PH-components}) and cooperative sorts
-that will not appear in the IG ($\PHs \setminus \Gamma$).
-We define in \pref{eq:ph-predec} the set of predecessors of a sort $a$, that is, the sorts influencing $a$
-by considering direct actions and possible intermediate cooperative sorts.
-The predecessors of $a$ that are components are the regulators of $a$, denoted $\PHpredecgene{a}$
-(\pref{eq:regulators}).
-\begin{align}
-\begin{split}
-\forall a \in \PHs, \PHpredec{a} &\DEF \{b \in \PHs \mid \exists n \in \mathbb{N}^*, \exists
-(c^k)_{k \in \segm{0}{n}} \in \PHs^{n+1}, \\
-                                   & \quad \quad c^0 = b \wedge c^n = a \\
-                                   & \quad \quad \wedge \forall k \in \segm{0}{n-1},
-                   c^k \in \PHdirectpredec{c^{k+1}} \cap (\PHs\setminus\Gamma)\}
-\end{split}
-\label{eq:ph-predec}
-\\
-\forall a\in \PHs, \PHpredecgene{a} & \DEF \PHpredec{a} \cap \Gamma
-\label{eq:regulators}
-\end{align}
+\newcommand{\myupsilon}{\upsilon}
 
-\end{comment}
+Pour tout composant $a$,
+les \emph{prédécesseurs} de $a$, notés $\pred(a)$,
+sont toutes les sortes ayant au moins une action frappant $a$.
+Les \emph{régulateurs} de $a$, en revanche, notés $\reg(a)$, sont tous les composants
+qui influent sur $a$, soit directement, soit à travers une sorte coopérative.
+Il est à noter que les régulateurs définis de cette manière seront potentiellement
+des régulateurs de $a$ dans le modèle de Thomas inféré,
+tels que définis \vpageref{regulateurs},
+ce qui explique pourquoi ces deux définitions sont proches.
 
-Pour tout ensemble de composants $g \subset \components$ et tout sous-état
-$\sigma \in \PHsubl_g$, on note $\ctx_g(\sigma)$ l'ensemble des processus frappant $a$
+\begin{align*}
+  \forall a \in \components, \pred(a) &\DEF \{ b \in \PHs \mid
+    \exists h \in \PHh, \sorte{\frappeur{h}} = b \wedge
+    \sorte{\cible{h}} = a \} \\
+  \forall a \in \components, \reg(a) &\DEF \{ \compin(b) \mid
+    b \in \pred(a) \}
+\end{align*}
+Où $\compin(b)$ fait référence aux composants qui régulent la sorte coopérative $b$,
+autrement dit aux sortes que $b$ représente
+(cf.~\vdefref{comp}).
 
-Given a set $g$ of components and a configuration (\ie a sub-state) $\sigma$, $\ctx_g(\sigma)$
-refers to the set of processes hitting $a$ regulated by any sort in $g$ (\pref{eq:ctx-sigma}).
-If $g=\{b\}$, we simply note $\ctx_b(\sigma)$.
-This set is composed of the active processes of sorts in $g$, and the focal process (assumed
-unique) of the cooperative sorts $\upsilon$ hitting $a$ that have a predecessor in $g$.
-The evaluation of the focal process of $\upsilon$ in context $\sigma$, denoted $\upsilon(\sigma)$,
-relies on \pref{pro:wf-cooperative-sort}, which gives its value when all the direct predecessors of
-$\upsilon$ are defined in $\sigma$.
-When a predecessor $\upsilon'$ is not in $\sigma$, we extend the evaluation by recursively computing
-the focal value of $\upsilon'$ is $\sigma$, as stated in \pref{eq:cooperative-eval},
-where $\uplus$ stands for a union of states (which are sets of processes).
-Because there is no cycle between cooperative sorts, this recursive evaluation of $\upsilon(\sigma)$
-always terminates.
-\begin{align}
-%\[
-\forall g\subset \Gamma,
-  \ctx_g(\sigma) & \DEF \{ \sigma[b] \mid b\in g \} \cup \{ \upsilon(\sigma) \mid
-\upsilon\in\PHdirectpredec{a} \setminus \Gamma \wedge g\cap \PHpredecgene{\upsilon} \neq \emptyset \}
-\label{eq:ctx-sigma}
-\\
-\upsilon(\sigma) & \DEF
-\upsilon(\sigma \uplus \etat{\upsilon'(\sigma) \mid 
-  \upsilon'\in\PHdirectpredec{\upsilon} \wedge
-  \upsilon'\in\PHs\setminus\Gamma })
-\label{eq:cooperative-eval}
-%\]
-\end{align}
+L'étude des influences d'un composant $b$ régulant un autre composant $a$ nécessite d'étudier
+le groupe de régulateurs de $b$ qui vont influencer conjointement $a$.
+Ces groupes de régulateurs sont aisément déterminés en observant les sortes coopératives.
+Nous proposons ici de définir les groupes de régulateurs comme étant les composants connexes
+d'un graphe reliant tous les régulateurs de $a$ qui sont représentés par une même sorte
+coopérative :
+\[
+  \forall a \in \components,
+  X(a) \DEF \mathcal{C} \big( (\reg(a),
+  \{ \{b,c\} \subset \compin(\myupsilon) \mid
+  \myupsilon \in \pred(a) \cap \cs \}) \big)
+\]
+Où $\mathcal{C}(G)$ représente l'ensemble des composantes connexes du graphe non orienté $G$.
 
-This inference mainly focuses on the presence of actions betweens two sorts to conclude on the presence of a regulation.
-We aim at inferring that $b$ activates (inhibits) $a$ if there exists a configuration where increasing
-the level of $b$ makes possible the increase (decrease) of the level of $a$,
-which is directly inspired from the works of~\cite{Richard2010378}.
-To do so, the sets of components cooperating together to hit $a$, called groups of influence of $a$, are studied.
-Such groups are given by $X(a)$ which is the set of connected components in the graph linking two regulators
-$b$ and $c$ of $a$ if they use a common cooperative sort to have an influence on $a$ (\pref{eq:influence-groups}).
-\begin{equation}
-X(a) = \mathcal C\left( (\PHpredecgene{a}, \{ \{b,c\} \mid
-        \exists \upsilon\in \PHdirectpredec{a} \setminus \Gamma,
-        \{b,c\} \subset \PHpredecgene{\upsilon} \}) \right)
-\label{eq:influence-groups}
-\end{equation}
+Pour étudier l'influence d'un groupe de régulateurs $g$ sur un composant $a$,
+nous effectuons une analyse exhaustive de toutes les configurations possibles de $g$.
+Pour cela, il est nécessaire de définir un sous-état $\sigma$ sur les sortes de $g$,
+et et de compléter ce sous-état par les processus de sorte coopérative
+qui représentent l'état des composants dans $g$.
+Nous définissons pour cela l'ensemble $\allFocals{a}{g}{\sigma}$
+qui contient l'état des sortes de $g$, celui de $a$, et celui de toutes les sortes
+coopératives frappant $a$.
 
-To infer influence of a component $b$ on a component $a$,
-we observe the direction of evolution of $a$ for different active processes of $b$.
-The fact that $a$ tends to evolve differently when $b$ changes denotes an influence from $b$.
-Formally, for a given group $g$ of regulators of a component $a$
-(that is, a minimal set of components regulating $a$ through common cooperative sorts),
-and a configuration $\ctx$ on $g$, we note
-$\irB_a(\sigma)$ the set of processes towards which $a$ can bounce (\pref{eq:possible-bounces}).
-%This set is defined using the set $\irF_a(\sigma)$ of action hitting $\PHget{\sigma}{a}$ in $\sigma$ (\pref{eq:possible-actions})
-%and the set of processes $\ctx$ hitting any process of $a$ (\pref{eq:ctx-sigma}).
-If $a$ cannot be hit by any action in $\sigma$, then $\irB_a(\sigma) = \{ \PHget{\sigma}{a} \}$.
-%
-\begin{align}
-\begin{split}\label{eq:possible-bounces}
-  &\forall g \in X(a), \forall \sigma \in \textstyle\prod_{c\in g \cup \{ a \}} \PHl_c,
+%allFocals
+\begin{align*}
+  &\forall a \in \components, \forall g \in X(a), \forall \sigma \in \PHsubl_{g \cup \{ a \}}, \\
+  & \quad
+  \allFocals{a}{g}{\sigma} = \{ \PHget{\sigma}{b} \mid b \in \pred(a) \cap \components \}
+  \cup \{ \pfp_\sigma(b) \mid b \in \pred(a) \cap \cs \}
+\end{align*}
+Avec :
+\[
+  \pfp_\sigma(b) = \pfp_{s \recouvre \sigma}(b)
+\]
+où le choix de $s \in \PHl$ est indifférent d'après le point (\ref{csss}) de la \vdefref{cs}.
+
+Enfin, il est possible d'étudier localement la dynamique de $a$ en fonction du sous-état
+$\sigma$ d'un groupe de régulateurs $g$ donné ;
+cette dynamique locale se concentre donc uniquement sur les actions frappant $a$.
+En effet, en faisant varier l'un des composants $b \in g$ et en observant le résultat
+sur l'évolution de $a$ (tendance à l'augmentation ou à la diminution de son niveau d'expression),
+il est possible d'en déduire l'influence locale de $b$ sur $a$ pour un niveau d'expression
+de $b$ donné.
+Pour cela, nous appelons $\irB_a(\sigma)$ l'ensemble des processus vers lesquels $a$ peut évoluer
+depuis le sous-état $\sigma$ ;
+naturellement, si aucune action ne frappe $a$ dans $\sigma$,
+alors $\irB_a(\sigma) = \PHget{\sigma}{a}$.
+
+\begin{align*}
+  &\forall g \in X(a), \forall \sigma \in \PHsubl_{g \cup \{ a \}},
   \irB_a(\sigma) \DEF 
   \begin{cases}
     \irF_a(\sigma)
-      & \text{ if } \irF_a(\sigma) \neq \emptyset\\
+      & \text{ si } \irF_a(\sigma) \neq \emptyset\\
     \{ \PHget{\sigma}{a} \}
-      & \text{ if } \irF_a(\sigma) = \emptyset
+      & \text{ si } \irF_a(\sigma) = \emptyset
   \end{cases}\\
-  &\text{where: } \irF_a(\sigma) \DEF \{ a_k \in \PHl_a \mid \exists b \in \PHs, \exists \PHfrappe{b_i}{a_j}{a_k} \in \PHa,\\
-  & \qquad\qquad\qquad\qquad\qquad\qquad \PHget{\sigma}{a} = a_j \wedge \PHget{(\ctx_{g}(\sigma))}{b} = b_i \}\\
-\end{split}
-\end{align}
+  &\text{où : } \irF_a(\sigma) \DEF \{ a_k \in \PHl_a \mid
+    \exists b \in \PHs, \exists \PHfrappe{b_i}{a_j}{a_k} \in \PHa,
+  \{ b_i, a_j \} \subset \allFocals{a}{g}{\sigma} \}\\
+\end{align*}
 
-\pref{pps:inference-edges} details the inference of all existing influences between components occurring
-with a threshold $t$.
-The main idea of this inference is that
-the presence of a positive (negative) influence of a component $b$ on $a$ denotes the fact that
-there exists a state in which increasing the level of $b$ tends to make the future level of $a$ rise (drop)
-(\pref{eq:edges-inference}).
-Therefore, these influences are split into positive and negative ones, and represent possible edges in the final IG.
-Furthermore, studying the influences of the groups of regulators of $a$
-allows to study its auto-influences, and thus infer auto-edges on $a$ in the IG (\pref{eq:edges-inference-auto}).
-Finally, \pref{eq:edges-inference-noreg} handles the special case where $a$ has no regulators.
-We ignore the cases where a component has no visible influence on another.
-%
-\begin{proposition}[Influences inference]\label{pps:inference-edges}
-We define the set of positive (resp. negative) influences $\hat{E}_+$ (resp. $\hat{E}_-$) for any $a\in\Gamma$ by:
-% Arcs a -> b, a ≠ b
-\begin{align}
-\begin{split}\label{eq:edges-inference}
-  \forall b\in\PHpredecgene{a}, \forall s \in \{ +, - \}, \\
-  b \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), b \in g,
-  \exists \sigma \in \textstyle\prod_{c\in g \cup \{ a \}} \PHl_c, \\
-    &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
-    &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
-    &\qquad s = \f{sign}(k - j)
-\end{split}
-\end{align}
-% Auto-arcs depuis les groupes de régulateurs
-\begin{align}
-\begin{split}\label{eq:edges-inference-auto}
-  \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-  a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a),
-  \exists \sigma \in \textstyle\prod_{c\in g \cup \{ a \}} \PHl_c, \\
-    &\qquad \{ a_t, a_{t+1} \} \subset \PHl_a \wedge a_t \in \sigma,\\
-    &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{a_{t+1}\}), \\
-    &\qquad s = \f{sign}(k - j)
-\end{split}
-\end{align}
-% Auto-arcs des composants sans prédécesseurs
-\begin{align}
-\begin{split}\label{eq:edges-inference-noreg}
-  \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-  a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \PHpredecgene{a} = \emptyset \wedge \{ a_t, a_{t+1} \} \subset \PHl_a, \\
-    &\qquad \exists a_j \in \irB_a(\etat{a_t}), \exists a_k \in \irB_a(\etat{a_{t+1}}), \\
-    &\qquad s = \f{sign}(k - j)
-\end{split}
-\end{align}
-\begin{comment}
-% Arcs a -> b, a ≠ b
-\begin{align}
-\begin{split}\label{eq:edges-inference}
-  \forall b\in\PHpredecgene{a}, \forall s \in \{ +, - \}, \\
-  b \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), b \in g,
-  \exists \sigma \in \textstyle\prod_{c\in g \cup \{ a \}} \PHl_c, \\
-    &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
-    &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
-    &\qquad s = \f{sign}(k - a)
-\end{split}
-\end{align}
-% Auto-arcs depuis les groupes de régulateurs
-\begin{align}
-\begin{split}\label{eq:edges-inference-auto}
-  \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-  a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), \exists b \in g,
-  \exists \sigma \in \textstyle\prod_{c\in g \cup \{ a \}} \PHl_c, \\
-    &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
-    &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
-    &\qquad s = \f{sign}(a_k - a_j)
-\end{split}
-\end{align}
-% Auto-arcs des composants sans prédécesseurs
-\begin{align}
-\begin{split}\label{eq:edges-inference-noreg}
-  \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-  a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \reg{a} = \emptyset \wedge \{ a_t, a_{t+1} \} \subset \PHl_a, \\
-    &\qquad \exists a_j \in \irB_a(\PHetat{a_t}), \exists a_k \in \irB_a(\PHetat{a_{t+1}}), \\
-    &\qquad s = \f{sign}(a_k - a_j)
-\end{split}
-\end{align}
-\end{comment}
-where $\f{sign}(x) = \begin{cases}|x|/x & \text{ if $x \neq 0$} \\ 0 & \text{ if $x = 0$}\end{cases}$ \enspace.
+
+La \propref{inference-edges} détaille l'inférence de toutes les influences locales existant
+entre les composants, c'est-à-dire celles qui se produisent pour un seuil donné $t$.
+L'idée principale derrière cette inférence est la suivante :
+s'il existe une une influence
+positive (\resp négative) d'un composant $b$ sur un autre composant $a$,
+alors augmenter le niveau d'expression de $b$
+va potentiellement faire faire augmenter (\resp diminuer) le niveau d'expression de $a$,
+au moins dans certaines configurations (\eqref{edges-inference}).
+Ainsi, ces influences locales se séparent en influences positives et négatives,
+ce qui représente de potentiels arcs dans le graphe des interactions final.
+De plus, l'étude des influences sur les groupes de régulateurs d'un composant $a$
+permet aussi d'étudier les auto-influences de $a$
+(\eqref{edges-inference-auto})
+ce qui permettra potentiellement d'inférer des auto-arcs.
+Finalement, il est nécessaire d'étudier le cas particulier où $a$ ne possède pas de régulateurs
+(\eqref{edges-inference-noreg}).
+Nous notons que cette méthode ignore naturellement tous les cas où il n'est pas possible
+de distinguer une influence d'un composant sur un autre.
+
+\begin{proposition}[Inférence des influences]
+\proplabel{inference-edges}
+  Nous définissons l'ensemble $\hat{E}_+$ (\resp $\hat{E}_-$)
+  des \emph{influences locales positives} (\resp \emph{négatives})
+  pour tout composant $a \in \components$ par :
+  % Arcs a -> b, a ≠ b
+  \begin{align}
+    \begin{split}\eqlabel{edges-inference}
+      \forall b \in \reg(a), \forall s \in \{ +, - \}, \\
+      b \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), b \in g,
+      \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
+        &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
+        &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
+        &\qquad s = \f{signe}(k - j)
+    \end{split}
+    \end{align}
+    % Auto-arcs depuis les groupes de régulateurs
+    \begin{align}
+    \begin{split}\eqlabel{edges-inference-auto}
+      \forall s \in \{ +, - \}, \quad\qquad\qquad \\
+      a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a),
+      \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
+        &\qquad \{ a_t, a_{t+1} \} \subset \PHl_a \wedge a_t \in \sigma,\\
+        &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{a_{t+1}\}), \\
+        &\qquad s = \f{signe}(k - j)
+    \end{split}
+    \end{align}
+    % Auto-arcs des composants sans prédécesseurs
+    \begin{align}
+    \begin{split}\eqlabel{edges-inference-noreg}
+      \forall s \in \{ +, - \}, \quad\qquad\qquad \\
+      a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \reg(a) = \emptyset \wedge
+        \{ a_t, a_{t+1} \} \subset \PHl_a, \\
+        &\qquad \exists a_j \in \irB_a(\etat{a_t}), \exists a_k \in \irB_a(\etat{a_{t+1}}), \\
+        &\qquad s = \f{signe}(k - j)
+    \end{split}
+  \end{align}
+  où : $\f{signe}(x) = \begin{cases}
+    + & \text{ si $x > 0$} \\
+    - & \text{ si $x < 0$} \\
+    0 & \text{ if $x = 0$}
+  \end{cases}$
 \end{proposition}
 
-We are now able to infer the edges of the final IG by considering positive and negative influences
-(\pref{pps:inference-IG}).
-We infer a positive (resp. negative) edge if there only exist corresponding influences with the same sign.
-If an influence is both positive and negative, we infer an unsigned edge.
-In the end, the threshold of each edge is the minimum threshold for which an influence has been found.
-%
-\begin{proposition}[Interaction Graph inference]\label{pps:inference-IG}
-We infer $IG = (\Gamma,E)$ using \pref{pps:inference-edges} as follows:
-\begin{align*}
-E_+ &= \{ \arc{a}{+}{t}{b} \mid \nexists a \xrightarrow{t'} b \in \hat{E}_-
-  \wedge t = \min \{ l \mid a \xrightarrow{l} b \in \hat{E}_+\}\} \\
-E_- &= \{ \arc{a}{-}{t}{b} \mid \nexists a \xrightarrow{t'} b \in \hat{E}_+
-  \wedge t = \min \{l \mid a \xrightarrow{l} b \in \hat{E}_-\}\} \\
-E_\pm &= \{ \arc{a}{\uns}{t}{b} \mid \exists a \xrightarrow{t'} b \in \hat{E}_+ \wedge \exists a \xrightarrow{t''} b \in \hat{E}_- \\
-  & \qquad\qquad\qquad \wedge t = \min \{l \mid a \xrightarrow{l} b \in \hat{E}_- \cup \hat{E}_+\}\}
-\end{align*}
+Nous sommes alors en mesure d'inférer les arcs du graphe des interactions final,
+à partir de ces ensembles d'influences locales positives et négatives.
+En effet, nous pouvons inférer une influence (globale) positive ou négative
+d'un composant vers un autre
+s'il n'existe que des influences locales correspondantes du même signe.
+Une influence non-signée est inférée si, à l'inverse, il existe au moins deux influences
+locales correspondantes de signes différents.
+Enfin, le seuil de chaque influence (quel que soit son signe)
+est égal au seuil minimum pour lequel une influence locale a été trouvée.
+Nous formalisons cette inférence dans la \propref{inference-gi}.
+
+\begin{proposition}[Inférence du graphe des interactions]
+\proplabel{inference-gi}
+  Nous inférons $\GI = (\Gamma; E)$ à l'aide de la \propref{inference-edges} comme suit :
+  \begin{align*}
+    E_+ &= \{ \arc{a}{+}{t}{b} \mid \nexists a \xrightarrow{t'} b \in \hat{E}_-
+      \wedge t = \min \{ r \mid a \xrightarrow{r} b \in \hat{E}_+ \}\} \\
+    E_- &= \{ \arc{a}{-}{t}{b} \mid \nexists a \xrightarrow{t'} b \in \hat{E}_+
+      \wedge t = \min \{ r \mid a \xrightarrow{r} b \in \hat{E}_- \}\} \\
+    E_\uns &= \{ \arc{a}{\uns}{t}{b} \mid \exists a \xrightarrow{t'} b \in \hat{E}_+ \wedge
+      \exists a \xrightarrow{t''} b \in \hat{E}_- \\
+      & \qquad\qquad\qquad \wedge t = \min \{ r \mid
+      a \xrightarrow{r} b \in \hat{E}_- \cup \hat{E}_+ \} \}
+  \end{align*}
 \end{proposition}
 
 
 
-\begin{example}
-The IG inference of the PH of \pref{fig:runningPH-1} gives the
-IG in \pref{fig:BRN-inf1}, containing the following edges:
-\begin{align*}
-  E_+ &= \{\arcf{b}{+}{1}{a}, \arcf{c}{+}{1}{a}, \arcf{a}{+}{1}{a}, \arcf{b}{+}{1}{b}, \arcf{c}{+}{1}{c}\}\\
-  E_- &= \{\arcf{a}{-}{2}{b}\} \qquad\qquad\qquad\qquad\qquad
-  E_\uns = \emptyset
-\end{align*}
-This IG is close to the one in \pref{fig:runningBRN} but not equivalent,
-as each component has an additional auto-action.
-The auto-actions on $b$ and $c$ are the consequence of a global stability
-in some configurations: $c$ never evolves, and neither does $b$ when $a_2$ is not active.
-The auto-action on $a$ is mainly caused by its multi-valued nature.
 
-The inference of the refined PH of \pref{fig:runningPH-2} gives the same IG.
-
-\begin{figure}[t]
+\begin{figure}[ht]
 \centering
-\scalebox{1.2}{
-\begin{tikzpicture}[grn]
-  \path[use as bounding box] (-1.3,-0.75) rectangle (3.5,1.5);
-  \node[inner sep=0] (a) at (2,0) {a};
-  \node[inner sep=0] (b) at (0,0) {b};
-  \node[inner sep=0] (c) at (2,1.2) {c};
-  \path[->]
-    (b) edge[bend right] node[elabel, below=-2pt] {$+1$} (a)
-    (c) edge node[elabel, right=-2pt] {$+1$} (a)
-    (a) edge[bend right] node[elabel, above=-5pt] {$-2$} (b)
-    (b) edge[in=-15+180, out=15+180, loop] node[elabel, left=-2pt] {+1} (b)
-    (c) edge[in=15, out=-15, loop] node[elabel, right=-2pt] {+1} (c)
-    (a) edge[in=15, out=-15, loop] node[elabel, right=-2pt] {+1} (a);
+\scalebox{1.3}{
+\begin{tikzpicture}
+  \path[use as bounding box] (-4,-1.9) rectangle (4.5,3.9);
+
+  \TSort{(0,0)}{a}{3}{l}
+  \TSort{(3, 3)}{b}{2}{t}
+  \TSort{(3,-1)}{c}{2}{b}
+
+  \TSetTick{bc}{0}{00}
+  \TSetTick{bc}{1}{01}
+  \TSetTick{bc}{2}{10}
+  \TSetTick{bc}{3}{11}
+  % \TSetSortLbcel{bc}{$\neg a\wedge b$}
+  \TSort{(-3,-0.5)}{bc}{4}{l}
+
+  \THit{bc_3}{}{a_1}{.north west}{a_2}
+  \THit{bc_0}{}{a_1}{.south west}{a_0}
+  \path[bounce]
+  \TBounce{a_1}{bend left}{a_2}{.south west}
+  \TBounce{a_1}{bend right}{a_0}{.north west}
+  ;
+
+  \THit{b_0}{}{a_2}{.east}{a_1}
+  \THit{b_1}{}{a_0}{.north east}{a_1}
+  \path[bounce]
+  \TBounce{a_2}{bend left}{a_1}{.north east}
+  \TBounce{a_0}{bend right=20}{a_1}{.south}
+  ;
+
+  \THit{c_0}{bend right}{a_2}{.south east}{a_1}
+  \THit{c_1}{bend right}{a_0}{.east}{a_1}
+  \path[bounce]
+  \TBounce{a_2}{bend left=20}{a_1}{.north}
+  \TBounce{a_0}{bend right=30}{a_1}{.south east}
+  ;
+
+  \path[]
+    (1.9,-1.3) edge[bend left=10,coopupdate] (-2.2,-0.7)
+    (1.9, 3.3) edge[bend right=10,coopupdate] (-2.2,3)
+  ;
+
+  \THit{a_2}{bend left,out=40,in=80}{b_1}{.north west}{b_0}
+  \path[bounce, bend right]
+  \TBounce{b_1}{}{b_0}{.east}
+  ;
 \end{tikzpicture}
 }
-\caption{\label{fig:BRN-inf1}
-  Result of the IG inference performed on the PH of \pref{fig:runningPH-2}.
+\caption{\figlabel{infer-ex-ph}%
+  Exemple de Frappes de Processus canoniques avec trois composants ($a$, $b$ et $c$)
+  et une sorte coopérative ($bc$).
+  La dynamique de ce modèle est unitaire car il respecte bien le \vcrref{unitaire}.
+  L'inférence du graphe des interactions peut donc être effectuée sur ce modèle.
 }
 \end{figure}
 
+
+
+\begin{example}
+  L'application de l'inférence du graphe des interactions aux Frappes de Processus canoniques
+  de la \figref{infer-ex-ph} donne le graphe représenté à la \figref{infer-ig},
+  contenant les arcs suivants :
+  \begin{align*}
+    E_+ &= \{\arcf{b}{+}{1}{a}, \arcf{c}{+}{1}{a}, \arcf{a}{+}{1}{a},
+      \arcf{b}{+}{1}{b}, \arcf{c}{+}{1}{c}\} \\
+    E_- &= \{\arcf{a}{-}{2}{b}\} \qquad\qquad\qquad\qquad\qquad
+    E_\uns = \emptyset
+  \end{align*}
+  Ce graphe des interactions est proche de celui qui avait été proposé
+  \vfigref{thomas}(gauche) bien qu'il ne soit pas équivalent,
+  car chaque composant comporte une auto-action positive.
+  Les auto-actions sur $b$ et $c$ sont la conséquence d'une stabilité globale
+  sur plusieurs sous-états : en effet, $c$ n'évolue jamais,
+  et $b$ n'évolue pas non plus lorsque $a_2$ n'est pas actif.
+  L'auto-action sur $a$ est principalement causée par sa nature multi-valuée.
+  
+  \begin{figure}[ht]
+  \centering
+  \scalebox{1.2}{
+  \begin{tikzpicture}[grn]
+    \path[use as bounding box] (-1.3,-0.75) rectangle (3.5,1.5);
+    \node[inner sep=0] (a) at (2,0) {a};
+    \node[inner sep=0] (b) at (0,0) {b};
+    \node[inner sep=0] (c) at (2,1.2) {c};
+    \path[->]
+      (b) edge[bend right] node[elabel, below=-2pt] {$+1$} (a)
+      (c) edge node[elabel, right=-2pt] {$+1$} (a)
+      (a) edge[bend right] node[elabel, above=-5pt] {$-2$} (b)
+      (b) edge[in=-15+180, out=15+180, loop] node[elabel, left=-2pt] {+1} (b)
+      (c) edge[in=15, out=-15, loop] node[elabel, right=-2pt] {+1} (c)
+      (a) edge[in=15, out=-15, loop] node[elabel, right=-2pt] {+1} (a);
+  \end{tikzpicture}
+  }
+  \caption{\figlabel{infer-ig}%
+    Graphe des interactions inféré depuis les Frappes de Processus de la \figref{infer-ex-ph}.
+  }
+  \end{figure}
 \end{example}
+
+\begin{example}
+  Si on remplace la sorte coopérative $bc$ des Frappes de Processus de la \figref{infer-ex-ph}
+  par quatre actions
+  \[ \PHfrappe{b_0}{a_1}{a_0} ; \PHfrappe{b_1}{a_1}{a_2} ;
+     \PHfrappe{c_0}{a_1}{a_0} ; \PHfrappe{c_1}{a_1}{a_2} \]
+  on obtient à nouveau le graphe des interactions donné à la \figref{infer-ig}.
+\end{example}
+
+\begin{example}
+  L'ajout d'une action $\PHfrappe{a_2}{b_0}{b_1}$ aux Frappes de Processus canoniques de la
+  \figref{infer-ex-ph} modifie le résultat de l'inférence.
+  En effet, dans ce cas deux arcs non-signés vers $b$ sont inférés en lieu et place
+  des arcs signés précédents :
+  \begin{align*}
+    E_+ &= \{\arcf{b}{+}{1}{a}, \arcf{c}{+}{1}{a}, \arcf{a}{+}{1}{a}, \arcf{c}{+}{1}{c}\}\\
+    E_- &= \emptyset \qquad\qquad\qquad\qquad
+    E_\uns = \{\arcf{a}{\uns}{2}{b}, \arcf{b}{\uns}{1}{b}\}
+  \end{align*}
+  Cela est dû au fait que les actions $\PHfrappe{a_2}{b_1}{b_0}$ et $\PHfrappe{a_2}{b_0}{b_1}$
+  introduisent des oscillations causées uniquement par le processus $a_2$,
+  ce qui implique une influence locale à la fois positive et négative,
+  et est impossible à représenter au sein d'un modèle de Thomas.
+\end{example}
+
+
+
+
+
+
+
+
+\subsection{Inférence de la paramétrisation}
+\seclabel{infer-param}
+
+Une fois obtenu le graphe des interactions inféré selon la méthode proposée à la section
+précédente, il est ensuite possible d'inférer une partie des paramètres discrets
+propres à un modèle de Thomas, en fonction de la dynamique des Frappes de Processus canoniques
+d'origine.
+Cette inférence repose à nouveau sur une exploration exhaustive des comportements possibles
+du modèle en fonction de l'état des prédécesseurs de chaque composant.
+Cependant, cette inférence peut être partielle si le comportement modélisé
+ne peut pas être représenté à l'aide d'un modèle de Thomas.
+Dans ce cas, il est possible d'inférer une partie seulement des paramètres,
+puis d'énumérer toutes les modèles compatibles avec cette paramétrisation partielle,
+la dynamique du modèle et certaines contraintes de modélisation sur les paramètres.
+
+\subsection{Inférence des paramètres}
+\seclabel{infer-params}
+
+Cette sous-section présente l'inférence des paramètres discrets indépendants
+à partir d'un modèle de Frappes de Processus donné.
+Ces résultats sont équivalents à ceux présentés par \citeasnoun{PMR10-TCSB},
+auxquels nous ajoutons la notion de \emph{Frappes de Processus bien formées
+pour l'inférence des paramètres}, définie au \crref{infer-params-ok},
+et qui stipule que pour toute régulation de $a$ par $b$,
+tous les processus de $\levels{b}{a}$ (\resp $\ulevels{b}{a}$)
+possèdent la même influence sur $a$.
+
+\begin{property}[Frappes de Processus bien formées pour l'inférence des paramètres]
+\crlabel{infer-params-ok}
+  Des Frappes de Processus canoniques sont \emph{bien formées pour l'inférence des paramètres}
+  si et seulement si leur dynamique est unitaire (\crref{unitaire})
+  et si le graphe des interactions $(\Gamma; E)$ inféré par \propref{inference-gi}
+  vérifie :
+  \begin{align*}
+    \begin{split}
+      \forall a \in \Gamma &, \forall b \in \RRBreg{a},
+        \forall N \in \{ \levels{b}{a}, \ulevels{b}{a} \}, \forall i,j \in N, \\
+        %\forall (i, j \in \levels{b}{a} \vee i, j \in \ulevels{b}{a}), \\
+      & \forall c \in \PHs, ( (b \neq a \wedge c = a) \vee
+        (\exists \myupsilon \in \pred(a), c \in \conn(\myupsilon) \wedge b \in \compin(c)), \\
+%        (c \in \PHpredec{a} \setminus \Gamma \wedge b \in \PHdirectpredec{c})), \\
+      & \qquad \PHfrappe{b_i}{c_k}{c_l}\in\PHa \Leftrightarrow \PHfrappe{b_j}{c_k}{c_l}\in\PHa
+    \end{split}
+  \end{align*}
+\end{property}
+
+On souhaite dans la suite inférer le paramètre discret $K_{a,\omega}$,
+pour un composant $a \in \components$ et un ensemble $\omega \subset \RRBreg{a}$
+de ressources donnés.
+Cette inférence se base, à l'instar de l'inférence du graphe des interactions, sur une analyse
+exhaustive des sous-états des régulateurs de $a$.
+Pour chaque sorte $b \in \RRBreg{a}$, on définit un \todo{\emph{contexte}} $C^b_{a,\omega}$
+(\eqref{param-context}) qui recense tous les processus qui interagissent avec $a$
+dans tous les sous-états représentés par l'ensemble de ressources $\omega$.
+Le contexte d'une sorte coopérative $\myupsilon$ régulant $a$ est l'ensemble des processus
+focaux correspondant à ces sous-états (\eqref{param-context-coop}).
+Enfin, $C_{a,\omega}$ fait référence à l'union de tous ces contextes
+(\eqref{param-context-total}).
+
+\begin{align}
+\eqlabel{param-context}
+  \forall b \in \Gamma,~
+  C_{a,\omega}^b & \DEF \begin{cases}
+    \levels{b}{a}  & \text{si $b \in \omega$,}\\
+    \ulevels{b}{a} & \text{si $b \notin \omega$,}\\
+    L_b            & \text{sinon}\\
+  \end{cases}
+  \\
+\eqlabel{param-context-coop}
+  \forall \myupsilon \in \pred(a) \cap \cs,
+    C_{a,\omega}^\myupsilon & \DEF \{ \pfp_{\sigma}(\myupsilon) \mid
+    \sigma \in \bigtimes{b \in \compin(\myupsilon)} C_{a,\omega}^b \} \\
+\eqlabel{param-context-total}
+  C_{a,\omega} & \DEF \bigcup_{b \in \pred(a)} C^b_{a,\omega}
+\end{align}
+
+Pour inférer le paramètre recherché, nous calculons les \emph{processus focaux} de $a$,
+qui sont les processus vers lesquels tend le niveau d'expression de $a$ en présence
+de certains autres processus (\defref{focals}).
+Ainsi, $\focals(a, S, T)$ donne l'ensemble des processus de $a$ accessibles
+en partant de n'importe quel processus dans $S$, et à condition de ne jouer que des
+actions dont le frappeur est dans $T$.
+Cette notion se base sur un graphe recensant tous les bonds que peuvent faire les processus
+de $a$ ;
+si ce graphe est acyclique, alors l'ensemble des processus focaux est l'ensemble des processus
+de $a$ qui ne sont pas frappés ---~et vers lesquels $a$ va avoir tendance à évoluer.
+
+\begin{definition}[$\focals(a,S,T)$]
+\deflabel{focals}
+  L'ensemble des \emph{processus focaux} de $a \in \components$ depuis $S \subset \PHl_a$
+  pour le sous-état $T \subset \Proc$ est donné par :
+  \[
+    \focals(a, S, T) \DEF
+    \begin{cases}
+      \{ a_i \in V \mid \nexists (a_i,a_j)\in E\} & \text{si $(V,E)$ est acyclique},\\
+      \emptyset & \text{sinon}\\
+    \end{cases}
+  \]
+  où $(V,E)$ est le graphe orienté suivant :
+  \begin{align*}
+    E & \DEF \{ (a_j; a_k) \in (\PHl_a \times \PHl_a) \mid
+      \exists \PHfrappe{b_i}{a_j}{a_k} \in \PHh^{(2)}, b_i \in T \wedge a_j \in S \} \\
+    V & \DEF S \cup \{ a_k \in \PHl_a \mid \exists (a_j; a_k) \in E \}
+    %\eqlabel{bounce-graph}
+  \end{align*}
+\end{definition}
+
+Le paramètre $K_{a,\omega}$ détermine les niveaux d'expression vers lesquels tend $a$
+en présence du contexte $C_{a,\omega}$.
+Cette valeur peut être calculée à l'aide de $\focals$ qui permet justement
+de retrouver les processus focaux en présence de certaines ressources.
+Ainsi, on peut en conclure que $K_{a,\omega} = \focals(a,C^a_{a,\omega},C_{a,\omega})$
+dans tous les cas où cette valeur est un intervalle non vide (\propref{inference-param}).
+
+\begin{proposition}[Inférence des paramètres]
+\proplabel{inference-param}
+  Soient $\PH = (\PHs, \PHl, \PHh)$ des Frappes de Processus bien formées pour l'inférence des
+  paramètres, $\GI = (\Gamma, E)$ le graphe des interactions inféré pour $\PH$
+  et $\omega \subset \RRBres{a}$ un ensemble de ressources de $a$.
+  Si $\focals(a,C^a_{a,\omega},C_{a,\omega})$ est un intervalle non vide,
+  avec $\focals(a,C^a_{a,\omega},C_{a,\omega}) = \segm{a_i}{a_j}$,
+  alors $K_{a,\omega} = \segm{i}{j}$.
+\end{proposition}
 
 
 
 \begin{example}
-If we add the action $\PHfrappe{a_2}{b_0}{b_1}$ to the PH of \pref{fig:runningPH-2},
-then two unsigned edges towards $b$ are inferred instead of the previous signed edges:
-\begin{align*}
-  E_+ &= \{\arcf{b}{+}{1}{a}, \arcf{c}{+}{1}{a}, \arcf{a}{+}{1}{a}, \arcf{c}{+}{1}{c}\}\\
-  E_- &= \emptyset \qquad\qquad\qquad\qquad
-  E_\uns = \{\arcf{a}{\uns}{2}{b}, \arcf{b}{\uns}{1}{b}\}
-\end{align*}
-This is due to the fact that the actions $\PHfrappe{a_2}{b_1}{b_0}$ and $\PHfrappe{a_2}{b_0}{b_1}$
-introduce an oscillation only caused by $a$, which cannot be represented in Thomas modeling.
+%\label{ex:infer-param-runningPH-1}
+  Si on l'applique aux Frappes de Processus de la \figref{infer-ex-ph},
+  la méthode d'inférence des paramètres donnée dans cette section est conclusive sur tous
+  les paramètres et donne :
+  \begin{align*}
+    K_{a, \emptyset} &= \segm{0}{0} &
+    K_{b, \emptyset} &= \segm{0}{0} \\
+    K_{a, \{a\}} &= \segm{0}{0} &
+    K_{b, \{a\}} &= \segm{0}{0} \\
+    K_{a, \{c\}} &= \segm{1}{1} &
+    K_{b, \{b\}} &= \segm{1}{1} \\
+    K_{a, \{b\}} &= \segm{1}{1} &
+    K_{b, \{a,b\}} &= \segm{0}{0} \\
+    K_{a, \{b,c\}} &= \segm{1}{1} &
+    K_{c, \emptyset} &= \segm{0}{0} \\
+    K_{a, \{a,b,c\}} &= \segm{2}{2} &
+    K_{c, \{c\}} &= \segm{1}{1} \\
+    K_{a,\{a,b\}} &= \segm{1}{1} &
+    K_{a,\{a,c\}} &= \segm{1}{1}
+  \end{align*}
 \end{example}
+
+\todo{Exemple partiellement conclusif}
+
+En observant la \propref{inference-param}, on constate que l'inférence
+de certains paramètres peut ne pas être possible.
+Cela peut être notamment dû à des coopérations mal définies entre les régulateurs d'un composant :
+lorsque deux régulateurs frappent un même composant de façon indépendante, leurs actions peuvent
+avoir des effets opposés, créant des oscillations dans la dynamique.
+Un tel indéterminisme ne peut pas être représenté à l'aide d'un modèle de Thomas étant donné
+que dans une configuration de ressources données, un composant possède un unique attracteur,
+représenté par le paramètre discret correspondant,
+et ne peut donc évoluer que dans une seule direction.
+Il est possible de résoudre ces cas non conclusifs
+(autrement dit, de supprimer ces comportements oscillants)
+en raffinant le modèle à l'aide de suppressions d'actions ou
+en s'assurant que les coopérations sont correctement définies à l'aide de sortes coopératives
+afin d'éviter des influences opposées depuis des régulateurs concurrents.
+
+
+
+% \subsection{Admissible parametrizations}\label{ssec:admissible-K}
+% 
+% When building a BRN, one has to find the parametrization that best describes the desired behavior of the studied system.
+% Complexity is inherent to this process as the number of possible parametrizations for a given IG is exponential w.r.t.~the number of components.
+% However, the method of parameters inference presented in this section gives some information about necessary parameters given a certain dynamics described by a PH.
+% This information thus drops the number of possible parametrizations, allowing to find the desired behavior more easily.
+% 
+% We first delimit the validity of a parameter (\pref{pro:K-valid}) in order to ensure that any
+% transition in the resulting BRN is allowed by the studied PH.
+% This is verified by the existence of a hit making the concerned component bounce into the direction
+% of the value of the parameter in the matching context.
+% Thus, assuming \pref{pro:wf-ph-K} holds, any transition in the inferred BRN corresponds to at least
+% one transition in the PH, proving the correctness of our inference.
+% We remark that any parameter inferred by \pref{pps:param-K} satisfies this property.
+% 
+% \begin{property}[Parameter validity]\label{pro:K-valid}
+% A parameter $K_{a,\omega}$ is valid w.r.t. the PH if and only if the following equation is verified:
+% \begin{align*}
+%   \forall a_i\in C^a_{a,\omega}, a_i \notin K_{a,\omega} \Longrightarrow
+%     (& \exists \PHfrappe{c_k}{a_i}{a_j}\in\PHa, c_k \in C^c_{a,\omega} \\
+%      & \wedge a_i < K_{a,\omega} \Rightarrow j > i \wedge  a_i > K_{a,\omega} \Rightarrow j <i )
+% \end{align*}
+% \end{property}
+% 
+% Then, we use some additional biological constraints on Thomas' parameters given in
+% \cite{BernotSemBRN}, that we sum up in the following three properties:
+% 
+% \begin{property}[Extreme values assumption]
+% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{extreme values assumption} if and only if:
+% \label{pro:param-enum-extreme}
+% \begin{align*}
+%   \forall b \in \Gamma, \GRNreg{b} \neq \emptyset \Longrightarrow \exists \omega \subset \GRNreg{b}, 0 \in K_{b,\omega} \wedge \exists \omega' \subset \GRNreg{b}, l_b \in K_{b,\omega'}
+% \end{align*}
+% \end{property}
+% 
+% \begin{property}[Activity assumption]
+% \label{pro:param-enum-activity}
+% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{activity assumption} if and only if:
+% \begin{align*}
+%   \forall b \in \Gamma, \forall a \in \GRNreg{b}, \exists \omega \subset \GRNreg{b}, K_{b,\omega} \neq K_{b,\omega \cup \{ a \}}
+% \end{align*}
+% \end{property}
+% 
+% \begin{property}[Monotonicity assumption]
+% \label{pro:param-enum-monotonicity}
+% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{monotonicity assumption} if and only if:
+% \begin{align*}
+%   \forall b \in \Gamma,
+%   \forall A^+ \subset \{ a \in \Gamma \mid \GRNedge{a}{+}{t}{b} \in E_+ \}&,
+%   \forall A^- \subset \{ a \in \Gamma \mid \GRNedge{a}{-}{t}{b} \in E_- \},\\
+%   K_{b,\omega \cup A^-} & \leqsegm K_{b,\omega \cup A^+}
+% \end{align*}
+% \end{property}
+% 
+% \begin{example}\label{ex:enum-param-runningPH-1}
+% The parametrization inferred in \pref{ex:infer-param-runningPH-1} was partial because $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ could not be inferred.
+% It is however possible to enumerate all complete and admissible parametrizations
+% compatible with both the inferred parameters, and the properties of this subsection.
+% This enumeration gives 9 different parametrizations which correspond to the 3 possible values
+% for each of the two parameters that could not be inferred:
+% \begin{align*}
+%   K_{a,\{a,b\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \} \\
+%   K_{a,\{a,c\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \}
+% \end{align*}
+% We note that for all solutions, $0 \notin K_{a,\{a,b\}} \wedge 0 \notin K_{a,\{a,c\}}$.
+% This is due to the monotonicity assumption (\pref{pro:param-enum-monotonicity}) which especially states that:
+% \begin{align*}
+%   K_{a,\{b\}} \leqsegm K_{a,\{a,b\}} \wedge
+%   K_{a,\{c\}} \leqsegm K_{a,\{a,c\}}
+% \end{align*}
+% 
+% Finally, we note that $\segm{1}{1}$ belongs to the possible values for both parameters.
+% Therefore this enumeration allows, from the model in \pref{fig:runningPH-1},
+% to find the behavior of the model refined with a cooperative sort described in \pref{fig:runningPH-2}.
+% \end{example}
