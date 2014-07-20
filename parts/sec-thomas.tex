@@ -55,13 +55,13 @@ L'utilité des arcs non-signés ($\uns$) est discutée à la fin de cette sectio
 
 \begin{definition}[Graphe des interactions]
 \deflabel{thomas-gi}
-  Un \emph{graphe des interactions} est un couple $\GI = (\Gamma; E)$ où
-  $\Gamma$ est l'ensemble fini des \emph{composants},
+  Un \emph{graphe des interactions} est un couple $\GI = (\components; E)$ où
+  $\components$ est l'ensemble fini des \emph{composants},
   étiquetés par un nom et un \emph{plafond},
   et $E$ est l'ensemble fini des \emph{régulations} entre deux nœuds,
   étiquetées par un \emph{signe} et un \emph{seuil} :
     \[E \DEF \{ \arc{a}{s}{t}{b}, \ldots \mid
-      a, b \in \Gamma \wedge s \in \{ +, -, \uns \} \wedge t \in \segm{1}{l_a}\}\]
+      a, b \in \components \wedge s \in \{ +, -, \uns \} \wedge t \in \segm{1}{l_a}\}\]
   tel que chaque régulation de $a$ vers $b$ soit unique :
     \[\forall \arc{a}{s}{t}{b} \in E,
       \forall \arc{a}{s'}{t'}{b} \in E, s = s' \wedge t = t' \enspace.\]
@@ -69,14 +69,14 @@ L'utilité des arcs non-signés ($\uns$) est discutée à la fin de cette sectio
 %
 Étant donnée cette définition, on note
 $E_s \DEF \{ \arc{a}{s}{t}{b} \in E \}$ pour $s \in \{ +, -, \uns \}$.
-De plus, pour tout composant $b \in \Gamma$, on note $\RRBreg{b}$ l'ensemble de ses
+De plus, pour tout composant $b \in \components$, on note $\RRBreg{b}$ l'ensemble de ses
 \emph{régulateurs} :
-    \[\RRBreg{b} \DEF \{ a \in \Gamma \mid \exists \arc{a}{s}{t}{b} \in E \}\]
+    \[\RRBreg{b} \DEF \{ a \in \components \mid \exists \arc{a}{s}{t}{b} \in E \}\]
 \label{regulateurs}
 
 \begin{example}
-  La \figref{thomas}(gauche) représente un graphe des interactions $(\Gamma; E)$ où
-  $\Gamma = \{a, b, c\}$, avec $l_a = 2$ et $l_b = l_c = 1$, et :
+  La \figref{thomas}(gauche) représente un graphe des interactions $(\components; E)$ où
+  $\components = \{a, b, c\}$, avec $l_a = 2$ et $l_b = l_c = 1$, et :
   \begin{align*}
     E_+ &= \{\arc{b}{+}{1}{a}, \arc{c}{+}{1}{a}\} &
     E_\uns &= \emptyset \\
@@ -155,7 +155,7 @@ si $s = +$, ou l'activation de $b$ en l'absence de l'inhibition de $a$ si $s = -
 
 \begin{definition}[Niveaux effectifs ($\levelssymbol$)]
 \deflabel{levels}
-  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
+  Soit $\GI = (\components; E)$ un graphe des interactions.
   Si $\arc{a}{s}{t}{b} \in E$, on définit :
     \[\levels{a}{b} \DEF \segm{t}{l_a} \quad \text{et} \quad
       \ulevels{a}{b} \DEF \segm{0}{t-1}\]
@@ -171,8 +171,8 @@ si $s = +$, ou l'activation de $b$ en l'absence de l'inhibition de $a$ si $s = -
 
 \myskip
 
-Un \emph{état} d'un graphe des interactions $(\Gamma; E)$ est un élément de l'ensemble
-$\RRBstates \DEF \prod_{a \in \Gamma} \segm{0}{l_a}$.
+Un \emph{état} d'un graphe des interactions $(\components; E)$ est un élément de l'ensemble
+$\RRBstates \DEF \prod_{a \in \components} \segm{0}{l_a}$.
 $\RRBget{s}{a}$ se rapporte au niveau d'expression du composant $a$ dans $s$.
 Pour tout état, l'ensemble des \emph{ressources} d'un composant donné est
 l'ensemble de ses régulateurs dont le niveau d'expression est supérieur ou égal au seuil
@@ -195,8 +195,8 @@ L'intérêt des paramètres sous forme d'intervalles est discuté à la fin de c
 
 \begin{definition}[Ressources ($\RRBressymbol$)]
 \deflabel{ressources}
-  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
-  Pour tout composant $a \in \Gamma$ et tout état $s \in \RRBstates$,
+  Soit $\GI = (\components; E)$ un graphe des interactions.
+  Pour tout composant $a \in \components$ et tout état $s \in \RRBstates$,
   on appelle \emph{ressources de $a$ dans $s$} et on note $\RRBres{a}{s}$
   l'ensemble des régulateurs de $a$ dont le niveau dans $s$ est supérieur au seuil
   de la régulation qui les relie à $a$ :
@@ -205,8 +205,8 @@ L'intérêt des paramètres sous forme d'intervalles est discuté à la fin de c
 
 \begin{definition}[Paramètre $K_{a, \omega}$ et paramétrisation $K$]
 \deflabel{thomas-param}
-  Soit $\GI = (\Gamma; E)$ un graphe des interactions.
-  Pour un composant $a \in \Gamma$ donné
+  Soit $\GI = (\components; E)$ un graphe des interactions.
+  Pour un composant $a \in \components$ donné
   et $\omega \subset \RRBreg{a}$ un sous-ensemble de ses régulateurs,
   le \emph{paramètre} $K_{a,\omega} = \segm{i}{j}$ est un intervalle non-vide tel que
   $0 \leq i \leq j \leq l_a$.
@@ -247,10 +247,10 @@ appartient déjà à l'intervalle du paramètre $K_{a,\RRBres{a}{s}}$.
   $\RRBtrans{}{}\ \in \RRBstates \times \RRBstates$ définie par :
   \begin{align*}
     \forall s, s' \in \RRBstates, \RRBtrans{s}{s'}
-      &\Longleftrightarrow \exists a \in \Gamma,
+      &\Longleftrightarrow \exists a \in \components,
     \RRBget{s}{a} \notin K_{a, \RRBres{a}{s}} \wedge
       \RRBget{s'}{a} = \RRBget{s}{a} + \delta^a(s) \\
-      &\qquad\quad \wedge \forall b \in \Gamma, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
+      &\qquad\quad \wedge \forall b \in \components, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
   \end{align*}
   avec : $\delta^a(s) = 
     \begin{cases}
@@ -356,16 +356,16 @@ la dynamique \citeaffixed{Richard10,PR11-SASB}{cf. par exemple}.
 \subsubsection*{Discussion sur la valeur du plafond}
 \label{plafond}
 Le plafond $l_a$ d'un composant $a$, qui est le niveau d'expression maximum de $a$,
-est généralement choisi comme égal au nombre $\card{\Gamma^+(a)}$
+est généralement choisi comme égal au nombre $\card{\components^+(a)}$
 de régulations sortant du nœud $a$ dans le graphe des interactions,
 c'est-à-dire le nombre de composants qu'il régule.
 En effet, chaque niveau discret dans $\segm{0}{l_a}$ représente un ensemble arbitraire de valeurs
 pour une donnée réelle et généralement continue de $a$ (niveau d'activité, concentration, etc.),
 et pour laquelle $a$ possède une certaine influence sur plusieurs autres composants qu'il régule.
-Ainsi, autoriser des valeurs de $l_a$ plus grandes que $\card{\Gamma^+(a)}$
+Ainsi, autoriser des valeurs de $l_a$ plus grandes que $\card{\components^+(a)}$
 n'augmente pas l'expressivité du modèle
 car plusieurs niveaux d'expression de $a$ auront alors le même rôle au niveau des régulations.
-À l'inverse, réduire ce plafond à des valeurs plus petites que $\card{\Gamma^+(a)}$
+À l'inverse, réduire ce plafond à des valeurs plus petites que $\card{\components^+(a)}$
 sous-entendrait que plusieurs seuils de régulations sortant de $a$ sont identiques,
 ce qui est biologiquement peu plausible.
 Cependant, ces considérations peuvent être ignorées pour des raisons diverses de modélisation,
@@ -438,10 +438,10 @@ car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
 
 \begin{definition}[Réseau discret asynchrone ($\RDA$)]
 \deflabel{rda-def}
-  Si $\GI = (\Gamma; E)$ est un graphe des interactions,
+  Si $\GI = (\components; E)$ est un graphe des interactions,
   un \emph{réseau discret asynchrone} est un couple $\RDA = (\GI; F)$
-  avec $F = (f_x)_{x \in \Gamma}$, tels que
-  $\forall x \in \Gamma, f_x : \RRBstates \rightarrow \segm{0}{l_x}$.
+  avec $F = (f_x)_{x \in \components}$, tels que
+  $\forall x \in \components, f_x : \RRBstates \rightarrow \segm{0}{l_x}$.
 \end{definition}
 
 \begin{definition}[Dynamique d'un réseau discret asynchrone ($\RRBtransrda{}{}$)]
@@ -451,16 +451,16 @@ car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
   $\RRBtransrda{}{}\ \in \RRBstates \times \RRBstates$ définie par :
   \begin{align*}
     \forall s, s' \in \RRBstates, \RRBtransrda{s}{s'}
-      &\Longleftrightarrow \exists a \in \Gamma,
+      &\Longleftrightarrow \exists a \in \components,
     \RRBget{s}{a} \neq f_a(s) \wedge
       \RRBget{s'}{a} = f_a(s) \\
-      &\qquad\quad \wedge \forall b \in \Gamma, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
+      &\qquad\quad \wedge \forall b \in \components, b \neq a \Rightarrow \RRBget{s}{b} = \RRBget{s'}{b}
   \end{align*}
 \end{definition}
 
 Enfin, nous désignons par \emph{réseau booléen asynchrone}
 tout réseau discret asynchrone dont les composants ne possèdent que deux niveaux discrets,
-c'est-à-dire tel que : $\forall x \in \Gamma, l_x = 1$.
+c'est-à-dire tel que : $\forall x \in \components, l_x = 1$.
 
 
 
@@ -501,7 +501,7 @@ Elles se formulent comme suit :
     est une condition nécessaire à la présence d'oscillations dans la dynamique.
 \end{itemize}
 Ces conjectures ont par la suite été démontrées
-dans le cas booléen, c'est-à-dire lorsque $\forall x \in \Gamma, l_x = 1$
+dans le cas booléen, c'est-à-dire lorsque $\forall x \in \components, l_x = 1$
 \cite{RRT08,Richard06thesis}
 ainsi que dans le cas multivalué \cite{RiCo07,Richard10}.
 
@@ -548,7 +548,7 @@ ont aussi été étudiées, ce qui a permis de préciser ces conditions \cite{Co
 % en formulant une condition nécessaire à l'existence de plusieurs points fixes.
 % Cette condition n'est cependant pas suffisante
 % et ne renseigne pas sur le nombre de points fixes.
-% %Dans le cadre d'un modèle booléen (tel que $\forall x \in \Gamma, l_x = 1$)
+% %Dans le cadre d'un modèle booléen (tel que $\forall x \in \components, l_x = 1$)
 % L'analyse des interactions seules permet de donner une limite supérieure au nombre
 % de points fixes \cite{aracena2008maximum,Richard09}
 % ainsi que du nombre de points fixes topologiques,

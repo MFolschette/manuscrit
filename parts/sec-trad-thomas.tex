@@ -259,7 +259,7 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 
 \begin{proposition}[Inférence du graphe des interactions]
 \proplabel{inference-gi}
-  Nous inférons $\GI = (\Gamma; E)$ à l'aide de la \propref{inference-edges} comme suit :
+  Nous inférons $\GI = (\components; E)$ à l'aide de la \propref{inference-edges} comme suit :
   \begin{align*}
     E_+ &= \{ \arc{a}{+}{t}{b} \mid \nexists a \xrightarrow{t'} b \in \hat{E}_-
       \wedge t = \min \{ r \mid a \xrightarrow{r} b \in \hat{E}_+ \}\} \\
@@ -433,24 +433,24 @@ et qui stipule que pour toute régulation de $a$ par $b$,
 tous les processus de $\levels{b}{a}$ (\resp $\ulevels{b}{a}$)
 possèdent la même influence sur $a$.
 
-\begin{property}[Frappes de Processus bien formées pour l'inférence des paramètres]
+\begin{critere}[Frappes de Processus bien formées pour l'inférence des paramètres]
 \crlabel{infer-params-ok}
   Des Frappes de Processus canoniques sont \emph{bien formées pour l'inférence des paramètres}
   si et seulement si leur dynamique est unitaire (\crref{unitaire})
-  et si le graphe des interactions $(\Gamma; E)$ inféré par \propref{inference-gi}
+  et si le graphe des interactions $(\components; E)$ inféré par \propref{inference-gi}
   vérifie :
   \begin{align*}
     \begin{split}
-      \forall a \in \Gamma &, \forall b \in \RRBreg{a},
+      \forall a \in \components &, \forall b \in \RRBreg{a},
         \forall N \in \{ \levels{b}{a}, \ulevels{b}{a} \}, \forall i,j \in N, \\
         %\forall (i, j \in \levels{b}{a} \vee i, j \in \ulevels{b}{a}), \\
       & \forall c \in \PHs, ( (b \neq a \wedge c = a) \vee
         (\exists \myupsilon \in \pred(a), c \in \conn(\myupsilon) \wedge b \in \compin(c)), \\
-%        (c \in \PHpredec{a} \setminus \Gamma \wedge b \in \PHdirectpredec{c})), \\
+%        (c \in \PHpredec{a} \setminus \components \wedge b \in \PHdirectpredec{c})), \\
       & \qquad \PHfrappe{b_i}{c_k}{c_l}\in\PHa \Leftrightarrow \PHfrappe{b_j}{c_k}{c_l}\in\PHa
     \end{split}
   \end{align*}
-\end{property}
+\end{critere}
 
 On souhaite dans la suite inférer le paramètre discret $K_{a,\omega}$,
 pour un composant $a \in \components$ et un ensemble $\omega \subset \RRBreg{a}$
@@ -467,7 +467,7 @@ Enfin, $C_{a,\omega}$ fait référence à l'union de tous ces contextes
 
 \begin{align}
 \eqlabel{param-context}
-  \forall b \in \Gamma,~
+  \forall b \in \components,~
   C_{a,\omega}^b & \DEF \begin{cases}
     \levels{b}{a}  & \text{si $b \in \omega$,}\\
     \ulevels{b}{a} & \text{si $b \notin \omega$,}\\
@@ -523,7 +523,7 @@ dans tous les cas où cette valeur est un intervalle non vide (\propref{inferenc
 \begin{proposition}[Inférence des paramètres]
 \proplabel{inference-param}
   Soient $\PH = (\PHs, \PHl, \PHh)$ des Frappes de Processus bien formées pour l'inférence des
-  paramètres, $\GI = (\Gamma, E)$ le graphe des interactions inféré pour $\PH$
+  paramètres, $\GI = (\components, E)$ le graphe des interactions inféré pour $\PH$
   et $\omega \subset \RRBres{a}$ un ensemble de ressources de $a$.
   Si $\focals(a,C^a_{a,\omega},C_{a,\omega})$ est un intervalle non vide,
   avec $\focals(a,C^a_{a,\omega},C_{a,\omega}) = \segm{a_i}{a_j}$,
@@ -574,59 +574,110 @@ afin d'éviter des influences opposées depuis des régulateurs concurrents.
 
 
 
-% \subsection{Admissible parametrizations}\label{ssec:admissible-K}
-% 
-% When building a BRN, one has to find the parametrization that best describes the desired behavior of the studied system.
-% Complexity is inherent to this process as the number of possible parametrizations for a given IG is exponential w.r.t.~the number of components.
-% However, the method of parameters inference presented in this section gives some information about necessary parameters given a certain dynamics described by a PH.
-% This information thus drops the number of possible parametrizations, allowing to find the desired behavior more easily.
-% 
-% We first delimit the validity of a parameter (\pref{pro:K-valid}) in order to ensure that any
-% transition in the resulting BRN is allowed by the studied PH.
-% This is verified by the existence of a hit making the concerned component bounce into the direction
-% of the value of the parameter in the matching context.
-% Thus, assuming \pref{pro:wf-ph-K} holds, any transition in the inferred BRN corresponds to at least
-% one transition in the PH, proving the correctness of our inference.
-% We remark that any parameter inferred by \pref{pps:param-K} satisfies this property.
-% 
-% \begin{property}[Parameter validity]\label{pro:K-valid}
-% A parameter $K_{a,\omega}$ is valid w.r.t. the PH if and only if the following equation is verified:
-% \begin{align*}
-%   \forall a_i\in C^a_{a,\omega}, a_i \notin K_{a,\omega} \Longrightarrow
-%     (& \exists \PHfrappe{c_k}{a_i}{a_j}\in\PHa, c_k \in C^c_{a,\omega} \\
-%      & \wedge a_i < K_{a,\omega} \Rightarrow j > i \wedge  a_i > K_{a,\omega} \Rightarrow j <i )
-% \end{align*}
-% \end{property}
-% 
-% Then, we use some additional biological constraints on Thomas' parameters given in
-% \cite{BernotSemBRN}, that we sum up in the following three properties:
-% 
-% \begin{property}[Extreme values assumption]
-% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{extreme values assumption} if and only if:
-% \label{pro:param-enum-extreme}
-% \begin{align*}
-%   \forall b \in \Gamma, \GRNreg{b} \neq \emptyset \Longrightarrow \exists \omega \subset \GRNreg{b}, 0 \in K_{b,\omega} \wedge \exists \omega' \subset \GRNreg{b}, l_b \in K_{b,\omega'}
-% \end{align*}
-% \end{property}
-% 
-% \begin{property}[Activity assumption]
-% \label{pro:param-enum-activity}
-% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{activity assumption} if and only if:
-% \begin{align*}
-%   \forall b \in \Gamma, \forall a \in \GRNreg{b}, \exists \omega \subset \GRNreg{b}, K_{b,\omega} \neq K_{b,\omega \cup \{ a \}}
-% \end{align*}
-% \end{property}
-% 
-% \begin{property}[Monotonicity assumption]
-% \label{pro:param-enum-monotonicity}
-% Let $\GI = (\Gamma, E)$ be an IG. A parametrization $K$ on $\GI$ satisfies the \emph{monotonicity assumption} if and only if:
-% \begin{align*}
-%   \forall b \in \Gamma,
-%   \forall A^+ \subset \{ a \in \Gamma \mid \GRNedge{a}{+}{t}{b} \in E_+ \}&,
-%   \forall A^- \subset \{ a \in \Gamma \mid \GRNedge{a}{-}{t}{b} \in E_- \},\\
-%   K_{b,\omega \cup A^-} & \leqsegm K_{b,\omega \cup A^+}
-% \end{align*}
-% \end{property}
+\subsection{Énumération des paramétrisations admissibles}
+\seclabel{enum-param}
+
+Lors de la construction d'un modèle de Thomas, trouver la paramétrisation compatible avec
+le comportement désiré est nécessaire pour obtenir un modèle complet.
+Cependant, cette étape possède une complexité inhérente à ce type de formalisme,
+car le nombre de paramètres que contient le modèle croît exponentiellement dans
+la taille du graphe des interactions
+(plus précisément, dans le nombre de régulations vers chaque composant).
+La méthode d'inférence des paramètres présentée précédemment permet cependant d'obtenir
+certaines informations sur ces paramètres en fonction de la dynamique des Frappes de Processus
+canoniques étudiées.
+Ces informations permettent donc de restreindre l'espace des paramétrisations possibles,
+et donc d'obtenir plus facilement le modèle recherché.
+
+En d'autres termes,
+lors de l'inférence d'un modèle de Thomas selon la méthode décrite précédemment,
+il arrive que certains paramètres ne puissent pas être inférés.
+Le modèle obtenu est alors partiel, et correspond à un ensemble
+plus ou moins large de modèles complets.
+En énumérant les valeurs possibles de chaque paramètre, il est envisageable de retrouver
+l'ensemble des modèles \emph{compatibles} avec ces valeurs.
+
+Nous délimitons tout d'abord la validité d'un paramètre (\crref{params-valide}) afin d'assurer
+que toutes les transitions dans le modèle de Thomas résultant
+sont permises par la dynamique des Frappes de Processus canoniques étudiées.
+Cette propriété est vérifiée en s'assurant,
+pour chaque configurations de ressources possibles,
+de l'existence d'une frappe faisant bondir
+le processus d'une sorte vers le paramètres correspondant.
+Ainsi, conjointement avec le fait que les Frappes de Processus étudiées
+sont bien formées pour l'inférence des paramètres,
+nous assurons que pour toute transition dans le modèle de Thomas inféré,
+il existe une transition équivalente dans les Frappes de Processus d'origine.
+Nous remarquons par ailleurs que les paramètres inférés à l'aide de la \vpropref{inference-param}
+vérifient déjà cette propriété.
+
+
+
+\begin{critere}[Validité d'un paramètre]
+\crlabel{params-valide}
+  Un paramètre $K_{a,\omega}$ est \emph{valide} pour les Frappes de Processus $\PH$
+  si et seulement si :
+  \begin{align*}
+    \forall a_i\in C^a_{a,\omega}, a_i \notin K_{a,\omega} \Longrightarrow
+      (& \exists \PHfrappe{c_k}{a_i}{a_j}\in\PHa, c_k \in C^c_{a,\omega} \\
+      & \wedge a_i < K_{a,\omega} \Rightarrow j > i \wedge  a_i > K_{a,\omega} \Rightarrow j <i )
+  \end{align*}
+\end{critere}
+
+Nous utilisons de plus plusieurs contraintes de modélisation \citeaffixed{BernotSemBRN}{tirées de}
+afin d'assurer une cohérence des paramètres avec les signes des régulations du graphe
+des interactions préalablement inféré.
+L'\emph{hypothèse des valeurs extrêmes} (\crref{param-enum-extreme})
+stipule que les niveaux extrêmes d'un composant $a$ (c'est-à-dire $0$ et $l_a$)
+doivent chacun apparaître dans au moins un paramètre.
+L'\emph{hypothèse d'activité} (\crref{param-enum-activity})
+stipule en outre que toutes les régulations doivent être fonctionnelles,
+c'est-à-dire que pour chaque régulateur d'un composant,
+il existe au moins une configuration dans laquelle la présence ou l'absence de ce régulateur
+modifie le paramètre considéré.
+Enfin, l'\emph{hypothèse de monotonicité} (\crref{param-enum-monotonicity})
+stipule qu'ajouter un activateur (\resp inhibiteur) aux ressources d'un composant
+ne peut qu'augmenter (\resp diminuer) la valeur du paramètre considéré.
+La relation d'ordre $\leqsegm$ entre deux paramètres discrets s'applique à des segments
+et est définie à la \vsecref{notations}.
+
+\begin{critere}[Hypothèse des valeurs extrêmes]
+\crlabel{param-enum-extreme}
+  Soit $\GI = (\components, E)$ un graphe des interactions.
+  Une paramétrisation $K$ sur $\GI$ satisfait l'\emph{hypothèse des valeurs extrêmes}
+  si et seulement si :
+  \begin{align*}
+    \forall b \in \components, \RRBreg{b} \neq \emptyset \Longrightarrow
+    \exists \omega \subset \RRBreg{b}, 0 \in K_{b,\omega} \wedge
+    \exists \omega' \subset \RRBreg{b}, l_b \in K_{b,\omega'}
+  \end{align*}
+\end{critere}
+
+\begin{critere}[Hypothèse d'activité]
+\crlabel{param-enum-activity}
+  Soit $\GI = (\components, E)$ un graphe des interactions.
+  Une paramétrisation $K$ sur $\GI$ satisfait l'\emph{hypothèse d'activité}
+  \begin{align*}
+    \forall b \in \components, \forall a \in \RRBreg{b}, \exists \omega \subset \RRBreg{b},
+    K_{b,\omega} \neq K_{b,\omega \cup \{ a \}}
+  \end{align*}
+\end{critere}
+
+\begin{critere}[Hypothèse de monotonicité]
+\crlabel{param-enum-monotonicity}
+  Soit $\GI = (\components, E)$ un graphe des interactions.
+  Une paramétrisation $K$ sur $\GI$ satisfait l'\emph{hypothèse de monotonicité}
+  si et seulement si :
+  \begin{align*}
+    \forall b \in \components,
+    \forall A^+ \subset \{ a \in \components \mid \arc{a}{+}{t}{b} \in E_+ \}&,
+    \forall A^- \subset \{ a \in \components \mid \arc{a}{-}{t}{b} \in E_- \},\\
+    K_{b,\omega \cup A^-} & \leqsegm K_{b,\omega \cup A^+}
+  \end{align*}
+\end{critere}
+
+\todo{Ajouter exemple avec cas non conclusifs.}
+
 % 
 % \begin{example}\label{ex:enum-param-runningPH-1}
 % The parametrization inferred in \pref{ex:infer-param-runningPH-1} was partial because $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ could not be inferred.
