@@ -3,15 +3,54 @@
 \section{Inférence du modèle de Thomas}
 \seclabel{trad-thomas}
 
-\TODO
+Partant d'un modèle de Frappes de Processus canoniques, il peut être intéressant
+d'obtenir le modèle de Thomas sous-jacent.
+Une telle traduction n'est pas triviale pour plusieurs raisons :
+\begin{itemize}
+  \item Les deux formalismes possèdent des approches différentes de la dynamique :
+    les Frappes de Processus sont beaucoup plus atomiques que le modèle de Thomas,
+    alors que celui-ci s'intéresse à des influences globales entre composants ;
+  \item Certains comportements permis par les Frappes de Processus ne le sont
+    pas par un modèle de Thomas ;
+  \item La représentation par paramètres discrets nécessite d'analyser la dynamique
+    pour les retrouver ---~là où l'inférence de portes logiques serait facilitée
+    par l'analyse des sortes coopératives.
+\end{itemize}
 
-\todo{Nous notons pour finir que la complexité de cette méthode est exponentielle dans le nombre
-de régulateurs de chaque composant, et linéaire dans le nombre total de composants.
-\footnote{Ce travail a été réalisé dans le cadre d'une collaboration avec Katsumi Inoue.
-Cette collaboration a débuté par un stage doctoral de trois mois dans l'Inoue Laboratory,
-au National Institute of Informatics (Tokyo, Japon).}}
+Nous donnons dans cette section une méthode plusieurs propositions
+permettant d'inférer le graphe des interactions (\secref{infer-gi})
+et les paramètre discrets (\secref{infer-param})
+du modèle de Thomas sous-jacent à des Frappes de Processus canoniques.
+Nous donnons aussi plusieurs critères pour que cette inférence soit possible.
+Il est à noter néanmoins que cette inférence peut être partielle,
+notamment au niveau des paramètres discrets qui ne peuvent parfois pas être inférés
+car le comportement représenté par les Frappes de Processus n'est pas entièrement traduisible
+en modèle de Thomas.
+Cependant, nous proposons aussi une méthode d'énumération des paramétrisations compatibles
+(\secref{enum-param}) qui se base sur :
+\begin{itemize}
+  \item les paramètres déjà inférés,
+  \item l'existence d'une partie de la dynamique des Frappes de Processus considérées
+    permettant de justifier le paramètre,
+  \item plusieurs critères de modélisation pertinents.
+\end{itemize}
 
-\todo{Citer FPIMR-10}
+Enfin, nous proposons à la \secref{infer-impl} quelques pistes d'implémentation
+de notre méthode en programmation par ensemble de réponses,
+un paradigme de programmation logique déclarative qui est particulièrement
+adapté à la représentation et à la résolution de problèmes combinatoire,
+typiquement de complexité NP.
+Nous illustrons notamment cette partie à l'aide du problème de l'énumération des paramétrisations
+compatibles avec un ensemble partiel de paramètres inférés.
+
+\myskip
+
+Ce travail a fait l'objet de deux publications \cite*{FPIMR12-CMSB,FPIMR12-LDSSB}%
+\footnote{Ce travail a été réalisé dans le cadre d'une collaboration avec Katsumi Inoue,
+marquée par un stage doctoral de trois mois en 2012 dans l'Inoue Laboratory,
+au National Institute of Informatics (Tokyo, Japon).}.
+
+\myskip
 
 Dans toute cette section, nous considérons un modèle de Frappes de Processus canoniques
 $\PH = (\PHs; \PHl; (\PHh^{(1)}; \PHh^{(2)}))$.
@@ -468,12 +507,8 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 
 
 
-
-
-
-
-
-\subsection{Inférence de la paramétrisation}
+\subsection{Inférence des paramètres}
+\seclabel{infer-params}
 \seclabel{infer-param}
 
 Une fois obtenu le graphe des interactions inféré selon la méthode proposée à la section
@@ -484,15 +519,7 @@ Cette inférence repose à nouveau sur une exploration exhaustive des comporteme
 du modèle en fonction de l'état des prédécesseurs de chaque composant.
 Cependant, cette inférence peut être partielle si le comportement modélisé
 ne peut pas être représenté à l'aide d'un modèle de Thomas.
-Dans ce cas, il est possible d'inférer une partie seulement des paramètres,
-puis d'énumérer toutes les modèles compatibles avec cette paramétrisation partielle,
-la dynamique du modèle et certaines contraintes de modélisation sur les paramètres.
 
-\subsection{Inférence des paramètres}
-\seclabel{infer-params}
-
-Cette sous-section présente l'inférence des paramètres discrets indépendants
-à partir d'un modèle de Frappes de Processus donné.
 Ces résultats sont équivalents à ceux présentés par \citeasnoun{PMR10-TCSB},
 auxquels nous ajoutons la notion de \emph{Frappes de Processus bien formées
 pour l'inférence des paramètres}, définie au \crref{infer-params-ok},
@@ -698,8 +725,6 @@ il existe une transition équivalente dans les Frappes de Processus d'origine.
 Nous remarquons par ailleurs que les paramètres inférés à l'aide de la \vpropref{inference-param}
 vérifient déjà cette propriété.
 
-
-
 \begin{critere}[Validité d'un paramètre]
 \crlabel{params-valide}
   Un paramètre $K_{a,\omega}$ est \emph{valide} pour les Frappes de Processus $\PH$
@@ -766,14 +791,14 @@ et est définie à la \vsecref{notations}.
 
 
 \begin{example}
-%\label{ex:enum-param-runningPH-1}
+\exlabel{infer-enum-param}
   Les paramètres inférés pour le modèle de Frappes de Processus canoniques de la
   \figref{infer-ex-ph-nocoop} sont donnés \vexpageref{infer-param-nocoop}.
   Cette paramétrisation est partielle car les paramètres
   $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ ne peuvent pas être inférés à l'aide de la
   \propref{inference-param}.
   Il est cependant possible d'énumérer les paramétrisations compatibles avec les paramètres
-  déjà trouvés et les \crrangeref{params-valide}{param-enum-monotonicity}
+  déjà trouvés et les \enumparamcr
   présentés dans cette section.
   Cette énumération produit 9 paramétrisations différentes qui correspondent aux
   trois valeurs possibles pour chacun des paramètres qui n'ont pas pu être inférés :
@@ -983,7 +1008,7 @@ où la notation $\leq$ possède la même signification que l'opérateur mathéma
   Afin de représenter tous les niveaux d'expression des composants du modèle de la
   \figref{infer-ex-ph-nocoop},
   nous utilisons le programme suivant, qui reprend les faits du programme proposé
-  \vexpageref{asp-component} :
+  \vexpageref{impl-component} :
   \begin{align*}
     &\component(a, 2). \\
     &\component(b, 1). \\
@@ -1007,7 +1032,7 @@ où la notation $\leq$ possède la même signification que l'opérateur mathéma
 
 
 
-\subsection{Règles de cardinalité}
+\subsubsection{Règles de cardinalité}
 \seclabel{impl-cardinality-rules}
 
 En tant qu'extension des règles simples, les \emph{règles de cardinalité} s'avèrent
@@ -1028,7 +1053,7 @@ et chaque atome $\atom{H}_i \in S \cap H$ respecte la règle simple suivante :
   \atom{H}_i \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1,
   \nota \atom{B}_2, \dots, \nota \atom{B}_m.
 \end{align*}
-en d'autres termes, tous les ensembles de réponses générés contiennent un sous-ensemble de
+en d'autres termes, tous les ensembles de réponse générés contiennent un sous-ensemble de
 l'ensemble $H$ dont la cardinalité est comprise entre $min$ et $max$,
 et pour lesquels la condition dans le corps de la cardinalité est vérifiée.
 L'ensemble des atomes $H = \{ \atom{H}_1, \atom{H}_2, \dots, \atom{H}_p \}$
@@ -1036,106 +1061,155 @@ est souvent décrit de la façon suivante : $H = \{ \atom{P} \mid \atom{Q} \}$,
 qui est un raccourci pour qualifier l'ensemble des atomes de la forme
 $\atom{P}$ et pour lesquels $\atom{Q}$ est vérifié.
 
-% Cardinality rules turn out to be convenient to enumerate all possible parametrizations by creating multiple answer sets.
-% For functional purposes, a unique label is assigned to every possible set of resources of a given component.
-% Thus, we denote $\omega_p$ the set of resources of a given component $a$ labeled by $p$,
-% and naturally, $K_{a,\omega_p}$ is the related parameter.
-% %and in the following we note $K_{a,\omega_p}$ the parameter of component $a$ whose set of resources $\omega$ is assigned to the label $p$.
-% We note that labeling the sets of resources of a component is obviously equivalent to labeling its parameters.
-% Then, suppose that:
-% \begin{itemize}
-%   \item $\paramlabel(a, p)$ states that $p$ is a valid label for a set of resources of component $a$ (and therefore $K_{a,\omega_p}$ is a valid parameter);
-%   \item $\param(a, p, i)$ states that: $i \in K_{a, \omega_p}$;
-%   \item $\inferedparam(a, p)$ states that the parameter inference of $K_{a, \omega_p}$ was conclusive (\pref{pps:param-K}).
-% \end{itemize}
-% It is thereby possible to enumerate the possible values of all parameters for which \pref{pps:param-K} was not conclusive, with the following cardinality rule:
-% \begin{align*}
-%   & 1\ \{\ \param(\var{A}, \var{P}, \var{I}) \mid \componentlevels(\var{A}, \var{I})\ \}\ \infty\ \la \\
-%   & \qquad\qquad\qquad \paramlabel(\var{A}, \var{P}), \nota \inferedparam(\var{A}, \var{P}).
-% \end{align*}
-% Indeed, this rule applies to any possible parameter $\var{P}$ of any component $\var{A}$ ($\paramlabel$) whose value is still unknown ($\nota \inferedparam$),
-% and states that any expression level $\var{I}$ of this component ($\componentlevels$) can belong to the value of the parameter ($\param$).
-% Furthermore, the lower bound is $1$, which forces each enumerated parameter to contain at least one value,
-% but no upper bound is specified ($\infty$) for the size of each parameter
-% (which is in fact already bounded by the number of possible expression levels of the related component).
-% %each parameter contains at least $1$ value, as stated by the lower bound, and has no upper bound ($\infty$) but the number of expression levels of its component.
-% In other worlds, this cardinality rule creates as many answer sets as there are \emph{candidate} parametrizations
-% so that if $K_{a, \omega_p}$ could not be inferred by \pref{pps:param-K}, then
-% $K_{a, \omega_p} \subset \segm{0}{l_a} \wedge K_{a, \omega_p} \neq \emptyset$
-% (thus completely disregarding the notion of admissible parametrizations given in \pref{ssec:admissible-K} or the fact that parameters have to be intervals).
-% 
-% 
-% 
-% \begin{example}\label{ex:cardinality}
-% In the scope of \pref{ex:infer-param-runningPH-1}, $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ could not be inferred by \pref{pps:param-K}.
-% The previous cardinality rule allows to produce 49 parametrizations, in which these two parameters can take all possible values:
-% %The enumeration thus produces 36 parametrizations, in which these parameters can take all possible values:
-% %(as, in this case, the assumptions of \pref{ssec:admissible-K} bring no new constraint):
-% \begin{align*}
-%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} , \segm{0}{1} , \segm{1}{2} , \segm{0}{2}, \{ 0, 2 \} \}^2
-% \end{align*}
-% and all the other parameters keep their inferred values.
-% %These parametrizations take the form of sets of $\param$ atoms.
-% Note that $\{ 0, 2 \}$ belongs to the set of candidate parametrizations
-% as no rule specifying that a parameter has to be an interval has been defined yet.
-% \end{example}
-% 
-% 
-% 
-% \subsection{Constraints}\label{sssec:constraints}
-% Finally, a \emph{constraint} is a rule with no $head$ part:
-% \begin{align*}
-%   \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1, \nota \atom{B}_2, \dots, \nota \atom{B}_m.
-% \end{align*}
-% A constraint is satisfied only if its $body$ is not satisfied,
-% which thus allows to invalidate answer sets containing some unwanted combinations of atoms.
-% In the scope of parameters enumeration, for example, constraints are especially useful to filter parametrizations
-% that contain non-interval parameters, or that do not respect the assumptions of \pref{ssec:admissible-K}.
-% Indeed, suppose that:
-% \begin{itemize}
-%   \item $\lessactive(a, p, q)$ states that $\omega_p$ is a set of resources of $a$ with (loosely) less activators and more inhibitors than $\omega_q$;
-%   \item $\paraminf(a, p, q)$ states that: $K_{a,\omega_p} \leqsegm K_{a,\omega_q}$.
-% \end{itemize}
-% Then, the monotonicity assumption (\pref{pro:param-enum-monotonicity}) is formulated as the following constraint:
-% \begin{align*}
-%   \la \lessactive(\var{A}, \var{P}, \var{Q}), \nota \paraminf(\var{A}, \var{P}, \var{Q}).
-% \end{align*}
-% Indeed, this constraint removes all parametrization results where parameters $K_{\var{A},\omega_\var{P}}$ and $K_{\var{A},\omega_\var{Q}}$ exist
-% such that $\var{A}$ is less activated by the set of resources $\omega_\var{P}$ than it is by $\omega_\var{Q}$,
-% but $K_{\var{A},\omega_\var{Q}} \ltsegm K_{\var{A},\omega_\var{P}}$,
-% thus violating the monotonicity assumption.
-% Of course, other assumptions can be formulated in the same way.
-% 
-% \begin{example}
-% The set of candidate values given in \pref{ex:cardinality} can be filtered using constraints.
-% For example, a constraint was written in order to obtain only interval parameters
-% (thus avoiding parameters with “gaps” such as $\{ 0, 2 \}$).
-% Applying such a constraint would reduce the set of possible values for the parameters $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ to:
-% \begin{align*}
-%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} , \segm{0}{1} , \segm{1}{2} , \segm{0}{2} \}^2
-% \end{align*}
-% 
-% Then, due to the fact that the parameters $K_{a,\{b\}} = \segm{1}{1}$ and $K_{a,\{c\}} = \segm{1}{1}$ could be inferred,
-% the monotonicity assumption (\pref{pro:param-enum-monotonicity} and expressed in ASP above) removes all parametrizations with:
-% $0 \in K_{a,\{a,b\}} \vee 0 \in K_{a,\{a,c\}}$.
-% In the end, the remaining possible values for the two parameters that were not inferred are:
-% \begin{align*}
-%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{1}{1} , \segm{2}{2} , \segm{1}{2} \}^2
-% \end{align*}
-% All these candidates respect the other properties of \pref{ssec:admissible-K} and no more candidates are filtered.
-% We thus obtain the results of \pref{ex:enum-param-runningPH-1}.
-% \end{example}
-% 
-% 
-% 
-% \medskip
-% 
-% This subsection succinctly described how ASP programs come in handy to represent a model and solve complex problems on it.
-% %all steps of Thomas' modeling inference.
-% It finds a particularly interesting application in the enumeration of parameters:
-% all possible parametrizations are generated in separate answer sets,
-% and integrity constraints are formulated to remove those that do not fit the assumptions of admissible parametrizations,
-% thus reducing the number of candidate parametrizations to be considered in the end.
-% However, all steps of the inference presented in this paper (\pref{sec:infer-IG} \& \ref{sec:infer-K})
-% were implemented in and benefited from this programming paradigm.
-% %, although in significantly different ways.
+Les règles de cardinalité s'avèrent pratiques pour énumérer toutes les paramétrisations
+possibles en créant des ensembles de réponse multiples.
+Pour des raisons d'implémentation, un libellé unique est assigné à chaque ensemble possible
+de ressources pour un composant donné.
+Ainsi, dans la suite, nous désignerons par $\omega_p$ l'ensemble des ressources
+d'un composant donné $a$ libellé par $p$,
+et $K_{a,\omega_p}$ est naturellement le paramètre relatif à cet ensemble.
+Nous notons que libeller les ensembles de ressources d'un composant
+est naturellement identique à libeller ses paramètres.
+Supposons dans la suite que :
+\begin{itemize}
+  \item $\paramlabel(a, p)$ stipule que $p$ est un libellé valide pour un ensemble de ressources
+    d'un composant $a$ (et en conséquence, $K_{a,\omega_p}$ est un paramètre valide) ;
+  \item $\param(a, p, i)$ signifie : $i \in K_{a, \omega_p}$ ;
+  \item $\inferedparam(a, p)$ permet de préciser que l'inférence du paramètre $K_{a, \omega_p}$
+    a été conclusive (selon la \propref{inference-param}).
+\end{itemize}
+Il est alors possible d'énumérer les valeurs possibles de chaque paramètre pour lequel
+la \propref{inference-param} n'a pas été conclusive, à l'aide de la règle de cardinalité
+suivante :
+\begin{align*}
+  & 1\ \{\ \param(\var{A}, \var{P}, \var{I}) \mid \componentlevels(\var{A},
+  \var{I})\ \}\ \infty\ \la \\
+  & \qquad\qquad\qquad \paramlabel(\var{A}, \var{P}), \nota \inferedparam(\var{A}, \var{P}).
+\end{align*}
+Cette règle ne s'applique donc qu'à chaque paramètre $\var{P}$ de tout composant $\var{A}$
+(grâce au prédicat $\paramlabel$) dont la valeur est toujours inconnue ($\nota \inferedparam$),
+et stipule que tout niveau d'expression $\var{I}$ du composant considéré ($\componentlevels$)
+peut appartenir au paramètre ($\param$).
+De plus, la limite inférieure de cette règle de cardinalité est $1$, ce qui force chaque
+paramètre énuméré à contenir au moins une valeur,
+mais aucune limite supérieure n'est spécifiée ($\infty$) pour la taille de chaque paramètre,
+qui est donc limitée par le nombre de niveaux d'expression du composant considéré.
+En d'autres termes, cette règle de cardinalité crée autant d'ensembles de réponse qu'il n'y
+a de paramétrisations \emph{candidates} (et non nécessairement admissibles)
+telles que pour chaque paramètre $K_{a, \omega_p}$ qui n'a pas pu être inféré par
+la \propref{inference-param},
+alors $K_{a, \omega_p} \subset \segm{0}{l_a} \wedge K_{a, \omega_p} \neq \emptyset$.
+Cette énumération ignore donc totalement la notion de paramétrisation admissible
+donnée par les \enumparamcr
+ou même le fait que les paramètres doivent être des intervalles.
+
+
+
+\begin{example}
+\exlabel{impl-cardinality}
+  Dans le cadre du modèle de la \figref{infer-ex-ph-nocoop},
+  les paramètres $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ ne peuvent pas être inférés
+  à l'aide de la \propref{inference-param}.
+  La règle de cardinalité précédente permet de produire 49 paramétrisations candidates,
+  dans lesquelles ces deux paramètres peuvent prendre toutes les valeurs possibles suivantes :
+  \begin{align*}
+    (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} , \segm{0}{1} , \segm{1}{2} , \segm{0}{2}, \{ 0, 2 \} \}^2
+  \end{align*}
+  les autres paramètres restant identiques aux valeurs qui ont été inférées.
+  Il est donc à noter que $\{ 0, 2 \}$ appartient à l'ensemble des paramétrisations
+  candidates étant donné qu'aucune règle n'a encore été définie pour spécifier
+  qu'un paramètre doit être un intervalle.
+\end{example}
+
+
+
+\subsubsection{Contraintes}
+\seclabel{impl-contraintes}
+
+Enfin, une \emph{contrainte} est une règle sans tête :
+\begin{align*}
+  \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1, \nota \atom{B}_2, \dots,
+  \nota \atom{B}_m.
+\end{align*}
+Une contrainte est satisfaite si et seulement si son corps n'est pas satisfait,
+ce qui permet d'invalider un ensemble de réponse contenant une combinaison non
+désirée d'atomes.
+En d'autres termes, si le corps d'une contrainte s'avère vrai pour un ensemble d'atomes
+donné, alors celui-ci ne peut pas être un ensemble de réponse.
+Dans le cadre de l'énumération des paramètres, par exemple, les contraintes
+sont particulièrement utiles pour filtrer les paramétrisations non désirées,
+car contenant des paramètres qui ne sont pas des intervalles,
+ou ne respectant pas les \enumparamcr.
+Supposons dans la suite que :
+\begin{itemize}
+  \item $\lessactive(a, p, q)$ stipule que $\omega_p$ est un ensemble de ressources
+    d'un composant $a$ contenant plus d'activateurs et moins d'inhibiteurs que $\omega_q$
+    (de façon large) ;
+  \item $\paraminf(a, p, q)$ signifie : $K_{a,\omega_p} \leqsegm K_{a,\omega_q}$.
+\end{itemize}
+L'hypothèse de monotonicité (\crref{param-enum-monotonicity}) est alors formulée
+sous la forme de la contrainte suivante :
+\label{impl-monotonicity}
+\begin{align*}
+  \la \lessactive(\var{A}, \var{P}, \var{Q}), \nota \paraminf(\var{A}, \var{P}, \var{Q}).
+\end{align*}
+En effet, cette contrainte supprime tous les résultats de paramétrisations où
+des paramètres $K_{\var{A},\omega_\var{P}}$ et $K_{\var{A},\omega_\var{Q}}$ existent
+tels que $\var{A}$ est moins activé par l'ensemble de ressources $\omega_\var{P}$
+qu'il ne l'est par $\omega_\var{Q}$,
+mais où $K_{\var{A},\omega_\var{Q}} \ltsegm K_{\var{A},\omega_\var{P}}$,
+violant ainsi l'hypothèse de monotonicité.
+Les autres critères peuvent naturellement être formulés de façon analogue.
+
+\begin{example}
+  L'ensemble des paramétrisations candidates données par la règle de cardinalité
+  proposée \vexpageref{impl-cardinality} peut être filtré à l'aide de contraintes.
+  Par exemple, une contrainte permet de n'obtenir que des paramètres intervalles,
+  et d'éliminer les paramètres contenant des «~trous~» comme $\{ 0, 2 \}$.
+  L'ajout d'une telle contrainte dans le programme réduit l'ensemble des valeurs possibles
+  pour les paramètres $K_{a\{a,b\}}$ et $K_{a,\{a,c\}}$ à :
+  \begin{align*}
+    (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} ,
+    \segm{0}{1} , \segm{1}{2} , \segm{0}{2} \}^2
+  \end{align*}
+  Par la suite, du fait que les paramètres $K_{a,\{b\}} = \segm{1}{1}$ et
+  $K_{a,\{c\}} = \segm{1}{1}$ ont été inférés,
+  l'hypothèse de monotonicité (\crref{param-enum-monotonicity} et formulée en ASP
+  \vpageref[ci-dessus]{impl-monotonicity})
+  supprime toutes les paramétrisations telles que :
+  $0 \in K_{a,\{a,b\}} \vee 0 \in K_{a,\{a,c\}}$.
+  Au final, les valeurs possibles restantes pour les deux paramètres non inférés sont :
+  \begin{align*}
+    (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{1}{1} , \segm{2}{2} , \segm{1}{2} \}^2
+  \end{align*}
+  Tous ces candidats respectent les \crref{params-valide,param-enum-extreme,param-enum-activity}
+  et cet ensemble n'est donc pas davantage filtré par les contraintes restantes.
+  Nous avons ainsi expliqué comment est obtenu le résultat détaillé
+  \vexpageref{infer-enum-param}.
+\end{example}
+
+\myskip
+
+Nous avons brièvement décrit dans cette section la façon dont les programmes ASP viennent
+en aide dans l'expression et la résolution de problèmes complexes.
+Ce paradigme trouve une application particulièrement intéressante dans l'énumération
+de paramétrisations compatibles (telle que détaillée à la \secref{enum-param}) :
+chaque paramétrisation générée l'est dans un ensemble d'atomes distinct,
+et des contraintes d'intégrité sont formulées pour filtrer les ensembles qui ne respectent
+pas les critères d'admissibilité.
+Les ensembles de réponse restants sont les paramétrisations intéressantes pour ce
+problème, c'est-à-dire celles respectant tous les critères,
+ce qui permet de réduire le nombre de paramétrisations à considérer pour obtenir
+la dynamique voulue pour le modèle.
+Il est à noter cependant que toutes les étapes d'inférence du modèle de Thomas,
+y compris l'inférence du graphe des interactions (\secref{infer-gi})
+et l'inférence des paramètres (\secref{infer-params})
+ont été codées en ASP afin de bénéficier de l'efficacité de ce paradigme,
+bien que les approches en soient différentes.
+
+Nous notons pour finir que la complexité générale
+de cette méthode est exponentielle dans le nombre
+de régulateurs de chaque composant, et linéaire dans le nombre total de composants.
+Ainsi, de grands modèles peuvent théoriquement être traités,
+à la condition que le nombre de régulateurs de chaque composant soit faible,
+ce qui est généralement le cas des réseaux de régulation biologique.
