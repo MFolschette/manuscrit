@@ -68,9 +68,15 @@ Naturellement, toute autre relations d'ordre entre les indices est admissible,
 \end{critere}
 
 \begin{example}
-  Les Frappes de Processus canoniques représentées à la \figref{infer-ex-ph}
-  possèdent une dynamique unitaire, et sont donc compatibles
+  Nous nous intéresserons dans la suite à l'inférence du graphe des interactions des deux
+  modèles de Frappes de Processus canoniques représentés
+  aux \figref{infer-ex-ph-nocoop,infer-ex-ph}.
+  Ceux-ci possèdent tous deux une dynamique unitaire selon le \crref{unitaire},
+  et sont donc compatibles
   avec l'inférence du graphe des interactions proposée à la section suivante.
+  Il est à noter notamment que les actions de mise à jour de la sorte coopérative
+  du modèle de la \figref{infer-ex-ph} ne sont pas unitaires, mais ces actions ne sont pas prises
+  en compte par ce critère.
 \end{example}
 
 \begin{remark}
@@ -275,7 +281,59 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 
 
 
-\begin{figure}[ht]
+\begin{figure}[htp]
+\centering
+\scalebox{1.3}{
+\begin{tikzpicture}
+  \TSort{(0,0)}{a}{3}{r}
+  \TSort{(-3,0.5)}{b}{2}{l}
+  \TSort{(3,0.5)}{c}{2}{r}
+
+  \THit{b_1}{}{a_0}{.west}{a_1}
+  \THit{b_1}{}{a_1}{.north west}{a_2}
+  \THit{b_0}{}{a_2}{.west}{a_1}
+  \THit{b_0}{}{a_1}{.west}{a_0}
+
+  \path[bounce, bend left=60]
+  \TBounce{a_1}{}{a_2}{.south west}
+  \TBounce{a_0}{}{a_1}{.south west}
+  ;
+  \path[bounce, bend right=60]
+  \TBounce{a_2}{in=-140}{a_1}{.north}
+  \TBounce{a_1}{}{a_0}{.north west}
+  ;
+
+  \THit{c_1}{}{a_0}{.east}{a_1}
+  \THit{c_1}{}{a_1}{.north east}{a_2}
+  \THit{c_0}{}{a_2}{.east}{a_1}
+  \THit{c_0}{}{a_1}{.east}{a_0}
+
+  \path[bounce, bend right=60]
+  \TBounce{a_1}{}{a_2}{.south east}
+  \TBounce{a_0}{}{a_1}{.south east}
+  ;
+  \path[bounce, bend left=60]
+  \TBounce{a_2}{in=150}{a_1}{.north}
+  \TBounce{a_1}{}{a_0}{.north east}
+  ;
+
+  \THit{a_2}{bend right}{b_1}{.north east}{b_0}
+  \path[bounce, bend left=80]
+  \TBounce{b_1}{out=100,in=140}{b_0}{.north}
+  ;
+\end{tikzpicture}
+}
+\caption{\figlabel{infer-ex-ph-nocoop}%
+  Exemple de Frappes de Processus canoniques avec trois composants : $a$, $b$ et $c$.
+  Ce modèle ne comporte aucune sorte coopérative.
+  La dynamique de ce modèle est unitaire car elle respecte bien le \vcrref{unitaire}.
+  L'inférence du graphe des interactions peut donc être effectuée sur ce modèle.
+}
+\end{figure}
+
+
+
+\begin{figure}[htp]
 \centering
 \scalebox{1.3}{
 \begin{tikzpicture}
@@ -325,10 +383,13 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 \end{tikzpicture}
 }
 \caption{\figlabel{infer-ex-ph}%
-  Exemple de Frappes de Processus canoniques avec trois composants ($a$, $b$ et $c$)
-  et une sorte coopérative ($bc$).
-  La dynamique de ce modèle est unitaire car il respecte bien le \vcrref{unitaire}.
-  L'inférence du graphe des interactions peut donc être effectuée sur ce modèle.
+  Raffinement du modèle de Frappes de Processus canoniques de la \figref{infer-ex-ph-nocoop}
+  à l'aide d'une sorte coopérative $bc$ :
+  les deux actions $\PHfrappe{b_1}{a_1}{a_2}$ et $\PHfrappe{c_1}{a_1}{a_2}$
+  sont ainsi remplacées par une action $\PHfrappe{bc_{11}}{a_1}{a_2}$ ;
+  de même, les actions $\PHfrappe{b_0}{a_1}{a_0}$ et $\PHfrappe{c_1}{a_1}{a_0}$
+  sont remplacées par $\PHfrappe{bc_{00}}{a_1}{a_0}$.
+  Ce modèle possède aussi une dynamique unitaire d'après le \crref{unitaire}.
 }
 \end{figure}
 
@@ -336,7 +397,7 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 
 \begin{example}
   L'application de l'inférence du graphe des interactions aux Frappes de Processus canoniques
-  de la \figref{infer-ex-ph} donne le graphe représenté à la \figref{infer-ig},
+  de la \figref{infer-ex-ph-nocoop} donne le graphe représenté à la \figref{infer-ig},
   contenant les arcs suivants :
   \begin{align*}
     E_+ &= \{\arcf{b}{+}{1}{a}, \arcf{c}{+}{1}{a}, \arcf{a}{+}{1}{a},
@@ -345,7 +406,7 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
     E_\uns = \emptyset
   \end{align*}
   Ce graphe des interactions est proche de celui qui avait été proposé
-  \vfigref{thomas}(gauche) bien qu'il ne soit pas équivalent,
+  à la \figref{thomas}(gauche) \figpageref[vref]{thomas} bien qu'il ne soit pas équivalent,
   car chaque composant comporte une auto-action positive.
   Les auto-actions sur $b$ et $c$ sont la conséquence d'une stabilité globale
   sur plusieurs sous-états : en effet, $c$ n'évolue jamais,
@@ -376,16 +437,22 @@ Nous formalisons cette inférence dans la \propref{inference-gi}.
 \end{example}
 
 \begin{example}
-  Si on remplace la sorte coopérative $bc$ des Frappes de Processus de la \figref{infer-ex-ph}
-  par quatre actions
-  \[ \PHfrappe{b_0}{a_1}{a_0} ; \PHfrappe{b_1}{a_1}{a_2} ;
-     \PHfrappe{c_0}{a_1}{a_0} ; \PHfrappe{c_1}{a_1}{a_2} \]
-  on obtient à nouveau le graphe des interactions donné à la \figref{infer-ig}.
+  Le modèle raffiné de Frappes de Processus canoniques représenté à la \figref{infer-ex-ph}
+  comporte une sorte coopérative $bc$ qui permet de modéliser la coopération
+  de $b_1$ et $c_1$ pour faire bondir $a_1$ en $a_2$,
+  ainsi que la coopération de $b_0$ et $c_0$ pour faire bondir $a_1$ en $a_0$.
+  Ces deux coopérations étaient représentées dans le modèle de la \figref{infer-ex-ph-nocoop}
+  par des actions indépendantes.
+  Cependant, ce modèle raffiné produit le même résultat en termes de graphe des interactions,
+  c'est-à-dire le graphe de la \figref{infer-ig},
+  ce qui s'explique par le fait que les composants $b$ et $c$ produisent le même type
+  de régulation sur $a$ dans les deux cas (avec des actions indépendantes ou à travers une sorte
+  coopérative).
 \end{example}
 
 \begin{example}
-  L'ajout d'une action $\PHfrappe{a_2}{b_0}{b_1}$ aux Frappes de Processus canoniques de la
-  \figref{infer-ex-ph} modifie le résultat de l'inférence.
+  L'ajout d'une action $\PHfrappe{a_2}{b_0}{b_1}$ aux Frappes de Processus canoniques raffinées
+  de la \figref{infer-ex-ph} modifie le résultat de l'inférence.
   En effet, dans ce cas deux arcs non-signés vers $b$ sont inférés en lieu et place
   des arcs signés précédents :
   \begin{align*}
@@ -457,16 +524,16 @@ pour un composant $a \in \components$ et un ensemble $\omega \subset \RRBreg{a}$
 de ressources donnés.
 Cette inférence se base, à l'instar de l'inférence du graphe des interactions, sur une analyse
 exhaustive des sous-états des régulateurs de $a$.
-Pour chaque sorte $b \in \RRBreg{a}$, on définit un \todo{\emph{contexte}} $C^b_{a,\omega}$
-(\eqref{param-context}) qui recense tous les processus qui interagissent avec $a$
+Pour chaque sorte $b \in \RRBreg{a}$, on définit une configuration $C^b_{a,\omega}$
+(\eqref{param-config}) qui recense tous les processus qui interagissent avec $a$
 dans tous les sous-états représentés par l'ensemble de ressources $\omega$.
-Le contexte d'une sorte coopérative $\myupsilon$ régulant $a$ est l'ensemble des processus
-focaux correspondant à ces sous-états (\eqref{param-context-coop}).
-Enfin, $C_{a,\omega}$ fait référence à l'union de tous ces contextes
-(\eqref{param-context-total}).
+La configuration d'une sorte coopérative $\myupsilon$ régulant $a$ est l'ensemble des processus
+focaux correspondant à ces sous-états (\eqref{param-config-coop}).
+Enfin, $C_{a,\omega}$ fait référence à l'union de toutes ces configurations
+(\eqref{param-config-total}).
 
 \begin{align}
-\eqlabel{param-context}
+\eqlabel{param-config}
   \forall b \in \components,~
   C_{a,\omega}^b & \DEF \begin{cases}
     \levels{b}{a}  & \text{si $b \in \omega$,}\\
@@ -474,11 +541,11 @@ Enfin, $C_{a,\omega}$ fait référence à l'union de tous ces contextes
     L_b            & \text{sinon}\\
   \end{cases}
   \\
-\eqlabel{param-context-coop}
+\eqlabel{param-config-coop}
   \forall \myupsilon \in \pred(a) \cap \cs,
     C_{a,\omega}^\myupsilon & \DEF \{ \pfp_{\sigma}(\myupsilon) \mid
     \sigma \in \bigtimes{b \in \compin(\myupsilon)} C_{a,\omega}^b \} \\
-\eqlabel{param-context-total}
+\eqlabel{param-config-total}
   C_{a,\omega} & \DEF \bigcup_{b \in \pred(a)} C^b_{a,\omega}
 \end{align}
 
@@ -514,7 +581,7 @@ de $a$ qui ne sont pas frappés ---~et vers lesquels $a$ va avoir tendance à é
 \end{definition}
 
 Le paramètre $K_{a,\omega}$ détermine les niveaux d'expression vers lesquels tend $a$
-en présence du contexte $C_{a,\omega}$.
+en présence de la configuration $C_{a,\omega}$.
 Cette valeur peut être calculée à l'aide de $\focals$ qui permet justement
 de retrouver les processus focaux en présence de certaines ressources.
 Ainsi, on peut en conclure que $K_{a,\omega} = \focals(a,C^a_{a,\omega},C_{a,\omega})$
@@ -533,10 +600,10 @@ dans tous les cas où cette valeur est un intervalle non vide (\propref{inferenc
 
 
 \begin{example}
-%\label{ex:infer-param-runningPH-1}
-  Si on l'applique aux Frappes de Processus de la \figref{infer-ex-ph},
-  la méthode d'inférence des paramètres donnée dans cette section est conclusive sur tous
-  les paramètres et donne :
+\exlabel{infer-param-nocoop}
+  Si on l'applique aux Frappes de Processus de la \figref{infer-ex-ph-nocoop},
+  la méthode d'inférence des paramètres donnée dans cette section est conclusive sur la majorité
+  des paramètres et donne :
   \begin{align*}
     K_{a, \emptyset} &= \segm{0}{0} &
     K_{b, \emptyset} &= \segm{0}{0} \\
@@ -550,12 +617,30 @@ dans tous les cas où cette valeur est un intervalle non vide (\propref{inferenc
     K_{c, \emptyset} &= \segm{0}{0} \\
     K_{a, \{a,b,c\}} &= \segm{2}{2} &
     K_{c, \{c\}} &= \segm{1}{1} \\
+%     K_{a,\{a,b\}} &= \segm{1}{1} &
+%     K_{a,\{a,c\}} &= \segm{1}{1}
+  \end{align*}
+  Seuls les paramètres $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ n'ont pas peu être inférés.
+  Cela est la conséquence directe de l'absence de coopération explicite entre $b$ et $c$ sur $a$,
+  ce qui crée des oscillations sur $a$ lorsque $b_1$ et $c_0$ ou $b_0$ et $c_1$
+  sont présents simultanément.
+\end{example}
+
+\begin{example}
+  Le modèle raffiné de Frappes de Processus canoniques de la \figref{infer-ex-ph}
+  comporte une coopération explicite entre $b$ et $c$ à l'aide de la sorte coopérative $bc$.
+  Cela permet notamment à l'inférence d'être davantage conclusive ;
+  ainsi, les résultats sont les mêmes que dans l'exemple précédent,
+  en dehors des deux paramètres suivants dont la valeur a pu être inférée :
+  \begin{align*}
     K_{a,\{a,b\}} &= \segm{1}{1} &
     K_{a,\{a,c\}} &= \segm{1}{1}
   \end{align*}
 \end{example}
 
-\todo{Exemple partiellement conclusif}
+
+
+\myskip
 
 En observant la \propref{inference-param}, on constate que l'inférence
 de certains paramètres peut ne pas être possible.
@@ -596,6 +681,8 @@ Le modèle obtenu est alors partiel, et correspond à un ensemble
 plus ou moins large de modèles complets.
 En énumérant les valeurs possibles de chaque paramètre, il est envisageable de retrouver
 l'ensemble des modèles \emph{compatibles} avec ces valeurs.
+
+\myskip
 
 Nous délimitons tout d'abord la validité d'un paramètre (\crref{params-valide}) afin d'assurer
 que toutes les transitions dans le modèle de Thomas résultant
@@ -676,27 +763,379 @@ et est définie à la \vsecref{notations}.
   \end{align*}
 \end{critere}
 
-\todo{Ajouter exemple avec cas non conclusifs.}
 
-% 
-% \begin{example}\label{ex:enum-param-runningPH-1}
-% The parametrization inferred in \pref{ex:infer-param-runningPH-1} was partial because $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ could not be inferred.
-% It is however possible to enumerate all complete and admissible parametrizations
-% compatible with both the inferred parameters, and the properties of this subsection.
-% This enumeration gives 9 different parametrizations which correspond to the 3 possible values
-% for each of the two parameters that could not be inferred:
+
+\begin{example}
+%\label{ex:enum-param-runningPH-1}
+  Les paramètres inférés pour le modèle de Frappes de Processus canoniques de la
+  \figref{infer-ex-ph-nocoop} sont donnés \vexpageref{infer-param-nocoop}.
+  Cette paramétrisation est partielle car les paramètres
+  $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ ne peuvent pas être inférés à l'aide de la
+  \propref{inference-param}.
+  Il est cependant possible d'énumérer les paramétrisations compatibles avec les paramètres
+  déjà trouvés et les \crrangeref{params-valide}{param-enum-monotonicity}
+  présentés dans cette section.
+  Cette énumération produit 9 paramétrisations différentes qui correspondent aux
+  trois valeurs possibles pour chacun des paramètres qui n'ont pas pu être inférés :
+  \begin{align*}
+    K_{a,\{a,b\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \} \\
+    K_{a,\{a,c\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \}
+  \end{align*}
+  Nous notons la propriété suivante pour toutes ces solutions :
+  $0 \notin K_{a,\{a,b\}} \wedge 0 \notin K_{a,\{a,c\}}$.
+  Cela est causé par l'hypothèse de monotonicité (\crref{param-enum-monotonicity})
+  qui stipule notamment dans ce cas précis :
+  \begin{align*}
+    K_{a,\{b\}} \leqsegm K_{a,\{a,b\}} \wedge
+    K_{a,\{c\}} \leqsegm K_{a,\{a,c\}}
+  \end{align*}
+  Enfin, nous notons que $\segm{1}{1}$ appartient aux valeurs possibles des deux paramètres.
+  Cette énumération permet donc notamment bien de retrouver les valeurs attendues,
+  inférées sur le modèle raffiné de la \figref{infer-ex-ph}.
+\end{example}
+
+
+
+\subsection{Pistes d'implémentation}
+\seclabel{infer-impl}
+
+%\newcommand{\atom}{\mathbf}
+\newcommand{\atom}[1]{#1}
+%\newcommand{\predicate}{\mathbf}
+\newcommand{\predicate}[1]{\mathit{#1}}
+\newcommand{\la}{\leftarrow}
+\newcommand{\var}[1]{#1}
+\newcommand{\nota}{\neg}
+
+\newcommand{\paramlabel}{\predicate{param\_label}}
+\newcommand{\paramres}{\predicate{param\_resource}}
+\newcommand{\component}{\predicate{component}}
+\newcommand{\componentlevels}{\predicate{component\_levels}}
+\newcommand{\param}{\predicate{param}}
+\newcommand{\inferedparam}{\predicate{infered\_param}}
+\newcommand{\lessactive}{\predicate{less\_active}}
+\newcommand{\paraminf}{\predicate{param\_inf}}
+
+Nous abordons dans cette section quelques principes de programmation par ensemble de réponse,
+aussi appelée ASP pour \textit{Answer Set Programming} \cite{Baral03,Baral10}.
+Cette forme de programmation logique déclarative a été utilisée pour la résolution des inférences
+du graphe des interactions et des paramètres, mais aussi pour l'énumération des paramétrisations
+compatibles dans le cas où certains paramètres ne peuvent être inférés.
+Nous illustrons d'ailleurs l'application d'ASP à l'énumération des paramétrisations
+compatibles, car cette partie de l'implémentation présente des exemples illustratifs
+intéressants, du fait notamment qu'ASP est particulièrement adapté à l'énumération
+de solutions.
+La résolution est effectuée à l'aide du \textit{solver} \tool{Clingo} \cite{gekakasc14b}
+qui possède des heuristiques efficaces pour la résolution de nombreux
+problèmes complexes.
+
+La définition d'un problème en ASP suit généralement trois étapes principales
+illustrées dans la suite :
+\begin{itemize}
+  \item la définition des données du problème,
+  \item la création d'ensembles de réponse,
+  \item le filtrage des réponses non satisfaisantes.
+\end{itemize}
+
+
+
+\subsubsection{Syntaxe des règles simples}
+\seclabel{asp-simple-rules}
+
+La définition d'un programme en ASP repose sur des règles de la forme :
+\begin{align*}
+  \underbrace{{\ }\atom{H}_{\ }}_{\text{tête}} \la \underbrace{\atom{A}_1, \atom{A}_2, \dots,
+  \atom{A}_n, \nota \atom{B}_1, \nota \atom{B}_2, \dots, \nota \atom{B}_m}_{\text{corps}}.
+\end{align*}
+Dans une telle règle, le \emph{corps} et consiste en un ensemble d'atomes
+(de la forme $\atom{A}_i$) et de négation d'atomes (de la forme $\nota \atom{B}_i$).
+Dans le cas de \emph{règles simples}, la \emph{tête} comprend un unique atome ($\atom{H}$).
+Schématiquement,
+une telle règle stipule que si les atomes $\atom{A}_1, \atom{A}_2, \dots, \atom{A}_n$
+sont vrais et qu'il n'est pas possible d'établir que les atomes
+$\atom{B}_1, \atom{B}_2, \dots, \atom{B}_m$ sont vrais (négation par l'échec),
+alors $\atom{H}$ doit être vrai.
+La sémantique d'une règle sera détaillée à la \secref{impl-sem}.
+
+Un atome est composé d'un prédicat et d'une série d'arguments (potentiellement vide),
+c'est-à-dire de la forme :
+\begin{align*}
+  \predicate{p}(x_1, x_2, \dots, x_r)
+\end{align*}
+où $\predicate{p}$ est le \emph{prédicat} et $x_1, x_2, \dots, x_r$ sont les \emph{arguments}.
+La valeur $r$, qui détermine le nombre d'arguments d'un atome, est appelée \emph{arité}.
+Chaque argument peut être une \emph{constante}, qui représente une donnée fixe
+(typiquement un nom de composant, un niveau d'expression...)
+ou une \emph{variable}, qui peut prendre la valeur de n'importe quelle constante,
+comme détaillé à la \secref{impl-variables}.
+Dans cet exemple, nous restreignons les constantes à des valeurs numériques où à des
+lettres minuscules (p.~ex. $a$, $b$, $c$, $1$, $2$, ...)
+tandis que les variables seront représentées par une lettre majuscule
+(p.~ex. $\var{A}$, $\var{P}$, $\var{Q}$, ...).
+
+\begin{example}
+\exlabel{impl-asp-atom}
+  Considérons le modèle de Frappes de Processus canoniques de la \figref{infer-ex-ph-nocoop}.
+  Dans la suite, nous utiliserons l'atome d'arité 2 suivant :
+  \begin{align*}
+    &\component(x, n)
+  \end{align*}
+  pour établir la présence d'un composant $x$ dans le modèle,
+  dont le niveau d'expression maximal est $l_x = n$.
+\end{example}
+
+
+\subsubsection{Réponses et ensembles de réponse}
+\seclabel{impl-sem}
+
+Un programme ASP est un ensemble de règles selon la syntaxe décrite ci-dessus.
+Résoudre un programme ASP signifie trouver un \emph{ensemble de réponse},
+qui est un ensemble minimal d'atomes respectant toutes les règles.
+Afin de définir formellement cette notion d'ensemble de réponse,
+nous appelons \emph{règle positive} toute règle ne contentant pas de négation d'atome
+(notée $\nota$), et \emph{programme positif} tout programme ne contenant que des
+règles positives.
+Une règle positive a donc la forme suivante :
+\begin{align*}
+  \atom{H} \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n.
+\end{align*}
+Si $S$ est un ensemble d'atomes, une règle positive est dite \emph{satisfaite} par $S$
+si et seulement si : $\atom{H} \in S \vee \exists i \in \segm{1}{n}, A_i \notin S$.
+Étant donnée cette définition de la satisfaction d'une règle,
+l'ensemble de réponse d'un programme positif $\Pi$ est
+est l'ensemble minimal (unique) d'atomes $S$ satisfaisant toutes les règles de $\Pi$.
+
+Dans le cas général, tous les programmes ne sont pas positifs.
+Dans le cas d'un programme non positif $\Pi$ et d'un ensemble d'atomes $S$,
+on note $\Pi^S$ la \emph{réduction} de $\Pi$ par $S$, définie en :
+\begin{itemize}
+  \item supprimant toutes les règles possédant une négation d'atome $\nota \atom{B}_i$
+    dans leur corps telle que $\atom{B}_i \in S$,
+  \item supprimant toutes les négations d'atomes dans le corps des règles restantes.
+\end{itemize}
+L'ensemble d'atomes $S$ est alors qualifié d'ensemble de réponse du programme non positif
+$\Pi$ si et seulement si il s'agit d'un ensemble de réponse pour le programme positif $\Pi^S$.
+Nous notons que plusieurs ensembles de réponse peuvent être solutions du même programme
+non défini.
+Dans la pratique, un \textit{solver} tel que \tool{Clingo} peut être configuré pour
+les énumérer tous ou pour n'en trouver qu'un.
+
+\begin{example}
+  Considérons le programme ASP suivant :
+ \begin{align*}
+   a &\la \nota b.\\
+   b &\la \nota a.
+ \end{align*}
+ Ce programme n'est pas positif, et il contient les deux ensembles de réponse suivants :
+ $\{a\}$ et $\{b\}$.
+\end{example}
+
+Il est à noter qu'il est possible de définir une règle ne comportant pas de corps
+(c'est-à-dire comportant zéro atomes et négations d'atomes).
+Une telle règle est aussi appelée un \emph{fait},
+et son atome de tête appartient par conséquence à tous les ensembles de réponse
+du programme.
+ainsi, les données représentant le modèle à étudier
+(à savoir le modèle de Frappes de Processus canoniques original,
+mais aussi le graphe des interactions et les paramètres inférés)
+sont exprimés en ASP à l'aide de faits.
+
+\begin{example}
+\exlabel{impl-component}
+  Afin de définir les trois composants contenus dans la \figref{infer-ex-ph-nocoop},
+  nous utilisons le programme suivant :
+  \begin{align*}
+    &\component(a, 2). \\
+    &\component(b, 1). \\
+    &\component(c, 1).
+  \end{align*}
+  Ce programme ne contient que des faits utilisant le prédicat $\components$
+  précédemment mentionné \vexpageref{impl-asp-atom}.
+  Par ailleurs, les symboles $a$, $b$, $c$, $1$ et $2$ représentent des constantes.
+  Ce programme produit un seul ensemble de réponse,
+  qui contient simplement les trois atomes qui y sont mentionnés.
+\end{example}
+
+
+
+\subsubsection{Variables}
+\seclabel{imple-variables}
+
+L'utilisation de variables, déjà évoquée précédemment, permet de généraliser des règles.
+Par exemple, pour décrire les ensembles de tous les niveaux d'expression de chaque composant
+(c'est-à-dire l'ensemble $\segm{0}{l_a}$ pour tout $a \in \component$),
+il est envisageable d'utiliser un atome de la forme : $\componentlevels(a, k)$
+pour stipuler que : $k \in \segm{0}{l_a}$.
+Les variables viennent alors en aide pour énumérer toutes les constantes entières $k$
+correspondant à un niveau d'expression possible :
+avant la résolution, une étape de \textit{ground} permet de remplacer, dans chaque règle,
+toutes les variables par toutes les constantes possibles ;
+en d'autres termes, ce processus permet d'obtenir un programme équivalent sans variable.
+La règle suivante, par exemple, contient trois variables ($\var{A}$, $\var{K}$ et $\var{M}$)
+et permet d'énumérer l'ensemble des niveaux d'expression possibles de chaque composant
+dans le modèle :
+\begin{align*}
+  \componentlevels(A, K) \la \component(\var{A}, \var{M}), 0 \leq K \leq M.
+\end{align*}
+où la notation $\leq$ possède la même signification que l'opérateur mathématique.
+
+\begin{example}
+  Afin de représenter tous les niveaux d'expression des composants du modèle de la
+  \figref{infer-ex-ph-nocoop},
+  nous utilisons le programme suivant, qui reprend les faits du programme proposé
+  \vexpageref{asp-component} :
+  \begin{align*}
+    &\component(a, 2). \\
+    &\component(b, 1). \\
+    &\component(c, 1). \\
+    &\componentlevels(A, K) \la \component(\var{A}, \var{M}), 0 \leq K \leq M.
+  \end{align*}
+  L'ensemble de réponse suivant est alors obtenu :
+  \begin{align*}
+    &\{&&\component(a, 2),
+    &&\component(b, 1), \\
+    &&&\component(c, 1),
+    &&\componentlevels(a, 0), \\
+    &&&\componentlevels(a, 1),
+    &&\componentlevels(a, 2), \\
+    &&&\componentlevels(b, 0),
+    &&\componentlevels(b, 1), \\
+    &&&\componentlevels(c, 0),
+    &&\componentlevels(c, 1). &\}
+  \end{align*}
+\end{example}
+
+
+
+\subsection{Règles de cardinalité}
+\seclabel{impl-cardinality-rules}
+
+En tant qu'extension des règles simples, les \emph{règles de cardinalité} s'avèrent
+utiles pour énumérer des ensembles de réponse.
+La tête d'une règle de cardinalité spécifie un ensemble d'atomes $H$ et deux entiers
+$min$ et $max$, et on note une telle règle :
+\begin{align*}
+  min\ \{\ H\ \}\ max \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1,
+  \nota \atom{B}_2, \dots, \nota \atom{B}_m.
+\end{align*}
+Pour chaque règle de ce type, autant d'ensembles de réponse sont créés, de façon à ce que
+chaque ensemble de réponse $S$ vérifie :
+\begin{align*}
+  min \leq |S \cap H| \leq max
+\end{align*}
+et chaque atome $\atom{H}_i \in S \cap H$ respecte la règle simple suivante :
+\begin{align*}
+  \atom{H}_i \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1,
+  \nota \atom{B}_2, \dots, \nota \atom{B}_m.
+\end{align*}
+en d'autres termes, tous les ensembles de réponses générés contiennent un sous-ensemble de
+l'ensemble $H$ dont la cardinalité est comprise entre $min$ et $max$,
+et pour lesquels la condition dans le corps de la cardinalité est vérifiée.
+L'ensemble des atomes $H = \{ \atom{H}_1, \atom{H}_2, \dots, \atom{H}_p \}$
+est souvent décrit de la façon suivante : $H = \{ \atom{P} \mid \atom{Q} \}$,
+qui est un raccourci pour qualifier l'ensemble des atomes de la forme
+$\atom{P}$ et pour lesquels $\atom{Q}$ est vérifié.
+
+% Cardinality rules turn out to be convenient to enumerate all possible parametrizations by creating multiple answer sets.
+% For functional purposes, a unique label is assigned to every possible set of resources of a given component.
+% Thus, we denote $\omega_p$ the set of resources of a given component $a$ labeled by $p$,
+% and naturally, $K_{a,\omega_p}$ is the related parameter.
+% %and in the following we note $K_{a,\omega_p}$ the parameter of component $a$ whose set of resources $\omega$ is assigned to the label $p$.
+% We note that labeling the sets of resources of a component is obviously equivalent to labeling its parameters.
+% Then, suppose that:
+% \begin{itemize}
+%   \item $\paramlabel(a, p)$ states that $p$ is a valid label for a set of resources of component $a$ (and therefore $K_{a,\omega_p}$ is a valid parameter);
+%   \item $\param(a, p, i)$ states that: $i \in K_{a, \omega_p}$;
+%   \item $\inferedparam(a, p)$ states that the parameter inference of $K_{a, \omega_p}$ was conclusive (\pref{pps:param-K}).
+% \end{itemize}
+% It is thereby possible to enumerate the possible values of all parameters for which \pref{pps:param-K} was not conclusive, with the following cardinality rule:
 % \begin{align*}
-%   K_{a,\{a,b\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \} \\
-%   K_{a,\{a,c\}} &\in \{ \segm{1}{1}, \segm{1}{2}, \segm{2}{2} \}
+%   & 1\ \{\ \param(\var{A}, \var{P}, \var{I}) \mid \componentlevels(\var{A}, \var{I})\ \}\ \infty\ \la \\
+%   & \qquad\qquad\qquad \paramlabel(\var{A}, \var{P}), \nota \inferedparam(\var{A}, \var{P}).
 % \end{align*}
-% We note that for all solutions, $0 \notin K_{a,\{a,b\}} \wedge 0 \notin K_{a,\{a,c\}}$.
-% This is due to the monotonicity assumption (\pref{pro:param-enum-monotonicity}) which especially states that:
-% \begin{align*}
-%   K_{a,\{b\}} \leqsegm K_{a,\{a,b\}} \wedge
-%   K_{a,\{c\}} \leqsegm K_{a,\{a,c\}}
-% \end{align*}
+% Indeed, this rule applies to any possible parameter $\var{P}$ of any component $\var{A}$ ($\paramlabel$) whose value is still unknown ($\nota \inferedparam$),
+% and states that any expression level $\var{I}$ of this component ($\componentlevels$) can belong to the value of the parameter ($\param$).
+% Furthermore, the lower bound is $1$, which forces each enumerated parameter to contain at least one value,
+% but no upper bound is specified ($\infty$) for the size of each parameter
+% (which is in fact already bounded by the number of possible expression levels of the related component).
+% %each parameter contains at least $1$ value, as stated by the lower bound, and has no upper bound ($\infty$) but the number of expression levels of its component.
+% In other worlds, this cardinality rule creates as many answer sets as there are \emph{candidate} parametrizations
+% so that if $K_{a, \omega_p}$ could not be inferred by \pref{pps:param-K}, then
+% $K_{a, \omega_p} \subset \segm{0}{l_a} \wedge K_{a, \omega_p} \neq \emptyset$
+% (thus completely disregarding the notion of admissible parametrizations given in \pref{ssec:admissible-K} or the fact that parameters have to be intervals).
 % 
-% Finally, we note that $\segm{1}{1}$ belongs to the possible values for both parameters.
-% Therefore this enumeration allows, from the model in \pref{fig:runningPH-1},
-% to find the behavior of the model refined with a cooperative sort described in \pref{fig:runningPH-2}.
+% 
+% 
+% \begin{example}\label{ex:cardinality}
+% In the scope of \pref{ex:infer-param-runningPH-1}, $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ could not be inferred by \pref{pps:param-K}.
+% The previous cardinality rule allows to produce 49 parametrizations, in which these two parameters can take all possible values:
+% %The enumeration thus produces 36 parametrizations, in which these parameters can take all possible values:
+% %(as, in this case, the assumptions of \pref{ssec:admissible-K} bring no new constraint):
+% \begin{align*}
+%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} , \segm{0}{1} , \segm{1}{2} , \segm{0}{2}, \{ 0, 2 \} \}^2
+% \end{align*}
+% and all the other parameters keep their inferred values.
+% %These parametrizations take the form of sets of $\param$ atoms.
+% Note that $\{ 0, 2 \}$ belongs to the set of candidate parametrizations
+% as no rule specifying that a parameter has to be an interval has been defined yet.
 % \end{example}
+% 
+% 
+% 
+% \subsection{Constraints}\label{sssec:constraints}
+% Finally, a \emph{constraint} is a rule with no $head$ part:
+% \begin{align*}
+%   \la \atom{A}_1, \atom{A}_2, \dots, \atom{A}_n, \nota \atom{B}_1, \nota \atom{B}_2, \dots, \nota \atom{B}_m.
+% \end{align*}
+% A constraint is satisfied only if its $body$ is not satisfied,
+% which thus allows to invalidate answer sets containing some unwanted combinations of atoms.
+% In the scope of parameters enumeration, for example, constraints are especially useful to filter parametrizations
+% that contain non-interval parameters, or that do not respect the assumptions of \pref{ssec:admissible-K}.
+% Indeed, suppose that:
+% \begin{itemize}
+%   \item $\lessactive(a, p, q)$ states that $\omega_p$ is a set of resources of $a$ with (loosely) less activators and more inhibitors than $\omega_q$;
+%   \item $\paraminf(a, p, q)$ states that: $K_{a,\omega_p} \leqsegm K_{a,\omega_q}$.
+% \end{itemize}
+% Then, the monotonicity assumption (\pref{pro:param-enum-monotonicity}) is formulated as the following constraint:
+% \begin{align*}
+%   \la \lessactive(\var{A}, \var{P}, \var{Q}), \nota \paraminf(\var{A}, \var{P}, \var{Q}).
+% \end{align*}
+% Indeed, this constraint removes all parametrization results where parameters $K_{\var{A},\omega_\var{P}}$ and $K_{\var{A},\omega_\var{Q}}$ exist
+% such that $\var{A}$ is less activated by the set of resources $\omega_\var{P}$ than it is by $\omega_\var{Q}$,
+% but $K_{\var{A},\omega_\var{Q}} \ltsegm K_{\var{A},\omega_\var{P}}$,
+% thus violating the monotonicity assumption.
+% Of course, other assumptions can be formulated in the same way.
+% 
+% \begin{example}
+% The set of candidate values given in \pref{ex:cardinality} can be filtered using constraints.
+% For example, a constraint was written in order to obtain only interval parameters
+% (thus avoiding parameters with “gaps” such as $\{ 0, 2 \}$).
+% Applying such a constraint would reduce the set of possible values for the parameters $K_{a,\{a,b\}}$ and $K_{a,\{a,c\}}$ to:
+% \begin{align*}
+%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{0}{0} , \segm{1}{1} , \segm{2}{2} , \segm{0}{1} , \segm{1}{2} , \segm{0}{2} \}^2
+% \end{align*}
+% 
+% Then, due to the fact that the parameters $K_{a,\{b\}} = \segm{1}{1}$ and $K_{a,\{c\}} = \segm{1}{1}$ could be inferred,
+% the monotonicity assumption (\pref{pro:param-enum-monotonicity} and expressed in ASP above) removes all parametrizations with:
+% $0 \in K_{a,\{a,b\}} \vee 0 \in K_{a,\{a,c\}}$.
+% In the end, the remaining possible values for the two parameters that were not inferred are:
+% \begin{align*}
+%   (K_{a,\{a,b\}} ; K_{a,\{a,c\}}) \in \{ \segm{1}{1} , \segm{2}{2} , \segm{1}{2} \}^2
+% \end{align*}
+% All these candidates respect the other properties of \pref{ssec:admissible-K} and no more candidates are filtered.
+% We thus obtain the results of \pref{ex:enum-param-runningPH-1}.
+% \end{example}
+% 
+% 
+% 
+% \medskip
+% 
+% This subsection succinctly described how ASP programs come in handy to represent a model and solve complex problems on it.
+% %all steps of Thomas' modeling inference.
+% It finds a particularly interesting application in the enumeration of parameters:
+% all possible parametrizations are generated in separate answer sets,
+% and integrity constraints are formulated to remove those that do not fit the assumptions of admissible parametrizations,
+% thus reducing the number of candidate parametrizations to be considered in the end.
+% However, all steps of the inference presented in this paper (\pref{sec:infer-IG} \& \ref{sec:infer-K})
+% were implemented in and benefited from this programming paradigm.
+% %, although in significantly different ways.

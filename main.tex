@@ -85,6 +85,10 @@
 % \newenvironment{graybox}%
 %   {\begin{lrbox}{\mybox}\begin{minipage}{0.98\linewidth}}%
 %  {\end{minipage}\end{lrbox}\noindent\framebox{\colorbox{couleurchapeau}{\usebox{\mybox}}}}
+\newenvironment{grayframedbox}%
+  {\begin{lrbox}{\mybox}\begin{minipage}{0.985\linewidth}}%
+  {\end{minipage}\end{lrbox}%
+  \noindent\textcolor{couleurframe}{\framebox{\usebox{\mybox}}}}
 \newenvironment{framedgraybox}%
   {\begin{lrbox}{\mybox}\begin{minipage}{0.97\linewidth}}%
   {\end{minipage}\end{lrbox}%
@@ -161,7 +165,8 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 % \newenvironment{theorem}{\vskip 5\p@\begin{graybox}\begin{gtheorem}}{%
 %   \end{gtheorem}\end{graybox}\vskip 5\p@}
 \newtheorem{lemma}{Lemme}[chapter]
-\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{gproposition}{Proposition}[chapter]
+\newgraytheorem{proposition}{gproposition}{grayframedbox}
 
 \theoremstyle{definition}
 \newtheorem{gdefinition}{Définition}[chapter]
@@ -171,7 +176,10 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 \newtheorem{critere}{Critère}[chapter]
 
 \theoremstyle{remark}
-\newtheorem*{example}{Exemple}
+\newtheorem*{gexample}{Exemple}
+%\newenvironment{example}{\myskip\noindent\textit{\textcolor{darkgray}{Exemple.}}}{}
+\newenvironment{example}{\myskip\noindent\colorbox{couleurchapeau}{%
+  \rule{0pt}{.8em}\textit{Exemple.}}}{}
 \newtheorem*{remark}{Remarque}
 
 
