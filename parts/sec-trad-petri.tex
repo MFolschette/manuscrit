@@ -1,0 +1,148 @@
+% Traduction en réseaux de Petri
+
+% \section{Réseaux de Petri}
+%   \subsection{Réseaux de Petri saufs (une place par processus)}
+%   \subsection{Réseaux de Petri bornés (une place par sorte)}
+
+\section{Traduction en réseaux de Petri}
+\seclabel{trad-petri}
+
+\todo{Glu partout}
+
+\todo{Pour cette traduction, les indices des processus ont un sens particulier
+et doivent être choisis dans $\sN$.}
+
+\begin{definition}[Réseau de Petri ($\PT$)]
+\deflabel{pt}
+  Un \emph{réseau de Petri} est un 6-uplet
+  $\PT = (\PTp; \PTt; \PTPre; \PTPost; \PTLect; \PTInh)$ où :
+  \begin{itemize}
+    \item $\PTp$ est l'ensemble fini des \emph{places},
+    \item $\PTt$ est l'ensemble fini des \emph{transitions},
+    \item $\PTPre \subset \PTp \times \sN \times \PTt$
+%    \item $\PTPre : \PTp \times \PTt \rightarrow \sN$
+      est l'ensemble des arcs entrant dans une transition,
+    \item $\PTPost \subset \PTt \times \sN \times \PTp$
+      est l'ensemble des arcs sortant d'une transition,
+    \item $\PTLect \subset \PTp \times \sN \times \PTt$ est l'ensemble des arcs de lecture,
+    \item $\PTInh \subset \PTp \times \sN \times \PTt$ est l'ensemble des arcs inhibiteurs,
+  \end{itemize}
+  avec : $\PTp \cap \PTt = \emptyset$ et $\PTp \cup \PTt \neq \emptyset$.
+  De plus, chaque arc est unique ; autrement dit, pour chacun des ensembles
+  $X \in \{ \PTPre, \PTPost, \PTLect, \PTInh \}$, on a :
+  \[\forall (a; i; b) \in X, \forall (a'; i'; b') \in X,
+    (a = a' \wedge b = b') \Rightarrow i = i'\]
+  On note par ailleurs, pour tout couple d'éléments $a, b \in \PTp \cup \PTt$ :
+%  $\forall X \in \{ \PTPre, \PTPost, \PTLect, \PTInh \},
+  \[X(p, t) = \begin{cases}
+              i & \text{ si } (a; i; b) \in X \\
+              0 & \text{ sinon}
+            \end{cases}\]
+%   
+%   place $p \in \PTp$ et toute transition $t \in \PTt$,
+%   $\PTPost(t, p) = $
+%   $\forall X \in \{ \PTPre, \PTPost, \PTLect, \PTInh \},
+%     \forall p \in \PTp, \forall t \in \PTt$,
+%   $X(p, t) \in \{ \PTPre, \PTPost, \PTLect, \PTInh \},$
+  
+  Un \emph{marquage} d'un réseau de Petri est une fonction $M : \PTp \rightarrow \sN$.
+  Un \emph{réseau de Petri avec marquage initial} est un couple $(\PT; M_0)$
+  où $\PT$ est un réseau de Petri et $M_0$ est un marquage de $\PT$.
+%   
+%   Pour toute transition $t \in \PTt$, on note de plus :
+%   $\PTPre(t) = $
+\end{definition}
+
+\begin{definition}[Sémantique des réseaux de Petri ($\PTtrans$)]
+\deflabel{pt-sem}
+  Étant donnés un réseau de Petri $\PT = (\PTp; \PTt; \PTPre; \PTPost; \PTLect; \PTInh)$
+  et un marquage $M$,
+  une transition $t \in \PTt$ est dite \emph{jouable} dans $M$ si et seulement si :
+  \[\forall p \in \PTp, M(p) \geq \PTPre(p, t) \wedge M(p) \geq \PTLect(p, t)
+    \wedge M(p) < \PTInh(p, t)\]
+  Dans ce cas, on note $(M \play t)$ le marquage résultant du jeu de cette transition depuis $M$,
+  défini par :
+  \[\forall p \in \PTp, (M \play t)(p) = M(p) - \PTPre(p, t) + \PTPost(t, p)\]
+  De plus, on note alors : $M \PTtrans (M \play t)$.
+\end{definition}
+
+\begin{definition}[Réseau de Petri équivalent ($\phmtoptsymbol$)]
+\deflabel{phm2pt}
+  Le réseau de Petri équivalent aux Frappes de Processus
+  avec actions plurielles $\PH = (\PHs; \PHl; \PHh)$
+  est défini par : $\phmtoan = (\PTp; \PTt; \PTPre; \PTPost; \PTLect; \PTInh)$, où :
+  \begin{itemize}
+    \item $\PTp = \PHs$,
+    \item $\PTt = \PHh$,
+    \item $\PTPre = \{ (b, j-k, h) \mid h \in \PHh \wedge b_j \in \cible{h} \wedge
+      b_k \in \bond{h} \wedge k-j < 0 \}$
+    \item $\PTPost = \{ (h, k-j, b) \mid h \in \PHh \wedge b_j \in \cible{h} \wedge
+      b_k \in \bond{h} \wedge k-j > 0 \}$
+    \item $\PTLect = \{ (a, i, h) \mid h \in \PHh \wedge a_i \in \frappeur{h} \wedge i > 0 \}$
+    \item $\PTInh = \{ (a, i+1, h) \mid h \in \PHh \wedge a_i \in \frappeur{h} \wedge i < l_a \}$
+  \end{itemize}
+  De plus, pour tout état $s \in \PHl$, on note
+  $M^s$ le marquage correspondant, défini par :
+  $\forall a \in \PTp, M^s(a) = i \text{ tel que } \PHget{s}{a} = a_i$.
+\end{definition}
+
+\begin{theorem}[$\PH \approx \phmtopt$]
+\thmlabel{bisimulationphm2pt}
+  Soient $\PH = (\PHs; \PHl; \PHh)$ des Frappes de Processus avec actions plurielles.
+  On a :
+  \[\forall s, s' \in \PHl, s \PHtrans s' \Longleftrightarrow
+    M^s \trans{\phmtopt} M^{s'} \enspace.\]
+\end{theorem}
+
+\begin{proof}
+  Soient $s, s' \in \PHl$.
+  On pose : $\phmtopt = (\PTp; \PTt; \PTPre; \PTPost; \PTLect; \PTInh)$.
+  Pour toute action $h \in \PHh$, on notera dans la suite :
+  \begin{itemize}
+    \item $\PTPre_h = \{ (b, j-k, h) \mid b_j \in \cible{h} \wedge
+      b_k \in \bond{h} \wedge k-j < 0 \}$,
+    \item $\PTPost_h = \{ (h, k-j, b) \mid b_j \in \cible{h} \wedge
+      b_k \in \bond{h} \wedge k-j > 0 \}$,
+    \item $\PTLect_h = \{ (a, i, h) \mid a_i \in \frappeur{h} \wedge i > 0 \}$,
+    \item $\PTInh_h = \{ (a, i+1, h) \mid a_i \in \frappeur{h} \wedge i < l_a \}$.
+  \end{itemize}
+  
+  ($\Rightarrow$) Supposons que $s \PHtrans s'$, c'est-à-dire qu'il existe une action $h \in \PHh$
+    telle que $s' = s \play h$.
+    Posons : $h = \PHfrappemult{A}{B}$.
+    D'après la \defref{phm2pt},
+    l'existence de cette action dans $\PH$ implique celle d'une transition $h \in \PTt$
+    dans $\phmtopt$, ainsi que des arcs suivants :
+    $\PTPre_h \subset \PTPre$, $\PTPost_h \subset \PTPost$,
+    $\PTLect_h \subset \PTLect$ et $\PTInh_h \subset \PTInh$.
+    Or, étant donné que $h$ est jouable dans $s$, on a :
+    $\forall a_i \in \frappeur{h}, a_i \in s$, d'où :
+    $\forall a \in \sortes{\frappeur{h}}, M^s(a) = i$.
+    De plus, comme $\cible{h} \subset \frappeur{h}$, on en déduit :
+    $\forall b \in \sortes{\cible{h}}, M^s(b) = j > j-k$.
+    Ainsi, $h$ est jouable dans $\PT$ d'après la \defref{pt-sem}.
+    De plus, d'après cette même définition,
+    $\forall b \in \sortes{\bond{h}}, (M^s \play h)(b) = j + (k - j) = k$
+    et $\forall a \in \PTp \setminus \sortes{\bond{h}}, (M^s \play h)(a) = M^s(a)$.
+    Ainsi, $(M^s \play h) = M^{s \play h} = M^{s'}$.
+  
+  ($\Leftarrow$) Supposons que $M^s \trans{\phmtopt} M^{s'}$,
+    c'est-à-dire qu'il existe une transition $h \in \PTt$ telle que $M^{s'} = M^s \play h$.
+    D'après la \defref{phm2pt}, il existe alors
+    une action $h = \PHfrappemult{A}{B} \in \PHh$ dans $\PH$,
+    ainsi que les ensembles d'arcs suivants dans $\phmtopt$ :
+    $\PTPre_h \subset \PTPre$, $\PTPost_h \subset \PTPost$,
+    $\PTLect_h \subset \PTLect$ et $\PTInh_h \subset \PTInh$.
+    Comme $h$ est jouable dans $M$, cela signifie alors, d'après la \defref{pt-sem}, que :
+%     \[\forall p \in \PTp, M^s(p) \geq \PTPre(p, t) \wedge M^s(p) \geq \PTLect(p, t)
+%       \wedge M^s(p) < \PTInh(p, t)\]
+    $\forall p \in \frappeur{h}, M^s(p) = \PHget{s}{p}$
+    (ainsi que : $\forall p \in \cible{h}, M^s(p) = \PHget{s}{p} \geq \PTPre(p, t)$).
+    Ainsi, $h$ est jouable dans $s$ car $a \subseteq s$.
+    Par ailleurs, $s \play h = s \recouvre B$ ;
+    or, $\forall b \in \sortes{\bond{h}}, (M^s \play h)(b) = j + (k - j) = k$
+    et $\forall a \in \PTp \setminus \sortes{\bond{h}}, (M^s \play h)(a) = M^s(a)$.
+    Ainsi, $s \play h = s'$.
+\end{proof}
+
+\todo{Exemple}
