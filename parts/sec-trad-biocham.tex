@@ -1,0 +1,169 @@
+% Traduction de modèles booléens Biocham
+
+\section{Traduction de modèles booléens Biocham}
+
+Nous proposons dans cette section une traduction des modèles Biocham dans la sémantique booléenne
+en Frappes de Processus avec actions plurielles.
+
+\myskip
+
+Biocham (\textit{Biochemical Abstract Machine})
+est un environnement logiciel pour la modélisation et l'analyse de systèmes biochimiques.
+Il propose notamment une syntaxe basée sur des règles de réactions pour représenter
+un système de réactions biochimiques,
+et un simulateur booléen permettant d'exécuter le système.
+Ce simulateur possède la particularité d'interpréter le modèle comme étant un modèle booléen,
+où les composants peuvent être présents ou absents,
+sans prendre en compte les coefficients stœchiométriques ou les paramètres cinétiques
+éventuels contenus dans les équations.
+
+Nous définissons dans la suite un système d'équations biochimiques
+tel que représenté dans la sémantique booléenne de Biocham,
+et nous proposons une traduction vers les Frappes de Processus avec actions plurielles,
+dont nous montrons qu'elle possède la même dynamique.
+
+\todo{Ajouter refs + citation Biocham}
+
+\begin{definition}[Système d'équations biochimiques]
+  Un \emph{système d'équations biochimiques} tel que décrit par Biocham
+  est un ensemble de réactions :
+  \[\BCe = \{ X \xrightarrow{Y} Z \mid X \cap Y = Y \cap Z = X \cap Z = \emptyset \}\]
+%   est un couple $(\BCc; \BCe)$ où :
+%   \begin{itemize}
+%     \item $\BCc$ est l'ensemble de composants booléens,
+%     \item $\BCe = \{ X \xrightarrow{Y} Z \mid X, Y, Z \subset \BCc \wedge
+%       X \cap Y = Y \cap Z = \emptyset \}$ est l'ensemble des équations biochimiques.
+%   \end{itemize}
+  Par ailleurs, on note $\BCc[\BCe]$
+  l'ensemble de tous les composants mentionnés dans $\BCe$ :
+  \[\BCc = \bigcup_{X \xrightarrow{Y} Z \in \BCe} X \cup Y \cup Z\]
+  
+  Pour toute équation biochimique $X \xrightarrow{Y} Z \in \BCe$,
+  les éléments de $X$ sont appelés les \emph{réactifs}, ceux de $Y$ sont les \emph{catalyseurs}
+  et ceux de $Z$ sont les \emph{produits}.
+  
+  Un \emph{état} d'un système d'équations biochimiques est un ensemble $S \subset \BCc$.
+\end{definition}
+
+\begin{remark}
+  La syntaxe véritable de Biocham permet d'intégrer des catalyseurs implicites,
+  autrement dit d'avoir des équations $X \xrightarrow{Y} Z \in \BCe$
+  telles quel $X \cap Z \neq \emptyset$.
+  Cependant, on peut réécrire de telles équations de la forme suivante,
+  tout en assurant la même dynamique :
+  $(X \setminus Z) \xrightarrow{Y \cup (X \cap Z)} (Z \setminus X)$.
+\end{remark}
+
+\begin{remark}
+  Il est naturellement possible de représenter une réaction d'équilibre
+  $X \overset{Y}{\longleftrightarrow} Z$ par deux réactions biochimiques
+  $X \xrightarrow{Y} Z$ et $Z \xrightarrow{Y} X$.
+\end{remark}
+
+\begin{definition}[Sémantique booléenne d'un système d'équations biochimiques]
+\deflabel{bc-sem}
+  Soit $\BCe$ un système d'équations biochimiques
+  et $S \subset \BCc$ un état de ce système.
+  On note : $S \BCtrans S'$ si et seulement si :
+  \[s \neq S' \wedge
+    \exists X \xrightarrow{Y} Z \in \BCe,
+    X \cup Y \subset S \wedge
+    \exists X' \subset X, S' = (S \setminus X') \cup Z\]
+%   Soient $\BCe$ un système d'équations biochimiques
+%   et $S \subset \BCc$ un état de ce système.
+%   Une équation $e = X \xrightarrow{Y} Z \in \BCe$ est dite \emph{jouable} dans $S$
+%   si et seulement si $X \cup Y \subset S$.
+%   On note alors $S \play e$ l'état résultant du jeu de $e$ dans $S$, défini par :
+%   $S \play e = (S \setminus X) \cup Z$.
+%   On notre par ailleurs : $S \BCtrans (S \play e)$.
+\end{definition}
+
+\begin{remark}
+  Cette définition prend compte de la sémantique indéterministe de Biocham pour ce qui est
+  de la consommation des réactifs.
+  Il est possible de rendre cette définition déterministe (du point de vue d'une réaction)
+  en imposant $X' = X$ pour toutes les transitions.
+  De même, cette définition ne prend pas en compte la présence éventuelle de produits
+  dans le milieu avant de jouer une équation ;
+  autrement dit, certains ou tous les produits d'une équation biochimique
+  peuvent se trouver dans le milieu au moment où elle est jouée.
+\end{remark}
+
+\begin{definition}[Frappes de Processus équivalentes ($\bctophmsymbol$)]
+\deflabel{bc2phm}
+  Soit $\BCe$ un système d'équations biochimiques.
+  On note $\bctophm = (\PHs, \PHl; \PHh)$ les Frappes de Processus avec actions plurielles
+  équivalentes, définies par :
+  \begin{itemize}
+    \item $\PHs = \BCc$,
+    \item $\PHl = \bigtimes{a \in \PHs} \PHl_a$, où $\forall a \in \PHs, \PHl_a = \{ a_0, a_1 \}$,
+%    \item $\PHh = \{ \PHfrappemult{(X_1 \cup Y_1 \cup Z_0)}{(X_0 \cup Z_1)} \mid
+    \item $\PHh = \{
+      \PHfrappemult{(X_1 \cup Y_1 \cup Z'_0 \cup (Z \setminus Z')_1)}{(X'_0 \cup Z'_1)} \mid
+      X \xrightarrow{Y} Z \in \BCe \wedge X' \subset X \wedge Z' \subset Z \wedge
+      (X' \cup Z') \neq \emptyset \}$,
+%     
+%     \item $\PHh = \{ \PHfrappemult{A}{B} \mid \exists X \xrightarrow{Y} Z \in \BCe,
+%       A = \{ a_1 \mid a \in X \cup Y \} \cup \{ a_0 \mid a \in Z \} \wedge
+%       B = \{ a_0 \mid a \in X \} \cup \{ a_1 \mid a \in Z \} \}$.
+%     
+%     \item $\PHh = \{ \PHfrappemults{a_1 \mid a \in X \cup Y}{a_0}
+%       \mid A = \{  \} X \cup Y \wedge B =  \}$
+%     \item $\PHh = \{ \PHfrappemult{A}{B} \mid A = \{  \} X \cup Y \wedge B =  \}$
+  \end{itemize}
+  où, pour tout $i \in \{ 0, 1 \}$ et tout $N \subset \BCc$, on note :
+  $N_i = \{ a_i \mid a \in N \}$.
+%   où, pour toute équation $X \xrightarrow{Y} Z \in \BCe$, on note
+%   $N_i = \{ a_i \mid a \in N \}$
+%   avec $i \in \{ 0, 1 \}$ et $N \in \{ X, Y, Z \}$.
+  
+  Enfin, pour tout état $S \subset \BCc$, on note
+  $\tophm{S} = S_1 \cup (\BCc \setminus S)_0$
+  %\etat{a_1 \mid a \in S} \cup \etat{a_0 \mid a \notin S}$
+  l'état correspondant dans $\bctophm$.
+\end{definition}
+
+\begin{theorem}[$\PH \approx \bctophm$]
+\thmlabel{bisimulationbc2phm}
+  Soit $\BCe$ un système d'équations biochimiques.
+  On a :
+  \[\forall S, S' \subset \BCc, S \BCtrans S' \Longleftrightarrow
+    \tophm{S} \trans{\bctophm} \tophm{S'} \enspace.\]
+\end{theorem}
+
+\begin{proof}
+  Posons : $\bctophm = (\PHs, \PHl; \PHh)$.
+  Soient $S, S' \subset \BCc$.
+  
+  ($\Rightarrow$) Supposons que $S \BCtrans S'$.
+    D'après la \defref{bc-sem},
+    cela signifie, outre $S \neq S'$,
+    qu'il existe une équation $X \xrightarrow{Y} Z \in \BCe$
+    telle que $X \cup Y \subset S$,
+    et qu'il existe un ensemble $X' \subset X$ tel que $S' = (S \setminus X') \cup Z$.
+    Posons $Z' = Z \cap S$
+    et $h = \PHfrappemult{(X_1 \cup Y_1 \cup Z'_0 \cup (Z \setminus Z')_1)}{(X'_0 \cup Z'_1)}$.
+    Comme $S \neq S'$, on note que $X' \neq \emptyset \vee Z' \neq \emptyset$.
+    D'après la \defref{bc2phm}, on a donc : $h \in \PHh$.
+    Par ailleurs, on a alors : $X_1 \cup Y_1 \subseteq \tophm{S}$,
+    et par définition de $Z'$, $Z'_0 \subseteq \tophm{S}$
+    et $(Z \setminus Z')_1 \subseteq \tophm{S}$,
+    donc $h$ est jouable dans $\tophm{S}$.
+%     Enfin, $\tophm{S} \play h = \tophm{S} \recouvre (X'_0 \cup Z'_1) =
+%       \tophm{(S \setminus X') \cup Z'}$.
+    Enfin, $\tophm{S'} = \tophm{(S \setminus X') \cup Z} = \tophm{(S \setminus X') \cup Z'} =
+      \tophm{S \setminus X'} \recouvre Z'_1 = (\tophm{S} \recouvre Z'_1) \recouvre X'_0 =
+      \tophm{S} \recouvre (Z'_1 \cup X'_0)$
+    car $X' \cup Z' = \emptyset$.
+  
+  ($\Leftarrow$) Supposons que $\tophm{S} \trans{\bctophm} \tophm{S'}$.
+    Cela signifie qu'il existe une action $h = \PHfrappemult{A}{B} \in \PHh$
+    telle que $\tophm{S'} = \tophm{S} \play h$.
+    Par ailleurs, l'existence d'une telle action implique, d'après la \defref{bc2phm},
+    l'existence d'une équation $X \xrightarrow{Y} Z \in \BCe$ telle que :
+    $h = \PHfrappemult{(X_1 \cup Y_1 \cup Z'_0 \cup (Z \setminus Z')_1)}{(X'_0 \cup Z'_1)}$,
+    avec $X' \subset X$, $Z' \subset Z$ et $(X' \cup Z') \neq \emptyset$.
+    
+    \TODO
+  
+\end{proof}
