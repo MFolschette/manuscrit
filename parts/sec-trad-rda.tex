@@ -1,0 +1,151 @@
+% Traduction depuis les réseaux discrets asynchrones}
+
+\section{Traduction depuis les réseaux discrets asynchrones}
+\seclabel{trad-rda}
+
+Nous proposons dans cette section une traduction des réseaux discrets asynchrones
+en Frappes de Processus canoniques, et nous en montrons la validité
+par une preuve de bisimulation faible.
+Les réseaux discrets asynchrones ont été préalablement définis à la \vdefref{rda-def}
+du \chapref{etatdelart}.
+Il s'agit de modèles proches du modèle de Thomas, mais en comportant pas de restriction unitaire
+de la dynamique, et présentant des fonctions d'évolution en lieu et place de paramètres discrets.
+Un réseau discret asynchrone se présente sous la forme d'un couple $\RDA = (\GI; F)$
+où $\GI = (\components; E)$ est un graphe des interactions
+et $F$ est un ensemble de fonctions $f_x : \RRBreg{x} \rightarrow \segm{0}{l_x}$
+pour tout composant $x \in \components$,
+où $\RRBreg{x}$ est l'ensemble des prédécesseurs de $x$ dans le graphe des interactions.
+La dynamique d'un tel réseau est la suivante : il existe une transition $\RRBtransrda{s}{s'}$
+si et seulement si un unique composant $x$ évolue entre $s$ et $s'$
+de façon à ce que : $\RRBget{s'}{x} = f_x(s)$.
+Les Frappes de Processus canoniques, définies à la \vsecref{phcanonique},
+permettent une représentation presque immédiate des réseaux discrets asynchrones,
+à condition de créer les sortes coopératives adéquates.
+
+\myskip
+
+% Nous complétons dans un premier temps la définition d'un réseau discret asynchrone par
+% la notion de dépendances d'un composant.
+% En effet, même si les fonctions d'évolution de chaque composant sont sur $\RRBstates$,
+% elles ne dépendent généralement 
+% pour tout composant $x \in \components$, $\RDAdep(x)$ est l'ensemble des composants dont
+% la valeur de $f_x$ dépend véritablement,
+% 
+% \begin{definition}[Dépendance]
+%   Soit $\RDA = (\GI; F)$ un réseau discret asynchrone, avec $\GI = (\components; E)$.
+%   Pour tout composant $x \in \components$,
+%   on note $\DNdep(x) \subseteq \components$ l'ensemble des composants dont
+%   la valeur de $f_x$ dépend véritablement,
+%   c'est-à-dire l'ensemble minimal tel que :
+%   \[\forall s, s' \in \RRBstates,
+%     \big(\forall y \in \DNdep(f_x), \get{s}{y} = \get{s'}{y}\big) \Longrightarrow
+%     f_x(s) = f_x(s')\]
+% \end{definition}
+
+Cette traduction associe deux sortes à chaque composant $a$ dans $\RDA$ :
+\begin{itemize}
+  \item une sorte du même nom pour représenter ce composant,
+  \item une sorte coopérative $f^a$ représentant sa fonction d'évolution $f_a$,
+    et dont les états sont donc une combinaison des états de ses régulateurs.
+\end{itemize}
+De plus, les actions primaires sont définies de façon à correctement mettre à jour
+les sortes coopératives,
+et les actions secondaires le sont de façon à ce que chaque sorte coopérative $f^a$
+interagisse avec son composant $a$ de la façon dont la fonction d'évolution
+correspondante le permet.
+
+\begin{definition}[Frappes de Processus équivalentes ($\rdatophsymbol$)]
+\deflabel{rda2phcanonique}
+  Soit $\RDA = (\GI; F)$ un réseau discret asynchrone, avec $\GI = (\components; E)$.
+  On note $\rdatoph = (\PHs; \PHl; (\PHh^{(1)}; \PHh^{(2)}))$
+  les Frappes de Processus canoniques équivalentes
+  à $\RDA$, définies par :
+  \begin{itemize}
+    \item $\PHs = \components \cup \{ f^a \mid a \in \components \}$,
+    \item $\PHl = \bigtimes{a \in \components} \PHl_{a} \times
+      \bigtimes{a \in \components} \PHl_{f^a}$ l'ensemble des états , où :
+      \begin{align*}
+      \forall a \in \components&, \PHl_{a} = \{ a_i \mid i \in \segm{0}{l_a} \} \\
+      \forall a \in \components&, \PHl_{f^a} = \begin{cases}
+          \PHsubl_{\RRBreg{a}} & \text{ si } \RRBreg{a} \neq \emptyset \\
+          \{ f^a_\emptyset \}  & \text{ sinon }
+        \end{cases} \enspace,
+      \end{align*}
+    \item $\PHh^{(1)} = \{ \PHfrappe{b_k}{f^a_\mysigma}{f^a_{\mysigma'}} \mid
+      a \in \components \wedge b \in \RRBreg{a} \wedge
+      b_k \in \PHl_{b} \wedge f^a_\mysigma \in \PHl_{f^a} \wedge
+      \get{\mysigma}{b} \neq b_k \wedge \mysigma' = \mysigma \recouvre b_k \}$,
+    \item $\PHh^{(2)} = \{ \PHfrappe{f^a_\mysigma}{a_k}{a_{k'}} \mid
+      a \in \components \wedge f^a_\mysigma \in \PHl_{f^a} \wedge
+      a_k, a_k' \in \PHl_{a} \wedge k \neq k' \wedge f^a(\decode \mysigma) = k' \}$.
+  \end{itemize}
+  
+  Pour tout état $s \in \RRBstates$ de $\RDA$,
+  $\encode s = \os$ est l'état correspondant dans $\rdatoph$, défini par :
+  $\forall a \in \components, \get{s}{a} = k \Rightarrow \get{\os}{a} = a_k$
+  et
+  $\forall a \in \components, \get{\os}{f^a}=f^a_\mysigma$
+  avec $f^a_\mysigma \in \PHl_{f^a}$
+  et $\forall b \in \RRBreg{a}, \get{\mysigma}{b} = \get{\os}{b}$.
+
+  À l'inverse, pour tout état $\os \in \PHl$ de $\rdatoph$,
+  $\decode \os = s$ est l'état correspondant dans $\RDA$ avec :
+  $\forall a \in \components, \get{\os}{a} = a_k \Rightarrow \get{s}{a} = k$.
+\end{definition}
+
+\begin{theorem}[$\RDA \approx \rdatoph$]
+\thmlabel{bisimulationrda2ph}
+  Soit $\RDA = (\GI; F)$ un réseau discret asynchrone.
+  On a :
+  \[\forall s, s' \in \RRBstates, \RRBtransrda{s}{s'} \Longleftrightarrow
+    \encode s \trans{\rdatoph} \encode s' \enspace.\]
+\end{theorem}
+
+\todo{voir en fonction de ce théorème :}
+
+\begin{theorem}[$\PH \approx \PHflat(\PH)$]
+\thmlabel{bisimuationrda2ph}
+  Soient $\PH = (\PHs; \PHl; \PHa^{\angles{k}})$ des Frappes de Processus avec $k$
+  classes de priorités,
+  et $\oPH = \PHflat(\PH) = (\ov{\PHs}; \ov{\PHl}; \ov{\PHa}^{\angles{2}})$ leur aplatissement.
+  \begin{enumerate}
+    \item \label{php2ph} $\forall s, s' \in \PHl$,
+      $s \trans{\PH} s' \Longrightarrow \flats{s} \mtrans{\oPH} \flats{s'}$,
+      où $\mtrans{\oPH}$ est une séquence finie de transitions $\trans{\oPH}$.
+    \item \label{ph2php} $\forall \os, \os' \in \ov{\PHl}$,
+      $\os \trans{\oPH} \os' \Longrightarrow \unflats{\os} = \unflats{\os'} \vee
+      \unflats{\os} \trans{\PH} \unflats{\os'} \enspace.$
+  \end{enumerate}
+\end{theorem}
+
+
+\TODO
+
+\begin{proof}
+(\ref{adn2ph}) From \pref{def:DN}, $x\DNtrans x'\Rightarrow \exists i\in\segm{1}{n},
+f^i(x)=\get{x'}{i} \wedge \forall j\in\segm{1}{n},i\neq j, \get{x}{j}=\get{x'}{j}$.
+Let us assume (without loss of generality) that $f^i(x)=k'$, $\get{x}{i}=k$ and
+$\mysigma\in\underset{j\in\DNdep(f^i)}{\times} \PHl_{a^j}$ such that
+$\forall j\in\DNdep(f^i), \get{\mysigma}{j}=a^j_{\get{x}{j}}$.
+From \pref{def:DN2PH}, $h=\PHfrappe{f^i_\mysigma}{a^i_k}{a^i_{k'}}\in\PHh^{(2)}$.
+From the definition of $\encode x$,
+$a^i_k\in \encode x$ and $f^i_\mysigma\in \encode x$;
+moreover, as there is no action in $\PHh^{(1)}$ applicable in $\encode x$,
+$h$ is applicable in $\encode x$:
+$\encode x\PHPtrans \encode x\play h$.
+In $\encode x\play h$, the only applicable actions of priority $1$ are those having
+$a^i_{k'}$ as hitter and hitting cooperative sorts, giving a finite number of transitions towards
+$\encode{x'}$.
+
+(\ref{ph2adn}) $s\PHPtrans s'$ only if there exists an action $h$ applicable in $s$ such that
+$s\play h=s'$.
+If $\prio(h)=1$, then, by definition of $\PHh^{(1)}$, 
+$\decode s=\decode {s'}$.
+If $\prio(h)=2$, then $\forall i\in\segm{1}{n}$,
+if $\get{s}{f^i} = f^i_\mysigma$, then, $\forall j\in\DNdep(f^i),
+\get{\mysigma}{a^j}=\get{s}{a^j}$.
+Let $i\in\segm{1}{n}$ such that $\get{s}{a^i}\neq\get{s'}{a^i}$ ($i$ is unique for this
+transition).
+By \pref{def:DN2PH}, if $\get{s'}{a^i}=a^i_{k'}$, necessarily $f^i(\decode s)=k'$, hence
+$\decode s\DNtrans \decode{s'}$.
+\end{proof}

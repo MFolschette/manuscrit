@@ -441,7 +441,7 @@ car ce composant peut évoluer d'un nombre arbitraire de niveaux d'expression
   Si $\GI = (\components; E)$ est un graphe des interactions,
   un \emph{réseau discret asynchrone} est un couple $\RDA = (\GI; F)$
   avec $F = (f_x)_{x \in \components}$, tels que
-  $\forall x \in \components, f_x : \RRBstates \rightarrow \segm{0}{l_x}$.
+  $\forall x \in \components, f_x : \RRBreg{x} \rightarrow \segm{0}{l_x}$.
 \end{definition}
 
 \begin{definition}[Dynamique d'un réseau discret asynchrone ($\RRBtransrda{}{}$)]
