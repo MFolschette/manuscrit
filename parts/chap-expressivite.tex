@@ -27,15 +27,60 @@
 
 
 
-\todo{Présentation phm2an}
-En effet, chaque action plurielle $\PHfrappemult{A}{B}$
-possède la même dynamique qu'un ensemble des transitions synchronisées
-partant chacune d'un processus de l'ensemble $A$ et
-arrivant dans le processus de la même sorte de l'ensemble $A \recouvre B$%
-\footnote{La notation $A \recouvre B$, formalisée à la \vdefref{recouvrementps}, représente
-l'ensemble où chaque processus de $A$ a été remplacé par
-le processus de $B$ de la même sorte, s'il existe.},
-comme décrit à la \secref{phm2an}.
+Le sujet du chapitre courant est l'expressivité des Frappes de Processus,
+dans les différentes sémantiques présentées au \chapref{sem},
+par rapport à d'autres modélisations couramment utilisées.
+Ce travail de positionnement comporte un intérêt évident lorsqu'il s'agit d'interagir
+avec d'autres types de modèles.
+Ainsi, les Frappes de Processus peuvent bénéficier des capacités d'analyse d'autres
+modélisations, moyennant une traduction, qui peuvent s'avérer efficaces pour
+certains problèmes.
+À l'inverse, traduire un formalisme en Frappes de Processus permet par exemple
+de pouvoir y appliquer les méthodes de représentation et d'analyse proposées,
+et notamment l'analyse statique détaillée au \chapref{as}.
+
+Nous présentons ainsi à la \secref{trad-rda} une traduction des réseaux discrets asynchrones
+en Frappes de Processus canoniques.
+Cette traduction est fondamentale pour l'étude des réseaux de régulation biologique
+car elle permet la traduction d'un modèle très utilisé directement en un formalisme
+de Frappes de Processus qu'il est possible d'étudier à l'aide de l'analyse statique.
+La \secref{trad-thomas} propose, à l'inverse, une méthode pour inférer l'ensemble des modèles
+de Thomas sous-jacents à un modèle de Frappes de Processus canoniques.
+L'inférence du graphe des interactions, par exemple,
+conserve certaines propriétés comme la présence de cycles
+exploitables par les résultats relatifs aux conjectures de Thomas.
+Par ailleurs, l'inférence des paramètres discrets permet de restreindre l'espace des possibles
+en matière de paramétrisations compatibles avec la dynamique du modèle étudié,
+facilitant ainsi la recherche de la paramétrisation représentant le comportement recherche.
+Les modèles de Thomas compatibles avec ces deux inférences sont ceux dont la paramétrisation
+est complétée lorsque certains paramètres n'ont pas pu être inférés ;
+nous proposons une méthode pour les énumérer en accord toujours avec la dynamique
+de modèle de Frappes de Processus canoniques étudié.
+
+Nous nous intéressons par ailleurs aux liens avec d'autres modélisations
+qui ne sont pas totalement asynchrones,
+à l'aide des Frappes de Processus avec actions plurielles.
+Nous montrons notamment à la \secref{phm2an} que ce type de Frappes de Processus
+est équivalent aux plus classiques automates synchronisés.
+Nous donnons pour cela les deux traductions adéquates et exhibons les preuves correspondantes.
+Par ailleurs, nous proposons aussi à la \secref{trad-petri}
+une traduction des Frappes de Processus avec actions
+plurielles vers les réseaux de Petri utilisant des arcs de lecture et des arcs inhibiteurs.
+Cette traduction permet de montrer le lien d'inclusion entre les deux formalismes,
+et ouvre des perspectives dans l'utilisation des réseaux de Petri pour l'analyse des réseaux
+de régulation biologique représentés sous la forme de Frappes de Processus.
+Pour finir, nous proposons à la \secref{trad-biocham} une traduction des systèmes d'équations tels
+que définis dans le formalisme de Biocham vers les Frappes de Processus avec actions plurielles.
+Nous nous intéressons naturellement à la sémantique booléenne de Biocham,
+qui est par ailleurs asynchrone et qui ajoute une couche supplémentaire d'indéterminisme
+sur chaque réaction (en autorisant la consommation d'une partie arbitraire des réactifs).
+Cette traduction prend naturellement parti des similitudes entre Biocham et les Frappes
+de Processus avec actions plurielles, et permet d'affirmer
+qu'un tel système d'équations biochimiques peut toujours être exprimé
+en Frappes de Processus avec actions plurielles,
+et donc analysé avec les outils adéquats.
+
+
 
 \section{Réseaux discrets asynchrones}
 \seclabel{trad-rda}

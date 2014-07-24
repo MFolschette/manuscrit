@@ -11,8 +11,15 @@ et nous exhibons pour cela deux traductions d'un formalisme vers l'autre.
 %(\defref[s]{phm2an} et \defref*[vref]{an2phm}).
 Cette équivalence est intéressante car elle montre clairement le lien entre ce formalisme
 de Frappes de Processus et celui plus répandu des réseaux d'automates synchronisés.
-De plus, les traductions permettent de naviguer entre les deux représentations
-afin d'en utiliser les différents outils.
+En effet, chaque action plurielle $\PHfrappemult{A}{B}$
+possède la même dynamique qu'un ensemble de transitions synchronisées
+partant chacune d'un processus de l'ensemble $A$ et
+arrivant dans le processus de la même sorte de l'ensemble $A \recouvre B$%
+\footnote{La notation $A \recouvre B$, formalisée à la \vdefref{recouvrementps}, représente
+l'ensemble où chaque processus de $A$ a été remplacé par
+le processus de $B$ de la même sorte, s'il existe.}.
+
+\myskip
 
 Nous rappelons tout d'abord la définition d'un réseau d'automates synchronisés (\defref{an})
 ainsi que la relation de transition entre deux états d'un tel modèle (\defref{an-sem})

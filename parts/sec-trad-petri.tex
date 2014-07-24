@@ -1,18 +1,61 @@
 % Traduction en réseaux de Petri
 
-% \section{Réseaux de Petri}
-%   \subsection{Réseaux de Petri saufs (une place par processus)}
-%   \subsection{Réseaux de Petri bornés (une place par sorte)}
-
 \section{Traduction en réseaux de Petri}
 \seclabel{trad-petri}
 
-\todo{Glu partout}
+Nous présentons dans cette section une méthode de traduction des Frappes de Processus
+avec actions plurielles en réseaux de Petri avec arcs inhibiteurs et arcs de lecture.
+Les réseaux de Petri, du nom de leur créateur \citefullname{petri1962kommunikation}{Carl Adam},
+permettent une représentation compacte des systèmes discrets concurrents
+sous la forme de places contenant des jetons qui représentent leur niveau d'expression,
+et de transitions qui consomment et produisent ces jetons.
 
-Dépliage (avec arcs inhibiteurs) \cite{baldan00}
+La traduction des Frappes de Processus en réseaux de Petri peut s'inscrire dans une volonté
+plus générale d'utiliser ce formalisme pour représenter des processus de régulation
+biologique \cite{Chaouiya07petrinet}.
+De plus, cela peut permettre d'appliquer des méthodes de dépliage \cite{baldan00}
+afin de réduire le parallélisme dans les modèles et faciliter en partie l'analyse
+par \textit{model checking}.
 
-\todo{Pour cette traduction, les indices des processus ont un sens particulier
-et doivent être choisis dans $\sN$.}
+La traduction proposée dans cette section fait correspondance, pour chaque sorte
+des Frappes de Processus avec actions plurielles initiales, une place dans le réseau de Petri
+produit.
+Les jetons de cette place représentent alors le processus actif dans la sorte correspondante.
+Les actions sont quand à elles représentées par une transition comportant les arcs ordinaires,
+de lecture et inhibiteurs nécessaire à reproduire la dynamique recherchée.
+Il est à noter que toutes les sémantiques de Frappes de Processus
+(avec actions plurielles, arcs neutralisants ou classes de priorités,
+mais aussi standards)
+peuvent être traduites en réseaux de Petri à l'aide de la traduction proposée ici,
+moyennant les traductions présentées aux \chapref{sem,phcanonique}.
+Cela montre notamment que les Frappes de Processus sont expressivement incluses
+dans les réseaux de Petri.
+De plus, l'avantage de la traduction proposée ci-après est de ne représenter qu'une place
+par sorte,
+et d'utiliser le système d'accumulation des jetons pour représenter les processus,
+même dans un cas multi-valué (non-booléen).
+Cette traduction de distingue donc de celle proposée par \citeasnoun[p.~47]{Pauleve11}
+qui fait correspondre une place à chaque processus,
+et produit donc un réseau de Petri sauf et n'utilisant pas d'arcs inhibiteurs.
+
+\myskip
+
+Nous commençons par rappeler la notion de réseau de Petri avec des arcs de lecture
+et des arcs inhibiteurs (\defref{pt}).
+Un réseau de Petri est composé de place et de transitions.
+Chaque place contient à tout instant un certain nombre de jetons qui tiennent le rôle
+de niveau d'expression courant de la place.
+Les transitions, quant à elles, sont reliées aux places par des arcs ordinaires,
+des arcs de lecture et des arcs inhibiteurs ;
+ces arcs déterminent la condition de tir de la transition en fonction des places auxquelles
+elle est reliée, ainsi que le nombre de jetons consommés et produits par son tir.
+Les arcs ordinaires permettent d'établir le nombre de jetons consommés
+et produits par le tir d'une transition, tandis que
+les arcs de lecture permettent de s'assurer de la présence d'un certain nombre de jetons
+dans une place et les arcs inhibiteurs permettent de s'assurer de la propriété
+inverse.
+Il est donc possible de passer d'un état (appelé \emph{marquage} à un autre
+en tirant une transition, et à la condition de respecter ces règles (\defref{pt-sem}).
 
 \begin{definition}[Réseau de Petri ($\PT$)]
 \deflabel{pt}
@@ -67,6 +110,28 @@ et doivent être choisis dans $\sN$.}
   \[\forall p \in \PTp, (M \play t)(p) = M(p) - \PTPre(p, t) + \PTPost(t, p)\]
   De plus, on note alors : $M \PTtrans (M \play t)$.
 \end{definition}
+
+Nous proposons à la \defref{phm2pt} une traduction des Frappes de Processus avec actions
+plurielles vers les réseaux de Petri tels que définis plus haut.
+Cette définition fait correspondre, à chaque sorte du modèle initial,
+une place dans le réseau de Petri produit,
+dont le nombre de jetons figurera le niveau d'activité.
+De même à chaque action correspond une transition, dont le déclenchement
+est contraint par des arcs de lecture et des arcs inhibiteurs pour s'assurer
+que le nombre de jetons des places correspondant aux frappeurs est le bon.
+Enfin, des arcs ordinaires permettent de consommer et produire les jetons
+nécessaires pour représenter tous les bonds.
+
+Il est à noter que Pour cette traduction, les indices des processus ont un sens particulier
+car ils représentent le nombre de jetons utilisés pour représenter chaque processus.
+Par exemple, une sorte hypothétique $a$ comprenant trois processus $a_0$, $a_1$ et $a_2$
+sera représentée par une place pouvant structurellement contenir jusqu'à $2$ jetons
+(cette contrainte n'étant pas inhérente au modèle mais à la forme des arcs de la traduction).
+Ainsi, les indices des processus du modèle initial doivent être choisis dans $\sN$.
+
+Pour terminer, nous montrons au \thmref{bisimulationphm2pt} que cette traduction
+conserve la dynamique ;
+autrement dit, que le modèle traduit est fortement bisimilaire au modèle original.
 
 \begin{definition}[Réseau de Petri équivalent ($\phmtoptsymbol$)]
 \deflabel{phm2pt}
@@ -148,3 +213,5 @@ et doivent être choisis dans $\sN$.}
 \end{proof}
 
 \todo{Exemple}
+
+\todo{Preuve borné (en utilisant la dynamique)}

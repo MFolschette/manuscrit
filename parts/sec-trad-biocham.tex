@@ -4,9 +4,6 @@
 
 Nous proposons dans cette section une traduction des modèles Biocham dans la sémantique booléenne
 en Frappes de Processus avec actions plurielles.
-
-\myskip
-
 Biocham \citeaffixed{fages2004modelling}{pour \textit{Biochemical Abstract Machine}, voir}
 est un environnement logiciel pour la modélisation et l'analyse de systèmes biochimiques.
 Il propose notamment une syntaxe basée sur des règles de réactions pour représenter
@@ -16,6 +13,17 @@ Ce simulateur possède la particularité d'interpréter le modèle comme étant 
 où les composants peuvent être présents ou absents,
 sans prendre en compte les coefficients stœchiométriques ou les paramètres cinétiques
 éventuels contenus dans les équations.
+
+Notre traduction s'appuie sur les ressemblances entre le formalisme booléen de Biocham
+et les Frappes de Processus avec actions plurielles, comme discutées au début de la
+\secref{phm}.
+Pour chaque équation de Biocham, cette traduction fit correspondre
+un ensemble d'actions qui reproduit toutes les dynamiques (non-déterministes) possibles.
+Nous montrons enfin que cette traduction produit effectivement un modèle équivalent,
+ce qui montre que les Frappes de Processus sont au moins aussi expressives
+que la sémantique booléenne de Biocham.
+
+\myskip
 
 Nous définissons dans la suite la notion de système d'équations biochimiques (\defref{bc})
 et sa dynamique dans la sémantique booléenne de Biocham (\defref{bc-sem}).
@@ -32,11 +40,11 @@ Par ailleurs, seule une partie des réactifs (dans $X$) est consommée, et ce de
 non-déterministe, afin de conserver l'ensemble des dynamiques possibles d'un modèle non booléen
 (et comportant donc des coefficients stœchiométriques).
 
-Nous proposons ensuite une traduction vers les Frappes de Processus avec actions plurielles
-(\defref{bc2phm})
-et nous montrons qu'elle possède la même dynamique (\thmref{bisimulationbc2phm}).
-Cette traduction fit correspondre, à chaque équation du système,
-un ensemble d'actions qui reproduit toutes les dynamiques non-déterministes possibles.
+% Nous proposons ensuite une traduction vers les Frappes de Processus avec actions plurielles
+% (\defref{bc2phm})
+% et nous montrons qu'elle possède la même dynamique (\thmref{bisimulationbc2phm}).
+% Cette traduction fit correspondre, à chaque équation du système,
+% un ensemble d'actions qui reproduit toutes les dynamiques non-déterministes possibles.
 
 \begin{definition}[Système d'équations biochimiques]
 \deflabel{bc}
