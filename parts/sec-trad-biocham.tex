@@ -7,7 +7,7 @@ en Frappes de Processus avec actions plurielles.
 
 \myskip
 
-Biocham (\textit{Biochemical Abstract Machine})
+Biocham \citeaffixed{fages2004modelling}{pour \textit{Biochemical Abstract Machine}, voir}
 est un environnement logiciel pour la modélisation et l'analyse de systèmes biochimiques.
 Il propose notamment une syntaxe basée sur des règles de réactions pour représenter
 un système de réactions biochimiques,
@@ -17,14 +17,29 @@ où les composants peuvent être présents ou absents,
 sans prendre en compte les coefficients stœchiométriques ou les paramètres cinétiques
 éventuels contenus dans les équations.
 
-Nous définissons dans la suite un système d'équations biochimiques
-tel que représenté dans la sémantique booléenne de Biocham,
-et nous proposons une traduction vers les Frappes de Processus avec actions plurielles,
-dont nous montrons qu'elle possède la même dynamique.
+Nous définissons dans la suite la notion de système d'équations biochimiques (\defref{bc})
+et sa dynamique dans la sémantique booléenne de Biocham (\defref{bc-sem}).
+Une équation biochimique est un triplet de la forme $X \xrightarrow{Y} Z$
+où $X$, $Y$ et $Z$ sont des ensembles de composants ayant respectivement le rôle
+de réactifs, catalyseurs et produits.
+La signification intuitive équation est la suivante :
+si, dans un état donné du système, tous les réactifs et tous les catalyseurs sont présents,
+alors il est possible de créer tous les produits et de consommer une partie des catalyseurs.
+Il est à noter que nous cherchons à garder l'expressivité la plus large de cette sémantique,
+qui autorise de jouer une équation même si certains produits (dans $Z$) sont déjà présents
+dans l'état considéré.
+Par ailleurs, seule une partie des réactifs (dans $X$) est consommée, et ce de façon
+non-déterministe, afin de conserver l'ensemble des dynamiques possibles d'un modèle non booléen
+(et comportant donc des coefficients stœchiométriques).
 
-\todo{Ajouter refs + citation Biocham}
+Nous proposons ensuite une traduction vers les Frappes de Processus avec actions plurielles
+(\defref{bc2phm})
+et nous montrons qu'elle possède la même dynamique (\thmref{bisimulationbc2phm}).
+Cette traduction fit correspondre, à chaque équation du système,
+un ensemble d'actions qui reproduit toutes les dynamiques non-déterministes possibles.
 
 \begin{definition}[Système d'équations biochimiques]
+\deflabel{bc}
   Un \emph{système d'équations biochimiques} tel que décrit par Biocham
   est un ensemble de réactions :
   \[\BCe = \{ X \xrightarrow{Y} Z \mid X \cap Y = Y \cap Z = X \cap Z = \emptyset \}\]
@@ -46,16 +61,16 @@ dont nous montrons qu'elle possède la même dynamique.
 \end{definition}
 
 \begin{remark}
+\label{bc-nondeterminisme}
   La syntaxe véritable de Biocham permet d'intégrer des catalyseurs implicites,
-  autrement dit d'avoir des équations $X \xrightarrow{Y} Z \in \BCe$
-  telles quel $X \cap Z \neq \emptyset$.
-  Cependant, on peut réécrire de telles équations de la forme suivante,
+  en relâchant la contrainte $X \cap Z = \emptyset$ ;
+  autrement dit, il est possible d'avoir $X \cap Z \neq \emptyset$.
+  Dans ce cas, les éléments de $X \cap Z$ sont aussi des catalyseurs,
+  car ils conditionnent le jeu de la réaction mais ne sont pas modifiés par celle-ci.
+  On peut réécrire de telles équations de la forme suivante,
   tout en assurant la même dynamique :
   $(X \setminus Z) \xrightarrow{Y \cup (X \cap Z)} (Z \setminus X)$.
-\end{remark}
-
-\begin{remark}
-  Il est naturellement possible de représenter une réaction d'équilibre
+  Par ailleurs, il est naturellement possible de représenter une réaction d'équilibre
   $X \overset{Y}{\longleftrightarrow} Z$ par deux réactions biochimiques
   $X \xrightarrow{Y} Z$ et $Z \xrightarrow{Y} X$.
 \end{remark}
@@ -65,7 +80,7 @@ dont nous montrons qu'elle possède la même dynamique.
   Soit $\BCe$ un système d'équations biochimiques
   et $S \subset \BCc$ un état de ce système.
   On note : $S \BCtrans S'$ si et seulement si :
-  \[s \neq S' \wedge
+  \[S \neq S' \wedge
     \exists X \xrightarrow{Y} Z \in \BCe,
     X \cup Y \subset S \wedge
     \exists X' \subset X, S' = (S \setminus X') \cup Z\]
@@ -79,15 +94,32 @@ dont nous montrons qu'elle possède la même dynamique.
 \end{definition}
 
 \begin{remark}
-  Cette définition prend compte de la sémantique indéterministe de Biocham pour ce qui est
+  Comme expliqué plus haut,
+  cette définition prend compte de la sémantique non-déterministe de Biocham pour ce qui est
   de la consommation des réactifs.
-  Il est possible de rendre cette définition déterministe (du point de vue d'une réaction)
+  Il est possible de rendre cette définition déterministe (du point de vue de chaque réaction)
   en imposant $X' = X$ pour toutes les transitions.
   De même, cette définition ne prend pas en compte la présence éventuelle de produits
   dans le milieu avant de jouer une équation ;
-  autrement dit, certains ou tous les produits d'une équation biochimique
+  autrement dit, certains des produits d'une équation biochimique
   peuvent se trouver dans le milieu au moment où elle est jouée.
 \end{remark}
+
+La \defref{bc2phm} propose une traduction des systèmes d'équations biochimiques
+en Frappes de Processus avec actions plurielles.
+Le modèle obtenu comporte autant de sortes booléennes que de composants mentionnés ;
+autrement dit, pour chaque composant $a$ mentionné, il existe une sorte avec deux processus
+$a_0$ et $a_1$ dans le modèle obtenu.
+De plus, pour chaque équation biochimique $X \xrightarrow{Y} Z$,
+un ensemble d'actions est créé, chaque action étant de la forme :
+$\PHfrappemult{(X_1 \cup Y_1 \cup Z'_0 \cup (Z \setminus Z')_1)}{(X'_0 \cup Z'_1)}$,
+où $X$ et $Y$ sont les réactifs et catalyseurs nécessaires à l'initiation de la réaction,
+$Z'$ représente les produits qui seront effectivement créés
+(et $Z \setminus Z'$ représente ceux qui sont déjà présents) et
+$X'$ représente le sous-ensemble des réactifs qui seront consommés
+(défini de façon totalement non-déterministe).
+Enfin, le \thmref{bisimulationbc2phm} stipule que le modèle obtenu
+est fortement bisimilaire ---~et possède donc strictement la même dynamique.
 
 \begin{definition}[Frappes de Processus équivalentes ($\bctophmsymbol$)]
 \deflabel{bc2phm}
@@ -123,6 +155,14 @@ dont nous montrons qu'elle possède la même dynamique.
   l'état correspondant dans $\bctophm$.
 \end{definition}
 
+\begin{remark}
+  Pour supprimer le non-déterminisme de Biocham,
+  tel qu'expliqué à la remarque \vpageref{bc-nondeterminisme},
+  il est possible de modifier la \defref{bc2phm}
+  afin d'imposer pour chaque action : $X' = X$,
+  ou de faire les simplifications correspondantes.
+\end{remark}
+
 \begin{theorem}[$\PH \approx \bctophm$]
 \thmlabel{bisimulationbc2phm}
   Soit $\BCe$ un système d'équations biochimiques.
@@ -154,16 +194,20 @@ dont nous montrons qu'elle possède la même dynamique.
     Enfin, $\tophm{S'} = \tophm{(S \setminus X') \cup Z} = \tophm{(S \setminus X') \cup Z'} =
       \tophm{S \setminus X'} \recouvre Z'_1 = (\tophm{S} \recouvre Z'_1) \recouvre X'_0 =
       \tophm{S} \recouvre (Z'_1 \cup X'_0)$
-    car $X' \cup Z' = \emptyset$.
+    car $X$, $Y$ et $Z$ sont disjoints, et $X'$ et $Z'$ aussi.
   
   ($\Leftarrow$) Supposons que $\tophm{S} \trans{\bctophm} \tophm{S'}$.
-    Cela signifie qu'il existe une action $h = \PHfrappemult{A}{B} \in \PHh$
+    Cela signifie qu'il existe une action $h \in \PHh$
     telle que $\tophm{S'} = \tophm{S} \play h$.
     Par ailleurs, l'existence d'une telle action implique, d'après la \defref{bc2phm},
     l'existence d'une équation $X \xrightarrow{Y} Z \in \BCe$ telle que :
     $h = \PHfrappemult{(X_1 \cup Y_1 \cup Z'_0 \cup (Z \setminus Z')_1)}{(X'_0 \cup Z'_1)}$,
     avec $X' \subset X$, $Z' \subset Z$ et $(X' \cup Z') \neq \emptyset$.
-    
-    \TODO
-  
+    Comme $h$ est jouable dans $\tophm{S}$, cela signifie notamment que
+    $X_1 \subseteq \tophm{S}$ et $Y_1 \subseteq \tophm{S}$
+    car $X$, $Y$ et $Z$ sont disjoints ; % (et $Z'$ et $(Z \setminus Z')$ aussi).
+    autrement dit : $X \subset S$ et $Y \subset S$.
+    Enfin, avec le même raisonnement que ci-dessus, on obtient :
+    $\tophm{S'} = \tophm{S} \recouvre (Z'_1 \cup X'_0) = \tophm{(S \setminus X') \cup Z}$,
+    d'où : $S' = (S \setminus X') \cup Z$.
 \end{proof}
