@@ -267,7 +267,8 @@
 \newcommand{\RRBtrans}[2]{#1 \trans{} #2}
 \newcommand{\RDA}{\f{RDA}}
 %\newcommand{\RDAdep}{\f{dep}}
-\newcommand{\RRBtransrda}[2]{#1 \trans{\RDA} #2}
+\newcommand{\RDAtrans}[1][\RDA]{\trans{#1}}
+\newcommand{\RRBtransrda}[2]{#1 \RDAtrans #2}
 %\newcommand{\uns}{\pm}
 \newcommand{\uns}{\circ}
 
