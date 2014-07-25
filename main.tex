@@ -3,6 +3,12 @@
 
 
 
+% Afficher / masquer les TODO
+\newboolean{todo}
+\setboolean{todo}{false}
+
+
+
 % Encodage d'entrée
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -234,23 +240,25 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 
 % Paquets temporaires
-\usepackage{lipsum}
+%\usepackage{lipsum}
 %\usepackage[notref,notcite]{showkeys}
 
 % Commandes À FAIRE
-\newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
-\newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
-\newcommand{\TODO}{\todo{TODO}}
-\newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
-\newcommand{\tocite}[1][citation]{\stodo{#1}}
-\newcommand{\toref}{\stodo{ref}}
-\newcommand{\storef}{\toref}
-\newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
-
-% \newcommand{\todo}[1]{}
-% \newcommand{\todoplustard}[1]{}
-% \newcommand{\tocite}[1][]{}
-%\newcommand{\todoexplicite}{\textcolor{blue}{\textbf{[Cette section est en cours de rédaction]}}}
+\ifthenelse{\boolean{todo}}{%
+  \newcommand{\todo}[1]{\textcolor{red}{\textbf{[[#1]]}}}
+  \newcommand{\todoplustard}[1]{\textcolor{blue}{\textbf{[[#1]]}}}
+  \newcommand{\TODO}{\todo{TODO}}
+  \newcommand{\stodo}[1]{\textcolor{red}{[#1]}}
+  \newcommand{\tocite}[1][citation]{\stodo{#1}}
+  \newcommand{\toref}{\stodo{ref}}
+  \newcommand{\storef}{\toref}
+  \newcommand{\pref}[1]{\textcolor{blue}{\ref{#1}~[\texttt{#1}]}}
+}{
+  \newcommand{\todo}[1]{}
+  \newcommand{\todoplustard}[1]{}
+  \newcommand{\tocite}[1][]{}
+  %\newcommand{\todoexplicite}{\textcolor{blue}{\textbf{[Cette section est en cours de rédaction]}}}
+}
 
 
 
@@ -382,11 +390,6 @@ check@mathfonts\else mathoptions@on\fi\endcsname{%
 
 
 \maketitle
-
-
-
-% Collaborations
-\input{parts/collaborations}
 
 
 

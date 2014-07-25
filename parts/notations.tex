@@ -21,9 +21,22 @@
     De plus, si $i_1, i_2, j_1, j_2 \in \sN$, on note :
     \begin{align*}
       \segm{i_1}{j_1} \leqsegm \segm{i_2}{j_2} &\EQDEF (i_1 \leq i_2 \wedge j_1 \leq j_2) \\
-      \text{et :} \qquad \segm{i_1}{j_1} \ltsegm \segm{i_2}{j_2} &\EQDEF (i_1<i_2 \wedge j_1\leq j_2) \vee (i_1\leq i_2\wedge j_1 < j_2)
+      \text{et :} \qquad \segm{i_1}{j_1} \ltsegm \segm{i_2}{j_2}
+        &\EQDEF (i_1<i_2 \wedge j_1\leq j_2) \vee (i_1\leq i_2\wedge j_1 < j_2)
     \end{align*}
-
+  
+  \item[Entiers relatifs]
+    On note $\mathbb{Z}$ l'ensemble des entiers relatifs.
+    
+    Par ailleurs, la fonction $\f{signe}$ est définie sur les entiers relatifs comme suit :
+    \begin{align*}
+      \f{signe} : \mathbb{Z} &\rightarrow \{ +, -, \varnothing \} \\
+      n & \mapsto \begin{cases}
+        + & \text{ si $x > 0$} \\
+        - & \text{ si $x < 0$} \\
+        \varnothing & \text{ if $x = 0$}
+      \end{cases}
+    \end{align*}
   
   \item[Séquences]
     Si $n \in \sN$, on note $e_1 \cons \ldots \cons e_n$ la séquence finie formée
@@ -76,6 +89,7 @@
     Il est ensuite étendu
     aux contextes à la \vdefref{ctxrecouvrement}
     ainsi qu'aux ensembles de processus à la \vdefref{recouvrementps}.
+
 \end{description}
 
 \todoplustard{Ajouter des références aux autres notations définies dans le corps de la thèse}

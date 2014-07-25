@@ -21,8 +21,8 @@
   La traduction vers le modèle de Thomas a fait l'objet de deux publications :
   \cite*{FPIMR12-LDSSB} et \cite*{FPIMR12-CMSB}
   et d'une soumission en journal en cours de \textit{review}.
-  La traduction des réseaux discrets asynchrones a
-  quant à elle été publiée dans \cite*{FPMR13-CS2Bio}.
+  La traduction depuis les réseaux discrets asynchrones a,
+  quant à elle, été publiée dans \cite*{FPMR13-CS2Bio}.
 }
 
 
@@ -74,11 +74,11 @@ que définis dans le formalisme de Biocham vers les Frappes de Processus avec ac
 Nous nous intéressons naturellement à la sémantique booléenne de Biocham,
 qui est par ailleurs asynchrone et qui ajoute une couche supplémentaire d'indéterminisme
 sur chaque réaction (en autorisant la consommation d'une partie arbitraire des réactifs).
-Cette traduction prend naturellement parti des similitudes entre Biocham et les Frappes
+Cette traduction tire naturellement parti des similitudes entre Biocham et les Frappes
 de Processus avec actions plurielles, et permet d'affirmer
 qu'un tel système d'équations biochimiques peut toujours être exprimé
 en Frappes de Processus avec actions plurielles,
-et donc analysé avec les outils adéquats.
+et donc être analysé avec les outils adéquats.
 
 
 
@@ -102,3 +102,35 @@ et donc analysé avec les outils adéquats.
 % \section{$\pi$-calcul ?}
 % 
 % \section{Automates finis communicants ?}
+
+
+\section{Bilan}
+Nous avons présenté dans ce chapitre plusieurs traductions :
+\begin{itemize}
+  \item depuis les Frappes de Processus,
+    vers le modèle de Thomas (\secref{trad-thomas})
+    et les réseaux de Petri (\secref{trad-petri}) ;
+  \item vers les Frappes de Processus,
+    depuis les réseaux discrets asynchrones (\secref{trad-rda})
+    et les systèmes d'équations biochimiques de la sémantique booléenne de Biocham
+    (\secref{trad-biocham}).
+\end{itemize}
+Par ailleurs, nous avons donné une preuve d'équivalence entre les Frappes de Processus
+et les automates synchronisés (\secref{phm2an}) avec les traductions adéquates.
+
+Nous insistons ici sur le fait que si chacune des traductions exposées ici
+s'effectue depuis ou vers un formalisme particulier des Frappes de Processus,
+il est néanmoins possible de naviguer entre les différentes sémantiques de Frappes
+de Processus sans pertes d'expressivité, comme l'ont montré
+les différents résultats du \chapref{sem}.
+Ainsi, les résultats particuliers proposés dans le présent chapitre
+se généralisent à toutes les sémantiques de Frappes de Processus,
+ce qui permet non seulement d'élargir le cadre de ces traductions
+à ces différentes sémantiques,
+mais aussi de conclure quant aux rapports d'expressivité entre les Frappes de Processus
+et les autres types de modélisation abordés.
+Il est à noter qu'il n'est pas impropre de parler ici de «~Frappes de Processus~»,
+sans préciser la sémantique, lorsqu'il est question d'expressivité,
+car les résultats du \chapref{sem} ont bien montré leur équivalence au niveau
+des capacités de représentation ---~à l'exception notable des Frappes de Processus standards
+qui ont probablement moins d'expressivité que les autres sémantiques.

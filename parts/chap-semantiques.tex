@@ -63,7 +63,7 @@ Ces connaissances peuvent être intégrées sous la forme de préemptions (la jo
 peut empêcher la jouabilité d'une autre action) ou de simultanéité
 (plusieurs processus peuvent évoluer simultanément).
 
-Pourtant, la sémantique standard des Frappes de Processus
+La sémantique standard des Frappes de Processus
 développée par \citeasnoun{PMR10-TCSB}
 et rappelée à la \vsecref{ph}
 ne permet pas de concilier l'introduction de contraintes dérivées d'informations biologiques
@@ -74,7 +74,7 @@ en revanche les analyses puissantes de la dynamique rappelées à la \vsecref{ph
 ne sont alors plus valables.
 En effet, celles-ci ne prennent pas en compte les fenêtres de tir introduites par les
 paramètres stochastiques.
-L'analyse des modèles doit alors être effectuée à l'aide d'outils de model checking
+L'analyse des modèles doit alors être effectuée à l'aide d'outils de \textit{model checking}
 probabilistes, qui doivent faire face à l'explosion combinatoire provoquée par l'ajout
 de la dimension temporelle continue.
 Il n'est alors généralement plus possible d'envisager d'étudier
@@ -105,7 +105,7 @@ Une telle approche permet de modéliser des contraintes temporelles,
 toute action modélisant une réaction très rapide étant par exemple systématiquement jouée
 avant les actions modélisant des réactions plus lentes.
 D'autres contraintes peuvent aussi être prises en compte, comme la concurrence entre réactions,
-mais aussi la représentation de processus propres à la modélisation et n'ayant pas nécessairement
+mais aussi la représentation de comportements propres à la modélisation et n'ayant pas nécessairement
 de sens biologique.
 
 Les formes alternatives de Frappes de Processus présentées dans ce chapitre se concen\-trent donc
@@ -151,10 +151,15 @@ d'une place (correspondant ici à un processus ou à une sorte, selon le point d
 De même, la notion de priorités a déjà été introduite dans certaines sémantiques de réseaux
 de Petri \cite{Marsan87} et de $\pi$\nbd calcul \cite{jlnu2010}.
 Enfin, les actions plurielles permettent de se rapprocher de la classe des modèles
-à dynamique synchrone \todo{Biocham, graphes des états...}.
+à dynamique synchrone,
+dont font partie les automates synchronisés,
+ou encore les systèmes d'équations biochimiques dans la sémantique booléenne de Biocham,
+comme cela sera étudié plus tard dans ce manuscrit, au \chapref{expressivite}.
+
+\myskip
 
 La définition du formalisme des Frappes de Processus avec classes de priorités
-a été publiée dans \cite{FPMR13-CS2Bio}.
+a été publiée dans \cite*{FPMR13-CS2Bio}.
 
 
 

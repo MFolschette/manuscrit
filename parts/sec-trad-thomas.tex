@@ -264,41 +264,76 @@ de distinguer une influence d'un composant sur un autre.
   % Arcs a -> b, a ≠ b
   \begin{align}
     \begin{split}\eqlabel{edges-inference}
-      \forall b \in \reg(a), \forall s \in \{ +, - \}, \\
-      b \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), b \in g,
-      \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
-        &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
-        &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
-        &\qquad s = \f{signe}(k - j)
-    \end{split}
-    \end{align}
-    % Auto-arcs depuis les groupes de régulateurs
-    \begin{align}
+      &\forall b \in \reg(a), \forall s \in \{ +, - \},
+        b \xrightarrow{t+1} a \in \hat{E}_s \\
+      &\qquad\qquad \Longleftrightarrow\ \exists g \in X(a), b \in g,
+        \exists \sigma \in \PHsubl_{g \cup \{ a \}},
+        \{ b_t, b_{t+1} \} \subset \PHl_b \wedge \\
+      &\qquad\qquad\qquad b_t \in \sigma,
+        \exists a_j \in \irB_a(\sigma),
+        \exists a_k \in \irB_a(\sigma\{b_{t+1}\}),
+        s = \f{signe}(k - j)
+    \end{split} \\
+%  \end{align}
+  % Auto-arcs depuis les groupes de régulateurs
+%  \begin{align}
     \begin{split}\eqlabel{edges-inference-auto}
-      \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-      a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a),
-      \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
-        &\qquad \{ a_t, a_{t+1} \} \subset \PHl_a \wedge a_t \in \sigma,\\
-        &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{a_{t+1}\}), \\
-        &\qquad s = \f{signe}(k - j)
-    \end{split}
-    \end{align}
-    % Auto-arcs des composants sans prédécesseurs
-    \begin{align}
+      &\forall s \in \{ +, - \},
+        a \xrightarrow{t+1} a \in \hat{E}_s \\
+      &\qquad\qquad \Longleftrightarrow\ \exists g \in X(a),
+        \exists \sigma \in \PHsubl_{g \cup \{ a \}},
+        \{ a_t, a_{t+1} \} \subset \PHl_a \wedge a_t \in \sigma, \\
+      &\qquad\qquad\qquad \exists a_j \in \irB_a(\sigma),
+        \exists a_k \in \irB_a(\sigma\{a_{t+1}\}),
+        s = \f{signe}(k - j)
+    \end{split}\\
+%  \end{align}
+  % Auto-arcs des composants sans prédécesseurs
+%  \begin{align}
     \begin{split}\eqlabel{edges-inference-noreg}
-      \forall s \in \{ +, - \}, \quad\qquad\qquad \\
-      a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \reg(a) = \emptyset \wedge
+      &\forall s \in \{ +, - \},
+        a \xrightarrow{t+1} a \in \hat{E}_s \\
+      &\qquad\qquad \Longleftrightarrow\ \reg(a) = \emptyset \wedge
         \{ a_t, a_{t+1} \} \subset \PHl_a, \\
-        &\qquad \exists a_j \in \irB_a(\etat{a_t}), \exists a_k \in \irB_a(\etat{a_{t+1}}), \\
-        &\qquad s = \f{signe}(k - j)
+      &\qquad\qquad\qquad \exists a_j \in \irB_a(\etat{a_t}),
+        \exists a_k \in \irB_a(\etat{a_{t+1}}),
+        s = \f{signe}(k - j)
     \end{split}
   \end{align}
-  où : $\f{signe}(x) = \begin{cases}
-    + & \text{ si $x > 0$} \\
-    - & \text{ si $x < 0$} \\
-    0 & \text{ if $x = 0$}
-  \end{cases}$
+%   % Arcs a -> b, a ≠ b
+%   \begin{align}
+%     \begin{split}\eqlabel{edges-inference}
+%       \forall b \in \reg(a), \forall s \in \{ +, - \}, \\
+%       b \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a), b \in g,
+%       \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
+%         &\qquad \{ b_t, b_{t+1} \} \subset \PHl_b \wedge b_t \in \sigma,\\
+%         &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{b_{t+1}\}), \\
+%         &\qquad s = \f{signe}(k - j)
+%     \end{split}
+%     \end{align}
+%     % Auto-arcs depuis les groupes de régulateurs
+%     \begin{align}
+%     \begin{split}\eqlabel{edges-inference-auto}
+%       \forall s \in \{ +, - \}, \quad\qquad\qquad \\
+%       a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \exists g \in X(a),
+%       \exists \sigma \in \PHsubl_{g \cup \{ a \}}, \\
+%         &\qquad \{ a_t, a_{t+1} \} \subset \PHl_a \wedge a_t \in \sigma,\\
+%         &\qquad \exists a_j \in \irB_a(\sigma), \exists a_k \in \irB_a(\sigma\{a_{t+1}\}), \\
+%         &\qquad s = \f{signe}(k - j)
+%     \end{split}
+%     \end{align}
+%     % Auto-arcs des composants sans prédécesseurs
+%     \begin{align}
+%     \begin{split}\eqlabel{edges-inference-noreg}
+%       \forall s \in \{ +, - \}, \quad\qquad\qquad \\
+%       a \xrightarrow{t+1} a \in \hat{E}_s \Longleftrightarrow\ & \reg(a) = \emptyset \wedge
+%         \{ a_t, a_{t+1} \} \subset \PHl_a, \\
+%         &\qquad \exists a_j \in \irB_a(\etat{a_t}), \exists a_k \in \irB_a(\etat{a_{t+1}}), \\
+%         &\qquad s = \f{signe}(k - j)
+%     \end{split}
+%   \end{align}
 \end{proposition}
+La fonction $\f{signe}$ sur les entiers relatifs a été définie à la \vsecref{notations}.
 
 Nous sommes alors en mesure d'inférer les arcs du graphe des interactions final,
 à partir de ces ensembles d'influences locales positives et négatives.
@@ -656,7 +691,7 @@ dans tous les cas où cette valeur est un intervalle non vide (\propref{inferenc
 %     K_{a,\{a,b\}} &= \segm{1}{1} &
 %     K_{a,\{a,c\}} &= \segm{1}{1}
   \end{align*}
-  Seuls les paramètres $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ n'ont pas peu être inférés.
+  Seuls les paramètres $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ n'ont pas pu être inférés.
   Cela est la conséquence directe de l'absence de coopération explicite entre $b$ et $c$ sur $a$,
   ce qui crée des oscillations sur $a$ lorsque $b_1$ et $c_0$ ou $b_0$ et $c_1$
   sont présents simultanément.
@@ -684,7 +719,7 @@ Cela peut être notamment dû à des coopérations mal définies entre les régu
 lorsque deux régulateurs frappent un même composant de façon indépendante, leurs actions peuvent
 avoir des effets opposés, créant des oscillations dans la dynamique.
 Un tel indéterminisme ne peut pas être représenté à l'aide d'un modèle de Thomas étant donné
-que dans une configuration de ressources données, un composant possède un unique attracteur,
+que dans une configuration donnée des ressources, un composant possède un unique attracteur,
 représenté par le paramètre discret correspondant,
 et ne peut donc évoluer que dans une seule direction.
 Il est possible de résoudre ces cas non conclusifs
@@ -807,7 +842,7 @@ et est définie à la \vsecref{notations}.
   $K_{a,\{a,b\}}$ et $K_{a,\{a,c\}}$ ne peuvent pas être inférés à l'aide de la
   \propref{inference-param}.
   Il est cependant possible d'énumérer les paramétrisations compatibles avec les paramètres
-  déjà trouvés et les \enumparamcr
+  déjà trouvés et les \enumparamcr{}
   présentés dans cette section.
   Cette énumération produit 9 paramétrisations différentes qui correspondent aux
   trois valeurs possibles pour chacun des paramètres qui n'ont pas pu être inférés :
@@ -852,16 +887,23 @@ et est définie à la \vsecref{notations}.
 
 Nous abordons dans cette section quelques principes de programmation par ensemble de réponse,
 aussi appelée ASP pour \textit{Answer Set Programming} \cite{Baral03}.
-Cette forme de programmation logique déclarative a été utilisée pour la résolution des inférences
+Cette forme de programmation logique déclarative possède le double avantage de
+canaliser la réflexion autour d'un problème sur sa modélisation,
+et non sur sa résolution (comme pour les techniques habituelles de programmation)
+tout en proposant des outils de résolution puissants.
+La résolution des problèmes formulés dans le cadre de ce travail
+est par exemple effectuée à l'aide du \textit{solver} \tool{Clingo} \cite{gekakasc14b}
+qui possède des heuristiques efficaces pour la résolution de nombreux
+problèmes complexes.
+
+ASP a été utilisé dans le cadre de l'inférence du modèle de Thomas
+pour la résolution des inférences individuelles
 du graphe des interactions et des paramètres, mais aussi pour l'énumération des paramétrisations
 compatibles dans le cas où certains paramètres ne peuvent être inférés.
 Nous illustrons d'ailleurs l'application d'ASP à l'énumération des paramétrisations
 compatibles, car cette partie de l'implémentation présente des exemples illustratifs
 intéressants, du fait notamment qu'ASP est particulièrement adapté à l'énumération
 de solutions.
-La résolution est effectuée à l'aide du \textit{solver} \tool{Clingo} \cite{gekakasc14b}
-qui possède des heuristiques efficaces pour la résolution de nombreux
-problèmes complexes.
 
 La définition d'un problème en ASP suit généralement trois étapes principales
 illustrées dans la suite :
@@ -870,6 +912,8 @@ illustrées dans la suite :
   \item la création d'ensembles de réponse,
   \item le filtrage des réponses non satisfaisantes.
 \end{itemize}
+Les méthodes de modélisation en ASP ont été abondamment illustrées
+au cours de nombreux tutoriels \cite{gebser13}.
 
 
 
@@ -1109,7 +1153,7 @@ telles que pour chaque paramètre $K_{a, \omega_p}$ qui n'a pas pu être infér�
 la \propref{inference-param},
 alors $K_{a, \omega_p} \subset \segm{0}{l_a} \wedge K_{a, \omega_p} \neq \emptyset$.
 Cette énumération ignore donc totalement la notion de paramétrisation admissible
-donnée par les \enumparamcr
+donnée par les \enumparamcr{}
 ou même le fait que les paramètres doivent être des intervalles.
 
 
