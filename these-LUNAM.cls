@@ -1047,7 +1047,7 @@
       \fi
    \else\ifx#3\@empty
       \ifnum #2 = 0\relax
-         \@onecommitteemember{Co-encadrant de th\`ese}{#1}
+         \@onecommitteemember{Co-directeur de th\`ese}{#1}
       \else
          \@onecommitteemember{Co-directrice de th\`ese}{#1}
       \fi
